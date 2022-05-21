@@ -15,7 +15,6 @@ function MyApp({ Component, pageProps, categories }) {
 
 MyApp.getInitialProps = async (appContext) => {
   const request = getStrapiURL("/api/categories");
-  console.log(request);
   const { data } = await axios.get(request, {
     headers: {
       Accept: "application/json",

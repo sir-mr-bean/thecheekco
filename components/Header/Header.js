@@ -4,9 +4,9 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { IoIosHeart } from "react-icons/io";
 import Link from "next/link";
 
-export const Header = ({ children, navigation }) => {
+export const Header = ({ navigation }) => {
   return (
-    <div className="h-max sticky top-2 md:top-2">
+    <div className="h-max sticky top-2 md:top-2 z-50">
       <div className="flex flex-col pt-4 md:pt-2">
         <div className="bg-paper-bg bg-cover bg-blend-lighten h-11 drop-shadow-[0_-7px_5px_rgba(0,0,0,0.31)] opacity-90">
           <div className="flex justify-start gap-16 items-center pb-2 md:justify-around lg:mx-36">
@@ -35,19 +35,21 @@ export const Header = ({ children, navigation }) => {
         <div className="bg-header-brown text-header-text text-[13px] font-gothic py-1">
           <ul className="flex justify-center gap-9 pl-3">
             {navigation?.data &&
-              navigation?.data.data.map((nav) => {
-                return (
-                  <Link
-                    key={nav.id}
-                    href="/shop/[id]/"
-                    as={`/shop/${nav.attributes.name}`}
-                  >
-                    <li key={nav.id}>
-                      <span>{nav.attributes.displayname}</span>
-                    </li>
-                  </Link>
-                );
-              })}
+              navigation?.data.data
+                .sort((a, b) => (a.id > b.id ? 1 : -1))
+                .map((nav) => {
+                  return (
+                    <Link
+                      key={nav.id}
+                      href="/shop/[id]/"
+                      as={`/shop/${nav.attributes.name}`}
+                    >
+                      <li key={nav.id}>
+                        <span>{nav.attributes.displayname}</span>
+                      </li>
+                    </Link>
+                  );
+                })}
           </ul>
         </div>
       </div>

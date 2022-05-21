@@ -1,10 +1,12 @@
 import { React } from "react";
 import axios from "axios";
 import { getStrapiURL } from "../../utils/api";
+import Image from "next/image";
 
 const CategoryPage = ({ results }) => {
   //console.log(results.attributes.products);
   const products = results.attributes.products;
+  console.log(products);
 
   return (
     <div>
@@ -18,8 +20,12 @@ const CategoryPage = ({ results }) => {
               <div key={product.id}>
                 <div className="relative">
                   <div className="relative w-full h-72 rounded-lg overflow-hidden">
-                    <img
-                      src={`${product.attributes?.itemimage?.data?.attributes?.url}`}
+                    <Image
+                      layout="fill"
+                      src={
+                        product.attributes?.itemimage?.data?.[0]?.attributes
+                          ?.url
+                      }
                       alt={product.attributes.imagealttext}
                       className="w-full h-full object-center object-cover"
                     />
@@ -67,8 +73,10 @@ const CategoryPage = ({ results }) => {
 export default CategoryPage;
 
 export async function getServerSideProps(context) {
+  console.log("context is:");
+  console.log(context);
   const request = getStrapiURL(
-    `/api/categories?filters[name][$eq]=${context.query.category}&populate[0]=products&populate[1]=products.itemimage`
+    `/api/categories?filters[name][$eq]=${context.params.category}&populate[0]=products&populate[1]=products.itemimage`
   );
   console.log(request);
   const { data } = await axios.get(request, {
