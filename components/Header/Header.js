@@ -45,7 +45,11 @@ export const Header = ({ navigation }) => {
                       as={`/shop/${nav.attributes.name}`}
                     >
                       <li key={nav.id}>
-                        <span>{nav.attributes.displayname}</span>
+                        <div className="px-1 hover:transform hover:transition-all hover:scale-125 cursor-pointer">
+                          <span className="font-gothic font-normal text-sm">
+                            {nav.attributes.displayname}
+                          </span>
+                        </div>
                       </li>
                     </Link>
                   );

@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.card:hover {
+  transform: rotateY(180deg);
+  transform-style: preserve-3d;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+}
