@@ -1,8 +1,9 @@
 import { React } from "react";
 import axios from "axios";
+import { getStrapiURL } from "../../utils/api";
 
 const CategoryPage = ({ results }) => {
-  console.log(results.attributes.products);
+  //console.log(results.attributes.products);
   const products = results.attributes.products;
 
   return (
@@ -18,7 +19,9 @@ const CategoryPage = ({ results }) => {
                 <div className="relative">
                   <div className="relative w-full h-72 rounded-lg overflow-hidden">
                     <img
-                      src={`http://localhost:1337${product.attributes?.itemimage?.data?.attributes?.url}`}
+                      src={getStrapiURL(
+                        `${product.attributes?.itemimage?.data?.attributes?.url}`
+                      )}
                       alt={product.attributes.imagealttext}
                       className="w-full h-full object-center object-cover"
                     />
@@ -66,9 +69,16 @@ const CategoryPage = ({ results }) => {
 export default CategoryPage;
 
 export async function getServerSideProps(context) {
-  const { data } = await axios.get(
-    `http://localhost:1337/api/categories?filters[name][$eq]=${context.query.category}&populate[0]=products&populate[1]=products.itemimage`
+  const request = getStrapiURL(
+    `/api/categories?filters[name][$eq]=${context.query.category}&populate[0]=products&populate[1]=products.itemimage`
   );
+  console.log(request);
+  const { data } = await axios.get(request, {
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${process.env.STRAPI_API_KEY}`,
+    },
+  });
   const results = data.data[0];
   return { props: { results } };
 }
