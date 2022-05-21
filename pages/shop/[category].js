@@ -19,9 +19,7 @@ const CategoryPage = ({ results }) => {
                 <div className="relative">
                   <div className="relative w-full h-72 rounded-lg overflow-hidden">
                     <img
-                      src={getStrapiURL(
-                        `${product.attributes?.itemimage?.data?.attributes?.url}`
-                      )}
+                      src={`${product.attributes?.itemimage?.data?.attributes?.url}`}
                       alt={product.attributes.imagealttext}
                       className="w-full h-full object-center object-cover"
                     />
