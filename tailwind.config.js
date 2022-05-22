@@ -14,6 +14,8 @@ module.exports = {
         "text-secondary": "#a75e2f",
         "bg-lighttan": "#FAF3EE",
         button: "#E3BB9D",
+        "shopping-cart": "#A75E2F",
+        "shopping-cart-badge": "#926E68",
       },
       backgroundImage: {
         "paper-bg": "url(../public/images/paper-brown-texture.jpg)",
