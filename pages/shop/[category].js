@@ -63,50 +63,53 @@ const CategoryPage = ({ data, categories, onAdd }) => {
             {data.data?.[0].attributes.displayname}
           </h2>
           <div className="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-3 lg:grid-cols-4 xl:gap-x-10 ">
-            {products.data.map((product) => (
-              <div key={product.id}>
-                <div className="relative">
-                  <div className="relative w-full h-72 rounded-lg overflow-hidden">
-                    <Image
-                      layout="fill"
-                      src={product.attributes?.itemimage?.data?.attributes?.url}
-                      alt={product.attributes.imagealttext}
-                      className="w-full h-full object-center object-cover"
-                    />
-                  </div>
-                  <div className="relative mt-4 space-y-2">
-                    <h3 className="text-sm font-medium text-gray-900">
-                      {product.attributes.name}
-                    </h3>
-                    <div className="flex text-header-brown">
-                      <BsStarFill />
-                      <BsStarFill />
-                      <BsStarFill />
-                      <BsStar />
-                      <BsStar />
+            {products &&
+              products.data.map((product) => (
+                <div key={product.id}>
+                  <div className="relative">
+                    <div className="relative w-full h-72 rounded-lg overflow-hidden">
+                      <Image
+                        layout="fill"
+                        src={
+                          product.attributes?.itemimage?.data?.attributes?.url
+                        }
+                        alt={product.attributes.imagealttext}
+                        className="w-full h-full object-center object-cover"
+                      />
                     </div>
-                    <p className="relative text-lg font-bold text-black">
-                      $
-                      {product.attributes.price
-                        .toFixed(2)
-                        .toLocaleString("en-us")}
-                    </p>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {product.color}
-                    </p>
+                    <div className="relative mt-4 space-y-2">
+                      <h3 className="text-sm font-medium text-gray-900">
+                        {product.attributes.name}
+                      </h3>
+                      <div className="flex text-header-brown">
+                        <BsStarFill />
+                        <BsStarFill />
+                        <BsStarFill />
+                        <BsStar />
+                        <BsStar />
+                      </div>
+                      <p className="relative text-lg font-bold text-black">
+                        $
+                        {product.attributes.price
+                          .toFixed(2)
+                          .toLocaleString("en-us")}
+                      </p>
+                      <p className="mt-1 text-sm text-gray-500">
+                        {product.color}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-6">
+                    <button
+                      onClick={() => handleAdd(product)}
+                      className="relative flex bg-button rounded-2xl py-2 px-8 items-center justify-center text-sm font-medium text-white border border-invisible hover:border-black uppercase cursor-pointer"
+                    >
+                      Add to cart
+                      <span className="sr-only">{product.attributes.name}</span>
+                    </button>
                   </div>
                 </div>
-                <div className="mt-6">
-                  <button
-                    onClick={() => handleAdd(product)}
-                    className="relative flex bg-button rounded-2xl py-2 px-8 items-center justify-center text-sm font-medium text-white border border-invisible hover:border-black uppercase cursor-pointer"
-                  >
-                    Add to cart
-                    <span className="sr-only">{product.attributes.name}</span>
-                  </button>
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </div>
