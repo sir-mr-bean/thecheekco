@@ -124,7 +124,6 @@ export const getStaticPaths = async () => {
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
     },
   });
-  console.log(data.data);
   return {
     paths: data.data.map((item) => ({
       params: {
@@ -136,7 +135,6 @@ export const getStaticPaths = async () => {
 };
 
 export const getStaticProps = async ({ params }) => {
-  console.log(params);
   const productsURL = getStrapiURL(
     `/api/categories?filters[name][$eq]=${params.category}&populate[0]=products&populate[1]=products.itemimage`
   );
@@ -147,7 +145,6 @@ export const getStaticProps = async ({ params }) => {
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
     },
   });
-  console.log(data.attributes);
   return {
     props: {
       data,
