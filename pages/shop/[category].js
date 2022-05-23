@@ -121,7 +121,7 @@ export default CategoryPage;
 
 export const getStaticPaths = async () => {
   const categories = getStrapiURL(`/api/categories`);
-  const { data } = await axios.get(categories, {
+  const { data } = await fetch(categories, {
     headers: {
       Accept: "application/json",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
@@ -142,7 +142,7 @@ export const getStaticProps = async ({ params }) => {
     `/api/categories?filters[name][$eq]=${params.category}&populate[0]=products&populate[1]=products.itemimage`
   );
   const categories = getStrapiURL(`/api/categories`);
-  const { data } = await axios.get(productsURL, {
+  const { data } = await fetch(productsURL, {
     headers: {
       Accept: "application/json",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
