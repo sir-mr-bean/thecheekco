@@ -6,6 +6,7 @@ import {
 } from "react-icons/ai";
 import { CartState } from "../context/Context";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 export default function cart() {
   const [total, setTotal] = useState(0);
@@ -19,6 +20,14 @@ export default function cart() {
     dispatch({
       type: "REMOVE_FROM_CART",
       item: product,
+    });
+  };
+  const handleSetQuantity = (product, qty) => {
+    console.log(qty);
+    dispatch({
+      type: "SET_QUANTITY",
+      item: product,
+      payload: qty.target.value,
     });
   };
 
@@ -96,6 +105,7 @@ export default function cart() {
                               Quantity, {product.name}
                             </label>
                             <select
+                              onChange={(e) => handleSetQuantity(product, e)}
                               id={`quantity-${productIdx}`}
                               name={`quantity-${productIdx}`}
                               defaultValue={product.quantity}
@@ -217,12 +227,11 @@ export default function cart() {
               </dl>
 
               <div className="mt-6">
-                <button
-                  type="submit"
-                  className="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
-                >
-                  Checkout
-                </button>
+                <Link href="/checkout">
+                  <div className="cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500">
+                    Checkout
+                  </div>
+                </Link>
               </div>
             </section>
           </form>

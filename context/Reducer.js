@@ -46,6 +46,21 @@ export const cartReducer = (state, action) => {
                 }
               : item
           );
+    case "SET_QUANTITY":
+      // if quantity is 1 remove from cart, otherwise decrement quantity
+      const result = state.map(
+        (item) => item.attributes.name === action.item.attributes.name
+      );
+      return state.find((item) => item.id === action.item.id)
+        ? state.map((item) =>
+            item.attributes.name === action.item.attributes.name
+              ? {
+                  ...item,
+                  quantity: parseInt(action.payload),
+                }
+              : item
+          )
+        : item;
 
     case "CLEAR_CART":
       return initialState;

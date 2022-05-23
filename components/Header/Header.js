@@ -14,20 +14,11 @@ import axios from "axios";
 export const Header = () => {
   const { cart, dispatch } = CartState();
   const [navigation, setNavigation] = useState([]);
-  const [total, setTotal] = useState(0);
-  // useEffect(() => {
-  //   setTotal(
-  //     cart.reduce(
-  //       (acc, curr) => acc + Number(curr.attributes.price) * curr.qty,
-  //       0
-  //     )
-  //   );
-  // }, [cart]);
+
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    setTotal(cart?.length);
     const fetchNavigation = async () => {
       const request = getStrapiURL("/api/categories");
       console.log(process.env.NEXT_PUBLIC_STRAPI_API_KEY);
@@ -85,14 +76,14 @@ export const Header = () => {
               {navigation &&
                 navigation
                   .sort((a, b) => (a.id > b.id ? 1 : -1))
-                  .map((nav) => {
+                  .map((nav, i) => {
                     return (
                       <Link
                         key={nav.id}
                         href="/shop/[id]/"
                         as={`/shop/${nav.attributes.name}`}
                       >
-                        <li>
+                        <li key={i}>
                           <div className="px-1 hover:transform hover:transition-all hover:scale-125 cursor-pointer">
                             <span className="font-gothic font-normal text-xs">
                               {nav.attributes.displayname}

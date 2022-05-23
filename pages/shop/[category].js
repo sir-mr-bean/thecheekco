@@ -7,11 +7,12 @@ import { CartState } from "../../context/Context";
 import { addToCart } from "../../context/Reducer";
 import toast from "react-hot-toast";
 
-const CategoryPage = ({ results, onAdd }) => {
+const CategoryPage = ({ data, categories, onAdd }) => {
   //console.log(results.attributes.products);
   const { cart, dispatch } = CartState();
-  const products = results.attributes.products;
-  console.log(onAdd);
+  const products = data.data?.[0].attributes.products;
+
+  console.log(categories);
 
   const handleAdd = (product) => {
     dispatch({
@@ -55,72 +56,116 @@ const CategoryPage = ({ results, onAdd }) => {
   };
 
   return (
-    <div className="max-w-screen min-h-screen border-2 flex justify-center">
-      <div className="py-4 px-4 sm:py-10 sm:px-6 lg:px-8 bg-bg-lighttan mt-24 shadow-[0_0px_7px_1px_rgba(0,0,0,0.51)] w-full h-full mx-6 md:mx-16 sm:mx-20">
-        <h2 className="text-4xl text-text-primary font-gothic font-extralight">
-          {results.attributes.displayname}
-        </h2>
-        <div className="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-3 lg:grid-cols-4 xl:gap-x-10 ">
-          {products.data.map((product) => (
-            <div key={product.id}>
-              <div className="relative">
-                <div className="relative w-full h-72 rounded-lg overflow-hidden">
-                  <Image
-                    layout="fill"
-                    src={product.attributes?.itemimage?.data?.attributes?.url}
-                    alt={product.attributes.imagealttext}
-                    className="w-full h-full object-center object-cover"
-                  />
-                </div>
-                <div className="relative mt-4 space-y-2">
-                  <h3 className="text-sm font-medium text-gray-900">
-                    {product.attributes.name}
-                  </h3>
-                  <div className="flex text-header-brown">
-                    <BsStarFill />
-                    <BsStarFill />
-                    <BsStarFill />
-                    <BsStar />
-                    <BsStar />
+    <>
+      <div className="max-w-screen min-h-screen border-2 flex justify-center">
+        <div className="py-4 px-4 sm:py-10 sm:px-6 lg:px-8 bg-bg-lighttan mt-24 shadow-[0_0px_7px_1px_rgba(0,0,0,0.51)] w-full h-full mx-6 md:mx-16 sm:mx-20">
+          <h2 className="text-4xl text-text-primary font-gothic font-extralight">
+            {data.data?.[0].attributes.displayname}
+          </h2>
+          <div className="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-3 lg:grid-cols-4 xl:gap-x-10 ">
+            {products.data.map((product) => (
+              <div key={product.id}>
+                <div className="relative">
+                  <div className="relative w-full h-72 rounded-lg overflow-hidden">
+                    <Image
+                      layout="fill"
+                      src={product.attributes?.itemimage?.data?.attributes?.url}
+                      alt={product.attributes.imagealttext}
+                      className="w-full h-full object-center object-cover"
+                    />
                   </div>
-                  <p className="relative text-lg font-bold text-black">
-                    $
-                    {product.attributes.price
-                      .toFixed(2)
-                      .toLocaleString("en-us")}
-                  </p>
-                  <p className="mt-1 text-sm text-gray-500">{product.color}</p>
+                  <div className="relative mt-4 space-y-2">
+                    <h3 className="text-sm font-medium text-gray-900">
+                      {product.attributes.name}
+                    </h3>
+                    <div className="flex text-header-brown">
+                      <BsStarFill />
+                      <BsStarFill />
+                      <BsStarFill />
+                      <BsStar />
+                      <BsStar />
+                    </div>
+                    <p className="relative text-lg font-bold text-black">
+                      $
+                      {product.attributes.price
+                        .toFixed(2)
+                        .toLocaleString("en-us")}
+                    </p>
+                    <p className="mt-1 text-sm text-gray-500">
+                      {product.color}
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-6">
+                  <button
+                    onClick={() => handleAdd(product)}
+                    className="relative flex bg-button rounded-2xl py-2 px-8 items-center justify-center text-sm font-medium text-white border border-invisible hover:border-black uppercase cursor-pointer"
+                  >
+                    Add to cart
+                    <span className="sr-only">{product.attributes.name}</span>
+                  </button>
                 </div>
               </div>
-              <div className="mt-6">
-                <button
-                  onClick={() => handleAdd(product)}
-                  className="relative flex bg-button rounded-2xl py-2 px-8 items-center justify-center text-sm font-medium text-white border border-invisible hover:border-black uppercase cursor-pointer"
-                >
-                  Add to cart
-                  <span className="sr-only">{product.attributes.name}</span>
-                </button>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
 export default CategoryPage;
 
-export async function getServerSideProps(context) {
-  const request = getStrapiURL(
-    `/api/categories?filters[name][$eq]=${context.params.category}&populate[0]=products&populate[1]=products.itemimage`
-  );
-  const { data } = await axios.get(request, {
+export const getStaticPaths = async () => {
+  const categories = getStrapiURL(`/api/categories`);
+  const { data } = await axios.get(categories, {
     headers: {
       Accept: "application/json",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
     },
   });
-  const results = data.data[0];
-  return { props: { results } };
-}
+  console.log(data.data);
+  return {
+    paths: data.data.map((item) => ({
+      params: {
+        category: item.attributes.name,
+      },
+    })),
+    fallback: false,
+  };
+};
+
+export const getStaticProps = async ({ params }) => {
+  console.log(params);
+  const productsURL = getStrapiURL(
+    `/api/categories?filters[name][$eq]=${params.category}&populate[0]=products&populate[1]=products.itemimage`
+  );
+  const categories = getStrapiURL(`/api/categories`);
+  const { data } = await axios.get(productsURL, {
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
+    },
+  });
+  console.log(data.attributes);
+  return {
+    props: {
+      data,
+      categories,
+    },
+  };
+};
+
+// export async function getServerSideProps(context) {
+//   const request = getStrapiURL(
+//     `/api/categories?filters[name][$eq]=${context.params.category}&populate[0]=products&populate[1]=products.itemimage`
+//   );
+//   const { data } = await axios.get(request, {
+//     headers: {
+//       Accept: "application/json",
+//       Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
+//     },
+//   });
+//   const results = data.data[0];
+//   return { props: { results } };
+// }
