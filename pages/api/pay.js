@@ -1,8 +1,9 @@
 import { Client } from "square";
 import { randomUUID } from "crypto";
-BigInt.prototype.toJSON = function () {
-  return this.toString();
-};
+
+// BigInt.prototype.toJSON = function () {
+//   return this.toString();
+// };
 
 const { paymentsApi } = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
