@@ -10,9 +10,7 @@ const { paymentsApi } = new Client({
 });
 
 export default async function handler(req, res) {
-  console.log(req.method);
   if (req.method === "POST") {
-    console.log("inside POST");
     const { result } = await paymentsApi.createPayment({
       idempotencyKey: randomUUID(),
       sourceId: req.body.sourceId,
@@ -21,7 +19,6 @@ export default async function handler(req, res) {
         amount: req.body.amount,
       },
     });
-    console.log(result);
     res.status(200).json(result);
   } else {
     res.status(500).send();

@@ -27,7 +27,7 @@ function MyApp({ Component, pageProps }) {
             amount: 150,
           }),
         });
-        alert(JSON.stringify(await response.json(), null, 2));
+        //alert(JSON.stringify(await response.json(), null, 2));
       }}
     >
       <Context>
