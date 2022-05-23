@@ -7,12 +7,10 @@ import { CartState } from "../../context/Context";
 import { addToCart } from "../../context/Reducer";
 import toast from "react-hot-toast";
 
-const CategoryPage = ({ data, categories, onAdd }) => {
+const CategoryPage = ({ data, onAdd }) => {
   //console.log(results.attributes.products);
   const { cart, dispatch } = CartState();
   const products = data.data?.[0].attributes.products;
-
-  console.log(categories);
 
   const handleAdd = (product) => {
     dispatch({
@@ -121,16 +119,22 @@ export default CategoryPage;
 
 export const getStaticPaths = async () => {
   const categories = getStrapiURL(`/api/categories`);
-  const { data } = await fetch(categories, {
+  const res = await fetch(categories, {
     headers: {
       Accept: "application/json",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
     },
   });
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch posts, received status ${res.status}`);
+  }
+
   return {
     paths: data.data.map((item) => ({
       params: {
-        category: item.attributes.name,
+        category: item.attributes.name.toString(),
       },
     })),
     fallback: false,
@@ -141,17 +145,19 @@ export const getStaticProps = async ({ params }) => {
   const productsURL = getStrapiURL(
     `/api/categories?filters[name][$eq]=${params.category}&populate[0]=products&populate[1]=products.itemimage`
   );
-  const categories = getStrapiURL(`/api/categories`);
-  const { data } = await fetch(productsURL, {
+  const res = await fetch(productsURL, {
     headers: {
       Accept: "application/json",
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
     },
   });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch posts, received status ${res.status}`);
+  }
+  const data = await res.json();
   return {
     props: {
       data,
-      categories,
     },
   };
 };
