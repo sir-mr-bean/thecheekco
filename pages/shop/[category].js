@@ -1,5 +1,4 @@
 import { React } from "react";
-import axios from "axios";
 import { getStrapiURL } from "../../utils/api";
 import Image from "next/image";
 import { BsStarFill, BsStarHalf, BsStar } from "react-icons/bs";

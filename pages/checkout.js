@@ -34,54 +34,59 @@ export default function checkout() {
 
             <div className="flow-root">
               <ul role="list" className="-my-6 divide-y divide-gray-200">
-                {products.map((product) => (
-                  <li key={product.id} className="py-6 flex space-x-6">
-                    <img
-                      src={product.attributes?.itemimage?.data?.attributes?.url}
-                      alt={product.imageAlt}
-                      className="flex-none w-24 h-24 object-center object-cover bg-gray-100 rounded-md"
-                    />
-                    <div className="flex-auto">
-                      <div className="space-y-1 sm:flex sm:items-start sm:justify-between sm:space-x-6">
-                        <div className="flex-auto text-sm font-medium space-y-1">
-                          <h3 className="text-gray-900">
-                            <a href={product.href}>{product.attributes.name}</a>{" "}
-                            x {product.quantity}
-                          </h3>
-                          <p className="text-gray-900">
-                            $
-                            {(
-                              product.attributes.price * product.quantity
-                            ).toFixed(2)}
-                          </p>
-                          <p className="hidden text-gray-500 sm:block">
-                            {product.color}
-                          </p>
-                          <p className="hidden text-gray-500 sm:block">
-                            {product.size}
-                          </p>
-                        </div>
-                        <div className="flex-none flex space-x-4">
-                          <button
-                            type="button"
-                            className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                          >
-                            Edit
-                          </button>
-                          <div className="flex border-l border-gray-300 pl-4">
+                {products &&
+                  products.map((product) => (
+                    <li key={product.id} className="py-6 flex space-x-6">
+                      <img
+                        src={
+                          product.attributes?.itemimage?.data?.attributes?.url
+                        }
+                        alt={product.imageAlt}
+                        className="flex-none w-24 h-24 object-center object-cover bg-gray-100 rounded-md"
+                      />
+                      <div className="flex-auto">
+                        <div className="space-y-1 sm:flex sm:items-start sm:justify-between sm:space-x-6">
+                          <div className="flex-auto text-sm font-medium space-y-1">
+                            <h3 className="text-gray-900">
+                              <a href={product.href}>
+                                {product.attributes.name}
+                              </a>{" "}
+                              x {product.quantity}
+                            </h3>
+                            <p className="text-gray-900">
+                              $
+                              {(
+                                product.attributes.price * product.quantity
+                              ).toFixed(2)}
+                            </p>
+                            <p className="hidden text-gray-500 sm:block">
+                              {product.color}
+                            </p>
+                            <p className="hidden text-gray-500 sm:block">
+                              {product.size}
+                            </p>
+                          </div>
+                          <div className="flex-none flex space-x-4">
                             <button
-                              onClick={() => handleRemove(product)}
                               type="button"
                               className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
                             >
-                              Remove
+                              Edit
                             </button>
+                            <div className="flex border-l border-gray-300 pl-4">
+                              <button
+                                onClick={() => handleRemove(product)}
+                                type="button"
+                                className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                              >
+                                Remove
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </li>
-                ))}
+                    </li>
+                  ))}
               </ul>
             </div>
 
