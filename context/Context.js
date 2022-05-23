@@ -7,7 +7,9 @@ const Context = ({ children }) => {
   const [cart, dispatch] = useReducer(cartReducer, [], initializer);
 
   useEffect(() => {
-    localStorage.setItem("localCart", JSON.stringify(cart));
+    if (window !== undefined) {
+      localStorage.setItem("localCart", JSON.stringify(cart));
+    }
   }, [cart]);
 
   return <Cart.Provider value={{ cart, dispatch }}>{children}</Cart.Provider>;

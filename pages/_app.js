@@ -1,14 +1,10 @@
 import "../styles/globals.css";
-import App from "next/app";
 import Header from "../components/Header/Header";
-import { getStrapiURL } from "../utils/api";
 import Script from "next/script";
 import Head from "next/head";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import Context from "../context/Context";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { ApiError, Client, Environment } from "square";
+
 import { PaymentForm } from "react-square-web-payments-sdk";
 
 function MyApp({ Component, pageProps }) {
