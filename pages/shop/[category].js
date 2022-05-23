@@ -152,17 +152,3 @@ export const getStaticProps = async ({ params }) => {
     },
   };
 };
-
-// export async function getServerSideProps(context) {
-//   const request = getStrapiURL(
-//     `/api/categories?filters[name][$eq]=${context.params.category}&populate[0]=products&populate[1]=products.itemimage`
-//   );
-//   const { data } = await axios.get(request, {
-//     headers: {
-//       Accept: "application/json",
-//       Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
-//     },
-//   });
-//   const results = data.data[0];
-//   return { props: { results } };
-// }
