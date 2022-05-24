@@ -11,8 +11,6 @@ import { useRouter } from "next/router";
 const CategoryPage = ({ data, onAdd }) => {
   const router = useRouter();
   const query = router.query;
-  console.log(query);
-  //console.log(results.attributes.products);
   const { cart, dispatch } = CartState();
   const products = data.data?.[0].attributes.products;
 
@@ -48,7 +46,7 @@ const CategoryPage = ({ data, onAdd }) => {
         <div className="flex border-l border-text-primary border-opacity-10">
           <button
             onClick={() => toast.dismiss(t.id)}
-            className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:text-text-primary"
           >
             Close
           </button>
@@ -75,7 +73,7 @@ const CategoryPage = ({ data, onAdd }) => {
                         .replace(/ /g, "-")
                         .toLowerCase()}`}
                     >
-                      <div className="relative w-full h-72 rounded-lg overflow-hidden cursor-pointer">
+                      <div className="relative w-full h-72 rounded-lg overflow-hidden cursor-pointer border-2 border-[#DBA37D]">
                         <Image
                           layout="fill"
                           src={
@@ -161,7 +159,7 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async ({ params }) => {
   const productsURL = getStrapiURL(
-    `/api/categories?filters[name][$eq]=${params.category}&populate[0]=products&populate[1]=products.itemimage`
+    `/api/categories?filters[name][$eq]=${params.category}&populate[0]=products&populate[1]=products.itemimage&populate[2]=products.categories`
   );
   const res = await fetch(productsURL, {
     headers: {

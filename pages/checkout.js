@@ -94,7 +94,9 @@ export default function checkout() {
             <dl className="text-sm font-medium text-gray-500 mt-10 space-y-6">
               <div className="flex justify-between">
                 <dt>Subtotal</dt>
-                <dd className="text-gray-900">${total.toFixed(2)}</dd>
+                <dd className="text-gray-900">
+                  ${total - (total * 0.1).toFixed(2)}
+                </dd>
               </div>
               <div className="flex justify-between">
                 <dt>Taxes</dt>

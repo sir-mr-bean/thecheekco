@@ -7,11 +7,21 @@ import {
 import { CartState } from "../context/Context";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { getStrapiURL } from "../utils/api";
 
-export default function cart() {
+export default function cart({ data }) {
   const [total, setTotal] = useState(0);
   const { cart, dispatch } = CartState();
   const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    let sum = 0;
+    cart.forEach((product) => {
+      sum += product.attributes.price * product.quantity;
+    });
+    setTotal(sum);
+  }, [cart]);
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -23,7 +33,6 @@ export default function cart() {
     });
   };
   const handleSetQuantity = (product, qty) => {
-    console.log(qty);
     dispatch({
       type: "SET_QUANTITY",
       item: product,
@@ -31,30 +40,21 @@ export default function cart() {
     });
   };
 
-  //   useEffect(() => {
-  //     console.log(cart);
-  //     setTotal(
-  //       cart.reduce(
-  //         (acc, curr) => acc + Number(curr.attributes.price) * curr.qty,
-  //         0
-  //       )
-  //     );
-  //   }, [cart]);
-
   const products = cart;
   return (
     mounted && (
       <div className="bg-white">
         <div className="max-w-2xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-          <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+          <h1 className="text-3xl tracking-tight text-text-primary sm:text-4xl">
             Shopping Cart
           </h1>
-          <form className="mt-12 lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16">
-            <section aria-labelledby="cart-heading" className="lg:col-span-7">
-              <h2 id="cart-heading" className="sr-only">
-                Items in your shopping cart
-              </h2>
-              {products && (
+          {products.length ? (
+            <form className="mt-12 lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16">
+              <section aria-labelledby="cart-heading" className="lg:col-span-7">
+                <h2 id="cart-heading" className="sr-only">
+                  Items in your shopping cart
+                </h2>
+
                 <ul
                   role="list"
                   className="border-t border-b border-gray-200 divide-y divide-gray-200"
@@ -76,12 +76,19 @@ export default function cart() {
                           <div>
                             <div className="flex justify-between">
                               <h3 className="text-sm">
-                                <a
-                                  href={product.href}
-                                  className="font-medium text-gray-700 hover:text-gray-800"
+                                <Link
+                                  href="/shop/[category]/[id]"
+                                  as={`/shop/${
+                                    product.attributes.categories.data?.[0]
+                                      .attributes.name
+                                  }/${product.attributes.name
+                                    .replace(/ /g, "-")
+                                    .toLowerCase()}`}
                                 >
-                                  {product.attributes.name}
-                                </a>
+                                  <span className="font-medium text-text-primary hover:text-text-secondary">
+                                    {product.attributes.name}
+                                  </span>
+                                </Link>
                               </h3>
                             </div>
                             <div className="mt-1 flex text-sm">
@@ -109,7 +116,7 @@ export default function cart() {
                               id={`quantity-${productIdx}`}
                               name={`quantity-${productIdx}`}
                               defaultValue={product.quantity}
-                              className="max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                              className="max-w-full block rounded-md border border-gray-300 py-1.5 px-1 text-base font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-text-secondary focus:border-text-secondary sm:text-sm"
                             >
                               <option value={1}>1</option>
                               <option value={2}>2</option>
@@ -119,13 +126,15 @@ export default function cart() {
                               <option value={6}>6</option>
                               <option value={7}>7</option>
                               <option value={8}>8</option>
+                              <option value={9}>9</option>
+                              <option value={10}>10</option>
                             </select>
 
                             <div className="absolute top-0 right-0">
                               <button
                                 type="button"
                                 onClick={() => handleRemove(product)}
-                                className="-m-2 p-2 inline-flex text-gray-400 hover:text-gray-500"
+                                className="-m-2 p-2 inline-flex text-text-primary hover:text-text-secondary"
                               >
                                 <span className="sr-only">Remove</span>
                                 <AiOutlineClose
@@ -160,83 +169,104 @@ export default function cart() {
                     </li>
                   ))}
                 </ul>
-              )}
-            </section>
+              </section>
 
-            {/* Order summary */}
-            <section
-              aria-labelledby="summary-heading"
-              className="mt-16 bg-gray-50 rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 lg:col-span-5"
-            >
-              <h2
-                id="summary-heading"
-                className="text-lg font-medium text-gray-900"
+              {/* Order summary */}
+              <section
+                aria-labelledby="summary-heading"
+                className="mt-16 bg-gray-50 rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 lg:col-span-5"
               >
-                Order summary
-              </h2>
+                <h2
+                  id="summary-heading"
+                  className="text-lg font-medium text-gray-900"
+                >
+                  Order summary
+                </h2>
 
-              <dl className="mt-6 space-y-4">
-                <div className="flex items-center justify-between">
-                  <dt className="text-sm text-gray-600">Subtotal</dt>
-                  <dd className="text-sm font-medium text-gray-900">{total}</dd>
-                </div>
-                <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
-                  <dt className="flex items-center text-sm text-gray-600">
-                    <span>Shipping estimate</span>
-                    <a
-                      href="#"
-                      className="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500"
-                    >
-                      <span className="sr-only">
-                        Learn more about how shipping is calculated
-                      </span>
-                      <AiOutlineQuestionCircle
-                        className="h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    </a>
-                  </dt>
-                  <dd className="text-sm font-medium text-gray-900">$5.00</dd>
-                </div>
-                <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
-                  <dt className="flex text-sm text-gray-600">
-                    <span>Tax estimate</span>
-                    <a
-                      href="#"
-                      className="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500"
-                    >
-                      <span className="sr-only">
-                        Learn more about how tax is calculated
-                      </span>
-                      <AiOutlineQuestionCircle
-                        className="h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    </a>
-                  </dt>
-                  <dd className="text-sm font-medium text-gray-900">$8.32</dd>
-                </div>
-                <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
-                  <dt className="text-base font-medium text-gray-900">
-                    Order total
-                  </dt>
-                  <dd className="text-base font-medium text-gray-900">
-                    $112.32
-                  </dd>
-                </div>
-              </dl>
-
-              <div className="mt-6">
-                <Link href="/checkout">
-                  <div className="cursor-pointer w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500">
-                    Checkout
+                <dl className="mt-6 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <dt className="text-sm text-gray-600">Subtotal (ex GST)</dt>
+                    <dd className="text-sm font-medium text-gray-900">
+                      ${(total - total * 0.1).toFixed(2)}
+                    </dd>
                   </div>
-                </Link>
-              </div>
-            </section>
-          </form>
+
+                  <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
+                    <dt className="text-sm text-gray-900">GST</dt>
+
+                    <dd className="text-sm font-medium text-gray-900">
+                      ${(total * 0.1).toFixed(2)}
+                    </dd>
+                  </div>
+                  <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
+                    <dt className="flex items-center text-sm text-gray-600">
+                      <span>Shipping estimate</span>
+                      <a
+                        href="#"
+                        className="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500"
+                      >
+                        <span className="sr-only">
+                          Learn more about how shipping is calculated
+                        </span>
+                        <AiOutlineQuestionCircle
+                          className="h-5 w-5"
+                          aria-hidden="true"
+                        />
+                      </a>
+                    </dt>
+                    <dd className="text-sm font-medium text-gray-900">$5.00</dd>
+                  </div>
+                  <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
+                    <dt className="text-base font-medium text-gray-900">
+                      Order total
+                    </dt>
+                    <dd className="text-base font-medium text-gray-900">
+                      ${total.toFixed(2)}
+                    </dd>
+                  </div>
+                </dl>
+
+                <div className="mt-6">
+                  <Link href="/checkout">
+                    <div className="cursor-pointer w-full bg-button border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-button/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500">
+                      Checkout
+                    </div>
+                  </Link>
+                </div>
+              </section>
+            </form>
+          ) : (
+            <div className="py-4 flex flex-col space-y-4">
+              <span className="text-xl text-black">Nothing in here yet!</span>
+              <a
+                href="/"
+                className="text-xl text-black underline cursor-pointer hover:decoration-text-primary"
+              >
+                Return to shop
+              </a>
+            </div>
+          )}
         </div>
       </div>
     )
   );
 }
+
+export const getStaticProps = async () => {
+  const productsURL = getStrapiURL(`/api/categories?populate[0]=products`);
+  const res = await fetch(productsURL, {
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch posts, received status ${res.status}`);
+  }
+  const data = await res.json();
+  return {
+    props: {
+      data,
+    },
+  };
+};

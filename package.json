@@ -14,6 +14,7 @@
     "@stripe/stripe-js": "^1.29.0",
     "@tailwindcss/forms": "^0.5.2",
     "axios": "^0.27.2",
+    "bcryptjs": "^2.4.3",
     "firebase": "^9.8.1",
     "next": "12.1.6",
     "next-firebase-auth": "^0.14.4-alpha.0",
@@ -22,6 +23,7 @@
     "react-dom": "18.1.0",
     "react-hot-toast": "^2.2.0",
     "react-icons": "^4.3.1",
+    "react-places-autocomplete": "^7.3.0",
     "react-square-web-payments-sdk": "^3.1.1",
     "square": "^19.0.0",
     "use-shopping-cart": "^3.1.2"
