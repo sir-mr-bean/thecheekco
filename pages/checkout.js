@@ -33,9 +33,9 @@ export default function checkout() {
             <h2 className="sr-only">Order summary</h2>
 
             <div className="flow-root">
-              <ul role="list" className="-my-6 divide-y divide-gray-200">
-                {products &&
-                  products.map((product) => (
+              {products && (
+                <ul role="list" className="-my-6 divide-y divide-gray-200">
+                  {products.map((product) => (
                     <li key={product.id} className="py-6 flex space-x-6">
                       <img
                         src={
@@ -87,7 +87,8 @@ export default function checkout() {
                       </div>
                     </li>
                   ))}
-              </ul>
+                </ul>
+              )}
             </div>
 
             <dl className="text-sm font-medium text-gray-500 mt-10 space-y-6">

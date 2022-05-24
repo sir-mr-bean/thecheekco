@@ -1,12 +1,17 @@
 import { React } from "react";
-import { getStrapiURL } from "../../utils/api";
+import { getStrapiURL } from "../../../utils/api";
 import Image from "next/image";
 import { BsStarFill, BsStarHalf, BsStar } from "react-icons/bs";
-import { CartState } from "../../context/Context";
-import { addToCart } from "../../context/Reducer";
+import { CartState } from "../../../context/Context";
+import { addToCart } from "../../../context/Reducer";
 import toast from "react-hot-toast";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 const CategoryPage = ({ data, onAdd }) => {
+  const router = useRouter();
+  const query = router.query;
+  console.log(query);
   //console.log(results.attributes.products);
   const { cart, dispatch } = CartState();
   const products = data.data?.[0].attributes.products;
@@ -64,20 +69,34 @@ const CategoryPage = ({ data, onAdd }) => {
               products.data.map((product) => (
                 <div key={product.id}>
                   <div className="relative">
-                    <div className="relative w-full h-72 rounded-lg overflow-hidden">
-                      <Image
-                        layout="fill"
-                        src={
-                          product.attributes?.itemimage?.data?.attributes?.url
-                        }
-                        alt={product.attributes.imagealttext}
-                        className="w-full h-full object-center object-cover"
-                      />
-                    </div>
+                    <Link
+                      href="/shop/[category]/[id]"
+                      as={`/shop/${query.category}/${product.attributes.name
+                        .replace(/ /g, "-")
+                        .toLowerCase()}`}
+                    >
+                      <div className="relative w-full h-72 rounded-lg overflow-hidden cursor-pointer">
+                        <Image
+                          layout="fill"
+                          src={
+                            product.attributes?.itemimage?.data?.attributes?.url
+                          }
+                          alt={product.attributes.imagealttext}
+                          className="w-full h-full object-center object-cover"
+                        />
+                      </div>
+                    </Link>
                     <div className="relative mt-4 space-y-2">
-                      <h3 className="text-sm font-medium text-gray-900">
-                        {product.attributes.name}
-                      </h3>
+                      <Link
+                        href="/shop/[category]/[id]"
+                        as={`/shop/${query.category}/${product.attributes.name
+                          .replace(/ /g, "-")
+                          .toLowerCase()}`}
+                      >
+                        <h3 className="text-sm font-medium text-gray-900">
+                          {product.attributes.name}
+                        </h3>
+                      </Link>
                       <div className="flex text-header-brown">
                         <BsStarFill />
                         <BsStarFill />
