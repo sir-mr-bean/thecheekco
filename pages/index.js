@@ -141,7 +141,7 @@ export default function Home(props) {
               color="#602d0d"
               padding={5}
             >
-              <h1 className="text-4xl font-thin tracking-tight text-text-primary lg:text-6xl">
+              <h1 className="text-4xl font-light tracking-tight text-text-primary lg:text-6xl">
                 100% Plastic Free
               </h1>
             </RoughNotation>
