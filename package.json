@@ -25,6 +25,7 @@
     "react-hot-toast": "^2.2.0",
     "react-icons": "^4.3.1",
     "react-places-autocomplete": "^7.3.0",
+    "react-rough-notation": "^1.0.2",
     "react-square-web-payments-sdk": "^3.1.1",
     "square": "^19.0.0",
     "use-shopping-cart": "^3.1.2"

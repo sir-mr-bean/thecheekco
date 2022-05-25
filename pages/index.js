@@ -1,8 +1,10 @@
+import { RoughNotation, RoughNotationGroup } from "react-rough-notation";
+
 export default function Home(props) {
   const offers = [
     {
-      name: "Download the app",
-      description: "Get an exclusive $5 off code",
+      name: "Free Shipping",
+      description: "On all local orders from Mossman to Mission Beach",
       href: "#",
     },
     {
@@ -105,7 +107,7 @@ export default function Home(props) {
                     <p className="text-xs sm:text-sm text-text-secondary">
                       {offer.name}
                     </p>
-                    <p className="font-semibold text-text-primary">
+                    <p className="font-semibold text-text-primary w-5/6 mx-auto">
                       {offer.description}
                     </p>
                   </a>
@@ -129,9 +131,20 @@ export default function Home(props) {
           </div>
 
           <div className="relative max-w-3xl mx-auto py-12 sm:py-16 px-6 flex flex-col items-center text-center md:py-32 lg:py-44 lg:px-0 font-gothic">
-            <h1 className="text-4xl font-thin tracking-tight text-text-primary lg:text-6xl">
-              100% Plastic Free
-            </h1>
+            <RoughNotation
+              type="underline"
+              show={true}
+              iterations={3}
+              strokeWidth={3}
+              animationDelay={1000}
+              animationDuration={1200}
+              color="#602d0d"
+              padding={5}
+            >
+              <h1 className="text-4xl font-thin tracking-tight text-text-primary lg:text-6xl">
+                100% Plastic Free
+              </h1>
+            </RoughNotation>
             <p className="mt-4 text-xl text-text-primary prose prose-blockquote:text-text-primary">
               We take great pride in our eco innovation, from 100% compostable
               mailers down to eco friendly inks and tapes.
