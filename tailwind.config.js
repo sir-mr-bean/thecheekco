@@ -19,11 +19,13 @@ module.exports = {
       },
       backgroundImage: {
         "paper-bg": "url(../public/images/paper-brown-texture.jpg)",
+        "hero-pattern":
+          "linear-gradient(to right bottom, rgba('#7ed56f',0.8), rgba('#28b485',0.8)), url('https://images.unsplash.com/photo-1523772354886-34a1dc2f72e7?ixlib=rb-1.2.1&raw_url=true&q=80&fm=jpg&crop=entropy&cs=tinysrgb&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=736')",
       },
       fontFamily: {
         gothic: ["'Gothic A1'", "sans-serif"],
       },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
 };
