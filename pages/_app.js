@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import "../styles/widget.min.css";
 import Header from "../components/Header/Header";
 import Script from "next/script";
 import Head from "next/head";

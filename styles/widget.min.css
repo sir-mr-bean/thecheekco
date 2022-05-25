@@ -1,0 +1,770 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+.smt-overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 0.5s;
+  visibility: hidden;
+  opacity: 0;
+  z-index: 99999;
+}
+
+.smt-overlay:target {
+  visibility: visible;
+  opacity: 1;
+}
+
+.nzopqftphl {
+  margin: 70px auto;
+  padding: 0;
+  background: #fff;
+  border-radius: 5px;
+  width: 60%;
+  position: relative;
+  /* transition: all 5s ease-in-out; */
+}
+
+.nzopqftphl h2 {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+.nzopqftphl .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  transition: all 0.2s;
+  font-size: 25px;
+  font-weight: 300;
+  text-decoration: none;
+  background-color: rgb(0 0 0 / 20%);
+  padding: 4px 9px;
+  border-radius: 50px;
+  color: #fff;
+  opacity: 1;
+}
+
+.nzopqftphl .close:hover {
+  background-color: rgb(57 57 57 / 63%);
+}
+
+.nzopqftphl .content {
+  max-height: 100%;
+  overflow: hidden;
+  height: 100%;
+  border-radius: 20px;
+}
+
+.nzopqftphl {
+  height: 10%;
+  border-radius: 20px;
+  min-height: 775px;
+}
+
+.smt-iframe {
+  height: 100%;
+}
+
+.smt-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.smt-powered-by {
+  font-size: 14px;
+  color: #fff;
+  margin-right: 15px;
+  margin-top: 3px;
+}
+
+@media only screen and (max-width: 1198px) {
+  .nzopqftphl {
+    width: 95%;
+    min-height: 550px;
+  }
+}
+
+@media only screen and (min-width: 1199px) and (max-width: 1345px) {
+  .nzopqftphl {
+    width: 80%;
+  }
+}
+
+@media only screen and (min-width: 1346px) and (max-width: 1572px) {
+  .nzopqftphl {
+    width: 75%;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .nzopqftphl {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .nzopqftphl {
+    min-height: unset;
+  }
+}
+
+@media (min-width: 768px) {
+  .nzopqftphl {
+    border-radius: 20px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    height: 84%;
+    min-height: unset !important;
+    margin: 0;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .nzopqftphl {
+    height: 100%;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .nzopqftphl .content {
+    border-radius: 0;
+  }
+
+  .smt-iframe {
+    height: 100%;
+  }
+
+  .smt-footer {
+    display: none;
+  }
+}
+
+.fbmchucgbcol {
+  border: 5px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 5px solid #3498db;
+  border-bottom: 5px solid #3498db;
+  width: 150px;
+  height: 150px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.2),
+    inset 0 0 10px 5px rgba(0, 0, 0, 0.2);
+  margin: auto;
+  margin-bottom: 25px;
+}
+
+.fbmchucgbcolMainDiv {
+  position: fixed;
+  top: 45%;
+  left: 45%;
+  margin: -50px 0 0 -50px;
+  z-index: 9999;
+}
+
+.simpletix-button-theme {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  cursor: pointer;
+  text-decoration: none;
+  appearance: none;
+  transition: 0.3s;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  border-radius: 25px;
+  background: #2586b7;
+  padding: 14px;
+  color: #fff !important;
+  text-transform: uppercase;
+}
+
+.simpletix-button-theme:hover {
+  background: #666 !important;
+}
+
+@media only screen and (max-width: 1198px) {
+  .fbmchucgbcol {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .fbmchucgbcol {
+    width: 120px;
+    height: 120px;
+  }
+
+  .fbmchucgbcolMainDiv {
+    top: 45%;
+    left: 35%;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .fbmchucgbcol {
+    width: 120px;
+    height: 120px;
+  }
+
+  .fbmchucgbcolMainDiv {
+    top: 40%;
+    left: 21%;
+  }
+
+  .nzopqftphl .close {
+    background-color: rgb(14 47 96 / 0.3);
+    color: #fff;
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.smt-title {
+  font-size: 20px;
+  font-weight: 300;
+  color: #f3f3f3;
+}
+
+.smt-logo-link {
+  margin-right: 17px;
+}
+
+/* ----- Calendar --------- */
+.smt-Calendar {
+  font-family: "Poppins", sans-serif !important;
+  width: 1000px;
+  margin: auto;
+  max-width: 100%;
+  padding: 10px;
+}
+
+.smt-search-control {
+  margin-right: 6px;
+  position: relative;
+  width: 210px;
+}
+
+.smt-Calendar .smt-table-Calendar-auto {
+  overflow: auto;
+}
+
+.smt-Calendar .smt-weekdays {
+  margin: 0;
+  padding: 10px 0;
+  background-color: #fff;
+}
+
+.smt-Calendar .smt-weekdays th {
+  color: #666;
+  text-align: left;
+  border: 1px solid #ddd;
+  padding: 4px 4px 4px 14px;
+  font-size: 14px;
+  box-sizing: border-box;
+  align-items: center;
+  line-height: 24px;
+}
+
+.smt-Calendar .smt-weekdays th:first-child,
+.smt-weekdays th:last-child {
+  background-color: rgba(17, 17, 17, 0.08);
+}
+
+.smt-Calendar .button img {
+  width: 20px;
+  height: 20px;
+}
+
+/*.Calendar .days {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+}*/
+
+.smt-Calendar .smt-days td {
+  list-style-type: none;
+  text-align: left;
+  padding: 15px 10px;
+  font-size: 14px;
+  color: #777;
+  border: 1px solid #ddd;
+  height: 100px;
+  box-sizing: border-box;
+  vertical-align: top;
+}
+
+.smt-Calendar .smt-EventList {
+  font-size: 14px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.smt-Calendar .smt-EventList:nth-child(2) {
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.smt-Calendar .smt-calendarLinks {
+  background: rgb(22 166 233);
+  padding: 8px;
+  margin: 2px;
+  border-radius: 14px;
+  cursor: pointer;
+  display: block;
+  text-decoration: none;
+}
+
+.smt-Calendar .smt-btnprevnext {
+  margin: 30px 0;
+  width: auto;
+}
+
+.smt-Calendar .smt-btnprevnext .smt-card-header {
+  padding: 0 20px;
+}
+
+.smt-Calendar .smt-btnprevnext button {
+  padding: 4px 9px;
+  color: rgba(17, 17, 17, 0.5) !important;
+  background-color: rgb(236 236 236) !important;
+  border: 0;
+  margin: 0;
+}
+
+.smt-Calendar .smt-btnprevnext button img {
+  width: 12px;
+}
+
+.smt-Calendar #smt_CalendarTable table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+}
+
+/*.Calendar #CalendarTable table th,
+.Calendar #CalendarTable table td,
+.Calendar #CalendarTable table tr {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+.Calendar #CalendarTable table tr {
+  display: flex;
+}*/
+.smt-Calendar .smt-storeName {
+  color: rgb(17, 17, 17);
+  font-size: 24px;
+  text-align: center;
+  font-weight: bold;
+  padding: 10px 0;
+}
+
+.smt-Calendar .smt-CalendarHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.smt-Calendar .smt-calendarLinks:hover {
+  box-shadow: 5px 5px 20px grey;
+}
+
+.smt-Calendar #smt_prevbtn:disabled,
+.smt-pin-board #smt_prevPinBoardbtn:disabled {
+  cursor: not-allowed;
+  pointer-events: all !important;
+  opacity: 0.5;
+}
+
+/* .smt-Calendar .smt-date-control button {
+        background: #fff;
+        height: 32px;
+        border-radius: 5px;
+        cursor: pointer;
+    }*/
+
+.smt-date-control .smt-right-arrow img {
+  transform: rotate(180deg);
+}
+
+@media only screen and (max-width: 767px) {
+  .smt-Calendar .smt-weekdays th {
+    padding: 4px 4px 4px 8px;
+    font-size: 12px;
+    box-sizing: border-box;
+  }
+
+  .smt-Calendar .smt-days td {
+    min-height: 80px;
+    box-sizing: border-box;
+  }
+
+  .smt-Calendar .smt-btnprevnext {
+    margin: 0 0 15px;
+  }
+
+  .smt-Calendar .smt-CalendarHeader {
+    display: block;
+  }
+
+  .smt-Calendar .smt-storeName {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 20px;
+  }
+}
+
+/* pin board*/
+.smt-pin-board .smt-upcoming_events {
+  padding: 60px 0 50px;
+}
+
+.smt-pin-board .smt-wrapper-inner {
+  max-width: 1170px;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin: auto;
+  box-sizing: border-box;
+}
+
+.smt-pin-board .smt-upcoming_events .smt-list-box {
+  width: calc(33.15% - 30px);
+  margin: 60px 15px 0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgb(0 0 0 / 7%);
+  background: #fff;
+  position: relative;
+  border: #e8e8e8 solid 1px;
+}
+
+.smt-pin-board .smt-upcoming_events .smt-row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin: 0 -15px;
+}
+
+.smt-pin-board .smt-upcoming_events .smt-list-box .smt-event_image {
+  padding-top: 62.33%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top center;
+}
+
+.smt-pin-board .smt-tab-content {
+  display: none;
+  padding: 6px 12px;
+  -webkit-animation: fadeEffect 1s;
+  animation: fadeEffect 1s;
+}
+
+.smt-pin-board .smt-upcoming_events .smt-list-box .smt-event_contentdiv h4 {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+}
+
+.smt-pin-board .smt-upcoming_events .smt-list-box a {
+  display: block;
+  color: #333333;
+  text-decoration: none;
+  position: relative;
+  transition: all 0.3s ease-in-out 0s;
+  height: 100%;
+  width: 100%;
+  padding-bottom: 30px;
+}
+
+.smt-pin-board .smt-upcoming_events .smt-list-box a:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  background: #000;
+  opacity: 0;
+  -webkit-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+}
+
+.smt-pin-board .smt-upcoming_events .smt-list-box a:hover::before {
+  opacity: 0.1;
+}
+.smt-pin-board .smt-search-wrapper {
+  background-color: #f7f4ef;
+  padding: 8px 15px;
+  border: 1px solid rgb(228 228 228);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.smt-search-control input {
+  border: 1px solid rgb(205, 198, 195);
+  background: #fff;
+  padding: 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  outline: none;
+}
+
+.smt-search-control .smt-close-icon {
+  position: absolute;
+  right: 1px;
+  top: 1px;
+  bottom: 1px;
+  border-left: 1px solid rgb(205, 198, 195);
+  background: #fff;
+  border: 0;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+}
+
+.smt-search-control button img {
+  width: 16px;
+}
+
+.smt-date-control {
+  display: flex;
+  align-items: center;
+}
+
+.smt-date-control button {
+  height: 32px;
+  border: 1px solid rgb(205, 198, 195);
+  margin: 0 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.smt-search-control button:hover {
+  background-color: rgb(234, 227, 223);
+}
+
+.smt-footer-section {
+  padding: 0 15px;
+}
+
+.smt-date-control input {
+  text-align: center;
+  width: 110px;
+  height: 35px;
+}
+
+.smt-pin-board {
+  font-family: "Poppins", sans-serif !important;
+  font-size: 14px;
+  line-height: 1.71;
+  color: #000;
+  margin: 0;
+  padding: 0;
+}
+
+.smt-pin-board
+  .smt-upcoming_events
+  .smt-list-box
+  .smt-event_contentdiv
+  ul.smt-navs {
+  margin: 0;
+  padding: 0;
+}
+
+.smt-pin-board
+  .smt-upcoming_events
+  .smt-list-box
+  .smt-event_contentdiv
+  ul.smt-navs
+  li {
+  list-style: none;
+  position: relative;
+  padding-left: 28px;
+}
+
+ul.smt-navs li.smt-event_date_time::before {
+  width: 18px;
+  background-position: 88px 31px;
+  background-size: 955.5555555555555% 433.3333333333333%;
+}
+
+.smt-upcoming_events .smt-list-box .smt-event_contentdiv ul.smt-navs li p {
+  margin: 0 0 15px 0;
+}
+.smt-upcoming_events .smt-list-box .smt-event_contentdiv .venue-name {
+  font-weight: 600;
+}
+.smt-pin-board
+  .smt-upcoming_events
+  .smt-list-box
+  .smt-event_contentdiv
+  ul.smt-navs
+  li::before {
+  background-image: url(//cdn.simpletix.com/magnificent/images/spritev3.png);
+  background-position: 67.08860759493672% 78.33333333333333%;
+  background-size: 1228.5714285714287% 433.3333333333333%;
+  width: 14px;
+  height: 18px;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 0px;
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 3px;
+}
+
+.smt-upcoming_events
+  .smt-list-box
+  .smt-event_contentdiv
+  ul.smt-navs
+  li.smt-event_date_time::before {
+  width: 18px;
+  background-position: 88px 31px;
+  background-size: 955.5555555555555% 433.3333333333333%;
+}
+
+/*.smt-pin-board .smt-upcoming_events .smt-list-box a:hover h4 {
+  text-decoration: underline;
+}*/
+
+.smt-pin-board .smt-upcoming_events .smt-list-box .smt-footer-section {
+  border-top: 1px solid rgb(221, 221, 221);
+  padding: 7px 15px 8px;
+  position: absolute;
+  left: 0;
+  bottom: 30px;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.smt-badge-label {
+  border: 1px solid rgb(102, 105, 253);
+  color: rgb(102, 105, 253);
+  font-size: 12px;
+  line-height: 14px;
+  margin-right: 3px;
+  border-radius: 2px;
+  display: inline-block;
+  padding: 0 4px;
+}
+
+.smt-badge-label:hover {
+  background: rgb(102, 105, 253);
+  color: #fff;
+}
+
+.smt-badge-label-red {
+  border-color: rgb(255, 96, 85);
+  color: rgb(255, 96, 85);
+}
+
+.smt-badge-label-red:hover {
+  background: rgb(255, 96, 85);
+}
+
+.smt-pin-board .smt-upcoming_events .smt-list-box .smt-navs {
+  padding: 15px 15px 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.smt-pin-board .smt-upcoming_events .smt-list-box .smt-event_contentdiv {
+  padding: 20px 28px;
+}
+
+.smt-pin-board div#showlist {
+  margin: 0 -25px;
+}
+
+@media only screen and (max-width: 992px) {
+  .smt-upcoming_events .smt-list-box {
+    margin: 30px 15px 0;
+    width: calc(50% - 30px);
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .smt-table-Calendar-auto > table {
+    min-width: 1000px;
+  }
+  .smt-pin-board .smt-upcoming_events .smt-row {
+    padding: 0;
+  }
+
+  .smt-pin-board .smt-upcoming_events .smt-list-box {
+    width: calc(50.33% - 30px);
+    margin: 20px 12px 0;
+  }
+
+  .smt-pin-board
+    .smt-upcoming_events
+    .smt-list-box
+    .smt-footer-section
+    .smt-badge-label {
+    font-size: 10px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .smt-search-control {
+    margin-bottom: 1rem;
+  }
+
+  .smt-pin-board
+    .smt-upcoming_events
+    .smt-list-box
+    .smt-footer-section
+    .smt-badge-label {
+    font-size: 11px;
+  }
+
+  .smt-pin-board .smt-upcoming_events .smt-list-box {
+    width: calc(100% - 0px);
+  }
+
+  .smt-pin-board .smt-upcoming_events .smt-list-box {
+    width: 100%;
+  }
+}
