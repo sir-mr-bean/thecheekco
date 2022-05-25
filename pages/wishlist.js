@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { getStrapiURL } from "../utils/api";
 
-export default function cart({ data }) {
+export default function wishlist({ data }) {
   const [total, setTotal] = useState(0);
   const { cart, dispatch } = CartState();
   const [mounted, setMounted] = useState(false);
@@ -60,7 +60,7 @@ export default function cart({ data }) {
                   className="border-t border-b border-gray-200 divide-y divide-gray-200"
                 >
                   {products.map((product, productIdx) => {
-                    console.log(product.attributes);
+                    console.log(product.attributes.categories);
                     return (
                       <>
                         <li key={product.id} className="flex py-6 sm:py-10">
@@ -82,10 +82,7 @@ export default function cart({ data }) {
                                   <h3 className="text-sm">
                                     <Link
                                       href="/shop/[category]/[id]"
-                                      as={`/shop/${
-                                        product.attributes.categories.data?.[0]
-                                          .attributes.name
-                                      }/${product.attributes.name
+                                      as={`/shop/name/${product.attributes.name
                                         .replace(/ /g, "-")
                                         .toLowerCase()}`}
                                     >

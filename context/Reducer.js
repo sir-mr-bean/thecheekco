@@ -1,11 +1,13 @@
-const initialState = [];
+// Shopping Cart Reducer
 
-export const initializer = (initialValue = initialState) => {
+// Initial Cart State
+
+const initialCart = [];
+
+export const cartInitializer = (initialValue = initialCart) => {
   if (typeof window !== "undefined") {
     const localCart = localStorage.getItem("localCart");
     if (localCart) {
-      //console.log("found local cart!");
-      //console.log(localCart);
       return JSON.parse(localStorage.getItem("localCart"));
     } else {
       console.log("no local cart found");
@@ -13,6 +15,8 @@ export const initializer = (initialValue = initialState) => {
     }
   }
 };
+
+// Cart Reducer
 
 export const cartReducer = (state, action) => {
   console.log(state);
@@ -70,6 +74,8 @@ export const cartReducer = (state, action) => {
   }
 };
 
+// Reducer Functions
+
 export const addToCart = (item) => ({
   type: "ADD_TO_CART",
   item,
@@ -87,4 +93,63 @@ export const removeFromCart = (item) => ({
 
 export const clearCart = () => ({
   type: "CLEAR_CART",
+});
+
+// Wishlist Reducer
+
+// Initial Wishlist State
+
+const initialWishList = [];
+
+export const wishListInitializer = (initialValue = initialWishList) => {
+  if (typeof window !== "undefined") {
+    const localWishList = localStorage.getItem("wishlist");
+    if (localWishList) {
+      return JSON.parse(localStorage.getItem("wishlist"));
+    } else {
+      console.log("no wishlist");
+      return initialValue;
+    }
+  }
+};
+
+// Wishlist Reducer
+
+export const wishListReducer = (state, action) => {
+  console.log(state);
+  console.log(action);
+  switch (action.type) {
+    case "ADD_TO_WISHLIST":
+      return state.find((item) => item.id === action.item.id)
+        ? state.map((item) =>
+            item.id === action.item.id
+              ? {
+                  ...item,
+                }
+              : item
+          )
+        : [...state, { ...action.item }];
+    case "REMOVE_FROM_WISHLIST":
+      return state.filter((item) => item.id !== action.item.id);
+    case "CLEAR_WISHLIST":
+      return initialState;
+    default:
+      return state;
+  }
+};
+
+// Reducer Functions
+
+export const addToWishList = (item) => ({
+  type: "ADD_TO_WISHLIST",
+  item,
+});
+
+export const removeFromWishList = (item) => ({
+  type: "REMOVE_FROM_WISHLIST",
+  item,
+});
+
+export const clearWishList = () => ({
+  type: "CLEAR_WISHLIST",
 });

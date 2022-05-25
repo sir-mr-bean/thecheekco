@@ -1,12 +1,7 @@
-import Image from "next/image";
-import { MdArrowDropDown } from "react-icons/md";
-import { GiHamburgerMenu } from "react-icons/gi";
 import { IoIosHeart } from "react-icons/io";
 import { IoBasketSharp } from "react-icons/io5";
-import { BsPerson } from "react-icons/bs";
 import Link from "next/link";
 import Login from "./Login";
-import { useRouter } from "next/router";
 import { CartState } from "../../context/Context";
 import { useEffect, useState } from "react";
 import { getStrapiURL } from "../../utils/api";
@@ -14,7 +9,7 @@ import axios from "axios";
 import MobileMenu from "./MobileMenu";
 
 export const Header = () => {
-  const { cart, dispatch } = CartState();
+  const { cart } = CartState();
   const [navigation, setNavigation] = useState([]);
 
   const [mounted, setMounted] = useState(false);
@@ -50,26 +45,28 @@ export const Header = () => {
               <Link href="/cart">
                 <div className="ml-10 mb-3 cursor-pointer sm:block relative sm:absolute top-3 right-3 lg:right-20 md:rounded-full md:bg-white md:border-text-secondary md:bg-opacity-100 md:z-[100] md:shadow-text-primary md:shadow-md md:w-[65px] md:h-[65px]">
                   <IoBasketSharp className="h-6 w-6 sm:h-12 sm:w-12 text-shopping-cart opacity-100 m-2" />
-                  <div className="absolute -top-1 -left-1 bg-shopping-cart-badge w-5 h-5 rounded-full justify-center items-center flex text-white">
-                    {cart?.length || 0}
-                  </div>
+                  {cart.length > 0 && (
+                    <div className="absolute -top-1 -left-1 bg-shopping-cart-badge w-5 h-5 rounded-full justify-center items-center flex text-white">
+                      {cart.length}
+                    </div>
+                  )}
                 </div>
               </Link>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-6 font-gothic text-header-brown">
                 <div className="pt-0.5 pl-16">
                   <div className="sm:hidden p-1.5 active:bg-black rounded-md active:bg-opacity-10">
                     <MobileMenu navigation={navigation} />
                   </div>
                 </div>
-                <div className="hidden md:flex font-gothic text-header-brown">
+                <span>Eco Innovation</span>
+                <div className="hidden md:flex ">
                   <div className="flex space-x-1 justify-center items-center ">
-                    <span>Eco Innovation</span>
                     <div>
                       <IoIosHeart size={21} />
                     </div>
                   </div>
                 </div>
-                <div className="font-gothic text-header-brown sm:pr-16">
+                <div className=" sm:pr-16">
                   <Login />
                 </div>
               </div>

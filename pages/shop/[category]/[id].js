@@ -12,22 +12,6 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-// const product = {
-//   name: "Application UI Icon Pack",
-//   version: { name: "1.0", date: "June 5, 2021", datetime: "2021-06-05" },
-//   price: "$220",
-//   description:
-//     "The Application UI Icon Pack comes with over 200 icons in 3 styles: outline, filled, and branded. This playful icon pack is tailored for complex application user interfaces with a friendly and legible look.",
-//   highlights: [
-//     "200+ SVG icons in 3 unique styles",
-//     "Compatible with Figma, Sketch, and Adobe XD",
-//     "Drawn on 24 x 24 pixel grid",
-//   ],
-//   imageSrc:
-//     "https://tailwindui.com/img/ecommerce-images/product-page-05-product-01.jpg",
-//   imageAlt:
-//     "Sample of 30 icons with friendly and fun details in outline, filled, and brand color styles.",
-// };
 const reviews = {
   average: 4,
   featured: [
@@ -123,11 +107,11 @@ const Product = ({ data }) => {
     });
     if (window !== undefined) {
     }
-    toast.custom((t) => (
+    const toast = toast.custom(
       <div
         className={`${
-          t.visible ? "animate-enter" : "animate-leave"
-        } max-w-md w-full bg-bg-tan shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+          t.visible ? "animate-enter" : "animate-leave after:opacity-0"
+        } max-w-md w-full bg-bg-tan shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 shadow-text-primary`}
       >
         <div className="flex-1 w-0 p-4">
           <div className="flex items-start">
@@ -147,14 +131,14 @@ const Product = ({ data }) => {
         </div>
         <div className="flex border-l border-text-primary border-opacity-10">
           <button
-            onClick={() => toast.dismiss(t.id)}
+            onClick={() => toast.dismiss(toast)}
             className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:text-text-primary"
           >
             Close
           </button>
         </div>
       </div>
-    ));
+    );
   };
 
   return (
@@ -248,7 +232,7 @@ const Product = ({ data }) => {
 
                 <div className="border-t border-gray-200 mt-10 pt-10 flex justify-evenly items-center w-full">
                   <span className="text-black text-2xl">
-                    ${product?.attributes.price}
+                    ${product?.attributes.price.toFixed(2)}
                   </span>
                 </div>
 

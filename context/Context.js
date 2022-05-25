@@ -1,10 +1,16 @@
 import { createContext, useContext, useReducer, useEffect } from "react";
-import { cartReducer, productReducer, initializer } from "../context/Reducer";
+import {
+  cartReducer,
+  cartInitializer,
+  wishListReducer,
+  wishListInitializer,
+} from "../context/Reducer";
 
 const Cart = createContext();
+const Wishlist = createContext();
 
-const Context = ({ children }) => {
-  const [cart, dispatch] = useReducer(cartReducer, [], initializer);
+const CartContext = ({ children }) => {
+  const [cart, dispatch] = useReducer(cartReducer, [], cartInitializer);
 
   useEffect(() => {
     if (window !== undefined) {
@@ -15,8 +21,32 @@ const Context = ({ children }) => {
   return <Cart.Provider value={{ cart, dispatch }}>{children}</Cart.Provider>;
 };
 
+export const WishListContext = ({ children }) => {
+  const [wishlist, dispatch] = useReducer(
+    wishListReducer,
+    [],
+    wishListInitializer
+  );
+
+  useEffect(() => {
+    if (window !== undefined) {
+      localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    }
+  }, [wishlist]);
+
+  return (
+    <Wishlist.Provider value={{ wishlist, dispatch }}>
+      {children}
+    </Wishlist.Provider>
+  );
+};
+
+export const WishlistState = () => {
+  return useContext(Wishlist);
+};
+
 export const CartState = () => {
   return useContext(Cart);
 };
 
-export default Context;
+export default CartContext;
