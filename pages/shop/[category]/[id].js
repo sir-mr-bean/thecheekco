@@ -3,6 +3,10 @@ import { Fragment } from "react";
 import { Tab } from "@headlessui/react";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import Image from "next/image";
+import showdown from "showdown";
+import ReactHtmlParser from "react-html-parser";
+import { CartState } from "../../../context/Context";
+import toast from "react-hot-toast";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -97,36 +101,88 @@ const license = {
   `,
 };
 
+const Markdown = (content) => {
+  console.log(content);
+  var converter = new showdown.Converter();
+  var html = converter.makeHtml(content.content);
+  return (
+    <div className="bg-transparent text-text-primary font-gothic prose py-3">
+      {ReactHtmlParser(html)}
+    </div>
+  );
+};
+
 const Product = ({ data }) => {
-  console.log("data is");
-  console.log(data?.[0]);
+  const { cart, dispatch } = CartState();
   const product = data?.[0];
+
+  const handleAdd = (product) => {
+    dispatch({
+      type: "ADD_TO_CART",
+      item: product,
+    });
+    if (window !== undefined) {
+    }
+    toast.custom((t) => (
+      <div
+        className={`${
+          t.visible ? "animate-enter" : "animate-leave"
+        } max-w-md w-full bg-bg-tan shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+      >
+        <div className="flex-1 w-0 p-4">
+          <div className="flex items-start">
+            <div className="flex-shrink-0 pt-0.5">
+              <img
+                className="h-10 w-10 rounded-full"
+                src={product.attributes?.itemimage?.data?.attributes?.url}
+                alt=""
+              />
+            </div>
+            <div className="ml-3 flex-1 my-auto">
+              <p className="mt-1 text-sm text-text-primary font-gothic">
+                {product.attributes.name} added to cart.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="flex border-l border-text-primary border-opacity-10">
+          <button
+            onClick={() => toast.dismiss(t.id)}
+            className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:text-text-primary"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    ));
+  };
+
   return (
     <>
       {product && (
         <div className="font-gothic">
-          <div className="mx-auto pt-10 pb-16 px-4 sm:pb-12 sm:px-6 lg:max-w-5xl lg:px-8 space-y-6">
+          <div className="mx-auto pt-10 pb-16 px-4 sm:pb-12 sm:px-6 lg:max-w-5xl lg:px-8 space-y-6 ">
             {/* Product */}
-            <div className="flex flex-col sm:flex-row border justify-center sm:items-stretch sm:space-x-5 space-y-5">
+            <div className="flex flex-col sm:flex-row items-stretch border justify-between sm:space-x-6">
               {/* Product image */}
 
-              <div className="overflow-hidden relative min-w-sm sm:min-w-[40vw] 2xl:min-w-[20vw] my-auto">
+              <div className="overflow-hidden relative min-w-sm sm:min-w-[40vw] 2xl:min-w-[20vw]  self-center">
                 <Image
                   priority
                   layout="responsive"
-                  width={product.attributes.itemimage.data.attributes.width}
-                  height={product.attributes.itemimage.data.attributes.height}
+                  width={product.attributes.itemimage.data?.attributes.width}
+                  height={product.attributes.itemimage.data?.attributes.height}
                   src={product.attributes?.itemimage?.data?.attributes?.url}
                   alt={product.imageAlt}
-                  className="object-fill object-center rounded-lg"
+                  className="object-center rounded-lg"
                 />
               </div>
 
               {/* Product details */}
-              <div className="max-w-xl sm:max-w-none border rounded-lg w-full bg-white sm:px-10 flex flex-col justify-center items-center">
-                <div className="mt-4 flex flex-col space-y-2 items-center justify-center">
-                  <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl px-3">
-                    {product.attributes.name}
+              <div className="max-w-xl sm:max-w-none border rounded-lg w-full bg-white sm:px-10 flex flex-col justify-center p-3">
+                <div className="flex flex-col space-y-2 items-center justify-center">
+                  <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl px-3">
+                    {product?.attributes.name}
                   </h1>
 
                   <h2 id="information-heading" className="sr-only">
@@ -152,11 +208,12 @@ const Product = ({ data }) => {
                   </div>
                 </div>
 
-                <p className="text-gray-500 mt-6">
-                  {product.attributes.description}
+                <p className="text-text-primary mt-6 p-3">
+                  {product?.attributes.shortdescription}
                 </p>
                 <div className="flex justify-between items-center space-x-10">
                   <button
+                    onClick={() => handleAdd(product)}
                     type="button"
                     className="mt-3 uppercase bg-button border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
                   >
@@ -172,7 +229,7 @@ const Product = ({ data }) => {
                     <select
                       id="quantity"
                       name="quantity"
-                      className="mt-1 block w-full pl-3 pr-4 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md border text-black"
+                      className="mt-1 block w-full pl-3 pr-4 py-2 text-base border-gray-300 focus:outline-none focus:ring-text-primary focus:border-text-primary sm:text-sm rounded-md border text-black"
                       defaultValue={1}
                     >
                       <option>1</option>
@@ -191,14 +248,11 @@ const Product = ({ data }) => {
 
                 <div className="border-t border-gray-200 mt-10 pt-10 flex justify-evenly items-center w-full">
                   <span className="text-black text-2xl">
-                    ${product.attributes.price}
+                    ${product?.attributes.price}
                   </span>
                 </div>
 
                 <div className="border-t border-gray-200 mt-10 py-7 w-full flex justify-center items-center">
-                  <h3 className="text-sm font-medium text-gray-900 pr-4">
-                    Share
-                  </h3>
                   <ul role="list" className="flex items-center space-x-6">
                     <li>
                       <a
@@ -272,7 +326,7 @@ const Product = ({ data }) => {
                 </div>
               </div>
             </div>
-            <div className="lg:mt-0 lg:col-span-4 bg-white rounded-lg flex justify-center items-center pb-4 px-4">
+            <div className="lg:mt-0 lg:col-span-4 bg-white rounded-lg flex justify-center items-center pb-20 px-4">
               <Tab.Group as="div">
                 <div className="border-b border-gray-200">
                   <Tab.List className="-mb-px flex space-x-8">
@@ -286,7 +340,7 @@ const Product = ({ data }) => {
                         )
                       }
                     >
-                      Customer Reviews
+                      Additional Info
                     </Tab>
                     <Tab
                       className={({ selected }) =>
@@ -316,62 +370,8 @@ const Product = ({ data }) => {
                 </div>
                 <Tab.Panels as={Fragment}>
                   <Tab.Panel className="-mb-10">
-                    <h3 className="sr-only">Customer Reviews</h3>
-
-                    {reviews.featured.map((review, reviewIdx) => (
-                      <div
-                        key={review.id}
-                        className="flex text-sm text-gray-500 space-x-4"
-                      >
-                        <div className="flex-none py-10">
-                          <img
-                            src={review.avatarSrc}
-                            alt=""
-                            className="w-10 h-10 bg-gray-100 rounded-full"
-                          />
-                        </div>
-                        <div
-                          className={classNames(
-                            reviewIdx === 0 ? "" : "border-t border-gray-200",
-                            "py-10"
-                          )}
-                        >
-                          <h3 className="font-medium text-gray-900">
-                            {review.author}
-                          </h3>
-                          <p>
-                            <time dateTime={review.datetime}>
-                              {review.date}
-                            </time>
-                          </p>
-
-                          <div className="flex items-center mt-4">
-                            {[0, 1, 2, 3, 4].map((rating) => (
-                              <AiOutlineStar
-                                key={rating}
-                                className={classNames(
-                                  review.rating > rating
-                                    ? "text-yellow-400"
-                                    : "text-gray-300",
-                                  "h-5 w-5 flex-shrink-0"
-                                )}
-                                aria-hidden="true"
-                              />
-                            ))}
-                          </div>
-                          <p className="sr-only">
-                            {review.rating} out of 5 stars
-                          </p>
-
-                          <div
-                            className="mt-4 prose prose-sm max-w-none text-gray-500"
-                            dangerouslySetInnerHTML={{
-                              __html: review.content,
-                            }}
-                          />
-                        </div>
-                      </div>
-                    ))}
+                    <h3 className="sr-only">Additional Info</h3>
+                    <Markdown content={product.attributes?.longdescription} />
                   </Tab.Panel>
 
                   <Tab.Panel className="text-sm text-gray-500">
@@ -425,8 +425,9 @@ export const getStaticPaths = async () => {
     paths: productdata.data.map((item) => ({
       params: {
         category:
-          item.attributes.categories.data?.[0].attributes.name.toString(),
-        id: item.attributes.name.replaceAll(" ", "-").toString(),
+          item?.attributes.categories.data?.[0]?.attributes.name.toString() ||
+          "undefined",
+        id: item?.attributes.name.replaceAll(" ", "-").toString(),
       },
     })),
     fallback: true,
@@ -437,7 +438,7 @@ export async function getStaticProps({ params }) {
   const productName = params.id.replaceAll("-", " ");
   console.log(productName);
   const productURL = getStrapiURL(
-    `/api/products?filters[name][$containsi]=${productName}&populate[0]=itemimage`
+    `/api/products?filters[name][$containsi]=${productName}&populate[0]=itemimage&populate[1]=products.categories`
   );
   const productRes = await fetch(productURL, {
     headers: {

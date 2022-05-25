@@ -23,10 +23,12 @@
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-hot-toast": "^2.2.0",
+    "react-html-parser": "^2.0.2",
     "react-icons": "^4.3.1",
     "react-places-autocomplete": "^7.3.0",
     "react-rough-notation": "^1.0.2",
     "react-square-web-payments-sdk": "^3.1.1",
+    "showdown": "^2.1.0",
     "square": "^19.0.0",
     "use-shopping-cart": "^3.1.2"
   },

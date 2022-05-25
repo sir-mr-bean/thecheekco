@@ -37,7 +37,6 @@ export default function MobileMenu({ navigation }) {
               {navigation
                 .sort((a, b) => (a.id > b.id ? 1 : -1))
                 .map((nav) => {
-                  console.log(nav);
                   return (
                     <Menu.Item>
                       {({ active }) => (
