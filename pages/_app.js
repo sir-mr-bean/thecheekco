@@ -4,8 +4,7 @@ import Header from "../components/Header/Header";
 import Script from "next/script";
 import Head from "next/head";
 import { Toaster } from "react-hot-toast";
-import CartContext from "../context/Context";
-import WishListContext from "../context/Context";
+import CartContext, { WishListContext } from "../context/Context";
 
 import { PaymentForm } from "react-square-web-payments-sdk";
 

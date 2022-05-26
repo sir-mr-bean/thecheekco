@@ -249,7 +249,7 @@ export default function cart({ data }) {
             <div className="py-4 flex flex-col space-y-4">
               <span className="text-xl text-black">Nothing in here yet!</span>
               <a
-                href="/"
+                href="/shop"
                 className="text-xl text-black underline cursor-pointer hover:decoration-text-primary"
               >
                 Return to shop

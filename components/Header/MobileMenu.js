@@ -34,32 +34,36 @@ export default function MobileMenu({ navigation }) {
         <Menu.Items className="origin-top-right absolute top-8 right-0 mt-2 w-32 rounded-md shadow-lg bg-bg-lighttan focus:outline-none">
           <div className="py-1">
             <>
-              {navigation
-                .sort((a, b) => (a.id > b.id ? 1 : -1))
-                .map((nav) => {
-                  return (
-                    <Menu.Item>
-                      {({ active }) => (
-                        <Link
-                          key={nav.id}
-                          href="/shop/[id]/"
-                          as={`/shop/${nav.attributes.name}`}
-                        >
-                          <div
-                            className={classNames(
-                              active
-                                ? "bg-gray-100 text-text-secondary"
-                                : "text-text-primary",
-                              "block px-4 py-2 text-sm hover:bg-bg-tan cursor-pointer"
-                            )}
-                          >
-                            {nav.attributes.displayname}
-                          </div>
-                        </Link>
-                      )}
-                    </Menu.Item>
-                  );
-                })}
+              <ul>
+                {navigation
+                  .sort((a, b) => (a.id > b.id ? 1 : -1))
+                  .map((nav, i) => {
+                    return (
+                      <li key={i}>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <Link
+                              key={nav.id}
+                              href="/shop/[id]/"
+                              as={`/shop/${nav.attributes.name}`}
+                            >
+                              <div
+                                className={classNames(
+                                  active
+                                    ? "bg-gray-100 text-text-secondary"
+                                    : "text-text-primary",
+                                  "block px-4 py-2 text-sm hover:bg-bg-tan cursor-pointer"
+                                )}
+                              >
+                                {nav.attributes.displayname}
+                              </div>
+                            </Link>
+                          )}
+                        </Menu.Item>
+                      </li>
+                    );
+                  })}
+              </ul>
             </>
           </div>
         </Menu.Items>

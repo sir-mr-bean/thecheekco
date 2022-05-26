@@ -28,6 +28,7 @@
     "react-places-autocomplete": "^7.3.0",
     "react-rough-notation": "^1.0.2",
     "react-square-web-payments-sdk": "^3.1.1",
+    "shippo": "^1.7.1",
     "showdown": "^2.1.0",
     "square": "^19.0.0",
     "use-shopping-cart": "^3.1.2"

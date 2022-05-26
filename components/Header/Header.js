@@ -36,7 +36,7 @@ export const Header = () => {
       <div className="h-max sticky top-2 md:top-2 z-50">
         <div className="flex flex-col pt-4 md:pt-2">
           <div className="bg-paper-bg bg-cover h-11 drop-shadow-[0_-7px_5px_rgba(0,0,0,0.31)] bg-opacity-10">
-            <div className="flex justify-around items-center pb-2 md:justify-around lg:mx-36">
+            <div className="flex justify-around items-center pb-2 md:justify-between lg:mx-36">
               <Link href="/">
                 <div className="ml-2 text-[21px] text-header-brown font-gothic py-2 lg:py-0 lg:text-[34px] cursor-pointer">
                   the cheek co.
@@ -52,17 +52,26 @@ export const Header = () => {
                   )}
                 </div>
               </Link>
-              <div className="flex items-center space-x-6 font-gothic text-header-brown">
+              <div className="grid grid-cols-4 place-items-center place-content-center font-gothic text-header-brown">
                 <div className="pt-0.5 pl-16">
                   <div className="sm:hidden p-1.5 active:bg-black rounded-md active:bg-opacity-10">
                     <MobileMenu navigation={navigation} />
                   </div>
                 </div>
                 <span>Eco Innovation</span>
-                <div className="hidden md:flex ">
+                <div className="hidden md:flex items-center justify-center">
                   <div className="flex space-x-1 justify-center items-center ">
-                    <div>
-                      <IoIosHeart size={21} />
+                    <div className="mx-auto">
+                      <Link href={"/wishlist"}>
+                        <div className="group cursor-pointer">
+                          <div className="flex flex-col items-center">
+                            <IoIosHeart className="w-5 h-5 group-hover:w-4 group-hover:h-4 group-hover:animate-pulse group-hover:ease-in-out" />
+                            <span className="text-xs hidden translate-y-6 group-hover:block group-hover:transform group-hover:-translate-y-0 group-hover:transition group-hover:duration-1000 group-hover:ease-in-out">
+                              Wishlist
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
                     </div>
                   </div>
                 </div>

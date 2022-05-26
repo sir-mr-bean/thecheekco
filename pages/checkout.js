@@ -16,6 +16,27 @@ export default function checkout() {
     setTotal(sum);
   }, [cart]);
 
+  useEffect(() => {
+    const fetchRates = async () => {
+      const params = {
+        width: 100,
+        height: 100,
+        length: 100,
+        weight: 100,
+      };
+      const response = await fetch("/api/rates", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(params),
+      });
+      return response;
+    };
+
+    fetchRates(); //.then((res) => console.log(res));
+  }, []);
+
   const handleRemove = (product) => {
     dispatch({
       type: "REMOVE_FROM_CART",

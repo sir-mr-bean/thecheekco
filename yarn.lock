@@ -3715,6 +3715,11 @@
   "resolved" "https://registry.npmjs.org/shebang-regex/-/shebang-regex-3.0.0.tgz"
   "version" "3.0.0"
 
+"shippo@^1.7.1":
+  "integrity" "sha512-kALIuHGjGhSAq2Yvz9sLewxgJkC82/bsUqjAXOT9jfW0T1LPxRouwFkBUBsgYe68qlbyrMjfpIbtg5Mx7t4SMw=="
+  "resolved" "https://registry.npmjs.org/shippo/-/shippo-1.7.1.tgz"
+  "version" "1.7.1"
+
 "showdown@^2.1.0":
   "integrity" "sha512-/6NVYu4U819R2pUIk79n67SYgJHWCce0a5xTP979WbNp0FL9MN1I1QK662IDU1b6JzKTvmhgI7T7JYIxBi3kMQ=="
   "resolved" "https://registry.npmjs.org/showdown/-/showdown-2.1.0.tgz"
