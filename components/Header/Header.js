@@ -38,7 +38,7 @@ export const Header = () => {
           <div className="bg-paper-bg bg-cover h-11 drop-shadow-[0_-7px_5px_rgba(0,0,0,0.31)] bg-opacity-10">
             <div className="flex justify-around items-center pb-2 md:justify-between lg:mx-36">
               <Link href="/">
-                <div className="ml-2 text-[21px] text-header-brown font-gothic py-2 lg:py-0 lg:text-[34px] cursor-pointer">
+                <div className="ml-2 text-[21px] text-header-brown font-gothic py-2 lg:py-0 lg:text-[34px] cursor-pointer flex whitespace-nowrap">
                   the cheek co.
                 </div>
               </Link>
@@ -58,7 +58,7 @@ export const Header = () => {
                     <MobileMenu navigation={navigation} />
                   </div>
                 </div>
-                <span>Eco Innovation</span>
+                <span className="hidden sm:block">Eco Innovation</span>
                 <div className="hidden md:flex items-center justify-center">
                   <div className="flex space-x-1 justify-center items-center ">
                     <div className="mx-auto">
@@ -75,7 +75,7 @@ export const Header = () => {
                     </div>
                   </div>
                 </div>
-                <div className=" sm:pr-16">
+                <div className="pl-32 sm:pl-0 sm:pr-16">
                   <Login />
                 </div>
               </div>
