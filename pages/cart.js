@@ -60,7 +60,6 @@ export default function cart({ data }) {
                   className="border-t border-b border-gray-200 divide-y divide-gray-200"
                 >
                   {products.map((product, productIdx) => {
-                    console.log(product.attributes);
                     return (
                       <>
                         <li key={product.id} className="flex py-6 sm:py-10">

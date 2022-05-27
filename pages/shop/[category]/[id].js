@@ -86,7 +86,6 @@ const license = {
 };
 
 const Markdown = (content) => {
-  console.log(content);
   var converter = new showdown.Converter();
   var html = converter.makeHtml(content.content);
   return (
@@ -266,11 +265,11 @@ const Product = ({ data }) => {
                         <span className="sr-only">Share on Instagram</span>
                         <svg className="w-6 h-6">
                           <radialGradient id="rg" r="150%" cx="30%" cy="107%">
-                            <stop stop-color="#fdf497" offset="0" />
-                            <stop stop-color="#fdf497" offset="0.05" />
-                            <stop stop-color="#fd5949" offset="0.45" />
-                            <stop stop-color="#d6249f" offset="0.6" />
-                            <stop stop-color="#285AEB" offset="0.9" />
+                            <stop stopColor="#fdf497" offset="0" />
+                            <stop stopColor="#fdf497" offset="0.05" />
+                            <stop stopColor="#fd5949" offset="0.45" />
+                            <stop stopColor="#d6249f" offset="0.6" />
+                            <stop stopColor="#285AEB" offset="0.9" />
                           </radialGradient>
                         </svg>
                         <div id="ig">
@@ -420,7 +419,6 @@ export const getStaticPaths = async () => {
 
 export async function getStaticProps({ params }) {
   const productName = params.id.replaceAll("-", " ");
-  console.log(productName);
   const productURL = getStrapiURL(
     `/api/products?filters[name][$containsi]=${productName}&populate[0]=itemimage&populate[1]=products.categories`
   );
@@ -431,7 +429,6 @@ export async function getStaticProps({ params }) {
     },
   });
   const { data } = await productRes.json();
-  console.log(data);
   return {
     props: { data },
   };

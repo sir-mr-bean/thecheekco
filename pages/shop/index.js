@@ -18,11 +18,7 @@ const products = [
 export default function shop({ data }) {
   const categories = data.data;
   const item = categories?.[0].attributes.products.data;
-  //console.log(item);
-
   const result = item.splice(3, 10);
-
-  console.log(result);
 
   return (
     <>

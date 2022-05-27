@@ -10,7 +10,6 @@ export const cartInitializer = (initialValue = initialCart) => {
     if (localCart) {
       return JSON.parse(localStorage.getItem("localCart"));
     } else {
-      console.log("no local cart found");
       return initialValue;
     }
   }
@@ -19,8 +18,6 @@ export const cartInitializer = (initialValue = initialCart) => {
 // Cart Reducer
 
 export const cartReducer = (state, action) => {
-  console.log(state);
-  console.log(action);
   switch (action.type) {
     case "ADD_TO_CART":
       return state.find((item) => item.id === action.item.id)
@@ -107,7 +104,6 @@ export const wishListInitializer = (initialValue = initialWishList) => {
     if (localWishList) {
       return JSON.parse(localStorage.getItem("wishlist"));
     } else {
-      console.log("no wishlist");
       return initialValue;
     }
   }
@@ -116,8 +112,6 @@ export const wishListInitializer = (initialValue = initialWishList) => {
 // Wishlist Reducer
 
 export const wishListReducer = (state, action) => {
-  console.log(state);
-  console.log(action);
   switch (action.type) {
     case "ADD_TO_WISHLIST":
       return state.find((item) => item.id === action.item.id)

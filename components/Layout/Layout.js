@@ -4,7 +4,6 @@ import { useState } from "react";
 export default function Layout(props) {
   const [cartItems, setCartItems] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
-  console.log(props);
   const navigation = props.navigation;
   const children = props.children;
 
@@ -18,18 +17,14 @@ export default function Layout(props) {
       );
       const result = cartItems.forEach((item) => {
         let total = 0;
-        console.log(item.qty);
         return total + item.qty;
       });
-      console.log(result);
     } else {
       setCartItems([...cartItems, { ...product, qty: 1 }]);
       const result = cartItems.forEach((item) => {
         let total = 0;
-        console.log(item.qty);
         return total + item.qty;
       });
-      console.log(result);
     }
   };
 

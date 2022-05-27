@@ -2,7 +2,6 @@ import Shippo from "shippo";
 const shippo = new Shippo(process.env.SHIPPO_TOKEN);
 
 export default async function handler(req, res) {
-  console.log(req.body);
   shippo.shipment
     .create({
       address_from: {
@@ -35,7 +34,6 @@ export default async function handler(req, res) {
       ],
     })
     .then((response) => {
-      console.log(response);
       let rate_list = [];
       for (i of response.rates) {
         rate_list.push(i.amount);
