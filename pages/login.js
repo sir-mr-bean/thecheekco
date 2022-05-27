@@ -1,39 +1,100 @@
 import React from "react";
-import { GoogleAuthProvider, signInWithPopup, sign } from "firebase/auth";
-import { auth } from "../utils/firebaseConfig";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  sign,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signOut,
+} from "firebase/auth";
+import { auth, db } from "../utils/firebaseConfig";
+import { useFirebaseAuth } from "../context/FirebaseAuthContext";
 import Image from "next/image";
 import Logo from "../public/images/logo.png";
 import {
   AiOutlineInstagram,
   AiOutlineFacebook,
   AiOutlineTwitter,
+  AiOutlineGoogle,
 } from "react-icons/ai";
+import { FcGoogle } from "react-icons/fc";
+import { query, getDocs, collection, where, addDoc } from "firebase/firestore";
 
-const googleLogin = () => {
-  const provider = new GoogleAuthProvider();
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      // The signed-in user info.
-      const user = result.user;
-      console.log(user);
-      // ...
-    })
-    .catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.customData.email;
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      // ...
+const handleGoogleLogin = async () => {
+  const googleProvider = new GoogleAuthProvider();
+
+  try {
+    const res = await signInWithPopup(auth, googleProvider);
+    const user = res.user;
+    console.log(user);
+    const q = query(collection(db, "users"), where("uid", "==", user.uid));
+    console.log(q);
+    const docs = await getDocs(q);
+    if (docs.docs.length === 0) {
+      await addDoc(collection(db, "users"), {
+        uid: user.uid,
+        name: user.displayName,
+        authProvider: "google",
+        email: user.email,
+      });
+    }
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
+
+  // signInWithPopup(auth, provider)
+  //   .then((result) => {
+  //     // This gives you a Google Access Token. You can use it to access the Google API.
+  //     const credential = GoogleAuthProvider.credentialFromResult(result);
+  //     const token = credential.accessToken;
+  //     // The signed-in user info.
+  //     const user = result.user;
+  //     console.log(user);
+  //     // ...
+  //   })
+  //   .catch((error) => {
+  //     // Handle Errors here.
+  //     const errorCode = error.code;
+  //     const errorMessage = error.message;
+  //     // The email of the user's account used.
+  //     const email = error.customData.email;
+  //     // The AuthCredential type that was used.
+  //     const credential = GoogleAuthProvider.credentialFromError(error);
+  //     // ...
+  //   });
+};
+
+const registerWithEmailAndPassword = async (name, email, password) => {
+  try {
+    const res = await createUserWithEmailAndPassword(auth, email, password);
+    const user = res.user;
+    await addDoc(collection(db, "users"), {
+      uid: user.uid,
+      name,
+      authProvider: "local",
+      email,
     });
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
+};
+
+const logInWithEmailAndPassword = async (email, password) => {
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
 };
 
 const login = () => {
+  console.log("user from login is ");
+  const user = useFirebaseAuth();
+  console.log(user);
   return (
     <div className="min-h-full flex text-text-primary">
       <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
@@ -76,11 +137,11 @@ const login = () => {
 
                       <svg className="w-6 h-6 absolute top-0">
                         <radialGradient id="RG" r="150%" cx="30%" cy="107%">
-                          <stop stop-color="#fdf497" offset="0" />
-                          <stop stop-color="#fdf497" offset="0.05" />
-                          <stop stop-color="#fd5949" offset="0.45" />
-                          <stop stop-color="#d6249f" offset="0.6" />
-                          <stop stop-color="#285AEB" offset="0.9" />
+                          <stop stopColor="#fdf497" offset="0" />
+                          <stop stopColor="#fdf497" offset="0.05" />
+                          <stop stopColor="#fd5949" offset="0.45" />
+                          <stop stopColor="#d6249f" offset="0.6" />
+                          <stop stopColor="#285AEB" offset="0.9" />
                         </radialGradient>
                       </svg>
 
@@ -103,13 +164,13 @@ const login = () => {
                   </div>
 
                   <div>
-                    <a
-                      href="#"
-                      className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium  hover:bg-gray-50"
+                    <div
+                      onClick={() => handleGoogleLogin()}
+                      className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium  hover:bg-gray-50 cursor-pointer"
                     >
-                      <span className="sr-only">Sign in with Twitter</span>
-                      <AiOutlineTwitter size={22} color="#1DA1F2" />
-                    </a>
+                      <span className="sr-only">Sign in with Google</span>
+                      <FcGoogle size={22} color="#1DA1F2" />
+                    </div>
                   </div>
                 </div>
               </div>

@@ -2,12 +2,15 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { BsChevronDown, BsPerson } from "react-icons/bs";
+import { useFirebaseAuth } from "../../context/FirebaseAuthContext";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function Login() {
+  const user = useFirebaseAuth();
+  console.log(user);
   return (
     <Menu
       as="div"
@@ -15,13 +18,24 @@ export default function Login() {
     >
       <div className="">
         <Menu.Button className="inline-flex justify-center w-full rounded-md shadow-sm py-2 font-medium font-gothic">
-          <div className="hidden sm:flex items-center">
-            Login
-            <BsChevronDown
-              className="-mr-1 ml-2 h-4 w-4 bg-transparent"
-              aria-hidden="true"
-            />
-          </div>
+          {!user ? (
+            <div className="hidden sm:flex items-center">
+              Login
+              <BsChevronDown
+                className="-mr-1 ml-2 h-4 w-4 bg-transparent"
+                aria-hidden="true"
+              />
+            </div>
+          ) : (
+            <div className="hidden sm:flex items-center sm:pr-10 whitespace-nowrap">
+              My Account
+              <BsChevronDown
+                className="-mr-1 ml-2 h-4 w-4 bg-transparent"
+                aria-hidden="true"
+              />
+            </div>
+          )}
+
           <div className="active:bg-black rounded-md active:bg-opacity-10 py-1.5 px-1.5 sm:hidden">
             <BsPerson size={21} className="fill-text-primary" />
           </div>
@@ -39,36 +53,88 @@ export default function Login() {
       >
         <Menu.Items className="origin-top-right absolute top-8 right-0 mt-2 w-56 rounded-md shadow-lg bg-bg-lighttan focus:outline-none">
           <div className="">
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="/login"
-                  className={classNames(
-                    active
-                      ? "bg-button text-text-primary rounded-t-md"
-                      : "text-text-primary",
-                    "block px-4 py-2 text-sm"
+            {!user ? (
+              <>
+                <Menu.Item>
+                  {({ active }) => (
+                    <a
+                      href="/login"
+                      className={classNames(
+                        active
+                          ? "bg-button text-text-primary rounded-t-md"
+                          : "text-text-primary",
+                        "block px-4 py-2 text-sm"
+                      )}
+                    >
+                      My Account
+                    </a>
                   )}
-                >
-                  My Account
-                </a>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="/register"
-                  className={classNames(
-                    active
-                      ? "bg-button text-text-primary rounded-b-md"
-                      : "text-text-primary",
-                    "block px-4 py-2 text-sm"
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <a
+                      href="/register"
+                      className={classNames(
+                        active
+                          ? "bg-button text-text-primary rounded-b-md"
+                          : "text-text-primary",
+                        "block px-4 py-2 text-sm"
+                      )}
+                    >
+                      Join
+                    </a>
                   )}
-                >
-                  Join
-                </a>
-              )}
-            </Menu.Item>
+                </Menu.Item>
+              </>
+            ) : (
+              <>
+                <Menu.Item>
+                  {({ active }) => (
+                    <a
+                      href="/login"
+                      className={classNames(
+                        active
+                          ? "bg-button text-text-primary rounded-t-md"
+                          : "text-text-primary",
+                        "block px-4 py-2 text-sm"
+                      )}
+                    >
+                      My Profile
+                    </a>
+                  )}
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <a
+                      href="/register"
+                      className={classNames(
+                        active
+                          ? "bg-button text-text-primary rounded-b-md"
+                          : "text-text-primary",
+                        "block px-4 py-2 text-sm"
+                      )}
+                    >
+                      My Orders
+                    </a>
+                  )}
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <a
+                      href="/register"
+                      className={classNames(
+                        active
+                          ? "bg-button text-text-primary rounded-b-md"
+                          : "text-text-primary",
+                        "block px-4 py-2 text-sm"
+                      )}
+                    >
+                      Sign Out
+                    </a>
+                  )}
+                </Menu.Item>
+              </>
+            )}
           </div>
         </Menu.Items>
       </Transition>
