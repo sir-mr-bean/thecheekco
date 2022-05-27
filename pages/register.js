@@ -340,11 +340,13 @@ const register = () => {
           Register
         </div>
       </div>
-      <Image
-        width={450}
-        height={450}
-        src="https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/Eco_map_04ac6529f3.gif?updated_at=2022-05-24T23:53:56.723Z"
-      ></Image>
+      <div className="hidden sm:flex max-w-[40vw]">
+        <Image
+          width={600}
+          height={600}
+          src="https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/Eco_map_04ac6529f3.gif?updated_at=2022-05-24T23:53:56.723Z"
+        />
+      </div>
     </div>
   );
 };
