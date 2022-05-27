@@ -82,7 +82,7 @@ export default function cart({ data }) {
                                     <Link
                                       href="/shop/[category]/[id]"
                                       as={`/shop/${
-                                        product.attributes.categories.data?.[0]
+                                        product.attributes.categories?.data?.[0]
                                           .attributes.name
                                       }/${product.attributes.name
                                         .replace(/ /g, "-")

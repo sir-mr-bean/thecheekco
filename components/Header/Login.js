@@ -91,7 +91,7 @@ export default function Login() {
                 <Menu.Item>
                   {({ active }) => (
                     <a
-                      href="/login"
+                      href="/profile"
                       className={classNames(
                         active
                           ? "bg-button text-text-primary rounded-t-md"
@@ -106,7 +106,7 @@ export default function Login() {
                 <Menu.Item>
                   {({ active }) => (
                     <a
-                      href="/register"
+                      href="/profile/orders"
                       className={classNames(
                         active
                           ? "bg-button text-text-primary rounded-b-md"
