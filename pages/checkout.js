@@ -108,9 +108,9 @@ export default function checkout() {
             <div className="max-w-7xl mx-auto px-4 pt-4 pb-16 sm:px-6 sm:pt-8 sm:pb-24 lg:px-8 xl:px-2 xl:pt-14">
               <h1 className="sr-only">Checkout</h1>
 
-              <div className="max-w-lg mx-auto grid grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-2 ">
-                <div className="lg:sticky lg:top-36 w-full h-min">
-                  <div className="max-w-lg mx-auto w-full h-min pt-8 sm:pt-2">
+              <div className="grid grid-cols-1 gap-y-16 lg:max-w-none w-full">
+                <div className="w-full h-min">
+                  <div className="w-full h-min pt-8 sm:pt-2 flex flex-col sm:px-8">
                     <h2 className="sr-only">Order summary</h2>
 
                     <div className="flow-root">
@@ -180,7 +180,7 @@ export default function checkout() {
                       )}
                     </div>
 
-                    <dl className="text-sm font-medium text-text-primary mt-10 space-y-6">
+                    <dl className="text-sm font-medium text-text-primary mt-10 space-y-6 w-full">
                       <div className="flex justify-between">
                         <dt>Subtotal</dt>
                         <dd className="text-text-primary">
@@ -205,7 +205,7 @@ export default function checkout() {
                   </div>
                 </div>
 
-                <div className="max-w-lg mx-auto w-full">
+                <div className="sm:px-24 w-full">
                   <div className="flex flex-col justify-center items-center text-text-primary w-full">
                     <Image
                       height={147.5}
@@ -541,7 +541,9 @@ export default function checkout() {
                             },
                           },
                         }}
-                      />
+                      >
+                        Pay ${total.toFixed(2)}
+                      </CreditCard>
                     </div>
                   </div>
                 </div>

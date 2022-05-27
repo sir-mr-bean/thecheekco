@@ -90,7 +90,7 @@ export const Header = () => {
                     </div>
                   </div>
                   {/* Login */}
-                  <div className=" sm:pl-0 sm:pr-16">
+                  <div className="sm:pl-0 sm:pr-24 lg:pr-10">
                     <Login />
                   </div>
                 </div>

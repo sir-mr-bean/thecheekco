@@ -1,10 +1,24 @@
 import { RoughNotation, RoughNotationGroup } from "react-rough-notation";
+import { getStrapiURL } from "../utils/api";
 
-export default function Home(props) {
+export default function Home({ data }) {
+  const categories = data?.data;
+  console.log(categories?.[0].attributes?.products.data.length);
+  console.log(
+    Math.ceil(
+      Math.random() * categories?.[0].attributes?.products?.data.length + 1
+    )
+  );
+  console.log(
+    categories?.[0].attributes?.products?.data?.[
+      Math.floor(Math.random() * categories?.[0].attributes?.products?.length) +
+        1
+    ]?.attributes
+  );
   const offers = [
     {
-      name: "Free Shipping",
-      description: "On all local orders from Mossman to Mission Beach",
+      name: "On all local orders from Mossman to Mission Beach",
+      description: "Free Shipping",
       href: "#",
     },
     {
@@ -19,38 +33,38 @@ export default function Home(props) {
     },
   ];
 
-  const categories = [
-    {
-      name: "New Arrivals",
-      href: "#",
-      imageSrc:
-        "https://tailwindui.com/img/ecommerce-images/home-page-01-category-01.jpg",
-    },
-    {
-      name: "Productivity",
-      href: "#",
-      imageSrc:
-        "https://tailwindui.com/img/ecommerce-images/home-page-01-category-02.jpg",
-    },
-    {
-      name: "Workspace",
-      href: "#",
-      imageSrc:
-        "https://tailwindui.com/img/ecommerce-images/home-page-01-category-04.jpg",
-    },
-    {
-      name: "Accessories",
-      href: "#",
-      imageSrc:
-        "https://tailwindui.com/img/ecommerce-images/home-page-01-category-05.jpg",
-    },
-    {
-      name: "Sale",
-      href: "#",
-      imageSrc:
-        "https://tailwindui.com/img/ecommerce-images/home-page-01-category-03.jpg",
-    },
-  ];
+  // const categories = [
+  //   {
+  //     name: "New Arrivals",
+  //     href: "#",
+  //     imageSrc:
+  //       "https://tailwindui.com/img/ecommerce-images/home-page-01-category-01.jpg",
+  //   },
+  //   {
+  //     name: "Productivity",
+  //     href: "#",
+  //     imageSrc:
+  //       "https://tailwindui.com/img/ecommerce-images/home-page-01-category-02.jpg",
+  //   },
+  //   {
+  //     name: "Workspace",
+  //     href: "#",
+  //     imageSrc:
+  //       "https://tailwindui.com/img/ecommerce-images/home-page-01-category-04.jpg",
+  //   },
+  //   {
+  //     name: "Accessories",
+  //     href: "#",
+  //     imageSrc:
+  //       "https://tailwindui.com/img/ecommerce-images/home-page-01-category-05.jpg",
+  //   },
+  //   {
+  //     name: "Sale",
+  //     href: "#",
+  //     imageSrc:
+  //       "https://tailwindui.com/img/ecommerce-images/home-page-01-category-03.jpg",
+  //   },
+  // ];
 
   const collections = [
     {
@@ -95,18 +109,18 @@ export default function Home(props) {
           <div className="max-w-7xl mx-auto lg:px-8">
             <ul
               role="list"
-              className="grid grid-cols-1 divide-y divide-text-primary lg:grid-cols-3 lg:divide-y-0 lg:divide-x"
+              className="grid grid-cols-3  divide-text-primary divide-x"
             >
               {offers.map((offer) => (
-                <li key={offer.name} className="flex flex-col">
+                <li key={offer.name} className="flex flex-col ">
                   <a
                     href={offer.href}
-                    className="relative flex-1 flex flex-col justify-center py-3 sm:py-6 px-4 text-center focus:z-10"
+                    className="relative flex-1 flex flex-col justify-between pt-3 sm:py-6 px-2 text-center focus:z-10"
                   >
                     <p className="text-xs sm:text-sm text-text-secondary">
                       {offer.name}
                     </p>
-                    <p className="font-semibold text-text-primary w-5/6 mx-auto">
+                    <p className="font-semibold text-text-primary mx-auto">
                       {offer.description}
                     </p>
                   </a>
@@ -167,7 +181,7 @@ export default function Home(props) {
           {/* Category section */}
           <section
             aria-labelledby="category-heading"
-            className="pt-24 sm:pt-32 xl:max-w-7xl xl:mx-auto xl:px-8"
+            className="pt-6 sm:pt-32 xl:max-w-7xl xl:mx-auto xl:px-8"
           >
             <div className="px-4 sm:px-6 sm:flex sm:items-center sm:justify-between lg:px-8 xl:px-0">
               <h2
@@ -186,36 +200,45 @@ export default function Home(props) {
 
             <div className="mt-4 flow-root">
               <div className="-my-2">
-                <div className="box-content py-2 relative h-80 overflow-x-auto xl:overflow-visible">
+                <div className="box-content py-2 relative h-96 overflow-x-auto xl:overflow-visible">
                   <div className="absolute min-w-screen-xl px-4 flex space-x-8 sm:px-6 lg:px-8 xl:relative xl:px-0 xl:space-x-0 xl:grid xl:grid-cols-5 xl:gap-x-8">
-                    {categories.map((category) => (
-                      <a
-                        key={category.name}
-                        href={category.href}
-                        className="relative w-56 h-80 rounded-lg p-6 flex flex-col overflow-hidden hover:opacity-75 xl:w-auto"
-                      >
-                        <span aria-hidden="true" className="absolute inset-0">
-                          <img
-                            src={category.imageSrc}
-                            alt=""
-                            className="w-full h-full object-center object-cover"
+                    {categories &&
+                      categories.map((category) => (
+                        <a
+                          key={category?.attributes.displayname}
+                          href={category.href}
+                          className="relative w-56 h-80 rounded-lg p-6 flex flex-col overflow-hidden hover:opacity-75 xl:w-auto"
+                        >
+                          <span aria-hidden="true" className="absolute inset-0">
+                            <img
+                              src={
+                                category?.attributes?.products?.data?.[
+                                  Math.floor(
+                                    Math.random() *
+                                      categories?.[0].attributes?.products?.data
+                                        .length
+                                  )
+                                ]?.attributes.itemimage?.data?.attributes?.url
+                              }
+                              alt=""
+                              className="w-full h-full object-center object-cover"
+                            />
+                          </span>
+                          <span
+                            aria-hidden="true"
+                            className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-gray-800 opacity-50"
                           />
-                        </span>
-                        <span
-                          aria-hidden="true"
-                          className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-gray-800 opacity-50"
-                        />
-                        <span className="relative mt-auto text-center text-xl font-bold text-text-primary">
-                          {category.name}
-                        </span>
-                      </a>
-                    ))}
+                          <span className="relative mt-auto text-center text-xl font-bold text-button">
+                            {category?.attributes.displayname}
+                          </span>
+                        </a>
+                      ))}
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="mt-6 px-4 sm:hidden">
+            <div className="px-4 sm:hidden">
               <a
                 href="#"
                 className="block text-sm font-semibold text-text-primary hover:text-text-secondary"
@@ -351,3 +374,24 @@ export default function Home(props) {
     </div>
   );
 }
+
+export const getStaticProps = async () => {
+  const productsURL = getStrapiURL(
+    `/api/categories?populate[0]=products&populate[1]=products.itemimage&populate[2]=products.categories`
+  );
+  const res = await fetch(productsURL, {
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch posts, received status ${res.status}`);
+  }
+  const data = await res.json();
+  return {
+    props: {
+      data,
+    },
+  };
+};
