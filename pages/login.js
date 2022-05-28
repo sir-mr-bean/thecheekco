@@ -1,6 +1,7 @@
 import React from "react";
 import {
   GoogleAuthProvider,
+  FacebookAuthProvider,
   signInWithPopup,
   sign,
   signInWithEmailAndPassword,
@@ -20,79 +21,86 @@ import {
 } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { query, getDocs, collection, where, addDoc } from "firebase/firestore";
-
-const handleGoogleLogin = async () => {
-  const googleProvider = new GoogleAuthProvider();
-
-  try {
-    const res = await signInWithPopup(auth, googleProvider);
-    const user = res.user;
-    console.log(user);
-    const q = query(collection(db, "users"), where("uid", "==", user.uid));
-    console.log(q);
-    const docs = await getDocs(q);
-    if (docs.docs.length === 0) {
-      await addDoc(collection(db, "users"), {
-        uid: user.uid,
-        name: user.displayName,
-        authProvider: "google",
-        email: user.email,
-      });
-    }
-  } catch (err) {
-    console.error(err);
-    alert(err.message);
-  }
-
-  // signInWithPopup(auth, provider)
-  //   .then((result) => {
-  //     // This gives you a Google Access Token. You can use it to access the Google API.
-  //     const credential = GoogleAuthProvider.credentialFromResult(result);
-  //     const token = credential.accessToken;
-  //     // The signed-in user info.
-  //     const user = result.user;
-  //     console.log(user);
-  //     // ...
-  //   })
-  //   .catch((error) => {
-  //     // Handle Errors here.
-  //     const errorCode = error.code;
-  //     const errorMessage = error.message;
-  //     // The email of the user's account used.
-  //     const email = error.customData.email;
-  //     // The AuthCredential type that was used.
-  //     const credential = GoogleAuthProvider.credentialFromError(error);
-  //     // ...
-  //   });
-};
-
-const registerWithEmailAndPassword = async (name, email, password) => {
-  try {
-    const res = await createUserWithEmailAndPassword(auth, email, password);
-    const user = res.user;
-    await addDoc(collection(db, "users"), {
-      uid: user.uid,
-      name,
-      authProvider: "local",
-      email,
-    });
-  } catch (err) {
-    console.error(err);
-    alert(err.message);
-  }
-};
-
-const logInWithEmailAndPassword = async (email, password) => {
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-  } catch (err) {
-    console.error(err);
-    alert(err.message);
-  }
-};
+import { useRouter } from "next/router";
 
 const login = () => {
+  const router = useRouter();
   const user = useFirebaseAuth();
+
+  const handleGoogleLogin = async () => {
+    const googleProvider = new GoogleAuthProvider();
+
+    try {
+      const res = await signInWithPopup(auth, googleProvider);
+      const user = res.user;
+      console.log(user);
+      const q = query(collection(db, "users"), where("uid", "==", user.uid));
+      console.log(q);
+      const docs = await getDocs(q);
+      if (docs.docs.length === 0) {
+        await addDoc(collection(db, "users"), {
+          uid: user.uid,
+          name: user.displayName,
+          authProvider: "google",
+          email: user.email,
+        });
+      }
+      router.push("/profile");
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+  };
+
+  const handleFacebookLogin = async () => {
+    const facebookProvider = new FacebookAuthProvider();
+    try {
+      const res = await signInWithPopup(auth, facebookProvider);
+      const user = res.user;
+      console.log(user);
+      const q = query(collection(db, "users"), where("uid", "==", user.uid));
+      console.log(q);
+      const docs = await getDocs(q);
+      if (docs.docs.length === 0) {
+        await addDoc(collection(db, "users"), {
+          uid: user.uid,
+          name: user.displayName,
+          authProvider: "facebook",
+          email: user.email,
+        });
+      }
+      router.push("/profile");
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+  };
+
+  const registerWithEmailAndPassword = async (name, email, password) => {
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      const user = res.user;
+      await addDoc(collection(db, "users"), {
+        uid: user.uid,
+        name,
+        authProvider: "local",
+        email,
+      });
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+  };
+
+  const logInWithEmailAndPassword = async (email, password) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+  };
+
   return (
     <div className="min-h-full flex text-text-primary">
       <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
@@ -117,13 +125,14 @@ const login = () => {
 
                 <div className="mt-1 grid grid-cols-3 gap-3">
                   <div>
-                    <a
+                    <div
+                      onClick={() => handleFacebookLogin()}
                       href="#"
                       className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium  hover:bg-gray-50"
                     >
                       <span className="sr-only">Sign in with Facebook</span>
                       <AiOutlineFacebook size={22} color="#4267B2" />
-                    </a>
+                    </div>
                   </div>
 
                   <div>
