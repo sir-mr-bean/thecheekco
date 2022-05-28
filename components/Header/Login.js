@@ -3,14 +3,23 @@ import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { BsChevronDown, BsPerson } from "react-icons/bs";
 import { useFirebaseAuth } from "../../context/FirebaseAuthContext";
+import { auth } from "../../utils/firebaseConfig";
+import { useRouter } from "next/router";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function Login() {
-  const user = useFirebaseAuth();
-  console.log(user);
+  const router = useRouter();
+  const { user, signOut } = useFirebaseAuth();
+  console.log(auth.sign);
+
+  const handleSignOut = async () => {
+    await auth.signOut();
+    router.push("/");
+  };
+
   return (
     <Menu
       as="div"
@@ -120,17 +129,17 @@ export default function Login() {
                 </Menu.Item>
                 <Menu.Item>
                   {({ active }) => (
-                    <a
-                      href="/register"
+                    <button
+                      onClick={() => handleSignOut()}
                       className={classNames(
                         active
                           ? "bg-button text-text-primary rounded-b-md"
                           : "text-text-primary",
-                        "block px-4 py-2 text-sm"
+                        "block px-4 py-2 text-sm w-full text-left"
                       )}
                     >
                       Sign Out
-                    </a>
+                    </button>
                   )}
                 </Menu.Item>
               </>

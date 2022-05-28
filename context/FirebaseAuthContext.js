@@ -12,7 +12,6 @@ const FirebaseAuthProvider = ({ children }) => {
 
   useEffect(() => {
     auth.onAuthStateChanged(setUser);
-    console.log("user is ", value);
   }, []);
 
   return (
@@ -23,13 +22,7 @@ const FirebaseAuthProvider = ({ children }) => {
 };
 
 export function useFirebaseAuth() {
-  const context = useContext(FirebaseAuthContext);
-  if (context === undefined) {
-    throw new Error(
-      "useFirebaseAuth must be used within a FirebaseAuthProvider"
-    );
-  }
-  return context?.user;
+  return useContext(FirebaseAuthContext);
 }
 
 export default FirebaseAuthProvider;
