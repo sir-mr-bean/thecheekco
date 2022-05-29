@@ -13,7 +13,6 @@ function classNames(...classes) {
 export default function Login() {
   const router = useRouter();
   const { user, signOut } = useFirebaseAuth();
-  console.log(auth.sign);
 
   const handleSignOut = async () => {
     await auth.signOut();
