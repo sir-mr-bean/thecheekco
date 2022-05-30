@@ -9,8 +9,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 const CategoryPage = ({ currentProducts, currentCategory }) => {
-  console.log(currentCategory);
-  console.log(currentProducts);
   const router = useRouter();
   const query = router.query;
   const { cart, dispatch } = CartState();
@@ -149,7 +147,6 @@ export const getStaticPaths = async () => {
   if (!res.ok) {
     throw new Error(`Failed to fetch posts, received status ${res.status}`);
   }
-  //console.log(data);
   return {
     paths: data.map((item) => ({
       params: {
@@ -164,7 +161,6 @@ export const getStaticPaths = async () => {
 };
 
 export const getStaticProps = async ({ params }) => {
-  console.log(params);
   const categoriesURL = `${process.env.API_URL}/api/fetchcategories`;
   const categoriesResult = await fetch(categoriesURL, {
     headers: {
@@ -195,9 +191,9 @@ export const getStaticProps = async ({ params }) => {
     );
   });
   const currentProducts = productsData?.[0].filter((product) => {
-    return product.categoryId === currentCategory[0].id;
+    return product?.category?.id === currentCategory[0].id;
   });
-  //console.log(currentProducts);
+
   return {
     props: {
       currentProducts,

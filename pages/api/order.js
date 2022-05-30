@@ -20,7 +20,6 @@ export default async function handler(req, res) {
         amount: req.body.amount,
       },
     });
-    console.log(result);
     res.status(200).json(result.payment);
   } else {
     res.status(500).json(result.payment);

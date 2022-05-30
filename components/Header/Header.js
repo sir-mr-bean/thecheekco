@@ -13,16 +13,9 @@ import useSWR from "swr";
 export const Header = () => {
   const { cart } = CartState();
   const [navigation, setNavigation] = useState([]);
-  const { data } = useSWR(
-    "/api/fetchcategories",
-    {
-      headers: {
-        Accept: "application/json, text/plain, */*",
-        "User-Agent": "*",
-      },
-    },
-    fetcher
-  );
+  const { data } = useSWR("/api/fetchcategories", fetcher);
+
+  console.log(data);
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);

@@ -97,7 +97,8 @@ const Markdown = (content) => {
 
 const Product = ({ data }) => {
   const { cart, dispatch } = CartState();
-  const product = data?.[0];
+  const product = data;
+  console.log(data);
 
   const handleAdd = (product) => {
     dispatch({
@@ -117,13 +118,13 @@ const Product = ({ data }) => {
             <div className="flex-shrink-0 pt-0.5">
               <img
                 className="h-10 w-10 rounded-full"
-                src={product.attributes?.itemimage?.data?.attributes?.url}
-                alt=""
+                src={product.image}
+                alt={product.name}
               />
             </div>
             <div className="ml-3 flex-1 my-auto">
               <p className="mt-1 text-sm text-text-primary font-gothic">
-                {product.attributes.name} added to cart.
+                {product.name} added to cart.
               </p>
             </div>
           </div>
@@ -146,26 +147,24 @@ const Product = ({ data }) => {
         <div className="font-gothic">
           <div className="mx-auto pt-10 pb-16 px-4 sm:pb-12 sm:px-6 lg:max-w-5xl lg:px-8 space-y-6 ">
             {/* Product */}
-            <div className="flex flex-col sm:flex-row items-stretch border justify-between sm:space-x-6">
+            <div className="flex flex-col sm:flex-row border justify-between sm:space-x-6">
               {/* Product image */}
 
-              <div className="overflow-hidden relative min-w-sm sm:min-w-[40vw] 2xl:min-w-[20vw]  self-center">
+              <div className="overflow-hidden relative min-w-[90vw] sm:min-w-[40vw] md:min-w-[50vw] lg:min-w-[30vw] 2xl:min-w-[20vw] h-[50vh] self-center mb-6 sm:mb-0">
                 <Image
                   priority
-                  layout="responsive"
-                  width={product.attributes.itemimage.data?.attributes.width}
-                  height={product.attributes.itemimage.data?.attributes.height}
-                  src={product.attributes?.itemimage?.data?.attributes?.url}
-                  alt={product.imageAlt}
+                  layout="fill"
+                  src={product.image}
+                  alt={product.name}
                   className="object-center rounded-lg"
                 />
               </div>
 
               {/* Product details */}
-              <div className="max-w-xl sm:max-w-none border rounded-lg w-full bg-white sm:px-10 flex flex-col justify-center p-3">
+              <div className="max-w-xl sm:max-w-none border rounded-lg bg-white sm:px-10 flex flex-col justify-center p-3 w-full  md:w-[60vw]">
                 <div className="flex flex-col space-y-2 items-center justify-center">
                   <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl px-3">
-                    {product?.attributes.name}
+                    {product.name}
                   </h1>
 
                   <h2 id="information-heading" className="sr-only">
@@ -192,7 +191,7 @@ const Product = ({ data }) => {
                 </div>
 
                 <p className="text-text-primary mt-6 p-3">
-                  {product?.attributes.shortdescription}
+                  {product?.attributes?.shortdescription}
                 </p>
                 <div className="flex justify-between items-center space-x-10">
                   <button
@@ -231,7 +230,11 @@ const Product = ({ data }) => {
 
                 <div className="border-t border-gray-200 mt-10 pt-10 flex justify-evenly items-center w-full">
                   <span className="text-black text-2xl">
-                    ${product?.attributes.price.toFixed(2)}
+                    $
+                    {(
+                      product.variations?.[0]?.item_variation_data?.price_money
+                        ?.amount / 100
+                    ).toFixed(2)}
                   </span>
                 </div>
 
@@ -393,17 +396,26 @@ const Product = ({ data }) => {
 
 export const getStaticPaths = async () => {
   const productsURL = `${process.env.API_URL}/api/fetchproducts`;
-  const productsResult = await fetch(productsURL);
+  const productsResult = await fetch(productsURL, {
+    headers: {
+      Accept: "application/json, text/plain, */*",
+      "User-Agent": "*",
+    },
+  });
   const productsData = await productsResult.json();
 
   if (!productsResult.ok) {
     throw new Error(`Failed to fetch posts, received status ${res.status}`);
   }
   return {
-    paths: productsData.map((item) => ({
+    paths: productsData?.[0].map((item) => ({
       params: {
-        category: item?.item_data.name.toString() || "undefined",
-        id: item?.item_data.name.replaceAll(" ", "-").toString(),
+        id: item?.name.replaceAll(" ", "-").toString(),
+        category:
+          item?.category?.category_data?.name
+            .toLowerCase()
+            .replaceAll(" ", "-")
+            .toString() || "undefined",
       },
     })),
     fallback: true,
@@ -411,19 +423,23 @@ export const getStaticPaths = async () => {
 };
 
 export async function getStaticProps({ params }) {
+  console.log(params);
   const productName = params.id.replaceAll("-", " ");
-  const productURL = getStrapiURL(
-    `/api/products?filters[name][$containsi]=${productName}&populate[0]=itemimage&populate[1]=products.categories`
-  );
-  const productRes = await fetch(productURL, {
+  const productsURL = `${process.env.API_URL}/api/fetchproducts`;
+  const productRes = await fetch(productsURL, {
     headers: {
       Accept: "application/json",
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
+      "User-Agent": "*",
     },
   });
-  const { data } = await productRes.json();
+  const data = await productRes.json();
+  const currentProduct = data?.[0].filter(
+    (item) =>
+      item.name.toLowerCase().replaceAll(" ", "-").toString() === params.id
+  );
+  console.log(currentProduct);
   return {
-    props: { data },
+    props: { data: currentProduct?.[0] },
   };
 }
 

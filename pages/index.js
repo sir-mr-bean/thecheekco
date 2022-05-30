@@ -3,7 +3,6 @@ import { getStrapiURL } from "../utils/api";
 
 export default function Home({ data }) {
   const categories = data?.data;
-  console.log(categories?.[0].attributes?.products.data.length);
   console.log(
     Math.ceil(
       Math.random() * categories?.[0].attributes?.products?.data.length + 1

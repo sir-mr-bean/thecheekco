@@ -23,17 +23,19 @@ export default async function handler(req, res) {
         throw new Error(`Failed to fetch posts, received status ${res.status}`);
       }
       const data = await res.json();
-      console.log(data.related_objects);
       const products = data.objects.map((item) => {
         const currentImage = data.related_objects.filter(
           (image) => image.id === item.item_data.image_ids?.[0]
+        );
+        const currentCategory = data.related_objects.filter(
+          (category) => category.id === item.item_data.category_id
         );
         return {
           id: item.id,
           name: item.item_data.name,
           variations: item.item_data.variations,
           image: currentImage?.[0]?.image_data?.url,
-          categoryId: item.item_data.category_id,
+          category: currentCategory?.[0],
         };
       });
       categories.push(products);
