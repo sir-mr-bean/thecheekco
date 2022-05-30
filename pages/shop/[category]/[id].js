@@ -97,7 +97,7 @@ const Markdown = (content) => {
 
 const Product = ({ data }) => {
   const { cart, dispatch } = CartState();
-  const product = data;
+  const product = data?.[0];
   console.log(data);
 
   const handleAdd = (product) => {
@@ -407,17 +407,19 @@ export const getStaticPaths = async () => {
   if (!productsResult.ok) {
     throw new Error(`Failed to fetch posts, received status ${res.status}`);
   }
+  //console.log(productsData?.[0].filter((i) => i.category?.category_data));
   return {
-    paths: productsData?.[0].map((item) => ({
-      params: {
-        id: item?.name.replaceAll(" ", "-").toString(),
-        category:
-          item?.category?.category_data?.name
-            .toLowerCase()
-            .replaceAll(" ", "-")
-            .toString() || "undefined",
-      },
-    })),
+    paths: productsData?.[0]
+      .filter((i) => i.category?.category_data.name)
+      .map((item) => ({
+        params: {
+          id: item?.name.replaceAll(" ", "-").toString(),
+          category:
+            item?.category?.category_data.name
+              .toLowerCase()
+              .replaceAll(" ", "-") || null,
+        },
+      })),
     fallback: true,
   };
 };
@@ -429,17 +431,18 @@ export async function getStaticProps({ params }) {
   const productRes = await fetch(productsURL, {
     headers: {
       Accept: "application/json",
-      "User-Agent": "*",
     },
   });
-  const data = await productRes.json();
-  const currentProduct = data?.[0].filter(
+  const dataResult = await productRes.json();
+  console.log(dataResult?.[0]);
+  const currentProduct = dataResult?.[0].filter(
     (item) =>
       item.name.toLowerCase().replaceAll(" ", "-").toString() === params.id
   );
-  console.log(currentProduct);
+  //console.log(currentProduct?.[0]);
+  const data = currentProduct;
   return {
-    props: { data: currentProduct?.[0] },
+    props: { data },
   };
 }
 
