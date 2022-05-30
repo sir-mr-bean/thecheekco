@@ -160,11 +160,11 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async ({ params }) => {
   console.log(params);
-  const categoriesURL = `http://localhost:3000/api/fetchcategories`;
+  const categoriesURL = `http://${process.env.API_URL}/api/fetchcategories`;
   const categoriesResult = await fetch(categoriesURL);
   const categoriesData = await categoriesResult.json();
 
-  const productsURL = `http://localhost:3000/api/fetchproducts`;
+  const productsURL = `http://${process.env.API_URL}/api/fetchproducts`;
   const productsResult = await fetch(productsURL);
   const productsData = await productsResult.json();
 
