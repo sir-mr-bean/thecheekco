@@ -9,6 +9,7 @@ export default async function handler(req, res) {
       const res = await fetch(sqProducts, {
         method: "POST",
         headers: {
+          "User-Agent": "*",
           "Square-Version": "2022-05-12",
           "Content-Type": "application/json",
           Authorization: `Bearer ${process.env.SQUARE_ACCESS_TOKEN}`,

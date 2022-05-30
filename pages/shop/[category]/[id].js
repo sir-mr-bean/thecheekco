@@ -392,25 +392,18 @@ const Product = ({ data }) => {
 };
 
 export const getStaticPaths = async () => {
-  const products = getStrapiURL(`/api/products?populate[0]=categories`);
-  const productRes = await fetch(products, {
-    headers: {
-      Accept: "application/json",
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
-    },
-  });
-  const productdata = await productRes.json();
+  const productsURL = `${process.env.API_URL}/api/fetchproducts`;
+  const productsResult = await fetch(productsURL);
+  const productsData = await productsResult.json();
 
-  if (!productRes.ok) {
+  if (!productsResult.ok) {
     throw new Error(`Failed to fetch posts, received status ${res.status}`);
   }
   return {
-    paths: productdata.data.map((item) => ({
+    paths: productsData.map((item) => ({
       params: {
-        category:
-          item?.attributes.categories.data?.[0]?.attributes.name.toString() ||
-          "undefined",
-        id: item?.attributes.name.replaceAll(" ", "-").toString(),
+        category: item?.item_data.name.toString() || "undefined",
+        id: item?.item_data.name.replaceAll(" ", "-").toString(),
       },
     })),
     fallback: true,
