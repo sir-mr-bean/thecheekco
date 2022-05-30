@@ -137,7 +137,7 @@ const CategoryPage = ({ currentProducts, currentCategory }) => {
 export default CategoryPage;
 
 export const getStaticPaths = async () => {
-  const categoriesURL = `http://localhost:3000/api/fetchcategories`;
+  const categoriesURL = `http://${process.env.API_URL}/api/fetchcategories`;
   const res = await fetch(categoriesURL);
   const data = await res.json();
 
