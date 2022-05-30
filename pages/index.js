@@ -158,7 +158,7 @@ export default function Home({ data }) {
                 100% Plastic Free
               </h1>
             </RoughNotation>
-            <p className="mt-4 text-xl text-text-primary prose prose-blockquote:text-text-primary">
+            <span className="mt-4 text-xl text-text-primary prose prose-blockquote:text-text-primary">
               We take great pride in our eco innovation, from 100% compostable
               mailers down to eco friendly inks and tapes.
               <blockquote className="py-2 stylistic-quote-mark">
@@ -167,7 +167,7 @@ export default function Home({ data }) {
                 <cite className="text-sm">- WWF 2021</cite>
               </blockquote>
               Let's get cheeky and take the little steps to save our planet.
-            </p>
+            </span>
             <a
               href="#"
               className="mt-8 inline-block bg-button border border-transparent rounded-md py-3 px-8 text-base font-medium text-text-secondary hover:border-black"

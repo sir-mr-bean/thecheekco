@@ -7,29 +7,22 @@ import { useEffect, useState } from "react";
 import { getStrapiURL } from "../../utils/api";
 import axios from "axios";
 import MobileMenu from "./MobileMenu";
+import fetcher from "../../lib/fetcher";
+import useSWR from "swr";
 
 export const Header = () => {
   const { cart } = CartState();
   const [navigation, setNavigation] = useState([]);
+  const { data } = useSWR("/api/fetchcategories", fetcher);
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    const fetchNavigation = async () => {
-      const request = getStrapiURL("/api/categories");
-      const { data } = await axios.get(request, {
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
-        },
-      });
-      return data?.data;
-    };
-    if (mounted) {
-      fetchNavigation().then((res) => setNavigation(res));
+    if (data) {
+      setNavigation(data);
     }
-  }, [process.env.STRAPI_API_KEY, mounted, cart]);
+  }, [data]);
 
   return (
     mounted && (
@@ -102,17 +95,20 @@ export const Header = () => {
               {navigation &&
                 navigation
                   .sort((a, b) => (a.id > b.id ? 1 : -1))
+                  .filter((item) => item.category_data.name.charAt(0) != "_")
                   .map((nav, i) => {
                     return (
                       <Link
                         key={nav.id}
                         href="/shop/[id]/"
-                        as={`/shop/${nav.attributes.name}`}
+                        as={`/shop/${nav.category_data.name
+                          .toLowerCase()
+                          .replaceAll(" ", "-")}`}
                       >
                         <li key={i}>
                           <div className="px-1 hover:transform hover:transition-all hover:scale-125 cursor-pointer">
-                            <span className="font-gothic font-normal text-xs">
-                              {nav.attributes.displayname}
+                            <span className="font-gothic font-normal text-xs capitalize">
+                              {nav.category_data.name}
                             </span>
                           </div>
                         </li>

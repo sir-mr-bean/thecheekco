@@ -38,6 +38,7 @@ export default function MobileMenu({ navigation }) {
                 <ul>
                   {navigation
                     .sort((a, b) => (a.id > b.id ? 1 : -1))
+                    .filter((item) => item.category_data.name.charAt(0) != "_")
                     .map((nav, i) => {
                       return (
                         <li key={i}>
@@ -46,7 +47,9 @@ export default function MobileMenu({ navigation }) {
                               <Link
                                 key={nav.id}
                                 href="/shop/[id]/"
-                                as={`/shop/${nav.attributes.name}`}
+                                as={`/shop/${nav.category_data.name
+                                  .toLowerCase()
+                                  .replaceAll(" ", "-")}`}
                               >
                                 <div
                                   className={classNames(
@@ -56,7 +59,7 @@ export default function MobileMenu({ navigation }) {
                                     "block px-4 py-2 text-sm hover:bg-bg-tan cursor-pointer"
                                   )}
                                 >
-                                  {nav.attributes.displayname}
+                                  {nav.category_data.name}
                                 </div>
                               </Link>
                             )}
