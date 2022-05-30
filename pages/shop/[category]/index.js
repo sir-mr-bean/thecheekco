@@ -137,7 +137,7 @@ const CategoryPage = ({ currentProducts, currentCategory }) => {
 export default CategoryPage;
 
 export const getStaticPaths = async () => {
-  const categoriesURL = `http://${process.env.API_URL}/api/fetchcategories`;
+  const categoriesURL = `${process.env.API_URL}/api/fetchcategories`;
   const res = await fetch(categoriesURL);
   const data = await res.json();
 
@@ -160,11 +160,11 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async ({ params }) => {
   console.log(params);
-  const categoriesURL = `http://${process.env.API_URL}/api/fetchcategories`;
+  const categoriesURL = `${process.env.API_URL}/api/fetchcategories`;
   const categoriesResult = await fetch(categoriesURL);
   const categoriesData = await categoriesResult.json();
 
-  const productsURL = `http://${process.env.API_URL}/api/fetchproducts`;
+  const productsURL = `${process.env.API_URL}/api/fetchproducts`;
   const productsResult = await fetch(productsURL);
   const productsData = await productsResult.json();
 
