@@ -8,7 +8,6 @@ export default async function handler(req, res) {
         sqCategories = `https://connect.squareup.com/v2/catalog/list?types=category&cursor=${cursor}`;
       const res = await fetch(sqCategories, {
         headers: {
-          "User-Agent": "*",
           "Square-Version": "2022-05-12",
           "Content-Type": "application/json",
           Authorization: `Bearer ${process.env.SQUARE_ACCESS_TOKEN}`,
