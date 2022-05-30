@@ -8,7 +8,8 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const CategoryPage = ({ currentProducts, onAdd }) => {
+const CategoryPage = ({ currentProducts, currentCategory }) => {
+  console.log(currentCategory);
   console.log(currentProducts);
   const router = useRouter();
   const query = router.query;
@@ -60,8 +61,8 @@ const CategoryPage = ({ currentProducts, onAdd }) => {
     <>
       <div className="max-w-screen min-h-screen border-2 flex justify-center">
         <div className="py-4 px-4 sm:py-10 sm:px-6 lg:px-8 bg-bg-lighttan mt-24 shadow-[0_0px_7px_1px_rgba(0,0,0,0.51)] w-full h-full mx-6 md:mx-16 sm:mx-20">
-          <h2 className="text-4xl text-text-primary font-gothic font-extralight">
-            Category name
+          <h2 className="text-4xl text-text-primary font-gothic font-extralight capitalize">
+            {currentCategory?.[0].category_data.name}
           </h2>
           <div className="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-3 lg:grid-cols-4 xl:gap-x-10 ">
             {products &&
@@ -185,6 +186,7 @@ export const getStaticProps = async ({ params }) => {
   return {
     props: {
       currentProducts,
+      currentCategory,
     },
   };
 };
