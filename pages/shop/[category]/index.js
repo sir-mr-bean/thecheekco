@@ -135,7 +135,7 @@ const CategoryPage = ({ currentProducts, currentCategory }) => {
 export default CategoryPage;
 
 export const getStaticPaths = async () => {
-  const categoriesURL = `${process.env.API_URL}/api/fetchcategories`;
+  const categoriesURL = `https://thecheekco.vercel.app/api/fetchcategories`;
   const res = await fetch(categoriesURL, {
     headers: {
       Accept: "application/json, text/plain, */*",
@@ -161,7 +161,7 @@ export const getStaticPaths = async () => {
 };
 
 export const getStaticProps = async ({ params }) => {
-  const categoriesURL = `${process.env.API_URL}/api/fetchcategories`;
+  const categoriesURL = `https://thecheekco.vercel.app/api/fetchcategories`;
   const categoriesResult = await fetch(categoriesURL, {
     headers: {
       Accept: "application/json, text/plain, */*",
@@ -170,7 +170,7 @@ export const getStaticProps = async ({ params }) => {
   });
   const categoriesData = await categoriesResult.json();
 
-  const productsURL = `${process.env.API_URL}/api/fetchproducts`;
+  const productsURL = `https://thecheekco.vercel.app/api/fetchproducts`;
   const productsResult = await fetch(productsURL, {
     headers: {
       Accept: "application/json, text/plain, */*",
