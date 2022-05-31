@@ -33,6 +33,7 @@ export default async function handler(req, res) {
         return {
           id: item.id,
           name: item.item_data.name,
+          description: item?.item_data?.description,
           variations: item.item_data.variations,
           image: currentImage?.[0]?.image_data?.url,
           category: currentCategory?.[0],

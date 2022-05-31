@@ -10,7 +10,7 @@ import MobileMenu from "./MobileMenu";
 import fetcher from "../../lib/fetcher";
 import useSWR from "swr";
 
-export const Header = () => {
+export const Header = ({ scrollDirection }) => {
   const { cart } = CartState();
   const [navigation, setNavigation] = useState([]);
   const { data } = useSWR("/api/fetchcategories", fetcher);
@@ -28,8 +28,14 @@ export const Header = () => {
 
   return (
     mounted && (
-      <div className="h-max sticky top-2 md:top-2 z-50">
-        <div className="flex flex-col pt-4 md:pt-2">
+      <div
+        className={`h-max sticky z-50 ${
+          scrollDirection === "down"
+            ? "transition-all duration-700 -top-24"
+            : "transition-all duration-700 top-0"
+        }`}
+      >
+        <div className="flex flex-col">
           <div className="bg-paper-bg bg-cover h-11 drop-shadow-[0_-7px_5px_rgba(0,0,0,0.31)] bg-opacity-10">
             <div className="flex justify-around items-center pb-2 md:justify-between lg:mx-36">
               <Link href="/">
@@ -92,8 +98,8 @@ export const Header = () => {
               </div>
             </div>
           </div>
-          <div className="bg-header-brown text-header-text text-[10px] font-gothic py-1 bg-opacity-90 h-5 sm:h-auto">
-            <ul className="hidden sm:flex justify-center sm:gap-3 pl-3 sm:space-x-1">
+          <div className="bg-header-brown text-header-text text-[10px] font-gothic bg-opacity-90 h-5 sm:h-auto">
+            <ul className="hidden sm:flex justify-center pl-3 sm:space-x-6">
               {navigation &&
                 navigation
                   .sort((a, b) => (a.id > b.id ? 1 : -1))
@@ -107,12 +113,13 @@ export const Header = () => {
                           .toLowerCase()
                           .replaceAll(" ", "-")}`}
                       >
-                        <li key={i}>
-                          <div className="px-1 hover:transform hover:transition-all hover:scale-125 cursor-pointer">
-                            <span className="font-gothic font-normal text-xs capitalize">
-                              {nav.category_data.name}
-                            </span>
-                          </div>
+                        <li
+                          key={i}
+                          className="px-1.5 py-1 hover:transform hover:transition-all hover:scale-125 cursor-pointer h-full"
+                        >
+                          <span className="font-gothic font-normal text-xs capitalize">
+                            {nav.category_data.name}
+                          </span>
                         </li>
                       </Link>
                     );

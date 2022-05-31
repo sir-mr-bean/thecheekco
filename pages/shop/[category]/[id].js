@@ -147,23 +147,26 @@ const Product = ({ data }) => {
         <div className="font-gothic">
           <div className="mx-auto pt-10 pb-16 px-4 sm:pb-12 sm:px-6 lg:max-w-5xl lg:px-8 space-y-6 ">
             {/* Product */}
-            <div className="flex flex-col sm:flex-row border justify-between sm:space-x-6">
+            <div className="flex flex-col sm:flex-row border justify-items-stretch items-stretch sm:space-x-6">
               {/* Product image */}
 
-              <div className="overflow-hidden relative min-w-[90vw] sm:min-w-[40vw] md:min-w-[50vw] lg:min-w-[30vw] 2xl:min-w-[20vw] h-[50vh] self-center mb-6 sm:mb-0">
+              <div className="overflow-hidden relative w-full mb-6 sm:mb-0">
                 <Image
                   priority
-                  layout="fill"
+                  layout="responsive"
+                  objectFit="fill"
+                  height={800}
+                  width={800}
                   src={product.image}
                   alt={product.name}
-                  className="object-center rounded-lg"
+                  className="object-cover rounded-lg"
                 />
               </div>
 
               {/* Product details */}
-              <div className="max-w-xl sm:max-w-none border rounded-lg bg-white sm:px-10 flex flex-col justify-center p-3 w-full  md:w-[60vw]">
+              <div className="max-w-xl sm:max-w-none border rounded-lg bg-white sm:px-10 flex flex-col justify-center w-full px-4">
                 <div className="flex flex-col space-y-2 items-center justify-center">
-                  <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl px-3">
+                  <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl px-3 pt-4 ">
                     {product.name}
                   </h1>
 
@@ -191,7 +194,7 @@ const Product = ({ data }) => {
                 </div>
 
                 <p className="text-text-primary mt-6 p-3">
-                  {product?.attributes?.shortdescription}
+                  {product?.description}
                 </p>
                 <div className="flex justify-between items-center space-x-10">
                   <button
@@ -228,7 +231,7 @@ const Product = ({ data }) => {
                   </div>
                 </div>
 
-                <div className="border-t border-gray-200 mt-10 pt-10 flex justify-evenly items-center w-full">
+                <div className="border-t border-gray-200 mt-5 pt-5 flex justify-evenly items-center w-full">
                   <span className="text-black text-2xl">
                     $
                     {(
@@ -238,7 +241,7 @@ const Product = ({ data }) => {
                   </span>
                 </div>
 
-                <div className="border-t border-gray-200 mt-10 py-7 w-full flex justify-center items-center">
+                <div className="border-t border-gray-200 mt-5 py-1 w-full flex justify-center items-center">
                   <ul role="list" className="flex items-center space-x-6">
                     <li>
                       <a

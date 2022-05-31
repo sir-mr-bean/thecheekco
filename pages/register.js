@@ -199,21 +199,21 @@ const register = () => {
         <p className="text-sm font-medium py-3">Register with</p>
 
         <div className="mt-1 grid grid-cols-2 gap-3 w-full items-stretch">
-          <div
+          <button
             onClick={() => handleFacebookLogin()}
             className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium  hover:bg-gray-50 cursor-pointer"
           >
             <span className="sr-only">Sign in with Facebook</span>
             <AiOutlineFacebook size={22} color="#4267B2" />
-          </div>
+          </button>
 
-          <div
+          <button
             onClick={() => handleGoogleLogin()}
             className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium  hover:bg-gray-50 cursor-pointer"
           >
             <span className="sr-only">Sign in with Google</span>
             <FcGoogle size={22} color="#1DA1F2" />
-          </div>
+          </button>
         </div>
 
         <div className="mt-6 relative">
