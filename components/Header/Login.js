@@ -16,7 +16,7 @@ export default function Login() {
 
   const handleSignOut = async () => {
     await auth.signOut();
-    router.push("/");
+    router.reload();
   };
 
   return (

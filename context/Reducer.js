@@ -36,11 +36,11 @@ export const cartReducer = (state, action) => {
 
     case "DECREMENT_QUANTITY":
       // if quantity is 1 remove from cart, otherwise decrement quantity
-      return state.find((item) => item.name === action.item.attributes.name)
-        ?.quantity === 1
-        ? state.filter((item) => item.name !== action.item.attributes.name)
+      return state.find((item) => item.name === action.item.name)?.quantity ===
+        1
+        ? state.filter((item) => item.name !== action.item.name)
         : state.map((item) =>
-            item.name === action.item.attributes.name
+            item.name === action.item.name
               ? {
                   ...item,
                   quantity: item.quantity - 1,
@@ -49,12 +49,10 @@ export const cartReducer = (state, action) => {
           );
     case "SET_QUANTITY":
       // if quantity is 1 remove from cart, otherwise decrement quantity
-      const result = state.map(
-        (item) => item.attributes.name === action.item.attributes.name
-      );
+      const result = state.map((item) => item.name === action.item.name);
       return state.find((item) => item.id === action.item.id)
         ? state.map((item) =>
-            item.attributes.name === action.item.attributes.name
+            item.name === action.item.name
               ? {
                   ...item,
                   quantity: parseInt(action.payload),

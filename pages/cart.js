@@ -9,15 +9,19 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { getStrapiURL } from "../utils/api";
 
-export default function cart({ data }) {
+export default function cart() {
   const [total, setTotal] = useState(0);
   const { cart, dispatch } = CartState();
   const [mounted, setMounted] = useState(false);
-
+  console.log(cart);
   useEffect(() => {
     let sum = 0;
     cart.forEach((product) => {
-      sum += product.attributes.price * product.quantity;
+      sum +=
+        (
+          product.variations?.[0]?.item_variation_data?.price_money?.amount /
+          100
+        ).toFixed(2) * product.quantity;
     });
     setTotal(sum);
   }, [cart]);
@@ -64,11 +68,8 @@ export default function cart({ data }) {
                       <li key={product.id} className="flex py-6 sm:py-10">
                         <div className="flex-shrink-0">
                           <img
-                            src={
-                              product.attributes?.itemimage?.data?.attributes
-                                ?.url
-                            }
-                            alt={product.attributes.name}
+                            src={product.image}
+                            alt={product.name}
                             className="w-24 h-24 rounded-md object-center object-cover sm:w-48 sm:h-48"
                           />
                         </div>
@@ -81,20 +82,21 @@ export default function cart({ data }) {
                                   <Link
                                     href="/shop/[category]/[id]"
                                     as={`/shop/${
-                                      product.attributes.categories?.data?.[0]
-                                        .attributes.name
-                                    }/${product.attributes.name
+                                      product.category.name
+                                    }/${product.name
                                       .replace(/ /g, "-")
                                       .toLowerCase()}`}
                                   >
                                     <span className="font-medium text-text-primary hover:text-text-secondary">
-                                      {product.attributes.name}
+                                      {product.name}
                                     </span>
                                   </Link>
                                 </h3>
                               </div>
                               <div className="mt-1 flex text-sm">
-                                <p className="text-gray-500">{product.color}</p>
+                                <p className="text-gray-500">
+                                  {product?.color}
+                                </p>
                                 {product.size ? (
                                   <p className="ml-4 pl-4 border-l border-gray-200 text-gray-500">
                                     {product.size}
@@ -254,23 +256,3 @@ export default function cart({ data }) {
     )
   );
 }
-
-export const getStaticProps = async () => {
-  const productsURL = getStrapiURL(`/api/categories?populate[0]=products`);
-  const res = await fetch(productsURL, {
-    headers: {
-      Accept: "application/json",
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
-    },
-  });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch posts, received status ${res.status}`);
-  }
-  const data = await res.json();
-
-  return {
-    props: {
-      data,
-    },
-  };
-};

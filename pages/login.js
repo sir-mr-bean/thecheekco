@@ -2,13 +2,8 @@ import { useRef, useState, useEffect } from "react";
 import {
   GoogleAuthProvider,
   FacebookAuthProvider,
-  signInWithCustomToken,
   signInWithPopup,
-  sign,
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  sendPasswordResetEmail,
-  signOut,
 } from "firebase/auth";
 import { auth, db } from "../utils/firebaseConfig";
 import { useFirebaseAuth } from "../context/FirebaseAuthContext";

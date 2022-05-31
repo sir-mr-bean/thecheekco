@@ -4,8 +4,6 @@ import Link from "next/link";
 import Login from "./Login";
 import { CartState } from "../../context/Context";
 import { useEffect, useState } from "react";
-import { getStrapiURL } from "../../utils/api";
-import axios from "axios";
 import MobileMenu from "./MobileMenu";
 import fetcher from "../../lib/fetcher";
 import useSWR from "swr";
