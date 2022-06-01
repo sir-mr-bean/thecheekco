@@ -227,8 +227,8 @@ export default function Home({ categoriesData, productsData }) {
                       <button
                         className={
                           activeItemIndex === (i === 0 ? i : i + 1)
-                            ? `inline-block bg-button border border-transparent rounded-full p-1.5 text-base font-medium border-text-primary text-text-secondary hover:border-black`
-                            : `inline-block bg-button border border-transparent rounded-full p-1.5 text-base font-medium text-text-secondary hover:border-black`
+                            ? `inline-block bg-button border border-transparent rounded-full p-1.5 text-sm sm:text-base font-medium border-text-primary text-text-secondary hover:border-black`
+                            : `inline-block bg-button border border-transparent rounded-full p-1.5 text-sm sm:text-base font-medium text-text-secondary hover:border-black`
                         }
                         key={i}
                         active={i >= activeItemIndex && i < activeItemIndex}
