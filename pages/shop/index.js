@@ -23,13 +23,13 @@ export default function shop({ categoriesData, productsData }) {
   const products = productsData?.[0];
   console.log(products);
   return (
-    <div className="mx-10 px-4 bg-white shadow-md shadow-black text-text-primary font-gothic">
+    <div className="sm:mx-10 px-4 bg-white shadow-md shadow-black text-text-primary font-gothic">
       <div className="flex flex-wrap justify-between">
         <div className="w-full">
           <div className="flex flex-wrap justify-between">
             {products.length &&
               categories.map((category) => (
-                <div className="w-full px-4 mx-10">
+                <div className="w-full sm:px-4 sm:mx-10">
                   <div className="relative">
                     <Link
                       href="/shop/[category]"
@@ -46,7 +46,7 @@ export default function shop({ categoriesData, productsData }) {
                       </a>
                     </Link>
                   </div>
-                  <div className="flex flex-wrap gap-3 w-full justify-start xl:justify-evenly items-center">
+                  <div className="flex flex-wrap sm:gap-3 w-full justify-center sm:justify-start xl:justify-evenly items-center mx-auto">
                     {products
                       .filter(
                         (item) =>
@@ -57,7 +57,7 @@ export default function shop({ categoriesData, productsData }) {
                         console.log(product.image);
                         while (i < 6)
                           return (
-                            <div className="w-48 h-64 px-4">
+                            <div className="w-48 h-64 sm:px-4 mx-auto ">
                               <div className="relative">
                                 <Link
                                   href="/shop/[category]/[id]"
@@ -68,7 +68,7 @@ export default function shop({ categoriesData, productsData }) {
                                     .toLowerCase()}`}
                                 >
                                   <a className="block px-4">
-                                    <div className="relative w-48 h-36">
+                                    <div className="relative w-48 h-36 -translate-x-4 sm:translate-x-0">
                                       <Image
                                         src={
                                           product.image ||
@@ -76,7 +76,7 @@ export default function shop({ categoriesData, productsData }) {
                                         }
                                         alt={product.name}
                                         layout="fill"
-                                        className=" object-center object-cover"
+                                        className=" object-center object-cover rounded-lg"
                                       />
                                     </div>
                                     <div className="relative mt-4 space-y-2">
