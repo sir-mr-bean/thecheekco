@@ -20,14 +20,15 @@ export const cartInitializer = (initialValue = initialCart) => {
 export const cartReducer = (state, action) => {
   switch (action.type) {
     case "ADD_TO_CART":
+      console.log(action);
       return state.find((item) => item.id === action.item.id)
         ? state.map((item) =>
             item.id === action.item.id
               ? {
                   ...item,
-                  quantity: item.quantity + 1,
+                  quantity: item.quantity + action.qty,
                 }
-              : item
+              : { item, quantity: 1 }
           )
         : [...state, { ...action.item, quantity: 1 }];
 

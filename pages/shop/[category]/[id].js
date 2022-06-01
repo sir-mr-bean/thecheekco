@@ -1,5 +1,5 @@
 import { getStrapiURL } from "../../../utils/api";
-import { Fragment } from "react";
+import { Fragment, useRef } from "react";
 import { Tab } from "@headlessui/react";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import Image from "next/image";
@@ -96,6 +96,7 @@ const Markdown = (content) => {
 };
 
 const Product = ({ data }) => {
+  const quantity = useRef(null);
   const { cart, dispatch } = CartState();
   const product = data?.[0];
   console.log(data);
@@ -104,10 +105,11 @@ const Product = ({ data }) => {
     dispatch({
       type: "ADD_TO_CART",
       item: product,
+      qty: parseInt(quantity.current.value),
     });
     if (window !== undefined) {
     }
-    const toast = toast.custom(
+    toast.custom((t) => (
       <div
         className={`${
           t.visible ? "animate-enter" : "animate-leave after:opacity-0"
@@ -124,21 +126,21 @@ const Product = ({ data }) => {
             </div>
             <div className="ml-3 flex-1 my-auto">
               <p className="mt-1 text-sm text-text-primary font-gothic">
-                {product.name} added to cart.
+                {quantity.current.value} {product.name} added to cart.
               </p>
             </div>
           </div>
         </div>
         <div className="flex border-l border-text-primary border-opacity-10">
           <button
-            onClick={() => toast.dismiss(toast)}
+            onClick={() => toast.dismiss(t.id)}
             className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:text-text-primary"
           >
             Close
           </button>
         </div>
       </div>
-    );
+    ));
   };
 
   return (
@@ -210,6 +212,7 @@ const Product = ({ data }) => {
                       Quantity
                     </label>
                     <select
+                      ref={quantity}
                       id="quantity"
                       name="quantity"
                       className="mt-1 block w-full pl-3 pr-4 py-2 text-base border-gray-300 focus:outline-none focus:ring-text-primary focus:border-text-primary sm:text-sm rounded-md border text-black"

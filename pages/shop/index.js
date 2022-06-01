@@ -102,6 +102,19 @@ export default function shop({ categoriesData, productsData }) {
                             </div>
                           );
                       })}
+                    <div className="w-full flex justify-end items-center py-1 cursor-pointer">
+                      <Link
+                        href="/shop/[category]"
+                        as={`/shop/${category.category_data.name
+                          .replace(/ /g, "-")
+                          .toLowerCase()}`}
+                      >
+                        <span className="">
+                          Browse all {category.category_data.name}
+                          <span aria-hidden="true"> &rarr;</span>
+                        </span>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               ))}

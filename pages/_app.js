@@ -35,7 +35,6 @@ function useScrollDirection() {
 function MyApp({ Component, pageProps }) {
   const [total, setTotal] = useState(0);
   const scrollDirection = useScrollDirection();
-  console.log(scrollDirection);
 
   return (
     <FirebaseAuthContext>

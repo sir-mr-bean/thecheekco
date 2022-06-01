@@ -13,8 +13,6 @@ export const Header = ({ scrollDirection }) => {
   const [navigation, setNavigation] = useState([]);
   const { data } = useSWR("/api/fetchcategories", fetcher);
 
-  console.log(data);
-
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 

@@ -5,8 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function Home({ categoriesData, productsData }) {
-  console.log(categoriesData);
-  console.log(productsData);
   const carouselRef = useRef();
   const [activeItemIndex, setActiveItemIndex] = useState(0);
 
@@ -60,7 +58,6 @@ export default function Home({ categoriesData, productsData }) {
         "Be more productive than enterprise project managers with a single piece of paper.",
     },
   ];
-  console.log(carouselRef);
   return (
     <div>
       <div>
@@ -190,16 +187,14 @@ export default function Home({ categoriesData, productsData }) {
                           .replaceAll(" ", "-")}`}
                         className="relative overflow-hidden"
                       >
-                        <div
-                          key={category.category_data.name}
-                          className="flex justify-center items-center h-96 w-full m-4 cursor-pointer"
-                        >
-                          <div className="relative h-full w-full">
+                        <div className="flex justify-center items-center h-96 w-full m-4 cursor-pointer">
+                          <div className="relative h-full w-full ">
                             <Image
                               priority={true}
                               src={randomProduct?.image}
                               objectFit="cover"
                               layout="fill"
+                              className="rounded-md"
                             />
 
                             <div className="absolute w-full sm:w-1/3 sm:inset-x-1/3 bottom-2 z-10 flex flex-col justify-center items-center">
@@ -241,7 +236,11 @@ export default function Home({ categoriesData, productsData }) {
                             : `inline-block bg-button border border-transparent rounded-full p-1.5 text-xs sm:text-base font-medium text-text-secondary hover:border-black`
                         }
                         key={i}
-                        active={i >= activeItemIndex && i < activeItemIndex}
+                        active={
+                          i >= activeItemIndex && i < activeItemIndex
+                            ? true
+                            : undefined
+                        }
                         onClick={() =>
                           carouselRef.current.goTo(i > 0 ? i + 1 : i)
                         }
