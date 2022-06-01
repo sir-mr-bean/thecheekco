@@ -89,7 +89,7 @@ const Markdown = (content) => {
   var converter = new showdown.Converter();
   var html = converter.makeHtml(content.content);
   return (
-    <div className="bg-transparent text-text-primary font-gothic prose py-3">
+    <div className="bg-transparent text-text-primary font-gothic prose prose-stone py-3">
       {ReactHtmlParser(html)}
     </div>
   );
@@ -144,19 +144,19 @@ const Product = ({ data }) => {
   return (
     <>
       {product && (
-        <div className="font-gothic">
+        <div className="font-gothic text-text-primary">
           <div className="mx-auto pt-10 pb-16 px-4 sm:pb-12 sm:px-6 lg:max-w-5xl lg:px-8 space-y-6 ">
             {/* Product */}
-            <div className="flex flex-col sm:flex-row border justify-items-stretch items-stretch sm:space-x-6">
+            <div className="flex flex-col sm:flex-row  justify-items-stretch items-stretch sm:space-x-6">
               {/* Product image */}
 
-              <div className="overflow-hidden relative w-full mb-6 sm:mb-0">
+              <div className="overflow-hidden relative w-3/4 mx-auto sm:w-2/3 mb-6 sm:mb-0">
                 <Image
                   priority
                   layout="responsive"
-                  objectFit="fill"
-                  height={800}
-                  width={800}
+                  objectFit="cover"
+                  height={1920}
+                  width={1080}
                   src={product.image}
                   alt={product.name}
                   className="object-cover rounded-lg"
@@ -164,9 +164,9 @@ const Product = ({ data }) => {
               </div>
 
               {/* Product details */}
-              <div className="max-w-xl sm:max-w-none border rounded-lg bg-white sm:px-10 flex flex-col justify-center w-full px-4">
+              <div className="max-w-xl sm:max-w-none border rounded-lg bg-white sm:px-10 flex flex-col justify-around w-full px-4">
                 <div className="flex flex-col space-y-2 items-center justify-center">
-                  <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl px-3 pt-4 ">
+                  <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl px-3 pt-4">
                     {product.name}
                   </h1>
 
@@ -193,9 +193,7 @@ const Product = ({ data }) => {
                   </div>
                 </div>
 
-                <p className="text-text-primary mt-6 p-3">
-                  {product?.description}
-                </p>
+                <p className="text-text-primary mt-6 p-3"></p>
                 <div className="flex justify-between items-center space-x-10">
                   <button
                     onClick={() => handleAdd(product)}
@@ -315,7 +313,7 @@ const Product = ({ data }) => {
                 </div>
               </div>
             </div>
-            <div className="lg:mt-0 lg:col-span-4 bg-white rounded-lg flex justify-center items-center pb-20 px-4">
+            <div className="lg:mt-0 lg:col-span-4 bg-white rounded-lg flex justify-start items-center pb-20 px-4">
               <Tab.Group as="div">
                 <div className="border-b border-gray-200">
                   <Tab.List className="-mb-px flex space-x-8">
@@ -360,7 +358,7 @@ const Product = ({ data }) => {
                 <Tab.Panels as={Fragment}>
                   <Tab.Panel className="-mb-10">
                     <h3 className="sr-only">Additional Info</h3>
-                    <Markdown content={product.attributes?.longdescription} />
+                    <Markdown content={product.description} />
                   </Tab.Panel>
 
                   <Tab.Panel className="text-sm text-gray-500">

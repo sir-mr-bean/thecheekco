@@ -1,6 +1,8 @@
 import { RoughNotation, RoughNotationGroup } from "react-rough-notation";
 import Carousel from "react-elastic-carousel";
 import { useRef, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function Home({ categoriesData, productsData }) {
   console.log(categoriesData);
@@ -180,32 +182,40 @@ export default function Home({ categoriesData, productsData }) {
                     console.log(randomProduct);
                     // return a carousel displaying 3 random products at a time
                     return (
-                      <div
+                      <Link
                         key={category.category_data.name}
-                        className="flex justify-center items-center h-96 w-full m-4"
+                        href={`/shop/${category.category_data.name}`}
+                        as={`/shop/${category.category_data.name
+                          .toLowerCase()
+                          .replaceAll(" ", "-")}`}
+                        className="relative overflow-hidden"
                       >
-                        <div className="relative h-full w-full">
-                          <div
-                            className="absolute inset-0 overflow-hidden rounded-md"
-                            style={{
-                              backgroundImage: `url(${randomProduct?.image})`,
-                              backgroundSize: "cover",
-                              backgroundPosition: "center",
-                            }}
-                          ></div>
-                          <div className="absolute w-full sm:w-1/2 right-0  bottom-2 z-10 flex flex-col justify-center items-center">
-                            <div className="sm:px-4 py-2 bg-white bg-opacity-80 border border-transparent rounded-xl whitespace-nowrap sm:rounded-l-md shadow-sm">
-                              <div className="flex items-center justify-between">
-                                <div className="flex-1 px-2 sm:px-4">
-                                  <h3 className="text-sm sm:text-lg font-medium text-text-primary">
-                                    {category.category_data.name}
-                                  </h3>
+                        <div
+                          key={category.category_data.name}
+                          className="flex justify-center items-center h-96 w-full m-4 cursor-pointer"
+                        >
+                          <div className="relative h-full w-full">
+                            <Image
+                              priority={true}
+                              src={randomProduct?.image}
+                              objectFit="cover"
+                              layout="fill"
+                            />
+
+                            <div className="absolute w-full sm:w-1/3 sm:inset-x-1/3 bottom-2 z-10 flex flex-col justify-center items-center">
+                              <div className="sm:px-2 py-2 bg-white bg-opacity-80 border border-transparent rounded-md whitespace-nowrap shadow-sm">
+                                <div className="flex items-center justify-between">
+                                  <div className="flex-1 px-2 sm:px-4">
+                                    <h3 className="text-sm sm:text-lg font-medium text-text-primary">
+                                      {category.category_data.name}
+                                    </h3>
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </Link>
                     );
                   })}
             </Carousel>

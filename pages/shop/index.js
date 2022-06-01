@@ -26,7 +26,7 @@ export default function shop({ categoriesData, productsData }) {
     <div className="mx-2 sm:mx-10 px-4 bg-white shadow-md shadow-black text-text-primary font-gothic">
       <div className="flex flex-wrap justify-between">
         <div className="w-full">
-          <div className="flex flex-wrap justify-between">
+          <div className="flex flex-wrap justify-between divide-y">
             {products.length &&
               categories.map((category) => (
                 <div className="w-full sm:px-4 sm:mx-10">
@@ -46,7 +46,7 @@ export default function shop({ categoriesData, productsData }) {
                       </a>
                     </Link>
                   </div>
-                  <div className="flex flex-wrap sm:gap-3 w-full justify-center sm:justify-start xl:justify-evenly items-center mx-auto">
+                  <div className="flex flex-wrap md:gap-1 w-full justify-start sm:justify-start xl:justify-evenly items-center">
                     {products
                       .filter(
                         (item) =>
@@ -57,7 +57,7 @@ export default function shop({ categoriesData, productsData }) {
                         console.log(product.image);
                         while (i < 6)
                           return (
-                            <div className="w-48 h-fit space-y-2 sm:px-4 mx-auto ">
+                            <div className="w-fit h-fit space-y-2 sm:px-4 mx-auto">
                               <div className="relative">
                                 <Link
                                   href="/shop/[category]/[id]"
@@ -67,22 +67,34 @@ export default function shop({ categoriesData, productsData }) {
                                     .replace(/ /g, "-")
                                     .toLowerCase()}`}
                                 >
-                                  <a className="block px-4">
-                                    <div className="relative w-48 h-36 -translate-x-4 sm:translate-x-0">
-                                      <Image
-                                        src={
-                                          product.image ||
-                                          "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
-                                        }
-                                        alt={product.name}
-                                        layout="fill"
-                                        className=" object-center object-cover rounded-lg"
-                                      />
-                                    </div>
-                                    <div className="relative mt-4 space-y-2">
-                                      <h3 className="text-sm font-medium sm:whitespace-nowrap">
-                                        {product.name}
-                                      </h3>
+                                  <a className="px-4 ">
+                                    <div className="flex sm:flex-col justify-between items-start space-x-2">
+                                      <div className="relative w-64 min-w-xl">
+                                        <Image
+                                          src={
+                                            product.image ||
+                                            "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
+                                          }
+                                          alt={product.name}
+                                          width={1920}
+                                          height={1080}
+                                          layout="responsive"
+                                          className="object-center object-cover rounded-lg"
+                                        />
+                                      </div>
+                                      <div className="relative mt-4 flex flex-col sm:flex-row items-center justify-between w-full">
+                                        <h1 className="text-sm font-medium sm:whitespace-nowrap">
+                                          {product.name}
+                                        </h1>
+                                        <h3 className="text-xs font-medium sm:whitespace-nowrap pr-2">
+                                          $
+                                          {(
+                                            product.variations?.[0]
+                                              ?.item_variation_data?.price_money
+                                              ?.amount / 100
+                                          ).toFixed(2)}
+                                        </h3>
+                                      </div>
                                     </div>
                                   </a>
                                 </Link>

@@ -32,7 +32,7 @@ export default function MobileMenu({ navigation }) {
         leaveTo="transform opacity-0 scale-95"
       >
         <Menu.Items className="origin-top-right absolute top-8 right-0 mt-2 w-32 rounded-md shadow-lg bg-bg-lighttan focus:outline-none">
-          <div className="py-1">
+          <div className="">
             <>
               <div className="divide divide-text-primary divide-y">
                 <ul>
@@ -56,6 +56,7 @@ export default function MobileMenu({ navigation }) {
                                     active
                                       ? "bg-gray-100 text-text-secondary"
                                       : "text-text-primary",
+                                    i === 0 ? "rounded-t-md" : "",
                                     "block px-4 py-2 text-sm hover:bg-bg-tan cursor-pointer"
                                   )}
                                 >
@@ -91,9 +92,9 @@ export default function MobileMenu({ navigation }) {
                         <div
                           className={classNames(
                             active
-                              ? "bg-gray-100 text-text-secondary"
+                              ? "bg-gray-100 text-text-secondary rounded-b-md"
                               : "text-text-primary",
-                            "block px-4 py-2 text-sm hover:bg-bg-tan cursor-pointer"
+                            "block px-4 py-2 text-sm hover:bg-bg-tan cursor-pointer rounded-b-md"
                           )}
                         >
                           My Wishlist

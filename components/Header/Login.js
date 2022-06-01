@@ -69,7 +69,7 @@ export default function Login() {
                       href="/login"
                       className={classNames(
                         active
-                          ? "bg-button text-text-primary rounded-t-md"
+                          ? "bg-bg-tan text-text-primary rounded-t-md"
                           : "text-text-primary",
                         "block px-4 py-2 text-sm"
                       )}
@@ -84,7 +84,7 @@ export default function Login() {
                       href="/register"
                       className={classNames(
                         active
-                          ? "bg-button text-text-primary rounded-b-md"
+                          ? "bg-bg-tan text-text-primary rounded-b-md"
                           : "text-text-primary",
                         "block px-4 py-2 text-sm"
                       )}
@@ -102,7 +102,7 @@ export default function Login() {
                       href="/profile"
                       className={classNames(
                         active
-                          ? "bg-button text-text-primary rounded-t-md"
+                          ? "bg-bg-tan text-text-primary rounded-t-md"
                           : "text-text-primary",
                         "block px-4 py-2 text-sm"
                       )}
@@ -117,7 +117,7 @@ export default function Login() {
                       href="/profile/orders"
                       className={classNames(
                         active
-                          ? "bg-button text-text-primary rounded-b-md"
+                          ? "bg-bg-tan text-text-primary"
                           : "text-text-primary",
                         "block px-4 py-2 text-sm"
                       )}
@@ -132,7 +132,7 @@ export default function Login() {
                       onClick={() => handleSignOut()}
                       className={classNames(
                         active
-                          ? "bg-button text-text-primary rounded-b-md"
+                          ? "bg-bg-tan text-text-primary rounded-b-md"
                           : "text-text-primary",
                         "block px-4 py-2 text-sm w-full text-left"
                       )}
