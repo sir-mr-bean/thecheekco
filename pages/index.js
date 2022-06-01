@@ -1,19 +1,13 @@
 import { RoughNotation, RoughNotationGroup } from "react-rough-notation";
-import { getStrapiURL } from "../utils/api";
+import Carousel from "react-elastic-carousel";
+import { useRef, useState } from "react";
 
-export default function Home({ data }) {
-  const categories = data?.data;
-  console.log(
-    Math.ceil(
-      Math.random() * categories?.[0].attributes?.products?.data.length + 1
-    )
-  );
-  console.log(
-    categories?.[0].attributes?.products?.data?.[
-      Math.floor(Math.random() * categories?.[0].attributes?.products?.length) +
-        1
-    ]?.attributes
-  );
+export default function Home({ categoriesData, productsData }) {
+  console.log(categoriesData);
+  console.log(productsData);
+  const carouselRef = useRef();
+  const [activeItemIndex, setActiveItemIndex] = useState(0);
+
   const offers = [
     {
       name: "On all local orders from Mossman to Mission Beach",
@@ -31,39 +25,6 @@ export default function Home({ data }) {
       href: "#",
     },
   ];
-
-  // const categories = [
-  //   {
-  //     name: "New Arrivals",
-  //     href: "#",
-  //     imageSrc:
-  //       "https://tailwindui.com/img/ecommerce-images/home-page-01-category-01.jpg",
-  //   },
-  //   {
-  //     name: "Productivity",
-  //     href: "#",
-  //     imageSrc:
-  //       "https://tailwindui.com/img/ecommerce-images/home-page-01-category-02.jpg",
-  //   },
-  //   {
-  //     name: "Workspace",
-  //     href: "#",
-  //     imageSrc:
-  //       "https://tailwindui.com/img/ecommerce-images/home-page-01-category-04.jpg",
-  //   },
-  //   {
-  //     name: "Accessories",
-  //     href: "#",
-  //     imageSrc:
-  //       "https://tailwindui.com/img/ecommerce-images/home-page-01-category-05.jpg",
-  //   },
-  //   {
-  //     name: "Sale",
-  //     href: "#",
-  //     imageSrc:
-  //       "https://tailwindui.com/img/ecommerce-images/home-page-01-category-03.jpg",
-  //   },
-  // ];
 
   const collections = [
     {
@@ -97,7 +58,7 @@ export default function Home({ data }) {
         "Be more productive than enterprise project managers with a single piece of paper.",
     },
   ];
-
+  console.log(carouselRef);
   return (
     <div>
       <div>
@@ -197,58 +158,86 @@ export default function Home({ data }) {
               </a>
             </div>
 
-            <div className="mt-4 flow-root">
-              <div className="-my-2">
-                <div className="box-content py-2 relative h-96 overflow-x-auto xl:overflow-visible">
-                  <div className="absolute min-w-screen-xl px-4 flex space-x-8 sm:px-6 lg:px-8 ">
-                    {categories &&
-                      categories.map((category) => {
-                        console.log(
-                          category?.attributes?.products?.data?.[
-                            Math.floor(
-                              Math.random() *
-                                categories?.[0].attributes?.products?.data
-                                  .length
-                            )
-                          ]?.attributes.itemimage?.data?.attributes?.url
-                        );
-                        return (
-                          <a
-                            key={category?.attributes.displayname}
-                            href={category.href}
-                            className="relative w-full h-80 rounded-lg p-6 flex flex-col overflow-hidden hover:opacity-75"
-                          >
-                            <span
-                              aria-hidden="true"
-                              className="absolute inset-0"
-                            >
-                              <img
-                                src={
-                                  category?.attributes?.products?.data?.[
-                                    Math.floor(
-                                      Math.random() *
-                                        categories?.[0].attributes?.products
-                                          ?.data.length
-                                    )
-                                  ]?.attributes.itemimage?.data?.attributes?.url
-                                }
-                                alt=""
-                                className="w-full h-full object-center object-cover"
-                              />
-                            </span>
-                            <span
-                              aria-hidden="true"
-                              className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-gray-800 opacity-50"
-                            />
-                            <span className="relative mt-auto text-center text-xl font-bold text-button">
-                              {category?.attributes.displayname}
-                            </span>
-                          </a>
-                        );
-                      })}
-                  </div>
-                </div>
-              </div>
+            <Carousel
+              ref={carouselRef}
+              pagination={false}
+              showArrows={false}
+              itemsToShow={3}
+              itemsToScroll={3}
+              onChange={(currentItem) => setActiveItemIndex(currentItem.index)}
+            >
+              {categoriesData &&
+                productsData &&
+                categoriesData
+                  ?.filter((item) => item.category_data.name.charAt(0) != "_")
+                  .map((category) => {
+                    // for each category name in category.category_data.name, find a random product from productsData that matches the category name and display it
+                    const randomProduct = productsData?.[0].find(
+                      (product) =>
+                        product.category?.category_data?.name ===
+                        category.category_data.name
+                    );
+                    console.log(randomProduct);
+                    // return a carousel displaying 3 random products at a time
+                    return (
+                      <div
+                        key={category.category_data.name}
+                        className="flex justify-center items-center h-96 w-full m-4"
+                      >
+                        <div className="relative h-full w-full">
+                          <div
+                            className="absolute inset-0 overflow-hidden rounded-md"
+                            style={{
+                              backgroundImage: `url(${randomProduct?.image})`,
+                              backgroundSize: "cover",
+                              backgroundPosition: "center",
+                            }}
+                          ></div>
+                          <div className="absolute w-1/2 right-0  bottom-2 z-10 flex flex-col justify-center">
+                            <div className="px-4 py-2 bg-white bg-opacity-80 border border-transparent rounded-l-md shadow-sm">
+                              <div className="flex items-center justify-between">
+                                <div className="flex-1 px-4">
+                                  <h3 className="text-lg font-medium text-text-primary">
+                                    {category.category_data.name}
+                                  </h3>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+            </Carousel>
+            <div className="flex justify-center items-center space-x-3">
+              {categoriesData &&
+                productsData &&
+                categoriesData
+                  ?.filter((item) => item.category_data.name.charAt(0) != "_")
+                  .filter((item, i) => i % 2 === 0)
+                  .map((category, i) => {
+                    // for each category name in category.category_data.name, find a random product from productsData that matches the category name and display it
+                    const randomProduct = productsData?.[0].find(
+                      (product) =>
+                        product.category?.category_data?.name ===
+                        category.category_data.name
+                    );
+                    console.log(randomProduct);
+                    return (
+                      <button
+                        className={
+                          activeItemIndex === (i === 0 ? i : i + 1)
+                            ? `inline-block bg-button border border-transparent rounded-full p-1.5 text-base font-medium border-text-primary text-text-secondary hover:border-black`
+                            : `inline-block bg-button border border-transparent rounded-full p-1.5 text-base font-medium text-text-secondary hover:border-black`
+                        }
+                        key={i}
+                        active={i >= activeItemIndex && i < activeItemIndex}
+                        onClick={() =>
+                          carouselRef.current.goTo(i > 0 ? i + 1 : i)
+                        }
+                      />
+                    );
+                  })}
             </div>
 
             <div className="px-4 sm:hidden">
@@ -388,23 +377,35 @@ export default function Home({ data }) {
   );
 }
 
-export const getStaticProps = async () => {
-  const productsURL = getStrapiURL(
-    `/api/categories?populate[0]=products&populate[1]=products.itemimage&populate[2]=products.categories`
-  );
-  const res = await fetch(productsURL, {
+export const getStaticProps = async ({ params }) => {
+  const categoriesURL = `https://thecheekco.vercel.app/api/fetchcategories`;
+  const categoriesResult = await fetch(categoriesURL, {
     headers: {
-      Accept: "application/json",
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
+      Accept: "application/json, text/plain, */*",
+      "User-Agent": "*",
     },
   });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch posts, received status ${res.status}`);
+  const categoriesData = await categoriesResult.json();
+
+  const productsURL = `https://thecheekco.vercel.app/api/fetchproducts`;
+  const productsResult = await fetch(productsURL, {
+    headers: {
+      Accept: "application/json, text/plain, */*",
+      "User-Agent": "*",
+    },
+  });
+  const productsData = await productsResult.json();
+
+  if (!productsResult.ok || !categoriesResult.ok) {
+    throw new Error(
+      `Failed to fetch posts, received status ${productsResult.status}, ${categoriesResult.status}`
+    );
   }
-  const data = await res.json();
+
   return {
     props: {
-      data,
+      productsData,
+      categoriesData,
     },
   };
 };
