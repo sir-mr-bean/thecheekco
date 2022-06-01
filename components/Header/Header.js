@@ -35,7 +35,7 @@ export const Header = ({ scrollDirection }) => {
       >
         <div className="flex flex-col">
           <div className="bg-paper-bg bg-cover h-11 drop-shadow-[0_-7px_5px_rgba(0,0,0,0.31)] bg-opacity-10">
-            <div className="flex justify-around items-center pb-2 md:justify-between lg:mx-36">
+            <div className="flex justify-around items-center md:justify-between lg:mx-36">
               <Link href="/">
                 <div className="ml-2 sm:ml-10 text-[21px] text-header-brown font-gothic py-2 lg:py-0 lg:text-[34px] cursor-pointer flex whitespace-nowrap">
                   the cheek co.
@@ -59,7 +59,7 @@ export const Header = ({ scrollDirection }) => {
               </Link>
               <div className="flex items-center justify-between font-gothic text-header-brown">
                 {/* Mobile Menu */}
-                <div className="pt-0.5 pl-16">
+                <div className="pl-10">
                   <div className="sm:hidden p-1.5 active:bg-black rounded-md active:bg-opacity-10">
                     <MobileMenu navigation={navigation} />
                   </div>
