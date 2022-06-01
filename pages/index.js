@@ -193,11 +193,11 @@ export default function Home({ categoriesData, productsData }) {
                               backgroundPosition: "center",
                             }}
                           ></div>
-                          <div className="absolute w-1/2 right-0  bottom-2 z-10 flex flex-col justify-center">
-                            <div className="px-4 py-2 bg-white bg-opacity-80 border border-transparent rounded-l-md shadow-sm">
+                          <div className="absolute w-full sm:w-1/2 right-0  bottom-2 z-10 flex flex-col justify-center items-center">
+                            <div className="sm:px-4 py-2 bg-white bg-opacity-80 border border-transparent rounded-xl whitespace-nowrap sm:rounded-l-md shadow-sm">
                               <div className="flex items-center justify-between">
-                                <div className="flex-1 px-4">
-                                  <h3 className="text-lg font-medium text-text-primary">
+                                <div className="flex-1 px-2 sm:px-4">
+                                  <h3 className="text-sm sm:text-lg font-medium text-text-primary">
                                     {category.category_data.name}
                                   </h3>
                                 </div>
@@ -227,8 +227,8 @@ export default function Home({ categoriesData, productsData }) {
                       <button
                         className={
                           activeItemIndex === (i === 0 ? i : i + 1)
-                            ? `inline-block bg-button border border-transparent rounded-full p-1.5 text-sm sm:text-base font-medium border-text-primary text-text-secondary hover:border-black`
-                            : `inline-block bg-button border border-transparent rounded-full p-1.5 text-sm sm:text-base font-medium text-text-secondary hover:border-black`
+                            ? `inline-block bg-button border border-transparent rounded-full p-1.5 text-xs sm:text-base font-medium border-text-primary text-text-secondary hover:border-black`
+                            : `inline-block bg-button border border-transparent rounded-full p-1.5 text-xs sm:text-base font-medium text-text-secondary hover:border-black`
                         }
                         key={i}
                         active={i >= activeItemIndex && i < activeItemIndex}
