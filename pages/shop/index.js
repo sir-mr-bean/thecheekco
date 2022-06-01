@@ -23,7 +23,7 @@ export default function shop({ categoriesData, productsData }) {
   const products = productsData?.[0];
   console.log(products);
   return (
-    <div className="sm:mx-10 px-4 bg-white shadow-md shadow-black text-text-primary font-gothic">
+    <div className="mx-2 sm:mx-10 px-4 bg-white shadow-md shadow-black text-text-primary font-gothic">
       <div className="flex flex-wrap justify-between">
         <div className="w-full">
           <div className="flex flex-wrap justify-between">
@@ -57,7 +57,7 @@ export default function shop({ categoriesData, productsData }) {
                         console.log(product.image);
                         while (i < 6)
                           return (
-                            <div className="w-48 h-64 sm:px-4 mx-auto ">
+                            <div className="w-48 h-fit space-y-2 sm:px-4 mx-auto ">
                               <div className="relative">
                                 <Link
                                   href="/shop/[category]/[id]"
@@ -80,7 +80,7 @@ export default function shop({ categoriesData, productsData }) {
                                       />
                                     </div>
                                     <div className="relative mt-4 space-y-2">
-                                      <h3 className="text-sm font-medium ">
+                                      <h3 className="text-sm font-medium sm:whitespace-nowrap">
                                         {product.name}
                                       </h3>
                                     </div>
