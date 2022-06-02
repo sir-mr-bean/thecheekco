@@ -1,6 +1,6 @@
 import { RoughNotation, RoughNotationGroup } from "react-rough-notation";
-import Carousel from "react-elastic-carousel";
-import { ReactElasticCarouselProps } from "react-elastic-carousel";
+import Carousel from "../lib/react-elastic-carousel";
+import { ReactElasticCarouselProps } from "../lib/react-elastic-carousel";
 import { CartState } from "../context/Context";
 import * as React from "react";
 import { useRef, useState } from "react";
