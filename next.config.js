@@ -3,6 +3,10 @@ const withTM = require("next-transpile-modules")([
   "react-square-web-payments-sdk",
 ]);
 
+/**
+ * @type {import('next').NextConfig}
+ **/
+
 module.exports = withTM({
   reactStrictMode: true,
   images: {

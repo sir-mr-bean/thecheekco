@@ -8,6 +8,8 @@ import CartContext, { WishListContext } from "../context/Context";
 import { useState, useEffect } from "react";
 import { PaymentForm } from "react-square-web-payments-sdk";
 import FirebaseAuthContext from "../context/FirebaseAuthContext";
+import type { AppProps } from "next/app";
+import * as React from "react";
 
 function useScrollDirection() {
   const [scrollDirection, setScrollDirection] = useState(null);
@@ -32,7 +34,7 @@ function useScrollDirection() {
   return scrollDirection;
 }
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps }: AppProps) {
   const [total, setTotal] = useState(0);
   const scrollDirection = useScrollDirection();
 
@@ -44,7 +46,6 @@ function MyApp({ Component, pageProps }) {
             applicationId={process.env.NEXT_PUBLIC_SQUARE_APP_ID}
             locationId="LNW290H2QTZVK"
             cardTokenizeResponseReceived={async (token, buyer) => {
-              const cart = dynamic(() => import("../context/Context"));
               const response = await fetch("/api/pay", {
                 method: "POST",
                 headers: {

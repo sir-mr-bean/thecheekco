@@ -1,8 +1,12 @@
 import { RoughNotation, RoughNotationGroup } from "react-rough-notation";
 import Carousel from "react-elastic-carousel";
+import { ReactElasticCarouselProps } from "react-elastic-carousel";
+import { CartState } from "../context/Context";
+import * as React from "react";
 import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { GetStaticProps } from "next";
 import {
   BsStarFill,
   BsStarHalf,
@@ -11,13 +15,15 @@ import {
   BsEmojiHeartEyesFill,
 } from "react-icons/bs";
 import { FaKissWinkHeart } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 export default function Home({ categoriesData, productsData }) {
-  const carouselRef = useRef();
+  const carouselRef: any = useRef();
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   console.log(productsData);
   const guaSha = productsData?.[0].filter((item) => item.name == "The Gua Sha");
   console.log(guaSha);
+  const { cart, dispatch } = CartState();
 
   // create a function to replace all spaces in a string with "-"
   const slugify = (string) => {
@@ -81,6 +87,48 @@ export default function Home({ categoriesData, productsData }) {
         "Be more productive than enterprise project managers with a single piece of paper.",
     },
   ];
+
+  const handleAdd = (product) => {
+    dispatch({
+      type: "ADD_TO_CART",
+      item: product,
+    });
+    if (window !== undefined) {
+    }
+    toast.custom((t) => (
+      <div
+        className={`${
+          t.visible ? "animate-enter" : "animate-leave"
+        } max-w-md w-full bg-bg-tan shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+      >
+        <div className="flex-1 w-0 p-4">
+          <div className="flex items-start">
+            <div className="flex-shrink-0 pt-0.5">
+              <img
+                className="h-10 w-10 rounded-full"
+                src={product?.image}
+                alt=""
+              />
+            </div>
+            <div className="ml-3 flex-1 my-auto">
+              <p className="mt-1 text-sm text-text-primary font-gothic">
+                {product.name} added to cart.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="flex border-l border-text-primary border-opacity-10">
+          <button
+            onClick={() => toast.dismiss(t.id)}
+            className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:text-text-primary"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    ));
+  };
+
   return (
     <div>
       <div>
@@ -149,12 +197,15 @@ export default function Home({ categoriesData, productsData }) {
             </div>
 
             <Carousel
+              isRTL={false}
               ref={carouselRef}
               pagination={false}
               showArrows={false}
               itemsToShow={3}
               itemsToScroll={2}
-              onChange={(currentItem) => setActiveItemIndex(currentItem.index)}
+              onChange={(currentItem: any) =>
+                setActiveItemIndex(currentItem.index)
+              }
             >
               {categoriesData &&
                 productsData &&
@@ -223,7 +274,7 @@ export default function Home({ categoriesData, productsData }) {
                             : `inline-block bg-button border border-transparent rounded-full p-1.5 text-xs sm:text-base font-medium text-text-secondary hover:border-black`
                         }
                         key={i}
-                        active={
+                        data-active={
                           i >= activeItemIndex && i < activeItemIndex
                             ? true
                             : undefined
@@ -468,7 +519,7 @@ export default function Home({ categoriesData, productsData }) {
   );
 }
 
-export const getStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({ params }) => {
   const categoriesURL = `https://thecheekco.vercel.app/api/fetchcategories`;
   const categoriesResult = await fetch(categoriesURL, {
     headers: {
