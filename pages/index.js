@@ -3,10 +3,33 @@ import Carousel from "react-elastic-carousel";
 import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  BsStarFill,
+  BsStarHalf,
+  BsStar,
+  BsHeartFill,
+  BsEmojiHeartEyesFill,
+} from "react-icons/bs";
+import { FaKissWinkHeart } from "react-icons/fa";
 
 export default function Home({ categoriesData, productsData }) {
   const carouselRef = useRef();
   const [activeItemIndex, setActiveItemIndex] = useState(0);
+  console.log(productsData);
+  const guaSha = productsData?.[0].filter((item) => item.name == "The Gua Sha");
+  console.log(guaSha);
+
+  // create a function to replace all spaces in a string with "-"
+  const slugify = (string) => {
+    return string
+      .toString()
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w-]+/g, "")
+      .replace(/--+/g, "-")
+      .replace(/^-+/, "")
+      .replace(/-+$/, "");
+  };
 
   const offers = [
     {
@@ -91,48 +114,16 @@ export default function Home({ categoriesData, productsData }) {
 
         <div className="relative">
           {/* Decorative image and overlay */}
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 overflow-hidden bg-gradient-to-b from-transparent via-bg-tan"
-          >
-            <img
-              src="https://images.unsplash.com/photo-1523772354886-34a1dc2f72e7?ixlib=rb-1.2.1&raw_url=true&q=80&fm=jpg&crop=entropy&cs=tinysrgb&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=736"
-              alt=""
-              className="w-full h-full object-center object-cover  opacity-30"
-            />
-          </div>
-
-          <div className="relative max-w-3xl mx-auto py-12 sm:py-16 px-6 flex flex-col items-center text-center md:py-32 lg:py-44 lg:px-0 font-gothic">
-            <RoughNotation
-              type="underline"
-              show={true}
-              iterations={3}
-              strokeWidth={3}
-              animationDelay={1000}
-              animationDuration={1200}
-              color="#602d0d"
-              padding={5}
-            >
-              <h1 className="text-4xl font-light tracking-tight text-text-primary lg:text-6xl">
-                100% Plastic Free
-              </h1>
-            </RoughNotation>
-            <span className="mt-4 text-xl text-text-primary prose prose-blockquote:text-text-primary">
-              We take great pride in our eco innovation, from 100% compostable
-              mailers down to eco friendly inks and tapes.
-              <blockquote className="py-2 stylistic-quote-mark">
-                "Australia produces almost 3 million tonnes of plastic per
-                annum, of which less than 12% is recycled."
-                <cite className="text-sm">- WWF 2021</cite>
-              </blockquote>
-              Let's get cheeky and take the little steps to save our planet.
-            </span>
-            <a
-              href="#"
-              className="mt-8 inline-block bg-button border border-transparent rounded-md py-3 px-8 text-base font-medium text-text-secondary hover:border-black"
-            >
-              Browse collections
-            </a>
+          <div className="flex flex-col">
+            <div className="flex flex-col items-center justify-center w-full my-4 sm:my-2 px-8 2xl:px-96">
+              <span className="flex items-center justify-start  text-text-primary text-3xl sm:text-4xl md:text-6xl font-arvo w-full tracking-wide">
+                This year, let's make the switch
+              </span>
+              <span className="flex items-center justify-end  text-text-secondary text-4xl sm:text-6xl md:text-7xl font-bethellen w-full">
+                together !
+              </span>
+            </div>
+            <div className="sm:flex hidden"></div>
           </div>
         </div>
 
@@ -145,12 +136,12 @@ export default function Home({ categoriesData, productsData }) {
             <div className="px-4 sm:px-6 sm:flex sm:items-center sm:justify-between lg:px-8 xl:px-0">
               <h2
                 id="category-heading"
-                className="text-2xl font-extrabold tracking-tight text-text-secondary"
+                className="text-xl font-extrabold tracking-tight text-text-secondary"
               >
                 Shop by Category
               </h2>
               <a
-                href="#"
+                href="/shop"
                 className="hidden text-sm font-semibold text-text-primary hover:text-text-secondary sm:block"
               >
                 Browse all categories<span aria-hidden="true"> &rarr;</span>
@@ -162,7 +153,7 @@ export default function Home({ categoriesData, productsData }) {
               pagination={false}
               showArrows={false}
               itemsToShow={3}
-              itemsToScroll={3}
+              itemsToScroll={2}
               onChange={(currentItem) => setActiveItemIndex(currentItem.index)}
             >
               {categoriesData &&
@@ -176,18 +167,15 @@ export default function Home({ categoriesData, productsData }) {
                         product.category?.category_data?.name ===
                         category.category_data.name
                     );
-                    console.log(randomProduct);
                     // return a carousel displaying 3 random products at a time
                     return (
                       <Link
                         key={category.category_data.name}
                         href={`/shop/${category.category_data.name}`}
-                        as={`/shop/${category.category_data.name
-                          .toLowerCase()
-                          .replaceAll(" ", "-")}`}
+                        as={`/shop/${slugify(category?.category_data?.name)}`}
                         className="relative overflow-hidden"
                       >
-                        <div className="flex justify-center items-center h-96 w-full m-4 cursor-pointer">
+                        <div className="flex justify-center items-center h-96 w-full m-1 sm:m-2 md:m-4 cursor-pointer">
                           <div className="relative h-full w-full ">
                             <Image
                               priority={true}
@@ -227,7 +215,6 @@ export default function Home({ categoriesData, productsData }) {
                         product.category?.category_data?.name ===
                         category.category_data.name
                     );
-                    console.log(randomProduct);
                     return (
                       <button
                         className={
@@ -252,7 +239,7 @@ export default function Home({ categoriesData, productsData }) {
             <div className="px-4 sm:hidden">
               <a
                 href="/shop"
-                className="block text-sm font-semibold text-text-primary hover:text-text-secondary"
+                className="flex w-full items-center justify-end my-2 text-sm font-semibold text-text-primary hover:text-text-secondary"
               >
                 Browse all categories<span aria-hidden="true"> &rarr;</span>
               </a>
@@ -262,37 +249,132 @@ export default function Home({ categoriesData, productsData }) {
           {/* Featured section */}
           <section
             aria-labelledby="social-impact-heading"
-            className="max-w-7xl mx-auto pt-24 px-4 sm:pt-32 sm:px-6 lg:px-8"
+            className="mt-16 sm:mt-24 bg-paper-bg bg-cover bg-center"
           >
-            <div className="relative rounded-lg overflow-hidden">
-              <div className="absolute inset-0">
-                <img
-                  src="https://tailwindui.com/img/ecommerce-images/home-page-01-feature-section-01.jpg"
-                  alt=""
-                  className="w-full h-full object-center object-cover"
-                />
-              </div>
-              <div className="relative bg-gray-900 bg-opacity-75 py-32 px-6 sm:py-40 sm:px-12 lg:px-16">
-                <div className="relative max-w-3xl mx-auto flex flex-col items-center text-center">
+            <div className="relative overflow-hidden">
+              <div className="relative bg-white bg-opacity-30 py-16 sm:py-20 ">
+                <div className="relative sm:space-x-5 flex flex-col sm:flex-row items-center justify-between text-center sm:mx-10">
                   <h2
                     id="social-impact-heading"
-                    className="text-3xl font-extrabold tracking-tight text-text-primary sm:text-4xl"
+                    className="font-extrabold tracking-tight text-text-secondary max-w-xl font-gothic text-center sm:text-left mx-1"
                   >
-                    <span className="block sm:inline">Level up</span>
-                    <span className="block sm:inline">your desk</span>
+                    <span className="text-4xl lg:text-6xl font-semibold">
+                      The Cheeky{" "}
+                    </span>
+                    <span className="text-4xl lg:text-6xl font-semibold">
+                      Gua Sha
+                    </span>
+                    <div className="mt-3 font-light text-xl text-text-primary space-y-3 sm:pr-16 text-center sm:text-left">
+                      <p>
+                        A traditional rose quartz stone tool, used to relieve
+                        muscle tension, aid lymphatic drainage, increase
+                        elasticity, blood circulation.{" "}
+                      </p>
+                      <p>
+                        Firmly guide the stone along the skin in upward motions,
+                        slowly increasing pressure.
+                      </p>
+                    </div>
                   </h2>
-                  <p className="mt-3 text-xl text-text-primary">
-                    Make your desk beautiful and organized. Post a picture to
-                    social media and watch it get more likes than life-changing
-                    announcements. Reflect on the shallow nature of existence.
-                    At least you have a really nice desk setup.
-                  </p>
-                  <a
-                    href="#"
-                    className="mt-8 w-full block bg-white border border-transparent rounded-md py-3 px-8 text-base font-medium text-text-secondary hover:bg-gray-100 sm:w-auto"
-                  >
-                    Shop Workspace
-                  </a>
+                  <div className="relative w-fit flex flex-col text-text-primary text-xl">
+                    <Image
+                      src="https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/istockphoto_1320900406_612x612_removebg_preview_19c4bb41fa.png"
+                      height={612}
+                      width={612}
+                      layout="responsive"
+                    />
+                    <div className="flex flex-col space-y-2 pb-3 my-2 items-center justify-center">
+                      <div className="flex items-center space-x-2">
+                        <BsHeartFill className="w-6 h-6" />
+                        <span>lifts and firms</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <BsEmojiHeartEyesFill className="w-6 h-6" />
+                        <span>helping to aid allergy relief</span>
+                      </div>
+                      <div className="flex items-center justify-center space-x-2 lg:whitespace-nowrap">
+                        <FaKissWinkHeart className="w-6 h-6" />
+                        <span>reduces puffiness & inflimation</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="w-fit">
+                    {productsData &&
+                      productsData?.[0]
+                        .filter((item) => item.name === "The Gua Sha")
+                        .map((product) => {
+                          console.log("product is");
+                          console.log(product);
+                          return (
+                            <div key={product.id}>
+                              <div className="relative">
+                                <Link
+                                  href="/shop/[category]/[id]"
+                                  as={`/shop/${
+                                    product.category?.category_data?.name
+                                  }/${product.name
+                                    .replace(/ /g, "-")
+                                    .toLowerCase()}`}
+                                >
+                                  <div className="relative  mx-4 w-60 h-60 rounded-lg overflow-hidden cursor-pointer border-2 border-[#DBA37D]">
+                                    {product.image && (
+                                      <Image
+                                        layout="fill"
+                                        src={product?.image}
+                                        alt={product.name}
+                                        className="object-center object-cover"
+                                      />
+                                    )}
+                                  </div>
+                                </Link>
+                                <div className="relative mt-4 space-y-2">
+                                  <Link
+                                    href="/shop/[category]/[id]"
+                                    as={`/shop/${
+                                      product.category?.category_data?.name
+                                    }/${product.name
+                                      .replace(/ /g, "-")
+                                      .toLowerCase()}`}
+                                  >
+                                    <h3 className="text-sm font-medium text-gray-900">
+                                      {product.name}
+                                    </h3>
+                                  </Link>
+                                  <div className="flex text-header-brown justify-center">
+                                    <BsStarFill />
+                                    <BsStarFill />
+                                    <BsStarFill />
+                                    <BsStar />
+                                    <BsStar />
+                                  </div>
+                                  <p className="relative text-lg font-bold text-black">
+                                    $
+                                    {(
+                                      product.variations?.[0]
+                                        ?.item_variation_data?.price_money
+                                        ?.amount / 100
+                                    ).toFixed(2)}
+                                  </p>
+                                  <p className="mt-1 text-sm text-gray-500">
+                                    {product.color}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="mt-6">
+                                <button
+                                  onClick={() => handleAdd(product)}
+                                  className="relative flex w-fit mx-auto bg-button rounded-2xl py-2 px-8 items-center justify-center text-sm font-medium text-white border border-invisible hover:border-black uppercase cursor-pointer"
+                                >
+                                  Add to cart
+                                  <span className="sr-only">
+                                    {product.name}
+                                  </span>
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                  </div>
                 </div>
               </div>
             </div>

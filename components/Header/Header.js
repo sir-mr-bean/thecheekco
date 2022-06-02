@@ -13,6 +13,17 @@ export const Header = ({ scrollDirection }) => {
   const [navigation, setNavigation] = useState([]);
   const { data } = useSWR("/api/fetchcategories", fetcher);
 
+  const slugify = (string) => {
+    return string
+      .toString()
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w-]+/g, "")
+      .replace(/--+/g, "-")
+      .replace(/^-+/, "")
+      .replace(/-+$/, "");
+  };
+
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
@@ -105,9 +116,7 @@ export const Header = ({ scrollDirection }) => {
                       <Link
                         key={nav.id}
                         href="/shop/[id]/"
-                        as={`/shop/${nav.category_data.name
-                          .toLowerCase()
-                          .replaceAll(" ", "-")}`}
+                        as={`/shop/${slugify(nav.category_data.name)}`}
                       >
                         <li
                           key={i}

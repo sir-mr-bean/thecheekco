@@ -57,7 +57,7 @@ export default function shop({ categoriesData, productsData }) {
                         console.log(product.image);
                         while (i < 6)
                           return (
-                            <div className="w-fit h-fit space-y-2 sm:px-4 mx-auto">
+                            <div className="w-fit h-fit space-y-1 px-2 lg:px-4">
                               <div className="relative">
                                 <Link
                                   href="/shop/[category]/[id]"

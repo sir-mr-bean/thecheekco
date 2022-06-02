@@ -82,6 +82,7 @@ function MyApp({ Component, pageProps }) {
     });
 `}
             </Script>
+            <Script src="https://embed.prod.simpletix.com/assets/widget/widget.min.js"></Script>
 
             <div className="max-w-screen min-h-[150vh] bg-bg-tan bg-cover">
               <Header scrollDirection={scrollDirection} />
