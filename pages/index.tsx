@@ -16,17 +16,15 @@ import {
 } from "react-icons/bs";
 import { FaKissWinkHeart } from "react-icons/fa";
 import toast from "react-hot-toast";
+import { product, category } from "../types/Square";
 
-export default function Home({ categoriesData, productsData }) {
+export default function Home({ categoriesData, productsData }: any) {
   const carouselRef: any = useRef();
   const [activeItemIndex, setActiveItemIndex] = useState(0);
-  console.log(productsData);
-  const guaSha = productsData?.[0].filter((item) => item.name == "The Gua Sha");
-  console.log(guaSha);
   const { cart, dispatch } = CartState();
 
   // create a function to replace all spaces in a string with "-"
-  const slugify = (string) => {
+  const slugify = (string: string) => {
     return string
       .toString()
       .toLowerCase()
@@ -88,7 +86,7 @@ export default function Home({ categoriesData, productsData }) {
     },
   ];
 
-  const handleAdd = (product) => {
+  const handleAdd = (product: product) => {
     dispatch({
       type: "ADD_TO_CART",
       item: product,
@@ -210,11 +208,13 @@ export default function Home({ categoriesData, productsData }) {
               {categoriesData &&
                 productsData &&
                 categoriesData
-                  ?.filter((item) => item.category_data.name.charAt(0) != "_")
-                  .map((category) => {
+                  ?.filter(
+                    (item: category) => item.category_data.name.charAt(0) != "_"
+                  )
+                  .map((category: category) => {
                     // for each category name in category.category_data.name, find a random product from productsData that matches the category name and display it
                     const randomProduct = productsData?.[0].find(
-                      (product) =>
+                      (product: product) =>
                         product.category?.category_data?.name ===
                         category.category_data.name
                     );
@@ -257,12 +257,13 @@ export default function Home({ categoriesData, productsData }) {
               {categoriesData &&
                 productsData &&
                 categoriesData
-                  ?.filter((item) => item.category_data.name.charAt(0) != "_")
-                  .filter((item, i) => i % 2 === 0)
-                  .map((category, i) => {
-                    // for each category name in category.category_data.name, find a random product from productsData that matches the category name and display it
+                  ?.filter(
+                    (item: category) => item.category_data.name.charAt(0) != "_"
+                  )
+                  .filter((item: category, i: number) => i % 2 === 0)
+                  .map((category: category, i: number) => {
                     const randomProduct = productsData?.[0].find(
-                      (product) =>
+                      (product: product) =>
                         product.category?.category_data?.name ===
                         category.category_data.name
                     );
@@ -304,7 +305,7 @@ export default function Home({ categoriesData, productsData }) {
           >
             <div className="relative overflow-hidden">
               <div className="relative bg-white bg-opacity-30 py-16 sm:py-20 ">
-                <div className="relative sm:space-x-5 flex flex-col sm:flex-row items-center justify-between text-center sm:mx-10">
+                <div className="relative sm:space-x-5 flex flex-col sm:flex-row items-center justify-between sm:justify-center text-center sm:mx-10">
                   <h2
                     id="social-impact-heading"
                     className="font-extrabold tracking-tight text-text-secondary max-w-xl font-gothic text-center sm:text-left mx-1"
@@ -334,7 +335,7 @@ export default function Home({ categoriesData, productsData }) {
                       width={612}
                       layout="responsive"
                     />
-                    <div className="flex flex-col space-y-2 pb-3 my-2 items-center justify-center">
+                    <div className="flex flex-col space-y-2 pb-3 my-2 items-center justify-center text-lg">
                       <div className="flex items-center space-x-2">
                         <BsHeartFill className="w-6 h-6" />
                         <span>lifts and firms</span>
@@ -352,10 +353,8 @@ export default function Home({ categoriesData, productsData }) {
                   <div className="w-fit">
                     {productsData &&
                       productsData?.[0]
-                        .filter((item) => item.name === "The Gua Sha")
-                        .map((product) => {
-                          console.log("product is");
-                          console.log(product);
+                        .filter((item: product) => item.name === "The Gua Sha")
+                        .map((product: product) => {
                           return (
                             <div key={product.id}>
                               <div className="relative">
@@ -406,9 +405,6 @@ export default function Home({ categoriesData, productsData }) {
                                         ?.amount / 100
                                     ).toFixed(2)}
                                   </p>
-                                  <p className="mt-1 text-sm text-gray-500">
-                                    {product.color}
-                                  </p>
                                 </div>
                               </div>
                               <div className="mt-6">
@@ -434,44 +430,26 @@ export default function Home({ categoriesData, productsData }) {
           {/* Collection section */}
           <section
             aria-labelledby="collection-heading"
-            className="max-w-xl mx-auto pt-24 px-4 sm:pt-32 sm:px-6 lg:max-w-7xl lg:px-8"
+            className="w-full relative"
           >
-            <h2
-              id="collection-heading"
-              className="text-2xl font-extrabold tracking-tight text-text-secondary"
-            >
-              Shop by Collection
-            </h2>
-            <p className="mt-4 text-base text-gray-500">
-              Each season, we collaborate with world-class designers to create a
-              collection inspired by the natural world.
-            </p>
-
-            <div className="mt-10 space-y-12 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-x-8">
-              {collections.map((collection) => (
-                <a
-                  key={collection.name}
-                  href={collection.href}
-                  className="group block"
-                >
-                  <div
-                    aria-hidden="true"
-                    className="aspect-w-3 aspect-h-2 rounded-lg overflow-hidden group-hover:opacity-75 lg:aspect-w-5 lg:aspect-h-6"
-                  >
-                    <img
-                      src={collection.imageSrc}
-                      alt={collection.imageAlt}
-                      className="w-full h-full object-center object-cover"
-                    />
-                  </div>
-                  <h3 className="mt-4 text-base font-semibold text-text-secondary">
-                    {collection.name}
-                  </h3>
-                  <p className="mt-2 text-sm text-gray-500">
-                    {collection.description}
-                  </p>
-                </a>
-              ))}
+            <div className="flex font-gothic text-text-primary">
+              <div className="flex flex-col w-1/2 items-center justify-center">
+                {/* Title + Desc */}
+                <span className="text-6xl font-semibold font-gothic">
+                  Meet The Minis
+                </span>
+                <span className="text-xl px-20">
+                  Unsure on a formulation or just wanting to grab some handbag
+                  goodies, these Mini’s are for you! Travel, gift, just don’t
+                  get caught without these essentials.
+                </span>
+                <div className="flex space-x-2">
+                  <div className="bg-button rounded-full p-10 w-10 h-10"></div>
+                  <div className="bg-button rounded-full p-10 w-10 h-10"></div>
+                </div>
+                <div></div>
+              </div>
+              <div className="flex flex-wrap">{/* Products */}</div>
             </div>
           </section>
 
