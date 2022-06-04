@@ -17,7 +17,6 @@ import { getStrapiURL } from "../utils/api";
 export default function wishlist({ data }) {
   const { wishlist, dispatch } = WishlistState();
   const [mounted, setMounted] = useState(false);
-  console.log(wishlist);
 
   useEffect(() => {
     setMounted(true);

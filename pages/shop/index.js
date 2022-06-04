@@ -21,7 +21,6 @@ export default function shop({ categoriesData, productsData }) {
     (category) => !category.category_data.name.startsWith("_")
   );
   const products = productsData?.[0];
-  console.log(products);
   return (
     <div className="mx-2 sm:mx-10 px-4 bg-white shadow-md shadow-black text-text-primary font-gothic">
       <div className="flex flex-wrap justify-between">

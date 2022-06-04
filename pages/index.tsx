@@ -22,7 +22,6 @@ export default function Home({ categoriesData, productsData }: any) {
   const carouselRef: any = useRef();
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const { cart, dispatch } = CartState();
-  console.log(productsData);
 
   // create a function to replace all spaces in a string with "-"
   const slugify = (string: string) => {
