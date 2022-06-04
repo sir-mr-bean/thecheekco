@@ -145,7 +145,9 @@ export const getStaticPaths = async () => {
   const data = await res.json();
 
   if (!res.ok) {
-    throw new Error(`Failed to fetch posts, received status ${res.status}`);
+    throw new Error(
+      `Failed to fetch paths in [categories].js, received status ${res.status}`
+    );
   }
   return {
     paths: data.map((item) => ({
@@ -181,7 +183,7 @@ export const getStaticProps = async ({ params }) => {
 
   if (!productsResult.ok || !categoriesResult.ok) {
     throw new Error(
-      `Failed to fetch posts, received status ${productsResult.status}, ${categoriesResult.status}`
+      `Failed to fetch props in [category].js, received status ${productsResult.status}, ${categoriesResult.status}`
     );
   }
   const currentCategory = categoriesData.filter((item) => {

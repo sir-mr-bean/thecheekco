@@ -18,4 +18,9 @@ module.exports = withTM({
   experimental: {
     esmExternals: "loose",
   },
+  serverRuntimeConfig: {
+    // Will only be available on the server side
+    squareAPIURL: process.env.SQUARE_API_URL, // Pass through env variables
+    squareAccessToken: process.env.SQUARE_ACCESS_TOKEN, // Pass through env variables
+  },
 });

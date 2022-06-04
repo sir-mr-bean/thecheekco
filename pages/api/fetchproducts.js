@@ -1,18 +1,21 @@
+import getConfig from "next/config";
+
 export default async function handler(req, res) {
+  const { serverRuntimeConfig } = getConfig();
   try {
-    let sqProducts = `https://${process.env.SQUARE_API_URL}/v2/catalog/search`;
+    let sqProducts = `https://${serverRuntimeConfig.squareAPIURL}/v2/catalog/search`;
     const categories = [];
     let cursor = null;
     do {
       if (cursor != null)
-        sqProducts = `https://${process.env.SQUARE_API_URL}/v2/catalog/search?cursor=${cursor}`;
+        sqProducts = `https://${serverRuntimeConfig.squareAPIURL}/v2/catalog/search?cursor=${cursor}`;
       const res = await fetch(sqProducts, {
         method: "POST",
         headers: {
           "User-Agent": "*",
           "Square-Version": "2022-05-12",
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.SQUARE_ACCESS_TOKEN}`,
+          Authorization: `Bearer ${serverRuntimeConfig.squareAccessToken}`,
         },
         body: JSON.stringify({
           include_related_objects: true,
