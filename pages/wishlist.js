@@ -190,11 +190,11 @@ export default function wishlist({ data }) {
 }
 
 export const getStaticProps = async () => {
-  const productsURL = getStrapiURL(`/api/categories?populate[0]=products`);
+  const productsURL = `https://angeles-antiques-underground-storm.trycloudflare.com/api/fetchproducts`;
   const res = await fetch(productsURL, {
     headers: {
-      Accept: "application/json",
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
+      Accept: "application/json, text/plain, */*",
+      "User-Agent": "*",
     },
   });
   if (!res.ok) {

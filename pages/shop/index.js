@@ -202,7 +202,7 @@ export default function shop({ categoriesData, productsData }) {
 }
 
 export const getStaticProps = async ({ params }) => {
-  const categoriesURL = `https://thecheekco.vercel.app/api/fetchcategories`;
+  const categoriesURL = `https://angeles-antiques-underground-storm.trycloudflare.com/api/fetchcategories`;
   const categoriesResult = await fetch(categoriesURL, {
     headers: {
       Accept: "application/json, text/plain, */*",
@@ -211,7 +211,7 @@ export const getStaticProps = async ({ params }) => {
   });
   const categoriesData = await categoriesResult.json();
 
-  const productsURL = `https://thecheekco.vercel.app/api/fetchproducts`;
+  const productsURL = `https://angeles-antiques-underground-storm.trycloudflare.com/api/fetchproducts`;
   const productsResult = await fetch(productsURL, {
     headers: {
       Accept: "application/json, text/plain, */*",
