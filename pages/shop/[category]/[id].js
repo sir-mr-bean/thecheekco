@@ -1,4 +1,3 @@
-import { getStrapiURL } from "../../../utils/api";
 import { Fragment, useRef } from "react";
 import { Tab } from "@headlessui/react";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
@@ -421,7 +420,7 @@ export const getStaticPaths = async () => {
       .filter((i) => i.category?.category_data.name)
       .map((item) => ({
         params: {
-          id: item?.name.replaceAll(" ", "-").toString(),
+          id: item?.name.toLowerCase().replaceAll(" ", "-").toString(),
           category:
             item?.category?.category_data.name
               .toLowerCase()
@@ -433,7 +432,6 @@ export const getStaticPaths = async () => {
 };
 
 export async function getStaticProps({ params }) {
-  console.log(params);
   const productName = params.id.replaceAll("-", " ");
   const productsURL = `https://angeles-antiques-underground-storm.trycloudflare.com/api/fetchproducts`;
   const productRes = await fetch(productsURL, {
@@ -447,7 +445,7 @@ export async function getStaticProps({ params }) {
     );
   }
   const dataResult = await productRes.json();
-  console.log(dataResult?.[0]);
+  //console.log(dataResult?.[0]);
   const currentProduct = dataResult?.[0].filter(
     (item) =>
       item.name.toLowerCase().replaceAll(" ", "-").toString() === params.id

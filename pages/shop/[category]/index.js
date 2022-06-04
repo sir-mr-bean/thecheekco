@@ -1,5 +1,4 @@
 import { React } from "react";
-import { getStrapiURL } from "../../../utils/api";
 import Image from "next/image";
 import { BsStarFill, BsStarHalf, BsStar } from "react-icons/bs";
 import { CartState } from "../../../context/Context";

@@ -7,7 +7,6 @@ import {
 import { CartState } from "../context/Context";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { getStrapiURL } from "../utils/api";
 
 export default function cart() {
   const [total, setTotal] = useState(0);

@@ -12,7 +12,6 @@ import {
 } from "../context/Reducer";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { getStrapiURL } from "../utils/api";
 
 export default function wishlist({ data }) {
   const { wishlist, dispatch } = WishlistState();
