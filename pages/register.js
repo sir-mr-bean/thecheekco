@@ -16,14 +16,14 @@ import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { useFirebaseAuth } from "../context/FirebaseAuthContext";
+import { useAuth } from "../context/FirebaseAuthContext";
 import { auth, db } from "../utils/firebaseConfig";
 import { collection, addDoc } from "firebase/firestore";
 import BeatLoader from "react-spinners/BeatLoader";
 import { useRouter } from "next/router";
 
 const register = () => {
-  const useraccount = useFirebaseAuth();
+  const { currentUser } = useAuth();
   const router = useRouter();
   const nameRef = useRef(null);
   const emailRef = useRef(null);
@@ -42,11 +42,11 @@ const register = () => {
   });
 
   useEffect(() => {
-    if (useraccount.user !== null) {
-      console.log(useraccount);
+    if (currentUser !== null) {
+      console.log(currentUser);
       router.push("/profile");
     }
-  }, [useraccount]);
+  }, [currentUser]);
 
   const handlePasswordInput = async (e) => {
     if (e.target.id === "password") {

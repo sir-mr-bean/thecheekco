@@ -7,7 +7,7 @@ import { AiOutlineFacebook } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import Image from "next/image";
 import { Disclosure } from "@headlessui/react";
-import { useFirebaseAuth } from "../context/FirebaseAuthContext";
+import { useAuth } from "../context/FirebaseAuthContext";
 import {
   GoogleAuthProvider,
   FacebookAuthProvider,
@@ -19,8 +19,7 @@ import { auth } from "../utils/firebaseConfig";
 import BeatLoader from "react-spinners/BeatLoader";
 
 export default function checkout() {
-  const { user } = useFirebaseAuth();
-  console.log(user);
+  const { currentUser } = useAuth();
   const contactinfo = useRef();
   const emailRef = useRef(null);
   const passRef = useRef(null);
@@ -49,11 +48,11 @@ export default function checkout() {
   }, [cart]);
 
   useEffect(() => {
-    if (user) {
-      setUserEmail(user.email);
-      setUserPhone(user.phoneNumber);
+    if (currentUser) {
+      setUserEmail(currentUser.email);
+      setUserPhone(currentUser.phoneNumber);
     }
-  }, [user]);
+  }, [currentUser]);
 
   const handleGoogleLogin = async () => {
     const googleProvider = new GoogleAuthProvider();
@@ -233,7 +232,7 @@ export default function checkout() {
                         <span className="hidden sm:block whitespace-nowrap text-xl font-medium pt-3 sm:pt-0">
                           Checkout
                         </span>
-                        {!user && (
+                        {!currentUser && (
                           <>
                             <h2 className="text-sm whitespace-nowrap">
                               Already have an account?
