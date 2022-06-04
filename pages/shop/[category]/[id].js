@@ -407,9 +407,8 @@ export const getStaticPaths = async () => {
       "User-Agent": "*",
     },
   });
-  console.log(productsResult);
+
   const productsData = await productsResult.json();
-  console.log(productsData);
 
   if (!productsResult.ok) {
     throw new Error(

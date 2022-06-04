@@ -42,7 +42,6 @@ export default async function handler(req, res) {
           variations: item.item_data.variations,
           image: currentImage?.[0]?.image_data?.url,
           category: currentCategory?.[0],
-          item: item,
         };
       });
       categories.push(products);
