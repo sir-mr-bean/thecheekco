@@ -399,7 +399,7 @@ const Product = ({ data }) => {
 };
 
 export const getStaticPaths = async () => {
-  const productsURL = `${process.env.API_URL}/api/fetchproducts`;
+  const productsURL = `https://thecheekco.vercel.app/api/fetchproducts`;
   const productsResult = await fetch(productsURL, {
     headers: {
       Accept: "application/json, text/plain, */*",
@@ -409,7 +409,9 @@ export const getStaticPaths = async () => {
   const productsData = await productsResult.json();
 
   if (!productsResult.ok) {
-    throw new Error(`Failed to fetch posts, received status ${res.status}`);
+    throw new Error(
+      `Failed to fetch posts, received status ${productsResult.status}`
+    );
   }
   //console.log(productsData?.[0].filter((i) => i.category?.category_data));
   return {
@@ -431,7 +433,7 @@ export const getStaticPaths = async () => {
 export async function getStaticProps({ params }) {
   console.log(params);
   const productName = params.id.replaceAll("-", " ");
-  const productsURL = `${process.env.API_URL}/api/fetchproducts`;
+  const productsURL = `https://thecheekco.vercel.app/api/fetchproducts`;
   const productRes = await fetch(productsURL, {
     headers: {
       Accept: "application/json",
