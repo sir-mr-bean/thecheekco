@@ -2,7 +2,7 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { BsChevronDown, BsPerson } from "react-icons/bs";
-import { useFirebaseAuth } from "../../context/FirebaseAuthContext";
+import { useAuth } from "../../context/FirebaseAuthContext";
 import { auth } from "../../utils/firebaseConfig";
 import { useRouter } from "next/router";
 
@@ -12,7 +12,7 @@ function classNames(...classes) {
 
 export default function Login() {
   const router = useRouter();
-  const { user, signOut } = useFirebaseAuth();
+  const { currentUser } = useAuth();
 
   const handleSignOut = async () => {
     await auth.signOut();
@@ -26,7 +26,7 @@ export default function Login() {
     >
       <div className="">
         <Menu.Button className="inline-flex justify-center w-full rounded-md shadow-sm py-2 font-medium font-gothic">
-          {!user ? (
+          {!currentUser ? (
             <div className="hidden sm:flex items-center">
               Login
               <BsChevronDown
@@ -61,7 +61,7 @@ export default function Login() {
       >
         <Menu.Items className="origin-top-right absolute top-8 right-0 mt-2 w-56 rounded-md shadow-lg bg-bg-lighttan focus:outline-none">
           <div className="">
-            {!user ? (
+            {!currentUser ? (
               <>
                 <Menu.Item>
                   {({ active }) => (

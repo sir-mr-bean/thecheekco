@@ -6,7 +6,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth, db } from "../utils/firebaseConfig";
-import { useFirebaseAuth } from "../context/FirebaseAuthContext";
+import { useAuth } from "../context/FirebaseAuthContext";
 import Image from "next/image";
 import Logo from "../public/images/logo.png";
 import { AiOutlineFacebook } from "react-icons/ai";
@@ -16,26 +16,26 @@ import { useRouter } from "next/router";
 import BeatLoader from "react-spinners/BeatLoader";
 
 const login = () => {
+  const { currentUser } = useAuth();
   const [incorrectCreds, setIncorrectCreds] = useState(false);
   const router = useRouter();
-  const user = useFirebaseAuth();
   const emailRef = useRef(null);
   const passRef = useRef(null);
   const [loggingIn, setLoggingIn] = useState(false);
 
   useEffect(() => {
-    if (user.user !== null) {
-      console.log(user);
+    if (currentUser !== null) {
+      console.log(currentUser);
       router.push("/profile");
     }
-  }, [user]);
+  }, [currentUser]);
 
   const handleGoogleLogin = async () => {
     const googleProvider = new GoogleAuthProvider();
 
     try {
       const res = await signInWithPopup(auth, googleProvider);
-      const user = res.user;
+      const user = res?.user;
       console.log(user);
       const q = query(collection(db, "users"), where("uid", "==", user.uid));
       console.log(q);
@@ -48,6 +48,7 @@ const login = () => {
           email: user.email,
         });
       }
+
       router.push("/profile");
     } catch (err) {
       console.error(err);
@@ -59,7 +60,7 @@ const login = () => {
     const facebookProvider = new FacebookAuthProvider();
     try {
       const res = await signInWithPopup(auth, facebookProvider);
-      const user = res.user;
+      const user = res?.user;
       console.log(user);
       const q = query(collection(db, "users"), where("uid", "==", user.uid));
       console.log(q);
@@ -96,6 +97,18 @@ const login = () => {
   const logInWithEmailAndPassword = async (email, password) => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
+      const user = result?.user;
+      console.log(user);
+      const q = query(collection(db, "users"), where("uid", "==", user.uid));
+      const docs = await getDocs(q);
+      if (docs.docs.length === 0) {
+        await addDoc(collection(db, "users"), {
+          uid: user.uid,
+          name: user.displayName,
+          authProvider: "local",
+          email: user.email,
+        });
+      }
       return result;
     } catch (err) {
       console.log(err.message);

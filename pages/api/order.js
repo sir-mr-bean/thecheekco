@@ -11,17 +11,28 @@ const { ordersApi } = new Client({
 });
 
 export default async function handler(req, res) {
+  console.log(req.body.order.locationId);
   if (req.method === "POST") {
     const { result } = await ordersApi.createOrder({
       idempotencyKey: randomUUID(),
-      sourceId: req.body.sourceId,
-      amountMoney: {
-        currency: "AUD",
-        amount: req.body.amount,
+      order: {
+        locationId: req.body.order.locationId,
+        referenceId: req.body.order.referenceId,
+        lineItems: req.body.order.lineItems?.[0]?.map((item) => {
+          return {
+            catalogObjectId: item.catalogObjectId,
+            quantity: item.quantity,
+            // modifiers: item.modifiers?.map((modifier) => {
+            //   return {
+            //     catalogObjectId: modifier.catalogObjectId,
+            //   };
+            // }),
+          };
+        }),
       },
     });
-    res.status(200).json(result.payment);
+    res.status(200).json(result);
   } else {
-    res.status(500).json(result.payment);
+    res.status(500).json(result);
   }
 }

@@ -22,6 +22,7 @@ export default function Home({ categoriesData, productsData }: any) {
   const carouselRef: any = useRef();
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const { cart, dispatch } = CartState();
+  console.log(productsData);
 
   // create a function to replace all spaces in a string with "-"
   const slugify = (string: string) => {
@@ -498,7 +499,7 @@ export default function Home({ categoriesData, productsData }: any) {
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const categoriesURL = `https://thecheekco.vercel.app/api/fetchcategories`;
+  const categoriesURL = `${process.env.API_URL}/api/fetchcategories`;
   const categoriesResult = await fetch(categoriesURL, {
     headers: {
       Accept: "application/json, text/plain, */*",
@@ -507,7 +508,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   });
   const categoriesData = await categoriesResult.json();
 
-  const productsURL = `https://thecheekco.vercel.app/api/fetchproducts`;
+  const productsURL = `${process.env.API_URL}/api/fetchproducts`;
   const productsResult = await fetch(productsURL, {
     headers: {
       Accept: "application/json, text/plain, */*",

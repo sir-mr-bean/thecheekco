@@ -6,7 +6,6 @@ import Head from "next/head";
 import { Toaster } from "react-hot-toast";
 import CartContext, { WishListContext } from "../context/Context";
 import { useState, useEffect } from "react";
-import { PaymentForm } from "react-square-web-payments-sdk";
 import FirebaseAuthContext from "../context/FirebaseAuthContext";
 import type { AppProps } from "next/app";
 import * as React from "react";
@@ -35,46 +34,28 @@ function useScrollDirection() {
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [total, setTotal] = useState(0);
   const scrollDirection = useScrollDirection();
 
   return (
     <FirebaseAuthContext>
       <CartContext>
         <WishListContext>
-          <PaymentForm
-            applicationId={process.env.NEXT_PUBLIC_SQUARE_APP_ID}
-            locationId="LNW290H2QTZVK"
-            cardTokenizeResponseReceived={async (token, buyer) => {
-              const response = await fetch("/api/pay", {
-                method: "POST",
-                headers: {
-                  "Content-type": "application/json",
-                },
-                body: JSON.stringify({
-                  sourceId: token.token,
-                  amount: total.toFixed(2).toString().replace(".", ""),
-                }),
-              });
-              alert(JSON.stringify(await response.json(), null, 2));
-            }}
-          >
-            <Head>
-              <title>The Cheek Co. - Bath and Body </title>
-              <meta
-                name="description"
-                content="More than just amazing bath and skin care products. Ethically sourced handmade in Australia, cruelty free, vegan."
-              />
-              <link rel="icon" href="/favicon.ico" />
-            </Head>
-            <Script
-              strategy="afterInteractive"
-              defer
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
+          <Head>
+            <title>The Cheek Co. - Bath and Body </title>
+            <meta
+              name="description"
+              content="More than just amazing bath and skin care products. Ethically sourced handmade in Australia, cruelty free, vegan."
             />
+            <link rel="icon" href="/favicon.ico" />
+          </Head>
+          <Script
+            strategy="afterInteractive"
+            defer
+            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
+          />
 
-            <Script strategy="afterInteractive" defer>
-              {`
+          <Script strategy="afterInteractive" defer>
+            {`
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
@@ -82,15 +63,14 @@ function MyApp({ Component, pageProps }: AppProps) {
     page_path: window.location.pathname,
     });
 `}
-            </Script>
-            <Script src="https://embed.prod.simpletix.com/assets/widget/widget.min.js"></Script>
+          </Script>
+          <Script src="https://embed.prod.simpletix.com/assets/widget/widget.min.js"></Script>
 
-            <div className="max-w-screen min-h-[150vh] bg-bg-tan bg-cover">
-              <Header scrollDirection={scrollDirection} />
-              <Component {...pageProps} />
-              <Toaster position="top-right" reverseOrder={false} gutter={-40} />
-            </div>
-          </PaymentForm>
+          <div className="max-w-screen min-h-[150vh] bg-bg-tan bg-cover">
+            <Header scrollDirection={scrollDirection} />
+            <Component {...pageProps} />
+            <Toaster position="top-right" reverseOrder={false} gutter={-40} />
+          </div>
         </WishListContext>
       </CartContext>
     </FirebaseAuthContext>

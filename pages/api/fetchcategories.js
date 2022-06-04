@@ -1,11 +1,11 @@
 export default async function handler(req, res) {
   try {
-    let sqCategories = `https://connect.squareup.com/v2/catalog/list?types=category`;
+    let sqCategories = `https://${process.env.SQUARE_API_URL}/v2/catalog/list?types=category`;
     const categories = [];
     let cursor = null;
     do {
       if (cursor != null)
-        sqCategories = `https://connect.squareup.com/v2/catalog/list?types=category&cursor=${cursor}`;
+        sqCategories = `https://${process.env.SQUARE_API_URL}/v2/catalog/list?types=category&cursor=${cursor}`;
       const res = await fetch(sqCategories, {
         headers: {
           "Square-Version": "2022-05-12",

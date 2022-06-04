@@ -82,7 +82,7 @@ export default function cart() {
                                   <Link
                                     href="/shop/[category]/[id]"
                                     as={`/shop/${
-                                      product.category.name
+                                      product.category.category_data.name
                                     }/${product.name
                                       .replace(/ /g, "-")
                                       .toLowerCase()}`}
