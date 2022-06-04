@@ -400,13 +400,16 @@ const Product = ({ data }) => {
 
 export const getStaticPaths = async () => {
   const productsURL = `https://angeles-antiques-underground-storm.trycloudflare.com/api/fetchproducts`;
+  console.log(productsURL);
   const productsResult = await fetch(productsURL, {
     headers: {
       Accept: "application/json, text/plain, */*",
       "User-Agent": "*",
     },
   });
+  console.log(productsResult);
   const productsData = await productsResult.json();
+  console.log(productsData);
 
   if (!productsResult.ok) {
     throw new Error(
