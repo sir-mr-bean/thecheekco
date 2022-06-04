@@ -507,7 +507,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   });
   const categoriesData = await categoriesResult.json();
 
-  const productsURL = `https://angeles-antiques-underground-storm.trycloudflare.com/api/fetchcategories/api/fetchproducts`;
+  const productsURL = `https://angeles-antiques-underground-storm.trycloudflare.com/api/fetchproducts`;
   const productsResult = await fetch(productsURL, {
     headers: {
       Accept: "application/json, text/plain, */*",
