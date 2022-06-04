@@ -410,7 +410,7 @@ export const getStaticPaths = async () => {
 
   if (!productsResult.ok) {
     throw new Error(
-      `Failed to fetch posts, received status ${productsResult.status}`
+      `Failed to fetch paths for [id].js, received status ${productsResult.status}`
     );
   }
   //console.log(productsData?.[0].filter((i) => i.category?.category_data));
@@ -439,6 +439,11 @@ export async function getStaticProps({ params }) {
       Accept: "application/json",
     },
   });
+  if (!productRes.ok) {
+    throw new Error(
+      `Failed to fetch props for [id].js, received status ${productRes.status}`
+    );
+  }
   const dataResult = await productRes.json();
   console.log(dataResult?.[0]);
   const currentProduct = dataResult?.[0].filter(

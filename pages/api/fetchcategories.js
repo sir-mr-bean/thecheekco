@@ -14,7 +14,9 @@ export default async function handler(req, res) {
         },
       });
       if (!res.ok) {
-        throw new Error(`Failed to fetch posts, received status ${res.status}`);
+        throw new Error(
+          `Failed to fetch categories from Square, received status ${res.status}`
+        );
       }
       const data = await res.json();
       //console.log(data);

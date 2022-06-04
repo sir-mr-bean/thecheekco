@@ -20,7 +20,9 @@ export default async function handler(req, res) {
         }),
       });
       if (!res.ok) {
-        throw new Error(`Failed to fetch posts, received status ${res.status}`);
+        throw new Error(
+          `Failed to fetch products from Square, received status ${res.status}`
+        );
       }
       const data = await res.json();
       const products = data.objects.map((item) => {
