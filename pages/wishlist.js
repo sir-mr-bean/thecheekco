@@ -188,7 +188,7 @@ export default function wishlist({ data }) {
 }
 
 export const getStaticProps = async () => {
-  const productsURL = `https://angeles-antiques-underground-storm.trycloudflare.com/api/fetchproducts`;
+  const productsURL = `https://thecheekco.vercel.app/api/fetchproducts`;
   const res = await fetch(productsURL, {
     headers: {
       Accept: "application/json, text/plain, */*",

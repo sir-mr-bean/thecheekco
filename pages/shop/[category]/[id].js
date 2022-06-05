@@ -398,7 +398,7 @@ const Product = ({ data }) => {
 };
 
 export const getStaticPaths = async () => {
-  const productsURL = `https://angeles-antiques-underground-storm.trycloudflare.com/api/fetchproducts`;
+  const productsURL = `https://thecheekco.vercel.app/api/fetchproducts`;
   console.log(productsURL);
   const productsResult = await fetch(productsURL, {
     headers: {
@@ -433,7 +433,7 @@ export const getStaticPaths = async () => {
 
 export async function getStaticProps({ params }) {
   const productName = params.id.replaceAll("-", " ");
-  const productsURL = `https://angeles-antiques-underground-storm.trycloudflare.com/api/fetchproducts`;
+  const productsURL = `https://thecheekco.vercel.app/api/fetchproducts`;
   const productRes = await fetch(productsURL, {
     headers: {
       Accept: "application/json",
