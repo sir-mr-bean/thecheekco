@@ -9,53 +9,30 @@ import { useState, useEffect } from "react";
 import FirebaseAuthContext from "../context/FirebaseAuthContext";
 import type { AppProps } from "next/app";
 import * as React from "react";
-
-function useScrollDirection() {
-  const [scrollDirection, setScrollDirection] = useState(null);
-
-  useEffect(() => {
-    let lastScrollY = window.pageYOffset;
-    // function to run on scroll
-    const updateScrollDirection = () => {
-      const scrollY = window.pageYOffset;
-      const direction = scrollY > lastScrollY ? "down" : "up";
-      if (direction !== scrollDirection) {
-        setScrollDirection(direction);
-      }
-      lastScrollY = scrollY > 0 ? scrollY : 0;
-    };
-    window.addEventListener("scroll", updateScrollDirection); // add event listener
-    return () => {
-      window.removeEventListener("scroll", updateScrollDirection); // clean up
-    };
-  }, [scrollDirection]); // run when scroll direction changes
-
-  return scrollDirection;
-}
+import UserContext from "../context/User/userContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const scrollDirection = useScrollDirection();
-
   return (
     <FirebaseAuthContext>
-      <CartContext>
-        <WishListContext>
-          <Head>
-            <title>The Cheek Co. - Bath and Body </title>
-            <meta
-              name="description"
-              content="More than just amazing bath and skin care products. Ethically sourced handmade in Australia, cruelty free, vegan."
+      <UserContext>
+        <CartContext>
+          <WishListContext>
+            <Head>
+              <title>The Cheek Co. - Bath and Body </title>
+              <meta
+                name="description"
+                content="More than just amazing bath and skin care products. Ethically sourced handmade in Australia, cruelty free, vegan."
+              />
+              <link rel="icon" href="/favicon.ico" />
+            </Head>
+            <Script
+              strategy="afterInteractive"
+              defer
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
             />
-            <link rel="icon" href="/favicon.ico" />
-          </Head>
-          <Script
-            strategy="afterInteractive"
-            defer
-            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
-          />
 
-          <Script strategy="afterInteractive" defer>
-            {`
+            <Script strategy="afterInteractive" defer>
+              {`
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
@@ -63,16 +40,17 @@ function MyApp({ Component, pageProps }: AppProps) {
     page_path: window.location.pathname,
     });
 `}
-          </Script>
-          <Script src="https://embed.prod.simpletix.com/assets/widget/widget.min.js"></Script>
+            </Script>
+            <Script src="https://embed.prod.simpletix.com/assets/widget/widget.min.js"></Script>
 
-          <div className="max-w-screen min-h-[150vh] bg-bg-tan bg-cover">
-            <Header scrollDirection={scrollDirection} />
-            <Component {...pageProps} />
-            <Toaster position="top-right" reverseOrder={false} gutter={-40} />
-          </div>
-        </WishListContext>
-      </CartContext>
+            <div className="max-w-screen min-h-[150vh] bg-bg-tan bg-cover">
+              <Header />
+              <Component {...pageProps} />
+              <Toaster position="top-right" reverseOrder={false} gutter={-40} />
+            </div>
+          </WishListContext>
+        </CartContext>
+      </UserContext>
     </FirebaseAuthContext>
   );
 }

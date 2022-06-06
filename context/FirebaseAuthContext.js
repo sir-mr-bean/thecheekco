@@ -61,7 +61,7 @@ const FirebaseAuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setCurrentUser(user);
-      nookies.set(undefined, "token", "", { path: "/" });
+
       setLoading(false);
     });
 
@@ -96,8 +96,8 @@ const FirebaseAuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-export function useAuth() {
+export const useAuth = () => {
   return useContext(AuthContext);
-}
+};
 
 export default FirebaseAuthProvider;

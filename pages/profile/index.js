@@ -1,5 +1,5 @@
 import { useAuth } from "../../context/FirebaseAuthContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useRouter } from "next/router";
 import { query, getDocs, collection, where } from "firebase/firestore";
 import { db } from "../../utils/firebaseConfig";
@@ -8,51 +8,58 @@ import { Fragment } from "react";
 import UserInfo from "../../components/Profile/UserInfo";
 import UserOrders from "../../components/Profile/UserOrders";
 import UserDashboard from "../../components/Profile/UserDashboard";
+import { UserState } from "../../context/User/userContext";
+import { setUserObj } from "../../context/User/userReducer";
 
 const profile = () => {
   const router = useRouter();
   const { currentUser } = useAuth();
+  const { userObj, dispatch } = UserState();
+  console.log(userObj);
 
-  // User State
-  const [userObj, setUserObj] = useState({
+  const [userShippingObj, setUserShippingObj] = useState({
     firstName: "",
     lastName: "",
+    company: "",
     streetAddress: "",
+    apartmentOrUnit: "",
     city: "",
     state: "",
     country: "Australia",
     postalCode: "",
     emailAddress: "",
+    phoneNumber: "",
   });
 
   useEffect(() => {
-    const fetchDocs = async () => {
-      const q = query(
-        collection(db, "users"),
-        where("uid", "==", currentUser.uid)
-      );
-      const userDoc = getDocs(q);
-      const user = await userDoc;
-      console.log(user.docs[0].data());
-      const userData = user.docs[0].data();
+    //   const fetchDocs = async () => {
+    //     const q = query(
+    //       collection(db, "users"),
+    //       where("uid", "==", currentUser.uid)
+    //     );
+    //     const userDoc = getDocs(q);
+    //     const user = await userDoc;
+    //     console.log(user.docs[0].data());
+    //     const userData = user.docs[0].data();
 
-      setUserObj({
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        streetAddress: userData.streetAddress,
-        city: userData.city,
-        state: userData.state,
-        country: userData.country,
-        postalCode: userData.postalCode,
-        emailAddress: userData.email,
-      });
-    };
+    //     setUserObj({
+    //       firstName: userData.firstName,
+    //       lastName: userData.lastName,
+    //       company: userData.company,
+    //       streetAddress: userData.streetAddress,
+    //       apartmentOrUnit: userData.apartmentOrUnit,
+    //       city: userData.city,
+    //       state: userData.state,
+    //       country: userData.country,
+    //       postalCode: userData.postalCode,
+    //       email: userData.email,
+    //       phoneNumber: userData.phoneNumber,
+    //     });
+    //   };
 
     if (!currentUser) {
       console.log(currentUser);
       router.push("/login");
-    } else {
-      fetchDocs();
     }
   }, []);
 
@@ -118,7 +125,7 @@ const profile = () => {
             <UserDashboard />
           </Tab.Panel>
           <Tab.Panel>
-            <UserInfo userObj={userObj} setUserObj={setUserObj} />
+            <UserInfo userObj={userObj} dispatch={dispatch} />
           </Tab.Panel>
           <Tab.Panel>
             <UserOrders />

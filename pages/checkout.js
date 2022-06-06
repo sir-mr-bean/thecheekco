@@ -2,7 +2,6 @@ import { CreditCard, GooglePay } from "react-square-web-payments-sdk";
 import { PaymentForm } from "react-square-web-payments-sdk";
 import { CartState } from "../context/Context";
 import { useState, useEffect, useRef } from "react";
-import Logo from "../public/images/logo.png";
 import { AiOutlineFacebook } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import Image from "next/image";
@@ -15,12 +14,19 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { auth } from "../utils/firebaseConfig";
+import { query, getDocs, collection, where } from "firebase/firestore";
+import { auth, db } from "../utils/firebaseConfig";
 import BeatLoader from "react-spinners/BeatLoader";
+import { usePlacesWidget } from "react-google-autocomplete";
+import { UserState } from "../context/User/userContext";
+
+import UserForm from "../components/Checkout/UserForm";
+import GuestForm from "../components/Checkout/GuestForm";
 
 export default function checkout() {
+  const streetAddressInputRef = useRef(null);
+  const [firstLoad, setFirstLoad] = useState(true);
   const { currentUser } = useAuth();
-  const contactinfo = useRef();
   const emailRef = useRef(null);
   const passRef = useRef(null);
   const termsCheckboxRef = useRef(null);
@@ -30,8 +36,6 @@ export default function checkout() {
   const [total, setTotal] = useState(0);
   const products = cart;
   const [loggingIn, setLoggingIn] = useState(false);
-  const [userEmail, setUserEmail] = useState();
-  const [userPhone, setUserPhone] = useState();
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [sameAsCustomerInfo, setSameAsCustomerInfo] = useState(false);
 
@@ -46,13 +50,6 @@ export default function checkout() {
     });
     setTotal(sum);
   }, [cart]);
-
-  useEffect(() => {
-    if (currentUser) {
-      setUserEmail(currentUser.email);
-      setUserPhone(currentUser.phoneNumber);
-    }
-  }, [currentUser]);
 
   const handleGoogleLogin = async () => {
     const googleProvider = new GoogleAuthProvider();
@@ -140,7 +137,14 @@ export default function checkout() {
       item: product,
     });
   };
-  console.log(termsCheckboxRef);
+
+  const handleStreetAddress = (e) => {
+    setStreetAddress(e.target.value);
+    dispatch({
+      type: "SET_STREET_ADDRESS",
+      streetAddress: e.target.value,
+    });
+  };
   return (
     <>
       {total && (
@@ -273,7 +277,7 @@ export default function checkout() {
                                                     onClick={() =>
                                                       handleFacebookLogin()
                                                     }
-                                                    className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium  hover:bg-gray-50 "
+                                                    className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm shadow-text-secondary bg-white text-sm font-medium  hover:bg-gray-50 "
                                                   >
                                                     <span className="sr-only">
                                                       Sign in with Facebook
@@ -290,7 +294,7 @@ export default function checkout() {
                                                     onClick={() =>
                                                       handleGoogleLogin()
                                                     }
-                                                    className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium  hover:bg-gray-50"
+                                                    className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm shadow-text-secondary bg-white text-sm font-medium  hover:bg-gray-50"
                                                   >
                                                     <span className="sr-only">
                                                       Sign in with Google
@@ -340,7 +344,7 @@ export default function checkout() {
                                                     type="email"
                                                     autoComplete="email"
                                                     required
-                                                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-text-primary focus:outline-none focus:ring-text-primary focus:border-text-primary sm:text-sm"
+                                                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm shadow-text-secondary placeholder-text-primary focus:outline-none focus:ring-text-primary focus:border-text-primary sm:text-sm"
                                                   />
                                                 </div>
                                               </div>
@@ -360,7 +364,7 @@ export default function checkout() {
                                                     type="password"
                                                     autoComplete="current-password"
                                                     required
-                                                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-text-primary focus:outline-none focus:ring-text-primary focus:border-text-primary sm:text-sm"
+                                                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm shadow-text-secondary placeholder-text-primary focus:outline-none focus:ring-text-primary focus:border-text-primary sm:text-sm"
                                                   />
                                                 </div>
                                               </div>
@@ -395,7 +399,7 @@ export default function checkout() {
                                                 <button
                                                   onClick={handleAccountLogin}
                                                   type="button"
-                                                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary       "
+                                                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary       "
                                                 >
                                                   {loggingIn ? (
                                                     <BeatLoader
@@ -419,225 +423,8 @@ export default function checkout() {
                             </div>
                           </>
                         )}
+                        {currentUser ? <UserForm /> : <GuestForm />}
 
-                        <form className="mt-4 text-text-primary font-gothic">
-                          <div className="">
-                            <h2 className="text-lg font-medium ">
-                              Customer Information
-                            </h2>
-
-                            <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-                              <div>
-                                <label
-                                  htmlFor="first-name"
-                                  className="block text-sm font-medium text-gray-700"
-                                >
-                                  First name
-                                </label>
-                                <div className="mt-1">
-                                  <input
-                                    type="text"
-                                    id="first-name"
-                                    name="first-name"
-                                    autoComplete="given-name"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
-                                  />
-                                </div>
-                              </div>
-
-                              <div>
-                                <label
-                                  htmlFor="last-name"
-                                  className="block text-sm font-medium text-gray-700"
-                                >
-                                  Last name
-                                </label>
-                                <div className="mt-1">
-                                  <input
-                                    type="text"
-                                    id="last-name"
-                                    name="last-name"
-                                    autoComplete="family-name"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="sm:col-span-2">
-                                <label
-                                  htmlFor="company"
-                                  className="block text-sm font-medium text-gray-700"
-                                >
-                                  Company
-                                </label>
-                                <div className="mt-1">
-                                  <input
-                                    type="text"
-                                    name="company"
-                                    id="company"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="sm:col-span-2">
-                                <label
-                                  htmlFor="address"
-                                  className="block text-sm font-medium text-gray-700"
-                                >
-                                  Address
-                                </label>
-                                <div className="mt-1">
-                                  <input
-                                    type="text"
-                                    name="address"
-                                    id="address"
-                                    autoComplete="street-address"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="sm:col-span-2">
-                                <label
-                                  htmlFor="apartment"
-                                  className="block text-sm font-medium text-gray-700"
-                                >
-                                  Apartment, suite, etc.
-                                </label>
-                                <div className="mt-1">
-                                  <input
-                                    type="text"
-                                    name="apartment"
-                                    id="apartment"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
-                                  />
-                                </div>
-                              </div>
-
-                              <div>
-                                <label
-                                  htmlFor="city"
-                                  className="block text-sm font-medium text-gray-700"
-                                >
-                                  City
-                                </label>
-                                <div className="mt-1">
-                                  <input
-                                    type="text"
-                                    name="city"
-                                    id="city"
-                                    autoComplete="address-level2"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
-                                  />
-                                </div>
-                              </div>
-
-                              <div>
-                                <label
-                                  htmlFor="country"
-                                  className="block text-sm font-medium text-gray-700"
-                                >
-                                  Country
-                                </label>
-                                <div className="mt-1">
-                                  <select
-                                    id="country"
-                                    name="country"
-                                    autoComplete="country-name"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
-                                  >
-                                    <option>Australia</option>
-                                  </select>
-                                </div>
-                              </div>
-
-                              <div>
-                                <label
-                                  htmlFor="region"
-                                  className="block text-sm font-medium text-gray-700"
-                                >
-                                  State / Province
-                                </label>
-                                <div className="mt-1">
-                                  <input
-                                    type="text"
-                                    name="region"
-                                    id="region"
-                                    autoComplete="address-level1"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
-                                  />
-                                </div>
-                              </div>
-
-                              <div>
-                                <label
-                                  htmlFor="postal-code"
-                                  className="block text-sm font-medium text-gray-700"
-                                >
-                                  Postal code
-                                </label>
-                                <div className="mt-1">
-                                  <input
-                                    type="text"
-                                    name="postal-code"
-                                    id="postal-code"
-                                    autoComplete="postal-code"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="sm:col-span-2">
-                                <label
-                                  htmlFor="phone"
-                                  className="block text-sm font-medium text-gray-700"
-                                >
-                                  Phone
-                                </label>
-                                <div className="mt-1">
-                                  <input
-                                    type="text"
-                                    name="phone"
-                                    id="phone"
-                                    autoComplete="tel"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="mt-6 flex space-x-2 space-y-2 flex-col">
-                            <div className="flex items-center space-x-2 ">
-                              <input
-                                onChange={() =>
-                                  setTermsAccepted(!termsAccepted)
-                                }
-                                ref={termsCheckboxRef}
-                                id="terms"
-                                name="terms"
-                                type="checkbox"
-                                className="h-6 w-6 border-gray-300 rounded text-text-secondary focus:ring-text-secondary"
-                              />
-                              <label
-                                htmlFor="terms"
-                                className="text-sm text-text-primary"
-                              >
-                                I have read the terms and conditions and agree
-                                to the sale of my personal information to the
-                                highest bidder.
-                              </label>
-                            </div>
-                            <button
-                              type="button"
-                              disabled={!termsAccepted}
-                              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
-                            >
-                              Continue
-                            </button>
-                          </div>
-                        </form>
                         <form className="mt-4 text-text-primary font-gothic">
                           <div className="">
                             <div className="flex justify-between">
@@ -678,7 +465,7 @@ export default function checkout() {
                                     id="first-name"
                                     name="first-name"
                                     autoComplete="given-name"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
+                                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                                   />
                                 </div>
                               </div>
@@ -696,7 +483,7 @@ export default function checkout() {
                                     id="last-name"
                                     name="last-name"
                                     autoComplete="family-name"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
+                                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                                   />
                                 </div>
                               </div>
@@ -713,7 +500,7 @@ export default function checkout() {
                                     type="text"
                                     name="company"
                                     id="company"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
+                                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                                   />
                                 </div>
                               </div>
@@ -731,7 +518,7 @@ export default function checkout() {
                                     name="address"
                                     id="address"
                                     autoComplete="street-address"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
+                                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                                   />
                                 </div>
                               </div>
@@ -748,7 +535,7 @@ export default function checkout() {
                                     type="text"
                                     name="apartment"
                                     id="apartment"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
+                                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                                   />
                                 </div>
                               </div>
@@ -766,7 +553,7 @@ export default function checkout() {
                                     name="city"
                                     id="city"
                                     autoComplete="address-level2"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
+                                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                                   />
                                 </div>
                               </div>
@@ -783,7 +570,7 @@ export default function checkout() {
                                     id="country"
                                     name="country"
                                     autoComplete="country-name"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
+                                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                                   >
                                     <option>United States</option>
                                     <option>Canada</option>
@@ -805,7 +592,7 @@ export default function checkout() {
                                     name="region"
                                     id="region"
                                     autoComplete="address-level1"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
+                                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                                   />
                                 </div>
                               </div>
@@ -823,7 +610,7 @@ export default function checkout() {
                                     name="postal-code"
                                     id="postal-code"
                                     autoComplete="postal-code"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
+                                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                                   />
                                 </div>
                               </div>
@@ -841,7 +628,7 @@ export default function checkout() {
                                     name="phone"
                                     id="phone"
                                     autoComplete="tel"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-1"
+                                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                                   />
                                 </div>
                               </div>
@@ -872,7 +659,7 @@ export default function checkout() {
                             <button
                               type="button"
                               disabled={!termsAccepted}
-                              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
+                              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
                             >
                               Continue
                             </button>
