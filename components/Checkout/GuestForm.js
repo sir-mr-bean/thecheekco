@@ -45,7 +45,7 @@ const GuestForm = () => {
                 <div className="mt-1">
                   <input
                     type="text"
-                    id="first-name"
+                    id="guest-first-name"
                     name="first-name"
                     autoComplete="given-name"
                     value={userObj.firstName}
@@ -70,7 +70,7 @@ const GuestForm = () => {
                 <div className="mt-1">
                   <input
                     type="text"
-                    id="last-name"
+                    id="guest-last-name"
                     name="last-name"
                     autoComplete="family-name"
                     value={userObj.lastName}
@@ -96,7 +96,7 @@ const GuestForm = () => {
                   <input
                     type="text"
                     name="company"
-                    id="company"
+                    id="guest-company"
                     autoComplete="organization"
                     value={userObj.company}
                     onChange={(e) =>
@@ -186,7 +186,7 @@ const GuestForm = () => {
                   }}
                   type="search"
                   name="street-address"
-                  id="street-address"
+                  id="guest-street-address"
                   value={userObj.streetAddress}
                   onChange={(e) => {
                     dispatch({
@@ -209,7 +209,7 @@ const GuestForm = () => {
                   <input
                     type="text"
                     name="apartment"
-                    id="apartment"
+                    id="guest-apartment"
                     value={userObj.apartmentOrUnit}
                     onChange={(e) =>
                       dispatch({
@@ -233,7 +233,7 @@ const GuestForm = () => {
                   <input
                     type="text"
                     name="city"
-                    id="city"
+                    id="guest-city"
                     autoComplete="address-level2"
                     value={userObj.city || ""}
                     onChange={(e) =>
@@ -256,7 +256,7 @@ const GuestForm = () => {
                 </label>
                 <div className="mt-1">
                   <select
-                    id="country"
+                    id="guest-country"
                     name="country"
                     autoComplete="country-name"
                     value={userObj.country}
@@ -284,7 +284,7 @@ const GuestForm = () => {
                   <input
                     type="text"
                     name="region"
-                    id="region"
+                    id="guest-region"
                     autoComplete="address-level1"
                     value={userObj.state}
                     onChange={(e) =>
@@ -309,7 +309,7 @@ const GuestForm = () => {
                   <input
                     type="text"
                     name="postal-code"
-                    id="postal-code"
+                    id="guest-postal-code"
                     autoComplete="postal-code"
                     value={userObj.postalCode}
                     onChange={(e) =>
@@ -334,7 +334,7 @@ const GuestForm = () => {
                   <input
                     type="text"
                     name="phone"
-                    id="phone"
+                    id="guest-phone"
                     autoComplete="tel"
                     value={userObj.phoneNumber}
                     onChange={(e) =>
@@ -355,7 +355,7 @@ const GuestForm = () => {
               <input
                 onChange={() => setTermsAccepted(!termsAccepted)}
                 ref={termsCheckboxRef}
-                id="terms"
+                id="guest-terms"
                 name="terms"
                 type="checkbox"
                 className="h-6 w-6 border-gray-300 rounded text-text-secondary focus:ring-text-secondary"
