@@ -8,7 +8,7 @@ import {
 import { auth, db } from "../../utils/firebaseConfig";
 import { useAuth } from "../../context/FirebaseAuthContext";
 import Image from "next/image";
-import Logo from "../public/images/logo.png";
+import Logo from "../../public/images/logo.png";
 import { AiOutlineFacebook } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { query, getDocs, collection, where, addDoc } from "firebase/firestore";
