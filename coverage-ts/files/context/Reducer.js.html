@@ -1,0 +1,166 @@
+
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>Reducer.js</title>
+      <link href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" type="text/css" rel="stylesheet">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/mode/javascript/javascript.min.js" type="text/javascript" charset="utf-8"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.css" type="text/css" rel="stylesheet">
+<script src="..\..\assets\source-file.js" type="text/javascript" charset="utf-8"></script>
+<link href="..\..\assets\source-file.css" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+    <div style="margin-top:3em" class="ui container"><h1 class="ui header"><a href="..\..\index.html">TypeScript coverage report</a></h1><table style="margin-top:2em" class="ui celled table"><thead class=""><tr class=""><th class="">Filename</th><th class="">Percent</th><th class="">Threshold</th><th class="">Total</th><th class="">Covered</th><th class="">Uncovered</th></tr></thead><tbody class=""><tr class="negative"><td class="">context\Reducer.js</td><td class="">27.55%</td><td class="">80%</td><td class="">196</td><td class="">54</td><td class="">142</td></tr></tbody></table><textarea id="editor" readonly="" style="margin-top:3em">// Shopping Cart Reducer
+
+// Initial Cart State
+
+const initialCart = [];
+
+export const cartInitializer = (initialValue = initialCart) =&gt; {
+  if (typeof window !== &quot;undefined&quot;) {
+    const localCart = localStorage.getItem(&quot;localCart&quot;);
+    if (localCart) {
+      return JSON.parse(localStorage.getItem(&quot;localCart&quot;));
+    } else {
+      return initialValue;
+    }
+  }
+};
+
+// Cart Reducer
+
+export const cartReducer = (state, action) =&gt; {
+  switch (action.type) {
+    case &quot;ADD_TO_CART&quot;:
+      console.log(action);
+      return state.find((item) =&gt; item.id === action.item.id)
+        ? state.map((item) =&gt;
+            item.id === action.item.id
+              ? {
+                  ...item,
+                  quantity: item.quantity + action.qty,
+                }
+              : { item, quantity: 1 }
+          )
+        : [...state, { ...action.item, quantity: 1 }];
+
+    case &quot;REMOVE_FROM_CART&quot;:
+      return state.filter((item) =&gt; item.id !== action.item.id);
+
+    case &quot;DECREMENT_QUANTITY&quot;:
+      // if quantity is 1 remove from cart, otherwise decrement quantity
+      return state.find((item) =&gt; item.name === action.item.name)?.quantity ===
+        1
+        ? state.filter((item) =&gt; item.name !== action.item.name)
+        : state.map((item) =&gt;
+            item.name === action.item.name
+              ? {
+                  ...item,
+                  quantity: item.quantity - 1,
+                }
+              : item
+          );
+    case &quot;SET_QUANTITY&quot;:
+      // if quantity is 1 remove from cart, otherwise decrement quantity
+      const result = state.map((item) =&gt; item.name === action.item.name);
+      return state.find((item) =&gt; item.id === action.item.id)
+        ? state.map((item) =&gt;
+            item.name === action.item.name
+              ? {
+                  ...item,
+                  quantity: parseInt(action.payload),
+                }
+              : item
+          )
+        : item;
+
+    case &quot;CLEAR_CART&quot;:
+      return initialState;
+
+    default:
+      return state;
+  }
+};
+
+// Reducer Functions
+
+export const addToCart = (item) =&gt; ({
+  type: &quot;ADD_TO_CART&quot;,
+  item,
+});
+
+export const decrementItemQuantity = (item) =&gt; ({
+  type: &quot;DECREMENT_QUANTITY&quot;,
+  item,
+});
+
+export const removeFromCart = (item) =&gt; ({
+  type: &quot;REMOVE_FROM_CART&quot;,
+  item,
+});
+
+export const clearCart = () =&gt; ({
+  type: &quot;CLEAR_CART&quot;,
+});
+
+// Wishlist Reducer
+
+// Initial Wishlist State
+
+const initialWishList = [];
+
+export const wishListInitializer = (initialValue = initialWishList) =&gt; {
+  if (typeof window !== &quot;undefined&quot;) {
+    const localWishList = localStorage.getItem(&quot;wishlist&quot;);
+    if (localWishList) {
+      return JSON.parse(localStorage.getItem(&quot;wishlist&quot;));
+    } else {
+      return initialValue;
+    }
+  }
+};
+
+// Wishlist Reducer
+
+export const wishListReducer = (state, action) =&gt; {
+  switch (action.type) {
+    case &quot;ADD_TO_WISHLIST&quot;:
+      return state.find((item) =&gt; item.id === action.item.id)
+        ? state.map((item) =&gt;
+            item.id === action.item.id
+              ? {
+                  ...item,
+                }
+              : item
+          )
+        : [...state, { ...action.item }];
+    case &quot;REMOVE_FROM_WISHLIST&quot;:
+      return state.filter((item) =&gt; item.id !== action.item.id);
+    case &quot;CLEAR_WISHLIST&quot;:
+      return initialState;
+    default:
+      return state;
+  }
+};
+
+// Reducer Functions
+
+export const addToWishList = (item) =&gt; ({
+  type: &quot;ADD_TO_WISHLIST&quot;,
+  item,
+});
+
+export const removeFromWishList = (item) =&gt; ({
+  type: &quot;REMOVE_FROM_WISHLIST&quot;,
+  item,
+});
+
+export const clearWishList = () =&gt; ({
+  type: &quot;CLEAR_WISHLIST&quot;,
+});
+</textarea><pre id="annotations" style="display:none">[{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:19,&quot;character&quot;:28,&quot;text&quot;:&quot;state&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:19,&quot;character&quot;:35,&quot;text&quot;:&quot;action&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:20,&quot;character&quot;:10,&quot;text&quot;:&quot;action&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:20,&quot;character&quot;:17,&quot;text&quot;:&quot;type&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:22,&quot;character&quot;:18,&quot;text&quot;:&quot;action&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:23,&quot;character&quot;:13,&quot;text&quot;:&quot;state&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:23,&quot;character&quot;:19,&quot;text&quot;:&quot;find&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:23,&quot;character&quot;:25,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:23,&quot;character&quot;:34,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:23,&quot;character&quot;:39,&quot;text&quot;:&quot;id&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:23,&quot;character&quot;:46,&quot;text&quot;:&quot;action&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:23,&quot;character&quot;:53,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:23,&quot;character&quot;:58,&quot;text&quot;:&quot;id&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:24,&quot;character&quot;:10,&quot;text&quot;:&quot;state&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:24,&quot;character&quot;:16,&quot;text&quot;:&quot;map&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:24,&quot;character&quot;:21,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:25,&quot;character&quot;:12,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:25,&quot;character&quot;:17,&quot;text&quot;:&quot;id&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:25,&quot;character&quot;:24,&quot;text&quot;:&quot;action&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:25,&quot;character&quot;:31,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:25,&quot;character&quot;:36,&quot;text&quot;:&quot;id&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:27,&quot;character&quot;:21,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:28,&quot;character&quot;:18,&quot;text&quot;:&quot;quantity&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:28,&quot;character&quot;:28,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:28,&quot;character&quot;:33,&quot;text&quot;:&quot;quantity&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:28,&quot;character&quot;:44,&quot;text&quot;:&quot;action&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:28,&quot;character&quot;:51,&quot;text&quot;:&quot;qty&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:30,&quot;character&quot;:18,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:32,&quot;character&quot;:14,&quot;text&quot;:&quot;state&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:32,&quot;character&quot;:26,&quot;text&quot;:&quot;action&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:32,&quot;character&quot;:33,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:35,&quot;character&quot;:13,&quot;text&quot;:&quot;state&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:35,&quot;character&quot;:19,&quot;text&quot;:&quot;filter&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:35,&quot;character&quot;:27,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:35,&quot;character&quot;:36,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:35,&quot;character&quot;:41,&quot;text&quot;:&quot;id&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:35,&quot;character&quot;:48,&quot;text&quot;:&quot;action&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:35,&quot;character&quot;:55,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:35,&quot;character&quot;:60,&quot;text&quot;:&quot;id&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:39,&quot;character&quot;:13,&quot;text&quot;:&quot;state&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:39,&quot;character&quot;:19,&quot;text&quot;:&quot;find&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:39,&quot;character&quot;:25,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:39,&quot;character&quot;:34,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:39,&quot;character&quot;:39,&quot;text&quot;:&quot;name&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:39,&quot;character&quot;:48,&quot;text&quot;:&quot;action&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:39,&quot;character&quot;:55,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:39,&quot;character&quot;:60,&quot;text&quot;:&quot;name&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:39,&quot;character&quot;:67,&quot;text&quot;:&quot;quantity&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:41,&quot;character&quot;:10,&quot;text&quot;:&quot;state&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:41,&quot;character&quot;:16,&quot;text&quot;:&quot;filter&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:41,&quot;character&quot;:24,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:41,&quot;character&quot;:33,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:41,&quot;character&quot;:38,&quot;text&quot;:&quot;name&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:41,&quot;character&quot;:47,&quot;text&quot;:&quot;action&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:41,&quot;character&quot;:54,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:41,&quot;character&quot;:59,&quot;text&quot;:&quot;name&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:42,&quot;character&quot;:10,&quot;text&quot;:&quot;state&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:42,&quot;character&quot;:16,&quot;text&quot;:&quot;map&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:42,&quot;character&quot;:21,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:43,&quot;character&quot;:12,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:43,&quot;character&quot;:17,&quot;text&quot;:&quot;name&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:43,&quot;character&quot;:26,&quot;text&quot;:&quot;action&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:43,&quot;character&quot;:33,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:43,&quot;character&quot;:38,&quot;text&quot;:&quot;name&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:45,&quot;character&quot;:21,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:46,&quot;character&quot;:28,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:46,&quot;character&quot;:33,&quot;text&quot;:&quot;quantity&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:48,&quot;character&quot;:16,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:52,&quot;character&quot;:12,&quot;text&quot;:&quot;result&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:52,&quot;character&quot;:21,&quot;text&quot;:&quot;state&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:52,&quot;character&quot;:27,&quot;text&quot;:&quot;map&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:52,&quot;character&quot;:32,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:52,&quot;character&quot;:41,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:52,&quot;character&quot;:46,&quot;text&quot;:&quot;name&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:52,&quot;character&quot;:55,&quot;text&quot;:&quot;action&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:52,&quot;character&quot;:62,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:52,&quot;character&quot;:67,&quot;text&quot;:&quot;name&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:53,&quot;character&quot;:13,&quot;text&quot;:&quot;state&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:53,&quot;character&quot;:19,&quot;text&quot;:&quot;find&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:53,&quot;character&quot;:25,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:53,&quot;character&quot;:34,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:53,&quot;character&quot;:39,&quot;text&quot;:&quot;id&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:53,&quot;character&quot;:46,&quot;text&quot;:&quot;action&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:53,&quot;character&quot;:53,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:53,&quot;character&quot;:58,&quot;text&quot;:&quot;id&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:54,&quot;character&quot;:10,&quot;text&quot;:&quot;state&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:54,&quot;character&quot;:16,&quot;text&quot;:&quot;map&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:54,&quot;character&quot;:21,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:55,&quot;character&quot;:12,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:55,&quot;character&quot;:17,&quot;text&quot;:&quot;name&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:55,&quot;character&quot;:26,&quot;text&quot;:&quot;action&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:55,&quot;character&quot;:33,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:55,&quot;character&quot;:38,&quot;text&quot;:&quot;name&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:57,&quot;character&quot;:21,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:58,&quot;character&quot;:37,&quot;text&quot;:&quot;action&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:58,&quot;character&quot;:44,&quot;text&quot;:&quot;payload&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:60,&quot;character&quot;:16,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:68,&quot;character&quot;:13,&quot;text&quot;:&quot;state&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:74,&quot;character&quot;:26,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:76,&quot;character&quot;:2,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:79,&quot;character&quot;:38,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:81,&quot;character&quot;:2,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:84,&quot;character&quot;:31,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:86,&quot;character&quot;:2,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:112,&quot;character&quot;:32,&quot;text&quot;:&quot;state&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:112,&quot;character&quot;:39,&quot;text&quot;:&quot;action&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:113,&quot;character&quot;:10,&quot;text&quot;:&quot;action&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:113,&quot;character&quot;:17,&quot;text&quot;:&quot;type&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:115,&quot;character&quot;:13,&quot;text&quot;:&quot;state&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:115,&quot;character&quot;:19,&quot;text&quot;:&quot;find&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:115,&quot;character&quot;:25,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:115,&quot;character&quot;:34,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:115,&quot;character&quot;:39,&quot;text&quot;:&quot;id&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:115,&quot;character&quot;:46,&quot;text&quot;:&quot;action&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:115,&quot;character&quot;:53,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:115,&quot;character&quot;:58,&quot;text&quot;:&quot;id&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:116,&quot;character&quot;:10,&quot;text&quot;:&quot;state&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:116,&quot;character&quot;:16,&quot;text&quot;:&quot;map&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:116,&quot;character&quot;:21,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:117,&quot;character&quot;:12,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:117,&quot;character&quot;:17,&quot;text&quot;:&quot;id&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:117,&quot;character&quot;:24,&quot;text&quot;:&quot;action&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:117,&quot;character&quot;:31,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:117,&quot;character&quot;:36,&quot;text&quot;:&quot;id&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:119,&quot;character&quot;:21,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:121,&quot;character&quot;:16,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:123,&quot;character&quot;:14,&quot;text&quot;:&quot;state&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:123,&quot;character&quot;:26,&quot;text&quot;:&quot;action&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:123,&quot;character&quot;:33,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:125,&quot;character&quot;:13,&quot;text&quot;:&quot;state&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:125,&quot;character&quot;:19,&quot;text&quot;:&quot;filter&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:125,&quot;character&quot;:27,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:125,&quot;character&quot;:36,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:125,&quot;character&quot;:41,&quot;text&quot;:&quot;id&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:125,&quot;character&quot;:48,&quot;text&quot;:&quot;action&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:125,&quot;character&quot;:55,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:125,&quot;character&quot;:60,&quot;text&quot;:&quot;id&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:129,&quot;character&quot;:13,&quot;text&quot;:&quot;state&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:135,&quot;character&quot;:30,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:137,&quot;character&quot;:2,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:140,&quot;character&quot;:35,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\Reducer.js&quot;,&quot;line&quot;:142,&quot;character&quot;:2,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1}]</pre></div>
+    <p class="footer-text">TypeScript Coverage Report generated by <a href="https://github.com/plantain-00/type-coverage">type-coverage</a> and <a href="https://github.com/alexcanessa/typescript-coverage-report">typescript-coverage-report</a> at Tue, 07 Jun 2022 06:30:55 GMT</p>
+    </body>
+  </html>
+  

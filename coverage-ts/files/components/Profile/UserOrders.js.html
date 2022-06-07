@@ -1,0 +1,233 @@
+
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>UserOrders.js</title>
+      <link href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" type="text/css" rel="stylesheet">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/mode/javascript/javascript.min.js" type="text/javascript" charset="utf-8"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.css" type="text/css" rel="stylesheet">
+<script src="..\..\..\assets\source-file.js" type="text/javascript" charset="utf-8"></script>
+<link href="..\..\..\assets\source-file.css" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+    <div style="margin-top:3em" class="ui container"><h1 class="ui header"><a href="..\..\..\index.html">TypeScript coverage report</a></h1><table style="margin-top:2em" class="ui celled table"><thead class=""><tr class=""><th class="">Filename</th><th class="">Percent</th><th class="">Threshold</th><th class="">Total</th><th class="">Covered</th><th class="">Uncovered</th></tr></thead><tbody class=""><tr class="positive"><td class="">components\Profile\UserOrders.js</td><td class="">100.00%</td><td class="">80%</td><td class="">256</td><td class="">256</td><td class="">0</td></tr></tbody></table><textarea id="editor" readonly="" style="margin-top:3em">/* This example requires Tailwind CSS v2.0+ */
+
+import { AiOutlineCheck } from &quot;react-icons/ai&quot;;
+
+const orders = [
+  {
+    number: &quot;WU88191111&quot;,
+    date: &quot;January 22, 2021&quot;,
+    datetime: &quot;2021-01-22&quot;,
+    href: &quot;#&quot;,
+    invoiceHref: &quot;#&quot;,
+    total: &quot;$302.00&quot;,
+    products: [
+      {
+        id: 1,
+        name: &quot;Nomad Tumbler&quot;,
+        description:
+          &quot;This durable double-walled insulated tumbler keeps your beverages at the perfect temperature all day long. Hot, cold, or even lukewarm if you&#x27;re weird like that, this bottle is ready for your next adventure.&quot;,
+        href: &quot;#&quot;,
+        price: &quot;$35.00&quot;,
+        status: &quot;out-for-delivery&quot;,
+        date: &quot;January 5, 2021&quot;,
+        datetime: &quot;2021-01-05&quot;,
+        imageSrc:
+          &quot;https://tailwindui.com/img/ecommerce-images/order-history-page-06-product-01.jpg&quot;,
+        imageAlt:
+          &quot;Olive drab green insulated bottle with flared screw lid and flat top.&quot;,
+      },
+      // More products...
+    ],
+  },
+  {
+    number: &quot;WU88191111&quot;,
+    date: &quot;January 22, 2021&quot;,
+    datetime: &quot;2021-01-22&quot;,
+    href: &quot;#&quot;,
+    invoiceHref: &quot;#&quot;,
+    total: &quot;$302.00&quot;,
+    products: [
+      {
+        id: 1,
+        name: &quot;Nomad Tumbler&quot;,
+        description:
+          &quot;This durable double-walled insulated tumbler keeps your beverages at the perfect temperature all day long. Hot, cold, or even lukewarm if you&#x27;re weird like that, this bottle is ready for your next adventure.&quot;,
+        href: &quot;#&quot;,
+        price: &quot;$35.00&quot;,
+        status: &quot;out-for-delivery&quot;,
+        date: &quot;January 5, 2021&quot;,
+        datetime: &quot;2021-01-05&quot;,
+        imageSrc:
+          &quot;https://tailwindui.com/img/ecommerce-images/order-history-page-06-product-01.jpg&quot;,
+        imageAlt:
+          &quot;Olive drab green insulated bottle with flared screw lid and flat top.&quot;,
+      },
+      // More products...
+    ],
+  },
+  // More orders...
+];
+
+const UserOrders = () =&gt; {
+  return (
+    &lt;&gt;
+      &lt;div className=&quot;flex flex-col space-y-2&quot;&gt;
+        &lt;div className=&quot;bg-white sm:p-3 m-2 sm:m-6 font-gothic sm:w-3/4 sm:mx-auto rounded-md sm:rounded-lg shadow&quot;&gt;
+          &lt;div className=&quot;max-w-4xl mx-auto py-3 sm:px-6 sm:py-4&quot;&gt;
+            &lt;div className=&quot;px-4 sm:px-0&quot;&gt;
+              &lt;h1 className=&quot;text-2xl font-extrabold tracking-tight text-text-primary sm:text-3xl&quot;&gt;
+                Order history
+              &lt;/h1&gt;
+              &lt;p className=&quot;mt-2 text-sm text-text-secondary&quot;&gt;
+                Check the status of recent orders, manage returns, and download
+                invoices.
+              &lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div className=&quot;bg-white sm:p-6 m-2 sm:m-6 font-gothic sm:w-3/4 sm:mx-auto rounded-md sm:rounded-lg&quot;&gt;
+          &lt;div className=&quot;mt-16&quot;&gt;
+            &lt;h2 className=&quot;sr-only&quot;&gt;Recent orders&lt;/h2&gt;
+
+            &lt;div className=&quot;space-y-16 sm:space-y-24 divide-y divide-text-primary px-2&quot;&gt;
+              {orders.map((order) =&gt; (
+                &lt;div key={order.number}&gt;
+                  &lt;h3 className=&quot;sr-only&quot;&gt;
+                    Order placed on{&quot; &quot;}
+                    &lt;time dateTime={order.datetime}&gt;{order.date}&lt;/time&gt;
+                  &lt;/h3&gt;
+
+                  &lt;div className=&quot; px-4 py-6 sm:rounded-lg sm:p-6 md:flex md:items-center md:justify-between md:space-x-6 lg:space-x-8&quot;&gt;
+                    &lt;dl className=&quot;divide-y divide-text-secondary space-y-4 text-sm text-text-secondary flex-auto md:divide-y-0 md:space-y-0 md:grid md:grid-cols-3 md:gap-x-6 lg:w-1/2 lg:flex-none lg:gap-x-8&quot;&gt;
+                      &lt;div className=&quot;flex justify-between md:block&quot;&gt;
+                        &lt;dt className=&quot;font-medium text-text-primary&quot;&gt;
+                          Order number
+                        &lt;/dt&gt;
+                        &lt;dd className=&quot;md:mt-1&quot;&gt;{order.number}&lt;/dd&gt;
+                      &lt;/div&gt;
+                      &lt;div className=&quot;flex justify-between pt-4 md:block md:pt-0&quot;&gt;
+                        &lt;dt className=&quot;font-medium text-text-primary&quot;&gt;
+                          Date placed
+                        &lt;/dt&gt;
+                        &lt;dd className=&quot;md:mt-1&quot;&gt;
+                          &lt;time dateTime={order.datetime}&gt;{order.date}&lt;/time&gt;
+                        &lt;/dd&gt;
+                      &lt;/div&gt;
+                      &lt;div className=&quot;flex justify-between pt-4 font-medium text-text-primary md:block md:pt-0&quot;&gt;
+                        &lt;dt&gt;Total amount&lt;/dt&gt;
+                        &lt;dd className=&quot;md:mt-1&quot;&gt;{order.total}&lt;/dd&gt;
+                      &lt;/div&gt;
+                    &lt;/dl&gt;
+                    &lt;div className=&quot;space-y-4 mt-6 sm:flex sm:space-x-4 sm:space-y-0 md:mt-0&quot;&gt;
+                      &lt;a
+                        href={order.href}
+                        className=&quot;w-full flex items-center justify-center bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 md:w-auto&quot;
+                      &gt;
+                        View Order
+                        &lt;span className=&quot;sr-only&quot;&gt;{order.number}&lt;/span&gt;
+                      &lt;/a&gt;
+                      &lt;a
+                        href={order.invoiceHref}
+                        className=&quot;w-full flex items-center justify-center bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 md:w-auto&quot;
+                      &gt;
+                        View Invoice
+                        &lt;span className=&quot;sr-only&quot;&gt;
+                          for order {order.number}
+                        &lt;/span&gt;
+                      &lt;/a&gt;
+                    &lt;/div&gt;
+                  &lt;/div&gt;
+
+                  &lt;div className=&quot;mt-6 flow-root px-4 sm:mt-10 sm:px-0&quot;&gt;
+                    &lt;div className=&quot;-my-6 divide-y divide-gray-200 sm:-my-10&quot;&gt;
+                      {order.products.map((product) =&gt; (
+                        &lt;div key={product.id} className=&quot;flex py-6 sm:py-10&quot;&gt;
+                          &lt;div className=&quot;min-w-0 flex-1 lg:flex lg:flex-col&quot;&gt;
+                            &lt;div className=&quot;lg:flex-1&quot;&gt;
+                              &lt;div className=&quot;sm:flex&quot;&gt;
+                                &lt;div&gt;
+                                  &lt;h4 className=&quot;font-medium text-text-primary&quot;&gt;
+                                    {product.name}
+                                  &lt;/h4&gt;
+                                  &lt;p className=&quot;hidden mt-2 text-sm text-text-secondary sm:block&quot;&gt;
+                                    {product.description}
+                                  &lt;/p&gt;
+                                &lt;/div&gt;
+                                &lt;p className=&quot;mt-1 font-medium text-text-primary sm:mt-0 sm:ml-6&quot;&gt;
+                                  {product.price}
+                                &lt;/p&gt;
+                              &lt;/div&gt;
+                              &lt;div className=&quot;mt-2 flex text-sm font-medium sm:mt-4&quot;&gt;
+                                &lt;a
+                                  href={product.href}
+                                  className=&quot;text-text-primary hover:text-text-secondary&quot;
+                                &gt;
+                                  View Product
+                                &lt;/a&gt;
+                                &lt;div className=&quot;border-l border-gray-200 ml-4 pl-4 sm:ml-6 sm:pl-6&quot;&gt;
+                                  &lt;a
+                                    href=&quot;#&quot;
+                                    className=&quot;text-text-primary hover:text-text-secondary&quot;
+                                  &gt;
+                                    Buy Again
+                                  &lt;/a&gt;
+                                &lt;/div&gt;
+                              &lt;/div&gt;
+                            &lt;/div&gt;
+                            &lt;div className=&quot;mt-6 font-medium&quot;&gt;
+                              {product.status === &quot;delivered&quot; ? (
+                                &lt;div className=&quot;flex space-x-2&quot;&gt;
+                                  &lt;AiOutlineCheck
+                                    className=&quot;flex-none w-6 h-6 text-green-500&quot;
+                                    aria-hidden=&quot;true&quot;
+                                  /&gt;
+                                  &lt;p&gt;
+                                    Delivered
+                                    &lt;span className=&quot;hidden sm:inline&quot;&gt;
+                                      {&quot; &quot;}
+                                      on{&quot; &quot;}
+                                      &lt;time dateTime={product.datetime}&gt;
+                                        {product.date}
+                                      &lt;/time&gt;
+                                    &lt;/span&gt;
+                                  &lt;/p&gt;
+                                &lt;/div&gt;
+                              ) : product.status === &quot;out-for-delivery&quot; ? (
+                                &lt;p className=&quot;text-text-primary&quot;&gt;
+                                  Out for delivery
+                                &lt;/p&gt;
+                              ) : product.status === &quot;cancelled&quot; ? (
+                                &lt;p className=&quot;text-text-secondary&quot;&gt;Cancelled&lt;/p&gt;
+                              ) : null}
+                            &lt;/div&gt;
+                          &lt;/div&gt;
+                          &lt;div className=&quot;ml-4 flex-shrink-0 sm:m-0 sm:mr-6 sm:order-first&quot;&gt;
+                            &lt;img
+                              src={product.imageSrc}
+                              alt={product.imageAlt}
+                              className=&quot;col-start-2 col-end-3 sm:col-start-1 sm:row-start-1 sm:row-span-2 w-20 h-20 rounded-lg object-center object-cover sm:w-40 sm:h-40 lg:w-52 lg:h-52&quot;
+                            /&gt;
+                          &lt;/div&gt;
+                        &lt;/div&gt;
+                      ))}
+                    &lt;/div&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
+              ))}
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/&gt;
+  );
+};
+
+export default UserOrders;
+</textarea><pre id="annotations" style="display:none">[]</pre></div>
+    <p class="footer-text">TypeScript Coverage Report generated by <a href="https://github.com/plantain-00/type-coverage">type-coverage</a> and <a href="https://github.com/alexcanessa/typescript-coverage-report">typescript-coverage-report</a> at Tue, 07 Jun 2022 06:30:55 GMT</p>
+    </body>
+  </html>
+  

@@ -23,4 +23,13 @@ module.exports = withTM({
     squareAPIURL: process.env.SQUARE_API_URL, // Pass through env variables
     squareAccessToken: process.env.SQUARE_ACCESS_TOKEN, // Pass through env variables
   },
+  basePath: "",
+  paths: {
+    "@/components/*": ["components/*"],
+    "@pages/*": ["src/pages/*"],
+    "@/utils/*": ["utils/*"],
+    "@/styles/*": ["styles/*"],
+    "@/context/*": ["context/*"],
+    "@/types/*": ["@types/*"],
+  },
 });

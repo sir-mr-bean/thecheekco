@@ -1,0 +1,67 @@
+
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>Layout.js</title>
+      <link href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" type="text/css" rel="stylesheet">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/mode/javascript/javascript.min.js" type="text/javascript" charset="utf-8"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.css" type="text/css" rel="stylesheet">
+<script src="..\..\..\assets\source-file.js" type="text/javascript" charset="utf-8"></script>
+<link href="..\..\..\assets\source-file.css" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+    <div style="margin-top:3em" class="ui container"><h1 class="ui header"><a href="..\..\..\index.html">TypeScript coverage report</a></h1><table style="margin-top:2em" class="ui celled table"><thead class=""><tr class=""><th class="">Filename</th><th class="">Percent</th><th class="">Threshold</th><th class="">Total</th><th class="">Covered</th><th class="">Uncovered</th></tr></thead><tbody class=""><tr class="negative"><td class="">components\Layout\Layout.js</td><td class="">50.00%</td><td class="">80%</td><td class="">100</td><td class="">50</td><td class="">50</td></tr></tbody></table><textarea id="editor" readonly="" style="margin-top:3em">import Header from &quot;../Header/Header&quot;;
+import { useState } from &quot;react&quot;;
+
+export default function Layout(props) {
+  const [cartItems, setCartItems] = useState([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const navigation = props.navigation;
+  const children = props.children;
+
+  const onAdd = (product) =&gt; {
+    const exist = cartItems.find((x) =&gt; x.id === product.id);
+    if (exist) {
+      setCartItems(
+        cartItems.map((x) =&gt;
+          x.id === product.id ? { ...exist, qty: exist.qty + 1 } : x
+        )
+      );
+      const result = cartItems.forEach((item) =&gt; {
+        let total = 0;
+        return total + item.qty;
+      });
+    } else {
+      setCartItems([...cartItems, { ...product, qty: 1 }]);
+      const result = cartItems.forEach((item) =&gt; {
+        let total = 0;
+        return total + item.qty;
+      });
+    }
+  };
+
+  const onRemove = () =&gt; {
+    const exist = cartItems.find((x) =&gt; x.id === product.id);
+    if (exist.qty === 1) {
+      setCartItems(cartItems.filter((x) =&gt; x.id !== product.id));
+    } else {
+      setCartItems(
+        cartItems.map((x) =&gt;
+          x.id === product.id ? { ...exist, qty: exist.qty - 1 } : x
+        )
+      );
+    }
+  };
+  return (
+    &lt;&gt;
+      &lt;Header cartItems={cartItems} navigation={navigation} /&gt;
+      &lt;main&gt;{children}&lt;/main&gt;
+    &lt;/&gt;
+  );
+}
+</textarea><pre id="annotations" style="display:none">[{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:3,&quot;character&quot;:31,&quot;text&quot;:&quot;props&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:6,&quot;character&quot;:8,&quot;text&quot;:&quot;navigation&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:6,&quot;character&quot;:21,&quot;text&quot;:&quot;props&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:6,&quot;character&quot;:27,&quot;text&quot;:&quot;navigation&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:7,&quot;character&quot;:8,&quot;text&quot;:&quot;children&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:7,&quot;character&quot;:19,&quot;text&quot;:&quot;props&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:7,&quot;character&quot;:25,&quot;text&quot;:&quot;children&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:9,&quot;character&quot;:17,&quot;text&quot;:&quot;product&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:10,&quot;character&quot;:10,&quot;text&quot;:&quot;exist&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:10,&quot;character&quot;:34,&quot;text&quot;:&quot;x&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:10,&quot;character&quot;:40,&quot;text&quot;:&quot;x&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:10,&quot;character&quot;:42,&quot;text&quot;:&quot;id&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:10,&quot;character&quot;:49,&quot;text&quot;:&quot;product&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:10,&quot;character&quot;:57,&quot;text&quot;:&quot;id&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:11,&quot;character&quot;:8,&quot;text&quot;:&quot;exist&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:13,&quot;character&quot;:23,&quot;text&quot;:&quot;x&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:14,&quot;character&quot;:10,&quot;text&quot;:&quot;x&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:14,&quot;character&quot;:12,&quot;text&quot;:&quot;id&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:14,&quot;character&quot;:19,&quot;text&quot;:&quot;product&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:14,&quot;character&quot;:27,&quot;text&quot;:&quot;id&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:14,&quot;character&quot;:37,&quot;text&quot;:&quot;exist&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:14,&quot;character&quot;:44,&quot;text&quot;:&quot;qty&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:14,&quot;character&quot;:49,&quot;text&quot;:&quot;exist&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:14,&quot;character&quot;:55,&quot;text&quot;:&quot;qty&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:14,&quot;character&quot;:67,&quot;text&quot;:&quot;x&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:17,&quot;character&quot;:40,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:19,&quot;character&quot;:23,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:19,&quot;character&quot;:28,&quot;text&quot;:&quot;qty&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:22,&quot;character&quot;:39,&quot;text&quot;:&quot;product&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:23,&quot;character&quot;:40,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:25,&quot;character&quot;:23,&quot;text&quot;:&quot;item&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:25,&quot;character&quot;:28,&quot;text&quot;:&quot;qty&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:31,&quot;character&quot;:10,&quot;text&quot;:&quot;exist&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:31,&quot;character&quot;:34,&quot;text&quot;:&quot;x&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:31,&quot;character&quot;:40,&quot;text&quot;:&quot;x&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:31,&quot;character&quot;:42,&quot;text&quot;:&quot;id&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:32,&quot;character&quot;:8,&quot;text&quot;:&quot;exist&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:32,&quot;character&quot;:14,&quot;text&quot;:&quot;qty&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:33,&quot;character&quot;:37,&quot;text&quot;:&quot;x&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:33,&quot;character&quot;:43,&quot;text&quot;:&quot;x&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:33,&quot;character&quot;:45,&quot;text&quot;:&quot;id&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:36,&quot;character&quot;:23,&quot;text&quot;:&quot;x&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:37,&quot;character&quot;:10,&quot;text&quot;:&quot;x&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:37,&quot;character&quot;:12,&quot;text&quot;:&quot;id&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:37,&quot;character&quot;:37,&quot;text&quot;:&quot;exist&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:37,&quot;character&quot;:49,&quot;text&quot;:&quot;exist&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:37,&quot;character&quot;:55,&quot;text&quot;:&quot;qty&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:37,&quot;character&quot;:67,&quot;text&quot;:&quot;x&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:44,&quot;character&quot;:36,&quot;text&quot;:&quot;navigation&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Layout\\Layout.js&quot;,&quot;line&quot;:44,&quot;character&quot;:48,&quot;text&quot;:&quot;navigation&quot;,&quot;kind&quot;:1}]</pre></div>
+    <p class="footer-text">TypeScript Coverage Report generated by <a href="https://github.com/plantain-00/type-coverage">type-coverage</a> and <a href="https://github.com/alexcanessa/typescript-coverage-report">typescript-coverage-report</a> at Tue, 07 Jun 2022 06:30:55 GMT</p>
+    </body>
+  </html>
+  

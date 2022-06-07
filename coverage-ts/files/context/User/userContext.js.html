@@ -1,0 +1,93 @@
+
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>userContext.js</title>
+      <link href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" type="text/css" rel="stylesheet">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/mode/javascript/javascript.min.js" type="text/javascript" charset="utf-8"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.css" type="text/css" rel="stylesheet">
+<script src="..\..\..\assets\source-file.js" type="text/javascript" charset="utf-8"></script>
+<link href="..\..\..\assets\source-file.css" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+    <div style="margin-top:3em" class="ui container"><h1 class="ui header"><a href="..\..\..\index.html">TypeScript coverage report</a></h1><table style="margin-top:2em" class="ui celled table"><thead class=""><tr class=""><th class="">Filename</th><th class="">Percent</th><th class="">Threshold</th><th class="">Total</th><th class="">Covered</th><th class="">Uncovered</th></tr></thead><tbody class=""><tr class="negative"><td class="">context\User\userContext.js</td><td class="">70.00%</td><td class="">80%</td><td class="">110</td><td class="">77</td><td class="">33</td></tr></tbody></table><textarea id="editor" readonly="" style="margin-top:3em">import {
+  useContext,
+  createContext,
+  useReducer,
+  useState,
+  useEffect,
+} from &quot;react&quot;;
+import UserReducer from &quot;../User/userReducer&quot;;
+import { useAuth } from &quot;../FirebaseAuthContext&quot;;
+
+import { db } from &quot;../../utils/firebaseConfig&quot;;
+import { query, getDocs, collection, where } from &quot;firebase/firestore&quot;;
+
+const User = createContext();
+
+export const UserContext = ({ children }) =&gt; {
+  const [userObj, dispatch] = useReducer(UserReducer, emptyUser);
+  const { currentUser } = useAuth();
+  const emptyUser = {
+    firstName: &quot;&quot;,
+    lastName: &quot;&quot;,
+    company: &quot;&quot;,
+    streetAddress: &quot;&quot;,
+    apartmentOrUnit: &quot;&quot;,
+    city: &quot;&quot;,
+    state: &quot;&quot;,
+    country: &quot;Australia&quot;,
+    postalCode: &quot;&quot;,
+    email: &quot;&quot;,
+    phoneNumber: &quot;&quot;,
+  };
+
+  const fetchDocs = async (currentUser) =&gt; {
+    const q = query(
+      collection(db, &quot;users&quot;),
+      where(&quot;uid&quot;, &quot;==&quot;, currentUser.uid)
+    );
+    const user = await getDocs(q);
+    const userData = user.docs[0].data();
+    return {
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      company: userData.company,
+      streetAddress: userData.streetAddress,
+      apartmentOrUnit: userData.apartmentOrUnit,
+      city: userData.city,
+      state: userData.state,
+      country: userData.country,
+      postalCode: userData.postalCode,
+      email: userData.email,
+      phoneNumber: userData.phoneNumber,
+    };
+  };
+
+  useEffect(() =&gt; {
+    console.log(&quot;fetching user&quot;);
+    if (currentUser) {
+      fetchDocs(currentUser).then((user) =&gt; {
+        dispatch({
+          type: &quot;SET_USER&quot;,
+          payload: user,
+        });
+      });
+    }
+  }, [currentUser?.uid]);
+
+  return (
+    &lt;User.Provider value={{ userObj, dispatch }}&gt;{children}&lt;/User.Provider&gt;
+  );
+};
+export const UserState = () =&gt; {
+  return useContext(User);
+};
+
+export default UserContext;
+</textarea><pre id="annotations" style="display:none">[{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:15,&quot;character&quot;:30,&quot;text&quot;:&quot;children&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:16,&quot;character&quot;:9,&quot;text&quot;:&quot;userObj&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:17,&quot;character&quot;:10,&quot;text&quot;:&quot;currentUser&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:32,&quot;character&quot;:27,&quot;text&quot;:&quot;currentUser&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:35,&quot;character&quot;:25,&quot;text&quot;:&quot;currentUser&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:35,&quot;character&quot;:37,&quot;text&quot;:&quot;uid&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:40,&quot;character&quot;:6,&quot;text&quot;:&quot;firstName&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:40,&quot;character&quot;:26,&quot;text&quot;:&quot;firstName&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:41,&quot;character&quot;:6,&quot;text&quot;:&quot;lastName&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:41,&quot;character&quot;:25,&quot;text&quot;:&quot;lastName&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:42,&quot;character&quot;:6,&quot;text&quot;:&quot;company&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:42,&quot;character&quot;:24,&quot;text&quot;:&quot;company&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:43,&quot;character&quot;:6,&quot;text&quot;:&quot;streetAddress&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:43,&quot;character&quot;:30,&quot;text&quot;:&quot;streetAddress&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:44,&quot;character&quot;:6,&quot;text&quot;:&quot;apartmentOrUnit&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:44,&quot;character&quot;:32,&quot;text&quot;:&quot;apartmentOrUnit&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:45,&quot;character&quot;:6,&quot;text&quot;:&quot;city&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:45,&quot;character&quot;:21,&quot;text&quot;:&quot;city&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:46,&quot;character&quot;:6,&quot;text&quot;:&quot;state&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:46,&quot;character&quot;:22,&quot;text&quot;:&quot;state&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:47,&quot;character&quot;:6,&quot;text&quot;:&quot;country&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:47,&quot;character&quot;:24,&quot;text&quot;:&quot;country&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:48,&quot;character&quot;:6,&quot;text&quot;:&quot;postalCode&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:48,&quot;character&quot;:27,&quot;text&quot;:&quot;postalCode&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:49,&quot;character&quot;:6,&quot;text&quot;:&quot;email&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:49,&quot;character&quot;:22,&quot;text&quot;:&quot;email&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:50,&quot;character&quot;:6,&quot;text&quot;:&quot;phoneNumber&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:50,&quot;character&quot;:28,&quot;text&quot;:&quot;phoneNumber&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:56,&quot;character&quot;:8,&quot;text&quot;:&quot;currentUser&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:57,&quot;character&quot;:16,&quot;text&quot;:&quot;currentUser&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:64,&quot;character&quot;:6,&quot;text&quot;:&quot;currentUser&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:64,&quot;character&quot;:19,&quot;text&quot;:&quot;uid&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;context\\User\\userContext.js&quot;,&quot;line&quot;:67,&quot;character&quot;:28,&quot;text&quot;:&quot;userObj&quot;,&quot;kind&quot;:1}]</pre></div>
+    <p class="footer-text">TypeScript Coverage Report generated by <a href="https://github.com/plantain-00/type-coverage">type-coverage</a> and <a href="https://github.com/alexcanessa/typescript-coverage-report">typescript-coverage-report</a> at Tue, 07 Jun 2022 06:30:55 GMT</p>
+    </body>
+  </html>
+  

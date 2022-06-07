@@ -1,0 +1,169 @@
+
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>Login.js</title>
+      <link href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" type="text/css" rel="stylesheet">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/mode/javascript/javascript.min.js" type="text/javascript" charset="utf-8"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.css" type="text/css" rel="stylesheet">
+<script src="..\..\..\assets\source-file.js" type="text/javascript" charset="utf-8"></script>
+<link href="..\..\..\assets\source-file.css" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+    <div style="margin-top:3em" class="ui container"><h1 class="ui header"><a href="..\..\..\index.html">TypeScript coverage report</a></h1><table style="margin-top:2em" class="ui celled table"><thead class=""><tr class=""><th class="">Filename</th><th class="">Percent</th><th class="">Threshold</th><th class="">Total</th><th class="">Covered</th><th class="">Uncovered</th></tr></thead><tbody class=""><tr class="positive"><td class="">components\Header\Login.js</td><td class="">97.69%</td><td class="">80%</td><td class="">130</td><td class="">127</td><td class="">3</td></tr></tbody></table><textarea id="editor" readonly="" style="margin-top:3em">/* This example requires Tailwind CSS v2.0+ */
+import { Fragment } from &quot;react&quot;;
+import { Menu, Transition } from &quot;@headlessui/react&quot;;
+import { BsChevronDown, BsPerson } from &quot;react-icons/bs&quot;;
+import { useAuth } from &quot;../../context/FirebaseAuthContext&quot;;
+import { auth } from &quot;../../utils/firebaseConfig&quot;;
+import { useRouter } from &quot;next/router&quot;;
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(&quot; &quot;);
+}
+
+export default function Login() {
+  const router = useRouter();
+  const { currentUser } = useAuth();
+
+  const handleSignOut = async () =&gt; {
+    await auth.signOut();
+    router.reload();
+  };
+
+  return (
+    &lt;Menu
+      as=&quot;div&quot;
+      className=&quot;relative inline-block justify-center items-center&quot;
+    &gt;
+      &lt;div className=&quot;&quot;&gt;
+        &lt;Menu.Button className=&quot;inline-flex justify-center w-full rounded-md shadow-sm py-2 font-medium font-gothic&quot;&gt;
+          {!currentUser ? (
+            &lt;div className=&quot;hidden sm:flex items-center&quot;&gt;
+              Login
+              &lt;BsChevronDown
+                className=&quot;-mr-1 ml-2 h-4 w-4 bg-transparent&quot;
+                aria-hidden=&quot;true&quot;
+              /&gt;
+            &lt;/div&gt;
+          ) : (
+            &lt;div className=&quot;hidden sm:flex items-center sm:pr-10 whitespace-nowrap&quot;&gt;
+              My Account
+              &lt;BsChevronDown
+                className=&quot;-mr-1 ml-2 h-4 w-4 bg-transparent&quot;
+                aria-hidden=&quot;true&quot;
+              /&gt;
+            &lt;/div&gt;
+          )}
+
+          &lt;div className=&quot;active:bg-black rounded-md active:bg-opacity-10 py-1.5 px-1.5 sm:hidden&quot;&gt;
+            &lt;BsPerson size={21} className=&quot;fill-text-primary&quot; /&gt;
+          &lt;/div&gt;
+        &lt;/Menu.Button&gt;
+      &lt;/div&gt;
+
+      &lt;Transition
+        as={Fragment}
+        enter=&quot;transition ease-out duration-100&quot;
+        enterFrom=&quot;transform opacity-0 scale-95&quot;
+        enterTo=&quot;transform opacity-100 scale-100&quot;
+        leave=&quot;transition ease-in duration-75&quot;
+        leaveFrom=&quot;transform opacity-100 scale-100&quot;
+        leaveTo=&quot;transform opacity-0 scale-95&quot;
+      &gt;
+        &lt;Menu.Items className=&quot;origin-top-right absolute top-8 right-0 mt-2 w-56 rounded-md shadow-lg bg-bg-lighttan focus:outline-none&quot;&gt;
+          &lt;div className=&quot;&quot;&gt;
+            {!currentUser ? (
+              &lt;&gt;
+                &lt;Menu.Item&gt;
+                  {({ active }) =&gt; (
+                    &lt;a
+                      href=&quot;/login&quot;
+                      className={classNames(
+                        active
+                          ? &quot;bg-bg-tan text-text-primary rounded-t-md&quot;
+                          : &quot;text-text-primary&quot;,
+                        &quot;block px-4 py-2 text-sm&quot;
+                      )}
+                    &gt;
+                      My Account
+                    &lt;/a&gt;
+                  )}
+                &lt;/Menu.Item&gt;
+                &lt;Menu.Item&gt;
+                  {({ active }) =&gt; (
+                    &lt;a
+                      href=&quot;/register&quot;
+                      className={classNames(
+                        active
+                          ? &quot;bg-bg-tan text-text-primary rounded-b-md&quot;
+                          : &quot;text-text-primary&quot;,
+                        &quot;block px-4 py-2 text-sm&quot;
+                      )}
+                    &gt;
+                      Join
+                    &lt;/a&gt;
+                  )}
+                &lt;/Menu.Item&gt;
+              &lt;/&gt;
+            ) : (
+              &lt;&gt;
+                &lt;Menu.Item&gt;
+                  {({ active }) =&gt; (
+                    &lt;a
+                      href=&quot;/profile&quot;
+                      className={classNames(
+                        active
+                          ? &quot;bg-bg-tan text-text-primary rounded-t-md&quot;
+                          : &quot;text-text-primary&quot;,
+                        &quot;block px-4 py-2 text-sm&quot;
+                      )}
+                    &gt;
+                      My Profile
+                    &lt;/a&gt;
+                  )}
+                &lt;/Menu.Item&gt;
+                &lt;Menu.Item&gt;
+                  {({ active }) =&gt; (
+                    &lt;a
+                      href=&quot;/profile/orders&quot;
+                      className={classNames(
+                        active
+                          ? &quot;bg-bg-tan text-text-primary&quot;
+                          : &quot;text-text-primary&quot;,
+                        &quot;block px-4 py-2 text-sm&quot;
+                      )}
+                    &gt;
+                      My Orders
+                    &lt;/a&gt;
+                  )}
+                &lt;/Menu.Item&gt;
+                &lt;Menu.Item&gt;
+                  {({ active }) =&gt; (
+                    &lt;button
+                      onClick={() =&gt; handleSignOut()}
+                      className={classNames(
+                        active
+                          ? &quot;bg-bg-tan text-text-primary rounded-b-md&quot;
+                          : &quot;text-text-primary&quot;,
+                        &quot;block px-4 py-2 text-sm w-full text-left&quot;
+                      )}
+                    &gt;
+                      Sign Out
+                    &lt;/button&gt;
+                  )}
+                &lt;/Menu.Item&gt;
+              &lt;/&gt;
+            )}
+          &lt;/div&gt;
+        &lt;/Menu.Items&gt;
+      &lt;/Transition&gt;
+    &lt;/Menu&gt;
+  );
+}
+</textarea><pre id="annotations" style="display:none">[{&quot;file&quot;:&quot;components\\Header\\Login.js&quot;,&quot;line&quot;:14,&quot;character&quot;:10,&quot;text&quot;:&quot;currentUser&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Header\\Login.js&quot;,&quot;line&quot;:28,&quot;character&quot;:12,&quot;text&quot;:&quot;currentUser&quot;,&quot;kind&quot;:1},{&quot;file&quot;:&quot;components\\Header\\Login.js&quot;,&quot;line&quot;:63,&quot;character&quot;:14,&quot;text&quot;:&quot;currentUser&quot;,&quot;kind&quot;:1}]</pre></div>
+    <p class="footer-text">TypeScript Coverage Report generated by <a href="https://github.com/plantain-00/type-coverage">type-coverage</a> and <a href="https://github.com/alexcanessa/typescript-coverage-report">typescript-coverage-report</a> at Tue, 07 Jun 2022 06:30:55 GMT</p>
+    </body>
+  </html>
+  
