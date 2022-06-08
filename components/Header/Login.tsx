@@ -6,7 +6,7 @@ import { useAuth } from "../../context/FirebaseAuthContext";
 import { auth } from "../../utils/firebaseConfig";
 import { useRouter } from "next/router";
 
-function classNames(...classes) {
+function classNames(...classes: [string, string?, string?, Boolean?]): string {
   return classes.filter(Boolean).join(" ");
 }
 

@@ -1,42 +1,28 @@
 import { UserState } from "../../context/User/userContext";
 import Autocomplete from "react-google-autocomplete";
 import { useState, useEffect, useRef } from "react";
+import { User } from "@/types/User";
+import { UserAction } from "@/context/User/userReducer";
 
-const GuestForm = () => {
-  const { userObj, dispatch } = UserState();
+const UserForm = ({
+  userObj,
+  UserDispatch,
+}: {
+  userObj: User;
+  UserDispatch: Function;
+}) => {
   const termsCheckboxRef = useRef(null);
+  const streetAddressRef = useRef<HTMLInputElement>(null);
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const [firstRun, setFirstRun] = useState(true);
-  useEffect(() => {
-    dispatch({
-      type: "SET_USER",
-      payload: {
-        firstName: "",
-        lastName: "",
-        company: "",
-        streetAddress: "",
-        apartmentOrUnit: "",
-        city: "",
-        state: "",
-        country: "Australia",
-        postalCode: "",
-        email: "",
-        phoneNumber: "",
-      },
-    });
-    setFirstRun(false);
-  }, []);
   return (
     <>
-      {!firstRun && (
-        <form
-          autoComplete="off"
-          className="mt-4 text-text-primary font-gothic "
-        >
+      {userObj && (
+        <form autoComplete="off" className="mt-4 text-text-primary font-gothic">
+          <input type="hidden" value="something" />
           <div className="">
             <h2 className="text-lg font-medium ">Customer Information</h2>
 
-            <div className="mt-4 grid grid-cols-2 gap-y-6 sm:gap-x-2">
+            <div className="mt-4 grid grid-flow-row grid-cols-1 sm:gap-y-6 sm:grid-cols-2 sm:gap-x-4">
               <div>
                 <label
                   htmlFor="first-name"
@@ -47,12 +33,12 @@ const GuestForm = () => {
                 <div className="mt-1">
                   <input
                     type="text"
-                    id="guest-first-name"
+                    id="first-name"
                     name="first-name"
                     autoComplete="given-name"
-                    value={userObj.firstName}
+                    value={userObj?.firstName}
                     onChange={(e) =>
-                      dispatch({
+                      UserDispatch({
                         type: "SET_FIRST_NAME",
                         payload: e.target.value,
                       })
@@ -72,12 +58,12 @@ const GuestForm = () => {
                 <div className="mt-1">
                   <input
                     type="text"
-                    id="guest-last-name"
+                    id="last-name"
                     name="last-name"
                     autoComplete="family-name"
-                    value={userObj.lastName}
+                    value={userObj?.lastName}
                     onChange={(e) =>
-                      dispatch({
+                      UserDispatch({
                         type: "SET_LAST_NAME",
                         payload: e.target.value,
                       })
@@ -98,11 +84,11 @@ const GuestForm = () => {
                   <input
                     type="text"
                     name="company"
-                    id="guest-company"
+                    id="company"
                     autoComplete="organization"
-                    value={userObj.company}
+                    value={userObj?.company}
                     onChange={(e) =>
-                      dispatch({
+                      UserDispatch({
                         type: "SET_COMPANY",
                         payload: e.target.value,
                       })
@@ -121,82 +107,83 @@ const GuestForm = () => {
                 </label>
                 <Autocomplete
                   apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
-                  onPlaceSelected={(place) => {
-                    console.log(place);
-                    const [...address_components] = place.address_components;
-                    console.log(address_components);
-                    const apartmentOrUnit = address_components.find(
-                      (component) => component.types.includes("subpremise")
-                    );
-                    if (apartmentOrUnit) {
-                      console.log("found unit", apartmentOrUnit.long_name);
-                      dispatch({
-                        type: "SET_APARTMENT_OR_UNIT",
-                        payload: apartmentOrUnit.long_name,
+                  onPlaceSelected={(places: google.maps.places.PlaceResult) => {
+                    console.log(places);
+                    if (places) {
+                      const apartmentOrUnit = places?.address_components?.find(
+                        (component) => component.types.includes("subpremise")
+                      );
+                      if (apartmentOrUnit) {
+                        UserDispatch({
+                          type: "SET_APARTMENT_OR_UNIT",
+                          payload: apartmentOrUnit.long_name,
+                        });
+                      }
+                      const streetNumber = places?.address_components?.find(
+                        (component) => component.types.includes("street_number")
+                      );
+                      const streetAddress = places?.address_components?.find(
+                        (component) => component.types.includes("route")
+                      );
+                      const city = places?.address_components?.find(
+                        (component) => component.types.includes("locality")
+                      );
+                      const state = places?.address_components?.find(
+                        (component) =>
+                          component.types.includes(
+                            "administrative_area_level_1"
+                          )
+                      );
+                      const country = places?.address_components?.find(
+                        (component) => component.types.includes("country")
+                      );
+                      const postalCode = places?.address_components?.find(
+                        (component) => component.types.includes("postal_code")
+                      );
+                      UserDispatch({
+                        type: "SET_STREET_ADDRESS",
+                        payload:
+                          streetNumber?.long_name +
+                          " " +
+                          streetAddress?.long_name,
+                      });
+                      UserDispatch({
+                        type: "SET_CITY",
+                        payload: city?.long_name,
+                      });
+                      UserDispatch({
+                        type: "SET_STATE",
+                        payload: state?.long_name,
+                      });
+                      UserDispatch({
+                        type: "SET_COUNTRY",
+                        payload: country?.long_name,
+                      });
+                      UserDispatch({
+                        type: "SET_POSTAL_CODE",
+                        payload: postalCode?.long_name,
+                      });
+                      UserDispatch({
+                        type: "SET_STREET_NUMBER",
+                        payload: streetNumber?.long_name,
                       });
                     }
-                    const streetNumber = address_components.find((component) =>
-                      component.types.includes("street_number")
-                    );
-                    const streetAddress = address_components.find((component) =>
-                      component.types.includes("route")
-                    );
-                    const city = address_components.find((component) =>
-                      component.types.includes("locality")
-                    );
-                    const state = address_components.find((component) =>
-                      component.types.includes("administrative_area_level_1")
-                    );
-                    const country = address_components.find((component) =>
-                      component.types.includes("country")
-                    );
-                    const postalCode = address_components.find((component) =>
-                      component.types.includes("postal_code")
-                    );
-                    console.log("unit number is");
-                    dispatch({
-                      type: "SET_STREET_ADDRESS",
-                      payload:
-                        streetNumber.long_name + " " + streetAddress.long_name,
-                    });
-                    dispatch({
-                      type: "SET_CITY",
-                      payload: city.long_name,
-                    });
-                    dispatch({
-                      type: "SET_STATE",
-                      payload: state.long_name,
-                    });
-                    dispatch({
-                      type: "SET_COUNTRY",
-                      payload: country.long_name,
-                    });
-                    dispatch({
-                      type: "SET_POSTAL_CODE",
-                      payload: postalCode.long_name,
-                    });
-
-                    dispatch({
-                      type: "SET_STREET_NUMBER",
-                      payload: streetNumber.long_name,
-                    });
                   }}
                   options={{
                     componentRestrictions: { country: "au" },
-                    fields: ["address_components", "geometry"],
+                    fields: ["place?.address_components?", "geometry"],
                     types: ["address"],
                   }}
-                  type="search"
-                  name="street-address"
-                  id="guest-street-address"
-                  value={userObj.streetAddress}
-                  onChange={(e) => {
-                    dispatch({
-                      type: "SET_STREET_ADDRESS",
-                      payload: e.target.value,
-                    });
-                  }}
-                  className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
+                  ref={streetAddressRef}
+                  className=" mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
+                />
+                <input
+                  hidden
+                  id="street-address"
+                  ref={streetAddressRef}
+                  type="text"
+                  defaultValue={userObj?.streetAddress}
+                  autoComplete="off"
                 />
               </div>
 
@@ -211,10 +198,10 @@ const GuestForm = () => {
                   <input
                     type="text"
                     name="apartment"
-                    id="guest-apartment"
-                    value={userObj.apartmentOrUnit}
+                    id="apartment"
+                    value={userObj?.apartmentOrUnit}
                     onChange={(e) =>
-                      dispatch({
+                      UserDispatch({
                         type: "SET_APARTMENT_OR_UNIT",
                         payload: e.target.value,
                       })
@@ -235,11 +222,11 @@ const GuestForm = () => {
                   <input
                     type="text"
                     name="city"
-                    id="guest-city"
+                    id="city"
                     autoComplete="address-level2"
-                    value={userObj.city || ""}
+                    value={userObj?.city || ""}
                     onChange={(e) =>
-                      dispatch({
+                      UserDispatch({
                         type: "SET_CITY",
                         payload: e.target.value,
                       })
@@ -258,12 +245,12 @@ const GuestForm = () => {
                 </label>
                 <div className="mt-1">
                   <select
-                    id="guest-country"
+                    id="country"
                     name="country"
                     autoComplete="country-name"
-                    value={userObj.country}
+                    value={userObj?.country}
                     onChange={(e) =>
-                      dispatch({
+                      UserDispatch({
                         type: "SET_COUNTRY",
                         payload: e.target.value,
                       })
@@ -286,11 +273,11 @@ const GuestForm = () => {
                   <input
                     type="text"
                     name="region"
-                    id="guest-region"
+                    id="region"
                     autoComplete="address-level1"
-                    value={userObj.state}
+                    value={userObj?.state}
                     onChange={(e) =>
-                      dispatch({
+                      UserDispatch({
                         type: "SET_STATE",
                         payload: e.target.value,
                       })
@@ -311,11 +298,11 @@ const GuestForm = () => {
                   <input
                     type="text"
                     name="postal-code"
-                    id="guest-postal-code"
+                    id="postal-code"
                     autoComplete="postal-code"
-                    value={userObj.postalCode}
+                    value={userObj?.postalCode}
                     onChange={(e) =>
-                      dispatch({
+                      UserDispatch({
                         type: "SET_POSTAL_CODE",
                         payload: e.target.value,
                       })
@@ -336,11 +323,11 @@ const GuestForm = () => {
                   <input
                     type="text"
                     name="phone"
-                    id="guest-phone"
+                    id="phone"
                     autoComplete="tel"
-                    value={userObj.phoneNumber}
+                    value={userObj?.phoneNumber}
                     onChange={(e) =>
-                      dispatch({
+                      UserDispatch({
                         type: "SET_PHONE_NUMBER",
                         payload: e.target.value,
                       })
@@ -357,7 +344,7 @@ const GuestForm = () => {
               <input
                 onChange={() => setTermsAccepted(!termsAccepted)}
                 ref={termsCheckboxRef}
-                id="guest-terms"
+                id="terms"
                 name="terms"
                 type="checkbox"
                 className="h-6 w-6 border-gray-300 rounded text-text-secondary focus:ring-text-secondary"
@@ -381,4 +368,4 @@ const GuestForm = () => {
   );
 };
 
-export default GuestForm;
+export default UserForm;

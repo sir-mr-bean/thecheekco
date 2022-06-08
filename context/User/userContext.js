@@ -5,7 +5,7 @@ import {
   useState,
   useEffect,
 } from "react";
-import UserReducer from "../User/userReducer";
+import UserReducer from "./userReducer";
 import { useAuth } from "../FirebaseAuthContext";
 
 import { db } from "../../utils/firebaseConfig";

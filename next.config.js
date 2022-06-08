@@ -31,5 +31,6 @@ module.exports = withTM({
     "@/styles/*": ["styles/*"],
     "@/context/*": ["context/*"],
     "@/types/*": ["@types/*"],
+    "@/backend/*": ["src/backend/*"],
   },
 });

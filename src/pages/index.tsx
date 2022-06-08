@@ -18,10 +18,10 @@ import {
 import { FaKissWinkHeart, FaShippingFast } from "react-icons/fa";
 import { HiCursorClick } from "react-icons/hi";
 import toast from "react-hot-toast";
-import { product, category } from "../../@types/Square";
 import * as icons from "react-icons";
 import { FaIcons } from "react-icons/fa";
 import { Product, Category } from "../../@types/Product";
+import { trpc } from "@/utils/trpc";
 
 export default function Home({
   productsData: productsData,
@@ -30,6 +30,8 @@ export default function Home({
   productsData: [Product];
   categoriesData: [Category];
 }) {
+  const { data } = trpc.useQuery(["hello", { text: "kroucher" }]);
+  console.log(data);
   const carouselRef: any = useRef();
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const { cart, dispatch } = CartState();
@@ -300,19 +302,14 @@ export default function Home({
                     (item: Category) => item.category_data.name.charAt(0) != "_"
                   )
                   .map((category: Category) => {
-                    console.log(category);
-                    console.log(productsData);
                     const randomProduct = productsData.find(
                       (product: Product) => {
-                        console.log(product);
                         return (
                           product.category?.category_data.name ===
                           category.category_data.name
                         );
                       }
                     );
-
-                    console.log("random product is ", randomProduct);
 
                     return (
                       <Link
@@ -453,7 +450,6 @@ export default function Home({
                       productsData
                         .filter((item: Product) => item.name === "The Gua Sha")
                         .map((product: Product) => {
-                          console.log(product);
                           return (
                             <div key={product.id}>
                               <div className="relative">

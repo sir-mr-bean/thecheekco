@@ -6,10 +6,12 @@ import { CartState } from "../../context/Context";
 import { useEffect, useState } from "react";
 import MobileMenu from "./MobileMenu";
 import fetcher from "../../lib/fetcher";
-import useSWR from "swr";
+import useSWR, { SWRResponse } from "swr";
+import { Category } from "@/types/Category";
+import { Product } from "@/types/Product";
 
 function useScrollDirection() {
-  const [scrollDirection, setScrollDirection] = useState(null);
+  const [scrollDirection, setScrollDirection] = useState("");
 
   useEffect(() => {
     let lastScrollY = window.pageYOffset;
@@ -31,13 +33,13 @@ function useScrollDirection() {
   return scrollDirection;
 }
 
-export const Header = () => {
+export const Header = (): JSX.Element => {
   const scrollDirection = useScrollDirection();
-  const { cart } = CartState();
-  const [navigation, setNavigation] = useState([]);
-  const { data } = useSWR("/api/fetchcategories", fetcher);
+  const { cart }: { cart: Product[] } = CartState();
+  const [navigation, setNavigation] = useState<Category[]>();
+  const { data }: SWRResponse = useSWR("/api/fetchcategories", fetcher);
 
-  const slugify = (string) => {
+  const slugify = (string: string): string => {
     return string
       .toString()
       .toLowerCase()
@@ -52,13 +54,14 @@ export const Header = () => {
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    if (data) {
+    if (data?.length > 0) {
       setNavigation(data);
     }
   }, [data]);
 
   return (
-    mounted && (
+    <>
+      mounted && (
       <div
         className={`h-max sticky z-50 ${
           scrollDirection === "down"
@@ -94,7 +97,7 @@ export const Header = () => {
                 {/* Mobile Menu */}
                 <div className="pl-10">
                   <div className="sm:hidden p-1.5 active:bg-black rounded-md active:bg-opacity-10">
-                    <MobileMenu navigation={navigation} />
+                    {navigation && <MobileMenu {...navigation} />}
                   </div>
                 </div>
                 <div className="flex items-center justify-center sm:space-x-8 whitespace-nowrap">
@@ -131,7 +134,8 @@ export const Header = () => {
           </div>
           <div className="bg-header-brown text-header-text text-[10px] font-gothic bg-opacity-90 h-5 sm:h-auto">
             <ul className="hidden sm:flex justify-center pl-3 sm:space-x-6">
-              {navigation.length &&
+              {navigation &&
+                navigation?.length > 0 &&
                 navigation
                   .sort((a, b) => (a.id > b.id ? 1 : -1))
                   .filter((item) => item.category_data.name.charAt(0) != "_")
@@ -157,7 +161,8 @@ export const Header = () => {
           </div>
         </div>
       </div>
-    )
+      )
+    </>
   );
 };
 

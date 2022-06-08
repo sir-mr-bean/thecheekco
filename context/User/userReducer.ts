@@ -1,4 +1,61 @@
-export default function UserReducer(state, action) {
+import { User } from "@/types/User";
+
+export type UserAction =
+  | {
+      type: "SET_USER";
+      payload: User;
+    }
+  | {
+      type: "CLEAR_USER";
+
+      payload: null;
+    }
+  | {
+      type: "SET_FIRST_NAME";
+      payload: string;
+    }
+  | {
+      type: "SET_LAST_NAME";
+      payload: string;
+    }
+  | {
+      type: "SET_COMPANY";
+      payload: string;
+    }
+  | {
+      type: "SET_STREET_ADDRESS";
+      payload: string;
+    }
+  | {
+      type: "SET_APARTMENT_OR_UNIT";
+      payload: string;
+    }
+  | {
+      type: "SET_CITY";
+      payload: string;
+    }
+  | {
+      type: "SET_STATE";
+      payload: string;
+    }
+  | {
+      type: "SET_COUNTRY";
+      payload: string;
+    }
+  | {
+      type: "SET_POSTAL_CODE";
+      payload: string;
+    }
+  | {
+      type: "SET_EMAIL";
+      payload: string;
+    }
+  | {
+      type: "SET_PHONE_NUMBER";
+      payload: string;
+    };
+
+export default function UserReducer(state: User, action: UserAction): User {
   switch (action.type) {
     case "SET_USER":
       return {
@@ -68,7 +125,7 @@ export default function UserReducer(state, action) {
   }
 }
 
-export const setUserObj = (userObj) => ({
+export const setUserObj = (userObj: User) => ({
   type: "SET_USER",
   payload: userObj,
 });

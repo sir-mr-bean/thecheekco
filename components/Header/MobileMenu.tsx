@@ -3,12 +3,14 @@ import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import Link from "next/link";
+import { Category } from "@/types/Category";
 
-function classNames(...classes) {
+function classNames(...classes: [string, string?, string?, Boolean?]): string {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function MobileMenu({ navigation }) {
+export default function MobileMenu(props: Category[]): JSX.Element {
+  const navigation = props;
   return (
     <Menu
       as="div"
@@ -36,42 +38,46 @@ export default function MobileMenu({ navigation }) {
             <>
               <div className="divide divide-text-primary divide-y">
                 <ul>
-                  {navigation
-                    .sort((a, b) => (a.id > b.id ? 1 : -1))
-                    .filter((item) => item.category_data.name.charAt(0) != "_")
-                    .map((nav, i) => {
-                      return (
-                        <li key={i}>
-                          <Menu.Item>
-                            {({ active }) => (
-                              <Link
-                                key={nav.id}
-                                href="/shop/[id]/"
-                                as={`/shop/${nav.category_data.name
-                                  .toLowerCase()
-                                  .replaceAll(" ", "-")}`}
-                              >
-                                <div
-                                  className={classNames(
-                                    active
-                                      ? "bg-gray-100 text-text-secondary"
-                                      : "text-text-primary",
-                                    i === 0 ? "rounded-t-md" : "",
-                                    "block px-4 py-2 text-sm hover:bg-bg-tan cursor-pointer"
-                                  )}
+                  {navigation &&
+                    navigation?.length > 0 &&
+                    navigation
+                      .sort((a, b) => (a.id > b.id ? 1 : -1))
+                      .filter(
+                        (item) => item.category_data.name.charAt(0) != "_"
+                      )
+                      .map((nav, i) => {
+                        return (
+                          <li key={i}>
+                            <Menu.Item as="div">
+                              {({ active }: any) => (
+                                <Link
+                                  key={nav.id}
+                                  href="/shop/[id]/"
+                                  as={`/shop/${nav.category_data.name
+                                    .toLowerCase()
+                                    .replaceAll(" ", "-")}`}
                                 >
-                                  {nav.category_data.name}
-                                </div>
-                              </Link>
-                            )}
-                          </Menu.Item>
-                        </li>
-                      );
-                    })}
+                                  <div
+                                    className={classNames(
+                                      active
+                                        ? "bg-gray-100 text-text-secondary"
+                                        : "text-text-primary",
+                                      i === 0 ? "rounded-t-md" : "",
+                                      "block px-4 py-2 text-sm hover:bg-bg-tan cursor-pointer"
+                                    )}
+                                  >
+                                    {nav.category_data.name}
+                                  </div>
+                                </Link>
+                              )}
+                            </Menu.Item>
+                          </li>
+                        );
+                      })}
                 </ul>
                 <div>
                   <Menu.Item>
-                    {({ active }) => (
+                    {({ active }: any) => (
                       <Link href="/eco-innovation/">
                         <div
                           className={classNames(
@@ -87,7 +93,7 @@ export default function MobileMenu({ navigation }) {
                     )}
                   </Menu.Item>
                   <Menu.Item>
-                    {({ active }) => (
+                    {({ active }: any) => (
                       <Link href="/wishlist/">
                         <div
                           className={classNames(

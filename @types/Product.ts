@@ -7,7 +7,7 @@ export interface Product {
   variations: Variation[];
   image?: string;
   category?: Category;
-  quantity?: number;
+  quantity: number | 0;
 }
 
 export interface Category {

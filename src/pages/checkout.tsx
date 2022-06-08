@@ -1,10 +1,9 @@
 import { CreditCard, GooglePay } from "react-square-web-payments-sdk";
 import { PaymentForm } from "react-square-web-payments-sdk";
 import { CartState } from "../../context/Context";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineFacebook } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
-import Image from "next/image";
 import { Disclosure } from "@headlessui/react";
 import { useAuth } from "../../context/FirebaseAuthContext";
 import {
@@ -13,22 +12,32 @@ import {
   signInWithPopup,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  UserCredential,
 } from "firebase/auth";
-import { query, getDocs, collection, where } from "firebase/firestore";
+import { query, getDocs, collection, where, addDoc } from "firebase/firestore";
 import { auth, db } from "../../utils/firebaseConfig";
 import BeatLoader from "react-spinners/BeatLoader";
-import { usePlacesWidget } from "react-google-autocomplete";
-import { UserState } from "../../context/User/userContext";
-
+import { Product } from "@/types/Product";
 import UserForm from "../../components/Checkout/UserForm";
 import GuestForm from "../../components/Checkout/GuestForm";
+import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
+import { UserState } from "@/context/User/userContext";
 
 export default function checkout() {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+  const router = useRouter();
   const streetAddressInputRef = useRef(null);
   const [firstLoad, setFirstLoad] = useState(true);
   const { currentUser } = useAuth();
-  const emailRef = useRef(null);
-  const passRef = useRef(null);
+  const { userObj, dispatch: UserDispatch } = UserState();
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passRef = useRef<HTMLInputElement>(null);
   const termsCheckboxRef = useRef(null);
   const shippingInfoCheckboxRef = useRef(null);
   const [checkoutAs, setCheckoutAs] = useState("user");
@@ -38,17 +47,16 @@ export default function checkout() {
   const [loggingIn, setLoggingIn] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [sameAsCustomerInfo, setSameAsCustomerInfo] = useState(false);
+  const [incorrectCreds, setIncorrectCreds] = useState(false);
 
   useEffect(() => {
-    let sum = 0;
-    cart.forEach((product) => {
+    let sum: number = 0;
+    cart.forEach((product: Product) => {
       sum +=
-        (
-          product.variations?.[0]?.item_variation_data?.price_money?.amount /
-          100
-        ).toFixed(2) * product.quantity;
+        (product.variations[0].item_variation_data.price_money.amount / 100) *
+        product.quantity;
     });
-    setTotal(sum);
+    setTotal(parseInt(sum.toFixed(2)));
   }, [cart]);
 
   const handleGoogleLogin = async () => {
@@ -70,9 +78,10 @@ export default function checkout() {
         });
       }
       router.push("/profile");
-    } catch (err) {
-      console.error(err);
-      alert(err.message);
+    } catch (e) {
+      const result = (e as Error).message;
+      console.error(result);
+      alert(result);
     }
   };
 
@@ -94,13 +103,15 @@ export default function checkout() {
         });
       }
       router.push("/profile");
-    } catch (err) {
-      console.error(err);
-      alert(err.message);
+    } catch (e) {
+      const result = (e as Error).message;
+      console.error(result);
+      alert(result);
     }
   };
 
   const handleAccountLogin = async () => {
+    if (!emailRef.current || !passRef.current) return;
     setLoggingIn(true);
     try {
       const result = await logInWithEmailAndPassword(
@@ -114,43 +125,41 @@ export default function checkout() {
     }
   };
 
-  const logInWithEmailAndPassword = async (email, password) => {
+  const logInWithEmailAndPassword = async (
+    email: string,
+    password: string
+  ): Promise<UserCredential> => {
+    let result;
     try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-      return result;
-    } catch (err) {
-      console.log(err.message);
-      if (err.message.includes("invalid-email")) {
+      result = await signInWithEmailAndPassword(auth, email, password);
+    } catch (e) {
+      const result = (e as Error).message;
+      if (result.includes("invalid-email")) {
         setIncorrectCreds(true);
         setLoggingIn(false);
       }
-      if (err.message.includes("wrong-password")) {
+      if (result.includes("wrong-password")) {
         setIncorrectCreds(true);
         setLoggingIn(false);
       }
     }
+    return result as UserCredential;
   };
 
-  const handleRemove = (product) => {
-    dispatch({
-      type: "REMOVE_FROM_CART",
-      item: product,
-    });
-  };
-
-  const handleStreetAddress = (e) => {
-    setStreetAddress(e.target.value);
-    dispatch({
-      type: "SET_STREET_ADDRESS",
-      streetAddress: e.target.value,
-    });
-  };
   return (
     <>
       {total && (
         <PaymentForm
-          applicationId={process.env.NEXT_PUBLIC_SQUARE_APP_ID}
-          locationId={process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID}
+          applicationId={
+            process.env.NEXT_PUBLIC_SQUARE_APP_ID
+              ? process.env.NEXT_PUBLIC_SQUARE_APP_ID
+              : ""
+          }
+          locationId={
+            process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID
+              ? process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID
+              : ""
+          }
           createPaymentRequest={() => ({
             countryCode: "AU",
             currencyCode: "AUD",
@@ -189,7 +198,7 @@ export default function checkout() {
                   locationId: process.env.SQUARE_LOCATION_ID,
                   referenceID: "This is a test",
                   lineItems: [
-                    cart.map((item) => ({
+                    cart.map((item: Product) => ({
                       catalogObjectId: item.variations[0].id,
                       quantity: item.quantity.toString(),
                       modifiers: [
@@ -243,7 +252,7 @@ export default function checkout() {
                             </h2>
                             <div className="flex flex-col w-full">
                               <Disclosure>
-                                {({ open }) => (
+                                {({ open }: any) => (
                                   <>
                                     <Disclosure.Button
                                       as="div"
@@ -423,7 +432,14 @@ export default function checkout() {
                             </div>
                           </>
                         )}
-                        {currentUser ? <UserForm /> : <GuestForm />}
+                        {currentUser ? (
+                          <UserForm
+                            userObj={userObj}
+                            UserDispatch={UserDispatch}
+                          />
+                        ) : (
+                          <GuestForm />
+                        )}
 
                         <form className="mt-4 text-text-primary font-gothic">
                           <div className="">
@@ -670,9 +686,7 @@ export default function checkout() {
                             <Disclosure.Button className="w-full py-6 text-left text-lg font-medium text-text-primary cursor-auto">
                               Shipping address
                             </Disclosure.Button>
-                            <Disclosure.Panel open={true}>
-                              CONTENT HERE
-                            </Disclosure.Panel>
+                            <Disclosure.Panel>CONTENT HERE</Disclosure.Panel>
                             <button
                               type="button"
                               disabled
@@ -757,7 +771,7 @@ export default function checkout() {
                         </thead>
                         <tbody className="divide-y divide-gray-200 bg-white rounded-b-lg min-w-full">
                           {products &&
-                            products.map((product) => (
+                            products.map((product: Product) => (
                               <tr
                                 key={product.id}
                                 className="grid grid-cols-3 content-center items-center justify-center min-w-full"
@@ -765,12 +779,12 @@ export default function checkout() {
                                 <td className="py-4 pl-4 text-sm font-medium text-text-primary sm:pl-6 flex flex-nowrap items-center">
                                   <img
                                     src={product.image}
-                                    alt={product.imageAlt}
+                                    alt={product.name}
                                     className="flex-none w-16 h-16 object-center object-cover bg-gray-100 rounded-md"
                                   />
 
                                   <h3 className="text-text-primary pl-2  py-4 text-xs lg:whitespace-nowrap">
-                                    <a href={product.href}>{product.name}</a>
+                                    <a href={"#"}>{product.name}</a>
                                   </h3>
                                 </td>
                                 <td className="whitespace-nowrap translate-x-3 justify-self-end px-3 py-4 text-sm">
@@ -779,11 +793,11 @@ export default function checkout() {
                                 <td className="whitespace-nowrap px-3 py-4 text-sm justify-self-end">
                                   $
                                   {(
-                                    (
-                                      product.variations?.[0]
-                                        ?.item_variation_data?.price_money
-                                        ?.amount / 100
-                                    ).toFixed(2) * product.quantity
+                                    parseInt(
+                                      product.variations[0].item_variation_data.price_money.amount.toFixed(
+                                        2
+                                      )
+                                    ) / 100
                                   ).toFixed(2)}
                                 </td>
                               </tr>
