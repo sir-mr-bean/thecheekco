@@ -956,6 +956,22 @@
   resolved "https://registry.npmjs.org/@stitches/react/-/react-1.2.8.tgz"
   integrity sha512-9g9dWI4gsSVe8bNLlb+lMkBYsnIKCZTmvqvDG+Avnn69XfmHZKiaMrx7cgTaddq7aTPPmXiTsbFcUy0xgI4+wA==
 
+"@tailwindcss/forms@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@tailwindcss/forms/-/forms-0.5.2.tgz#4ef45f9916dcb37838cbe7fecdcc4ba7a7c2ab59"
+  integrity sha512-pSrFeJB6Bg1Mrg9CdQW3+hqZXAKsBrSG9MAfFLKy1pVA4Mb4W7C0k7mEhlmS2Dfo/otxrQOET7NJiJ9RrS563w==
+  dependencies:
+    mini-svg-data-uri "^1.2.3"
+
+"@tailwindcss/typography@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@tailwindcss/typography/-/typography-0.5.2.tgz#24b069dab24d7a2467d01aca0dd432cb4b29f0ee"
+  integrity sha512-coq8DBABRPFcVhVIk6IbKyyHUt7YTEC/C992tatFB+yEx5WGBQrCgsSFjxHUr8AWXphWckadVJbominEduYBqw==
+  dependencies:
+    lodash.castarray "^4.4.0"
+    lodash.isplainobject "^4.0.6"
+    lodash.merge "^4.6.2"
+
 "@trpc/client@^9.24.0":
   version "9.24.0"
   resolved "https://registry.yarnpkg.com/@trpc/client/-/client-9.24.0.tgz#39b86e4c89dfe43a3afd15003f8a7bbeedbb8011"
@@ -2805,6 +2821,11 @@ lodash.camelcase@^4.3.0:
   resolved "https://registry.npmjs.org/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz"
   integrity sha1-soqmKIorn8ZRA1x3EfZathkDMaY=
 
+lodash.castarray@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/lodash.castarray/-/lodash.castarray-4.4.0.tgz#c02513515e309daddd4c24c60cfddcf5976d9115"
+  integrity sha512-aVx8ztPv7/2ULbArGJ2Y42bG1mEQ5mGjpdvrbJcJFU3TbYybe+QlLS4pst9zV52ymy2in1KpFPiZnAOATxD4+Q==
+
 lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.npmjs.org/lodash.debounce/-/lodash.debounce-4.0.8.tgz"
@@ -2814,6 +2835,11 @@ lodash.flatmap@^4.5.0:
   version "4.5.0"
   resolved "https://registry.npmjs.org/lodash.flatmap/-/lodash.flatmap-4.5.0.tgz"
   integrity sha1-74y/QI9uSCaGYzRTBcaswLd4cC4=
+
+lodash.isplainobject@^4.0.6:
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/lodash.isplainobject/-/lodash.isplainobject-4.0.6.tgz#7c526a52d89b45c45cc690b88163be0497f550cb"
+  integrity sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==
 
 lodash.merge@^4.6.2:
   version "4.6.2"
@@ -2888,6 +2914,11 @@ mime-types@^2.1.12:
   integrity sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==
   dependencies:
     mime-db "1.52.0"
+
+mini-svg-data-uri@^1.2.3:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/mini-svg-data-uri/-/mini-svg-data-uri-1.4.4.tgz#8ab0aabcdf8c29ad5693ca595af19dd2ead09939"
+  integrity sha512-r9deDe9p5FJUPZAk3A59wGH7Ii9YrjjWw0jmw/liSbHl2CHiyXj6FcDXDu2K3TjVAXqiJdaw3xxwlZZr9E6nHg==
 
 "minimatch@3 || 4 || 5":
   version "5.1.0"
@@ -3246,18 +3277,9 @@ postcss@8.4.5:
     picocolors "^1.0.0"
     source-map-js "^1.0.1"
 
-postcss@^8.1.10, postcss@^8.4.12:
+postcss@^8.1.10, postcss@^8.4.12, postcss@^8.4.14:
   version "8.4.14"
   resolved "https://registry.npmjs.org/postcss/-/postcss-8.4.14.tgz"
-  integrity sha512-E398TUmfAYFPBSdzgeieK2Y1+1cpdxJx8yXbK/m57nRhKSmk1GB2tO4lbLBtlkfPQTDKfe4Xqv1ASWPpayPEig==
-  dependencies:
-    nanoid "^3.3.4"
-    picocolors "^1.0.0"
-    source-map-js "^1.0.2"
-
-postcss@^8.4.14:
-  version "8.4.14"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.14.tgz#ee9274d5622b4858c1007a74d76e42e56fd21caf"
   integrity sha512-E398TUmfAYFPBSdzgeieK2Y1+1cpdxJx8yXbK/m57nRhKSmk1GB2tO4lbLBtlkfPQTDKfe4Xqv1ASWPpayPEig==
   dependencies:
     nanoid "^3.3.4"
