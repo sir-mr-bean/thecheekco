@@ -30,8 +30,9 @@ export default function Home({
   productsData: [Product];
   categoriesData: [Category];
 }) {
-  const { data } = trpc.useQuery(["hello", { text: "kroucher" }]);
-  console.log(data);
+  const categories = trpc.useQuery(["categories"]);
+  console.log(categories);
+
   const carouselRef: any = useRef();
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const { cart, dispatch } = CartState();
@@ -132,6 +133,7 @@ export default function Home({
     dispatch({
       type: "ADD_TO_CART",
       item: product,
+      qty: 1,
     });
     if (window !== undefined) {
     }

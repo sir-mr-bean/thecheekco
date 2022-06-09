@@ -107,11 +107,12 @@ const UserForm = ({
                 </label>
                 <Autocomplete
                   apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
-                  onPlaceSelected={(places: google.maps.places.PlaceResult) => {
+                  onPlaceSelected={(places) => {
                     console.log(places);
                     if (places) {
                       const apartmentOrUnit = places?.address_components?.find(
-                        (component) => component.types.includes("subpremise")
+                        (component: any) =>
+                          component?.types?.includes("subpremise")
                       );
                       if (apartmentOrUnit) {
                         UserDispatch({

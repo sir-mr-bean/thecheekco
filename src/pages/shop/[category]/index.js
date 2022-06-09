@@ -17,6 +17,7 @@ const CategoryPage = ({ currentProducts, currentCategory }) => {
     dispatch({
       type: "ADD_TO_CART",
       item: product,
+      qty: 1,
     });
     if (window !== undefined) {
     }
