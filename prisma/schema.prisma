@@ -4,21 +4,23 @@ generator client {
 }
 datasource db {
   provider = "mysql"
-  url = env("DATABASE_URL")
+  url = env("DEV_DATABASE_URL")
   referentialIntegrity = "prisma"
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  firstName String? 
-  lastName String?
-  email String  @unique
-  company String?
-  streetAddress String?
-  apartmentOrUnit String?
-  city String?
-  state String?
-  country String?
-  postalCode String?
-  phoneNumber String?  
+  id              Int       @default(autoincrement()) @id
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @default(now())
+  firstName    String? 
+  lastName   String?
+  email    String    @unique
+  company    String?
+  streetAddress    String?
+  apartmentOrUnit    String?
+  city   String?
+  state    String?
+  country    String?
+  postalCode   String?
+  phoneNumber    String?  
 }

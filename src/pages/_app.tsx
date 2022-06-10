@@ -13,6 +13,7 @@ import UserContext from "@/context/User/userContext";
 import { withTRPC } from "@trpc/next";
 
 import { AppRouter } from "@/backend/router";
+import Footer from "@/components/Footer/Footer";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
@@ -42,6 +43,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
             <div className="max-w-screen min-h-[150vh] bg-bg-tan bg-cover">
               <Header />
               <Component {...pageProps} />
+              <Footer />
               <Toaster position="top-right" reverseOrder={false} gutter={-40} />
             </div>
           </WishListContext>

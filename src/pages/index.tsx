@@ -238,19 +238,17 @@ export default function Home({
           </div>
         </div>
 
-        <div className="flex w-full items-center justify-center space-x-4 py-8 px-4 lg:p-16">
-          <div className="flex flex-col space-y-10 items-center justify-center w-full">
-            <span className="text-text-primary text-sm sm:text-xl lg:text-2xl">
+        <div className="flex w-full items-center justify-center space-x-4 py-8 px-4 ">
+          <div className="flex flex-col space-y-4 sm:space-y-8 items-center justify-center w-full">
+            <span className="text-text-primary text-xs sm:text-xl lg:text-2xl">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
               pariatur delectus enim quia, rem repudiandae minima sunt
               aspernatur non natus corrupti ipsa, dolorum voluptatum, ab
               molestias totam odio corporis alias!
             </span>
-            <span className="text-text-primary text-sm sm:text-xl lg:text-2xl">
+            <span className="text-text-primary text-xs sm:text-xl lg:text-2xl">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-              pariatur delectus enim quia, rem repudiandae minima sunt
-              aspernatur non natus corrupti ipsa, dolorum voluptatum, ab
-              molestias totam odio corporis alias!
+              pariatur delectus enim quia
             </span>
           </div>
           <div className="w-full relative sm:p-3 lg:px-32">
@@ -261,6 +259,83 @@ export default function Home({
               layout="responsive"
               className="absolute top-0 left-0 "
             />
+          </div>
+        </div>
+
+        <div className="flex flex-col divide-y divide-text-primary px-6 space-y-3">
+          <div className="grid grid-cols-3 content-center gap-40 w-full pb-10 px-20 max-w-7xl mx-auto">
+            {productsData.slice(0, 3).map((product) => {
+              console.log(product.name);
+              return (
+                <div
+                  key={product.name}
+                  className="flex flex-col justify-center items-center text-text-primary "
+                >
+                  <div className="relative w-full h-full">
+                    <Image
+                      src={
+                        product.image ||
+                        "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
+                      }
+                      width={200}
+                      height={200}
+                      layout="responsive"
+                      className="mx-auto rounded-md"
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div>
+            <div className="flex justify-evenly items-center max-w-3xl mx-auto">
+              <div className="relative w-full h-full">
+                <Image
+                  src={"/images/ECO1.png"}
+                  width={450}
+                  height={415}
+                  layout="responsive"
+                  objectFit="contain"
+                  className="mx-auto"
+                />
+              </div>
+              <div className="relative w-full">
+                <Image
+                  src={"/images/ECO2.png"}
+                  width={450}
+                  height={415}
+                  layout="responsive"
+                  className="mx-auto "
+                />
+              </div>
+              <div className="relative w-full h-full">
+                <Image
+                  src={"/images/ECO3.png"}
+                  width={450}
+                  height={415}
+                  layout="responsive"
+                  className="mx-auto"
+                />
+              </div>
+              <div className="relative w-full h-full">
+                <Image
+                  src={"/images/ECO4.png"}
+                  width={450}
+                  height={415}
+                  layout="responsive"
+                  className="mx-auto"
+                />
+              </div>
+              <div className="relative w-full h-full">
+                <Image
+                  src={"/images/ECO5.png"}
+                  width={450}
+                  height={415}
+                  layout="responsive"
+                  className="mx-auto"
+                />
+              </div>
+            </div>
           </div>
         </div>
 

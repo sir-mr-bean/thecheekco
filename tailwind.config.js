@@ -34,6 +34,7 @@ module.exports = {
         eco: "#436A29",
       },
       backgroundImage: {
+        "footer-backdrop": "url('/images/footerbackdrop.png')",
         "paper-bg":
           "url(https://thecheekco.vercel.app/images/paper-brown-texture.jpg)",
         "hero-pattern":
