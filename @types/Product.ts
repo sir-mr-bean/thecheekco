@@ -8,6 +8,7 @@ export interface Product {
   image?: string;
   category?: Category;
   quantity: number | 0;
+  isAllNatural?: boolean;
 }
 
 export interface Category {

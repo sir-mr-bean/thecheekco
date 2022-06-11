@@ -1,6 +1,4 @@
 import { RoughNotation, RoughNotationGroup } from "react-rough-notation";
-import Carousel from "../../lib/react-elastic-carousel/dist";
-import { ReactElasticCarouselProps } from "../../lib/react-elastic-carousel/dist";
 import { CartState } from "../../context/Context";
 import * as React from "react";
 import { useRef, useState } from "react";
@@ -22,6 +20,7 @@ import * as icons from "react-icons";
 import { FaIcons } from "react-icons/fa";
 import { Product, Category } from "../../@types/Product";
 import { trpc } from "@/utils/trpc";
+import { useInViewport } from "react-in-viewport";
 
 export default function Home({
   productsData: productsData,
@@ -30,9 +29,9 @@ export default function Home({
   productsData: [Product];
   categoriesData: [Category];
 }) {
+  const notationRef = useRef(null);
+  const { inViewport, enterCount, leaveCount } = useInViewport(notationRef);
   const categories = trpc.useQuery(["categories"]);
-  console.log(categories);
-
   const carouselRef: any = useRef();
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const { cart, dispatch } = CartState();
@@ -265,7 +264,6 @@ export default function Home({
         <div className="flex flex-col divide-y divide-text-primary px-6 space-y-3">
           <div className="grid grid-cols-3 content-center gap-40 w-full pb-10 px-20 max-w-7xl mx-auto">
             {productsData.slice(0, 3).map((product) => {
-              console.log(product.name);
               return (
                 <div
                   key={product.name}
@@ -343,130 +341,156 @@ export default function Home({
           {/* Category section */}
           <section
             aria-labelledby="category-heading"
-            className="pt-6 sm:pt-32 xl:max-w-7xl xl:mx-auto xl:px-8"
+            className="bg-paper-bg bg-cover flex flex-col justify-center items-center w-full flex-1"
           >
-            <div className="px-4 sm:px-6 sm:flex sm:items-center sm:justify-between lg:px-8 xl:px-0">
-              <h2
-                id="category-heading"
-                className="text-xl font-extrabold tracking-tight text-text-secondary"
-              >
-                Shop by Category
-              </h2>
-              <a
-                href="/shop"
-                className="hidden text-sm font-semibold text-text-primary hover:text-text-secondary sm:block"
-              >
-                Browse all categories<span aria-hidden="true"> &rarr;</span>
-              </a>
-            </div>
+            <div className="bg-white bg-opacity-30 bg-cover relative w-full h-full ">
+              <div className="px-4 sm:px-6 sm:flex sm:items-center sm:justify-between lg:px-8 xl:px-0 w-full pt-6 sm:my-7">
+                <h2
+                  id="category-heading"
+                  className="text-xl font-extrabold tracking-tight text-text-primary sm:text-3xl lg:text-4xl"
+                >
+                  Shop by Category
+                </h2>
+                <a
+                  href="/shop"
+                  className="hidden text-sm sm:text-lg font-semibold text-text-primary hover:text-text-secondary sm:block"
+                >
+                  Browse all categories<span aria-hidden="true"> &rarr;</span>
+                </a>
+              </div>
+              <div className="flex flex-wrap px-4 sm:mx-auto items-center justify-center w-full">
+                {categoriesData &&
+                  productsData &&
+                  categoriesData
 
-            <Carousel
-              isRTL={false}
-              ref={carouselRef}
-              pagination={false}
-              showArrows={false}
-              itemsToShow={3}
-              itemsToScroll={2}
-              onChange={(currentItem: any) =>
-                setActiveItemIndex(currentItem.index)
-              }
-            >
-              {categoriesData &&
-                productsData &&
-                categoriesData
+                    .filter(
+                      (item: Category) =>
+                        item.category_data.name.charAt(0) != "_"
+                    )
+                    .map((category: Category) => {
+                      const randomProduct = productsData.find(
+                        (product: Product) => {
+                          return (
+                            product.category?.category_data.name ===
+                            category.category_data.name
+                          );
+                        }
+                      );
 
-                  .filter(
-                    (item: Category) => item.category_data.name.charAt(0) != "_"
-                  )
-                  .map((category: Category) => {
-                    const randomProduct = productsData.find(
-                      (product: Product) => {
-                        return (
-                          product.category?.category_data.name ===
-                          category.category_data.name
-                        );
-                      }
-                    );
+                      return (
+                        <Link
+                          key={category.category_data.name}
+                          href={`/shop/${category.category_data.name}`}
+                          as={`/shop/${slugify(category?.category_data?.name)}`}
+                          className="relative overflow-hidden"
+                        >
+                          <div className="flex flex-wrap justify-center items-center m-4 md:m-8  cursor-pointer">
+                            <div className="relative h-32 w-32 sm:h-64 sm:w-64">
+                              <Image
+                                priority={true}
+                                src={
+                                  randomProduct?.image ||
+                                  "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
+                                }
+                                width={100}
+                                height={100}
+                                objectFit="cover"
+                                layout="responsive"
+                                className="rounded-md"
+                              />
 
-                    return (
-                      <Link
-                        key={category.category_data.name}
-                        href={`/shop/${category.category_data.name}`}
-                        as={`/shop/${slugify(category?.category_data?.name)}`}
-                        className="relative overflow-hidden"
-                      >
-                        <div className="flex justify-center items-center h-96 w-full m-1 sm:m-2 md:m-4 cursor-pointer">
-                          <div className="relative h-full w-full ">
-                            <Image
-                              priority={true}
-                              src={
-                                randomProduct?.image ||
-                                "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
-                              }
-                              objectFit="cover"
-                              layout="fill"
-                              className="rounded-md"
-                            />
-
-                            <div className="absolute w-full sm:w-1/3 sm:inset-x-1/3 bottom-2 z-10 flex flex-col justify-center items-center">
-                              <div className="sm:px-2 py-2 bg-white bg-opacity-80 border border-transparent rounded-md whitespace-nowrap shadow-sm">
-                                <div className="flex items-center justify-between">
-                                  <div className="flex-1 px-2 sm:px-4">
-                                    <h3 className="text-sm sm:text-lg font-medium text-text-primary">
-                                      {category.category_data.name}
-                                    </h3>
+                              <div className="absolute w-full sm:w-1/3 sm:inset-x-1/3 bottom-2 z-10 flex flex-col justify-center items-center">
+                                <div className="sm:px-2 py-2 bg-white bg-opacity-80 border border-transparent rounded-md whitespace-nowrap shadow-sm">
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex-1 px-2 sm:px-4">
+                                      <h3 className="text-sm sm:text-lg font-medium text-text-primary">
+                                        {category.category_data.name}
+                                      </h3>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
                           </div>
+                        </Link>
+                      );
+                    })}
+              </div>
+
+              <div className="px-4 sm:hidden">
+                <a
+                  href="/shop"
+                  className="flex w-full items-center justify-end my-2 text-sm font-semibold text-text-primary hover:text-text-secondary"
+                >
+                  Browse all categories<span aria-hidden="true"> &rarr;</span>
+                </a>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div className="flex flex-col w-full sm:p-6 items-center justify-center pt-32">
+              <div className="flex items-center justify-center pt-8">
+                <span className="text-2xl sm:text-6xl text-text-primary font-gothic text-center">
+                  Check out our fav
+                </span>
+              </div>
+              <div
+                ref={notationRef}
+                className="flex items-center justify-center w-full text-3xl sm:text-6xl lg:text-7xl text-text-primary font-gothic text-center py-3 space-x-2 sm:space-x-3"
+              >
+                <span className="w-fit mr-3">all</span>
+                <RoughNotation
+                  type="circle"
+                  color="#E3BB9D"
+                  show={inViewport}
+                  animate
+                  animationDelay={500}
+                  animationDuration={1000}
+                  strokeWidth={4}
+                  padding={[12, 8]}
+                >
+                  <span className="">natural</span>
+                </RoughNotation>
+                <span>picks.</span>
+              </div>
+              <div className="flex flex-wrap w-full h-fit items-center justify-center sm:justify-evenly pt-10">
+                {productsData
+                  .filter((product) => product.isAllNatural === true)
+                  .slice(0, 6)
+                  .map((product) => {
+                    return (
+                      <Link
+                        key={product.id}
+                        href={`/shop/${product.category?.category_data.name}/${product.name}`}
+                        as={`/shop/${
+                          product.category?.category_data.name
+                        }/${slugify(product.name)}`}
+                        className="relative overflow-hidden"
+                      >
+                        <div className="flex flex-col justify-center items-center h-32 w-32 m-4 md:m-4 cursor-pointer hover:scale-105">
+                          <div className="relative h-full w-full">
+                            <Image
+                              priority={true}
+                              src={
+                                product?.image ||
+                                "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
+                              }
+                              width={150}
+                              height={150}
+                              objectFit="cover"
+                              layout="responsive"
+                              className="rounded-md"
+                            />
+                          </div>
+                          <span className="text-xs font-bold whitespace-nowrap text-text-primary w-full text-left py-2">
+                            {product.name}
+                          </span>
                         </div>
                       </Link>
                     );
                   })}
-            </Carousel>
-            <div className="flex justify-center items-center space-x-3">
-              {categoriesData &&
-                productsData &&
-                categoriesData
-                  .filter(
-                    (item: Category) => item.category_data.name.charAt(0) != "_"
-                  )
-                  .filter((item: Category, i: number) => i % 2 === 0)
-                  .map((category: Category, i: number) => {
-                    const randomProduct = productsData?.find(
-                      (product: Product) =>
-                        product.category?.category_data?.name ===
-                        category.category_data.name
-                    );
-                    return (
-                      <button
-                        className={
-                          activeItemIndex === (i === 0 ? i : i + 1)
-                            ? `inline-block bg-button border border-transparent rounded-full p-1.5 text-xs sm:text-base font-medium border-text-primary text-text-secondary hover:border-black`
-                            : `inline-block bg-button border border-transparent rounded-full p-1.5 text-xs sm:text-base font-medium text-text-secondary hover:border-black`
-                        }
-                        key={i}
-                        data-active={
-                          i >= activeItemIndex && i < activeItemIndex
-                            ? true
-                            : undefined
-                        }
-                        onClick={() =>
-                          carouselRef.current.goTo(i > 0 ? i + 1 : i)
-                        }
-                      />
-                    );
-                  })}
-            </div>
-
-            <div className="px-4 sm:hidden">
-              <a
-                href="/shop"
-                className="flex w-full items-center justify-end my-2 text-sm font-semibold text-text-primary hover:text-text-secondary"
-              >
-                Browse all categories<span aria-hidden="true"> &rarr;</span>
-              </a>
+              </div>
             </div>
           </section>
 

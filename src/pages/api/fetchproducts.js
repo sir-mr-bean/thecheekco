@@ -35,6 +35,24 @@ export default async function handler(req, res) {
         const currentCategory = data.related_objects.filter(
           (category) => category.id === item.item_data.category_id
         );
+        let isAllNatural = false;
+
+        if (item?.item_data.variations?.[0].custom_attribute_values) {
+          const keys = Object.keys(
+            item?.item_data.variations?.[0].custom_attribute_values
+          );
+          if (keys.length) {
+            const allNaturalAttr = keys?.some((key) => {
+              return (
+                item?.item_data.variations?.[0].custom_attribute_values[key]
+                  .name === "All-Natural" &&
+                item?.item_data.variations?.[0].custom_attribute_values[key]
+                  .boolean_value === true
+              );
+            });
+            isAllNatural = allNaturalAttr;
+          }
+        }
         return {
           id: item.id,
           name: item.item_data.name,
@@ -42,6 +60,8 @@ export default async function handler(req, res) {
           variations: item.item_data.variations,
           image: currentImage?.[0]?.image_data?.url,
           category: currentCategory?.[0],
+          isAllNatural: isAllNatural,
+          item: item,
         };
       });
       categories.push(products);

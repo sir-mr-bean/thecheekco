@@ -34,6 +34,7 @@
     "react-hot-toast": "^2.2.0",
     "react-html-parser": "^2.0.2",
     "react-icons": "^4.3.1",
+    "react-in-viewport": "^1.0.0-alpha.28",
     "react-places-autocomplete": "^7.3.0",
     "react-query": "^3.39.1",
     "react-rough-notation": "^1.0.2",
