@@ -15,21 +15,26 @@ import Image from "next/image";
 import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
+  GoogleAuthProvider,
+  signInWithPopup,
+  FacebookAuthProvider,
 } from "firebase/auth";
 import { useAuth } from "../../context/FirebaseAuthContext";
 import { auth, db } from "../../utils/firebaseConfig";
-import { collection, addDoc } from "firebase/firestore";
+import { query, getDocs, collection, where, addDoc } from "firebase/firestore";
 import BeatLoader from "react-spinners/BeatLoader";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 const register = () => {
+  const { data: session, status } = useSession();
   const { currentUser } = useAuth();
   const router = useRouter();
-  const nameRef = useRef(null);
-  const emailRef = useRef(null);
-  const passRef = useRef(null);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passRef = useRef<HTMLInputElement>(null);
   const [missingFields, setMissingFields] = useState(false);
-  const [passwordMatch, setPasswordMatch] = useState();
+  const [passwordMatch, setPasswordMatch] = useState<Boolean>();
   const [loading, setLoading] = useState(false);
   const [alreadyRegistered, setAlreadyRegistered] = useState(false);
   const [passwordTooShort, setPasswordTooShort] = useState(false);
@@ -40,13 +45,6 @@ const register = () => {
       confirm: "",
     },
   });
-
-  useEffect(() => {
-    if (currentUser !== null) {
-      console.log(currentUser);
-      router.push("/profile");
-    }
-  }, [currentUser]);
 
   const handlePasswordInput = async (e) => {
     if (e.target.id === "password") {
@@ -95,17 +93,17 @@ const register = () => {
     setAlreadyRegistered(false);
     setPasswordTooShort(false);
     if (
-      nameRef.current.value === "" &&
-      emailRef.current.value === "" &&
-      passRef.current.value === ""
+      nameRef?.current?.value === "" &&
+      emailRef?.current?.value === "" &&
+      passRef?.current?.value === ""
     )
       return setMissingFields(true);
     try {
       if (passwordMatch) {
         const result = await registerWithEmailAndPassword(
-          nameRef.current.value,
-          emailRef.current.value,
-          passRef.current.value
+          nameRef?.current?.value,
+          emailRef?.current?.value,
+          passRef?.current?.value
         );
         console.log(result);
       }

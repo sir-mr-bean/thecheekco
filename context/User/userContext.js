@@ -1,10 +1,4 @@
-import {
-  useContext,
-  createContext,
-  useReducer,
-  useState,
-  useEffect,
-} from "react";
+import { useContext, createContext, useReducer, useEffect } from "react";
 import UserReducer from "./userReducer";
 import { useAuth } from "../FirebaseAuthContext";
 

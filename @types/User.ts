@@ -1,17 +1,3 @@
-// const emptyUser = {
-//     firstName: "",
-//     lastName: "",
-//     company: "",
-//     streetAddress: "",
-//     apartmentOrUnit: "",
-//     city: "",
-//     state: "",
-//     country: "Australia",
-//     postalCode: "",
-//     email: "",
-//     phoneNumber: "",
-//   };
-//create interface from emptyUser
 export interface User {
   firstName: string;
   lastName: string;
@@ -24,4 +10,5 @@ export interface User {
   postalCode: string;
   email: string;
   phoneNumber: string;
+  isAdmin: boolean;
 }

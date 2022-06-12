@@ -8,13 +8,15 @@ import UserOrders from "../../../components/Profile/UserOrders";
 import UserDashboard from "../../../components/Profile/UserDashboard";
 import { UserState } from "../../../context/User/userContext";
 import { setUserObj } from "../../../context/User/userReducer";
+import { useSession } from "next-auth/react";
 
 const profile = () => {
+  const [session, status] = useSession();
   const router = useRouter();
   const { currentUser } = useAuth();
   const { userObj, dispatch } = UserState();
   console.log(userObj);
-
+  console.log(data);
   const [userShippingObj, setUserShippingObj] = useState({
     firstName: "",
     lastName: "",
@@ -28,13 +30,6 @@ const profile = () => {
     emailAddress: "",
     phoneNumber: "",
   });
-
-  useEffect(() => {
-    if (!currentUser) {
-      console.log(currentUser);
-      router.push("/login");
-    }
-  }, []);
 
   return (
     <>

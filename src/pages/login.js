@@ -14,21 +14,23 @@ import { FcGoogle } from "react-icons/fc";
 import { query, getDocs, collection, where, addDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import BeatLoader from "react-spinners/BeatLoader";
+import {
+  signIn,
+  getCsrfToken,
+  getProviders,
+  useSession,
+} from "next-auth/react";
 
-const login = () => {
+const login = ({ csrfToken, providers }) => {
+  console.log(providers);
+  const { data: session, status } = useSession();
+  console.log(session);
   const { currentUser } = useAuth();
   const [incorrectCreds, setIncorrectCreds] = useState(false);
   const router = useRouter();
   const emailRef = useRef(null);
   const passRef = useRef(null);
   const [loggingIn, setLoggingIn] = useState(false);
-
-  useEffect(() => {
-    if (currentUser !== null) {
-      console.log(currentUser);
-      router.push("/profile");
-    }
-  }, [currentUser]);
 
   const handleGoogleLogin = async () => {
     const googleProvider = new GoogleAuthProvider();
@@ -142,31 +144,33 @@ const login = () => {
 
           <div className="mt-8">
             <div>
-              <div>
-                <p className="text-sm font-medium ">Sign in with</p>
+              {providers && (
+                <div>
+                  <p className="text-sm font-medium ">Sign in with</p>
 
-                <div className="mt-1 grid grid-cols-2 gap-3">
-                  <div>
-                    <button
-                      onClick={() => handleFacebookLogin()}
-                      className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium  hover:bg-gray-50 cursor-pointer"
-                    >
-                      <span className="sr-only">Sign in with Facebook</span>
-                      <AiOutlineFacebook size={22} color="#4267B2" />
-                    </button>
-                  </div>
+                  <div className="mt-1 grid grid-cols-2 gap-3">
+                    <div>
+                      <button
+                        onClick={() => handleFacebookLogin()}
+                        className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium  hover:bg-gray-50 cursor-pointer"
+                      >
+                        <span className="sr-only">Sign in with Facebook</span>
+                        <AiOutlineFacebook size={22} color="#4267B2" />
+                      </button>
+                    </div>
 
-                  <div>
-                    <button
-                      onClick={() => handleGoogleLogin()}
-                      className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium  hover:bg-gray-50 cursor-pointer"
-                    >
-                      <span className="sr-only">Sign in with Google</span>
-                      <FcGoogle size={22} color="#1DA1F2" />
-                    </button>
+                    <div>
+                      <button
+                        onClick={() => signIn("google")}
+                        className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium  hover:bg-gray-50 cursor-pointer"
+                      >
+                        <span className="sr-only">Sign in with Google</span>
+                        <FcGoogle size={22} color="#1DA1F2" />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               <div className="mt-6 relative">
                 <div
@@ -288,3 +292,12 @@ const login = () => {
 };
 
 export default login;
+
+export async function getServerSideProps(context) {
+  const providers = await getProviders();
+  return {
+    props: {
+      providers,
+    },
+  };
+}

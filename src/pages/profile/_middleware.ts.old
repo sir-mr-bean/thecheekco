@@ -1,0 +1,17 @@
+import withAuth from "next-auth/middleware";
+import * as jose from "jose";
+
+export default withAuth({
+  jwt: {
+    decode: async ({ secret, token }) => {
+      const { payload: jwtData } = await jose.jwtVerify(
+        token as string,
+        new TextEncoder().encode(`${secret}`)
+      );
+      return jwtData;
+    },
+  },
+  callbacks: {
+    authorized: ({ token }) => !!token,
+  },
+});
