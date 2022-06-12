@@ -47,12 +47,12 @@ export default NextAuth({
     async signIn({ user, account, profile, email, credentials }) {
       return true;
     },
-    // async redirect({ url, baseUrl }) {
-    //   console.log(url, baseUrl);
-    //   if (url.startsWith("/")) return `${baseUrl}${url}`;
-    //   else if (new URL(url).origin === baseUrl) return url;
-    //   return baseUrl;
-    // },
+    async redirect({ url, baseUrl }) {
+      console.log(url, baseUrl);
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
+    },
     async session({ session, token, user }) {
       session.user = user;
       return session;
