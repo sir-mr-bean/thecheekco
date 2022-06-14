@@ -49,14 +49,14 @@ const UserInfo = () => {
       firstName: d["first-name"],
       lastName: d["last-name"],
       company: d.organization,
-      streetAddress: d["street-address"],
+      streetAddress: userObj.streetAddress,
       streetNumber: d["apartment-unit"],
       apartmentOrUnit: d["apartment-unit"],
       city: d.city,
-      state: d.state,
+      state: d.region,
       country: d.country,
-      postalCode: d.postalCode,
-      phoneNumber: d.phoneNumber,
+      postalCode: d["postal-code"],
+      phoneNumber: d.tel,
       isAdmin: userObj.isAdmin,
     };
     console.log(updatedUserObj);

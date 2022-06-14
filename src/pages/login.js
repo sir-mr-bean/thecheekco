@@ -19,6 +19,7 @@ import {
   getCsrfToken,
   getProviders,
   useSession,
+  getSession,
 } from "next-auth/react";
 
 const login = ({ csrfToken, providers }) => {
@@ -33,9 +34,7 @@ const login = ({ csrfToken, providers }) => {
 
   const handleGoogleLogin = async () => {
     try {
-      const result = await signIn("google");
-      console.log(result);
-      router.push("/profile");
+      await signIn("google", { callbackUrl: "http://localhost:3000/profile" });
     } catch (err) {
       console.error(err);
       alert(err.message);
@@ -142,11 +141,7 @@ const login = ({ csrfToken, providers }) => {
 
                     <div>
                       <button
-                        onClick={() => {
-                          signIn("google", {
-                            callbackUrl: "/profile",
-                          });
-                        }}
+                        onClick={handleGoogleLogin}
                         className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium  hover:bg-gray-50 cursor-pointer"
                       >
                         <span className="sr-only">Sign in with Google</span>
@@ -279,11 +274,9 @@ const login = ({ csrfToken, providers }) => {
 export default login;
 
 export async function getServerSideProps(context) {
-  const providers = await getProviders();
-  const CSRFToken = await getCsrfToken();
   return {
     props: {
-      providers,
+      providers: await getProviders(),
     },
   };
 }

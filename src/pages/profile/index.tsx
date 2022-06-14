@@ -16,11 +16,17 @@ import {
 } from "next-auth/react";
 import BeatLoader from "react-spinners/BeatLoader";
 import { User } from "@prisma/client";
-import { GetServerSideProps, NextPage } from "next";
+import { GetServerSideProps, GetServerSidePropsContext, NextPage } from "next";
 import { Context } from "@/backend/context";
 import { trpc } from "@/utils/trpc";
+import { Session } from "next-auth";
 
-const profile: NextPage = () => {
+interface PageProps {
+  session: Session;
+  csrfToken: string;
+}
+
+const profile: NextPage<PageProps> = (props) => {
   const { data: session, status } = trpc.useQuery(["next-auth.getSession"], {
     suspense: false,
   });
@@ -30,16 +36,11 @@ const profile: NextPage = () => {
       router.push("/login");
     },
   });
-  console.log(status);
-  console.log(session);
-  //console.log(props);
+  console.log(props);
+  console.log("session is ", session);
   const router = useRouter();
-  //const { data: session, status } = useSession();
   const currentUser = session?.user as User;
-  //const { currentUser } = useAuth();
-  //const { userObj, dispatch } = UserState();
-  //console.log(userObj);
-  //console.log(currentUser);
+
   const [userShippingObj, setUserShippingObj] = useState({
     firstName: "",
     lastName: "",
@@ -70,7 +71,7 @@ const profile: NextPage = () => {
             size={20}
           />
         </div>
-      ) : status === String("authenticated") ? (
+      ) : status === String("success") ? (
         <Tab.Group>
           <Tab.List className="max-h-max grid grid-cols-4 items-end border-b border-b-text-secondary text-text-primary font-gothic text-sm sm:text-xl mx-2 sm:mx-8 mt-5 mb-2 justify-between text-center h-11 md:h-16 md:w-2/3 md:mx-auto lg:whitespace-nowrap gap-1 md:gap-3">
             <Tab as={Fragment}>
@@ -155,3 +156,10 @@ const profile: NextPage = () => {
 };
 
 export default profile;
+
+interface Props {
+  props: {
+    session: Session;
+    csrfToken: string;
+  };
+}

@@ -9,23 +9,23 @@ const prisma = new PrismaClient();
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
-  jwt: {
-    encode: async ({ secret, token }) => {
-      const jwtToken = await new jose.SignJWT({ token: token })
-        .setProtectedHeader({ alg: "HS256" })
-        .setIssuedAt()
-        .setExpirationTime("30d")
-        .sign(new TextEncoder().encode(`${secret}`));
-      return jwtToken;
-    },
-    decode: async ({ secret, token }) => {
-      const { payload: jwtData } = await jose.jwtVerify(
-        token as string,
-        new TextEncoder().encode(`${secret}`)
-      );
-      return jwtData;
-    },
-  },
+  // jwt: {
+  //   encode: async ({ secret, token }) => {
+  //     const jwtToken = await new jose.SignJWT({ token: token })
+  //       .setProtectedHeader({ alg: "HS256" })
+  //       .setIssuedAt()
+  //       .setExpirationTime("30d")
+  //       .sign(new TextEncoder().encode(`${secret}`));
+  //     return jwtToken;
+  //   },
+  //   decode: async ({ secret, token }) => {
+  //     const { payload: jwtData } = await jose.jwtVerify(
+  //       token as string,
+  //       new TextEncoder().encode(`${secret}`)
+  //     );
+  //     return jwtData;
+  //   },
+  // },
   pages: {
     signIn: "/login",
     signOut: "/",
@@ -35,6 +35,7 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_NEXT_AUTH_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_NEXT_AUTH_CLIENT_SECRET as string,
+      checks: "pkce",
     }),
   ],
   session: {
