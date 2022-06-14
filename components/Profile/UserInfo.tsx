@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactHTMLElement } from "react";
 import { trpc } from "@/utils/trpc";
 import { z } from "zod";
 import Autocomplete, {
@@ -162,9 +162,14 @@ const UserInfo = () => {
                     >
                       Street address
                     </label>
-                    <Autocomplete
+                    <Autocomplete<
+                      ReactGoogleAutocompleteInputProps & {
+                        value: string;
+                      }
+                    >
                       apiKey={`${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
                       onPlaceSelected={(place) => {
+                        console.log(place);
                         const apartmentOrUnit = place?.address_components?.find(
                           (component) => component.types.includes("subpremise")
                         );
@@ -198,7 +203,9 @@ const UserInfo = () => {
                           streetAddress: streetNumber?.long_name
                             ? `${streetNumber?.long_name} ${streetAddress?.long_name}`
                             : `${streetAddress?.long_name}`,
-                          apartmentOrUnit: apartmentOrUnit?.long_name || "",
+                          apartmentOrUnit: apartmentOrUnit
+                            ? apartmentOrUnit?.long_name
+                            : "",
                           city: city?.long_name as string,
                           state: state?.long_name as string,
                           country: country?.long_name as string,
@@ -207,12 +214,14 @@ const UserInfo = () => {
                       }}
                       options={{
                         componentRestrictions: { country: "au" },
-                        fields: ["address_components", "geometry"],
+                        fields: ["address_components", "formatted_address"],
                         types: ["address"],
                       }}
                       {...register("street-address")}
                       id="street-address"
-                      defaultValue={userObj?.streetAddress as string}
+                      //defaultValue={userObj?.streetAddress as string}
+                      value={userObj?.streetAddress as string}
+                      inputAutocompleteValue={userObj?.streetAddress as string}
                       onChange={(e) => {
                         setUserObj({
                           ...userObj,
@@ -236,7 +245,11 @@ const UserInfo = () => {
                       {...register("apartment-unit")}
                       id="apartment-unit"
                       autoComplete="address-line1"
-                      defaultValue={userObj?.apartmentOrUnit as string}
+                      value={
+                        userObj.apartmentOrUnit
+                          ? (userObj?.apartmentOrUnit as string)
+                          : ""
+                      }
                       onChange={(e) => {
                         setUserObj({
                           ...userObj,
@@ -259,7 +272,7 @@ const UserInfo = () => {
                       {...register("city")}
                       id="city"
                       autoComplete="address-level2"
-                      defaultValue={userObj.city as string}
+                      value={userObj?.city ? (userObj.city as string) : ""}
                       onChange={(e) => {
                         setUserObj({
                           ...userObj,
@@ -282,7 +295,7 @@ const UserInfo = () => {
                       {...register("region")}
                       id="region"
                       autoComplete="address-level1"
-                      defaultValue={userObj.state as string}
+                      value={userObj?.state ? (userObj.state as string) : ""}
                       onChange={(e) => {
                         setUserObj({
                           ...userObj,
@@ -305,7 +318,11 @@ const UserInfo = () => {
                       {...register("postal-code")}
                       id="postal-code"
                       autoComplete="postal-code"
-                      defaultValue={userObj.postalCode as string}
+                      value={
+                        userObj?.postalCode
+                          ? (userObj.postalCode as string)
+                          : ""
+                      }
                       onChange={(e) => {
                         setUserObj({
                           ...userObj,
@@ -326,7 +343,9 @@ const UserInfo = () => {
                       id="country"
                       {...register("country")}
                       autoComplete="country-name"
-                      defaultValue={userObj.country as string}
+                      value={
+                        userObj?.country ? (userObj.country as string) : ""
+                      }
                       onChange={(e) => {
                         setUserObj({
                           ...userObj,
