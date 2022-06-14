@@ -47,7 +47,6 @@ export const UserContext = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log("fetching user");
     if (currentUser) {
       fetchDocs(currentUser).then((user) => {
         dispatch({

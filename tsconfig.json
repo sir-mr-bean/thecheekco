@@ -33,7 +33,9 @@
     "**/*.tsx",
     "src/**/*",
     "src/pages",
-    "components/Checkout/UserForm.tsx"
+    "components/Checkout/UserForm.tsx",
+    "utils/jwt.ts.old",
+    "context/User/context.ts.old"
   ],
   "exclude": ["node_modules"]
 }

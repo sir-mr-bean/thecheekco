@@ -13,7 +13,7 @@ export default function cart() {
   const [total, setTotal] = useState(0);
   const { cart, dispatch } = CartState();
   const [mounted, setMounted] = useState(false);
-  console.log(cart);
+
   useEffect(() => {
     let sum: number = 0;
     cart.forEach((product: Product) => {

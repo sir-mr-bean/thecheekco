@@ -11,18 +11,16 @@ import type { AppProps } from "next/app";
 import * as React from "react";
 import UserContext from "@/context/User/userContext";
 import { withTRPC } from "@trpc/next";
-import { SessionProvider } from "next-auth/react";
-
-import { AppRouter } from "@/backend/router";
+import { getSession, SessionProvider } from "next-auth/react";
+import { AppRouter } from "@/backend/router/_app";
+import superjson from "superjson";
 import Footer from "@/components/Footer/Footer";
+import { trpc } from "@/utils/trpc";
 
-const MyApp = ({
-  Component,
-  pageProps: { session, ...pageProps },
-}: AppProps) => {
+const MyApp = ({ Component, pageProps: { ...pageProps } }: AppProps) => {
   return (
     <FirebaseAuthContext>
-      <SessionProvider session={session}>
+      <SessionProvider session={pageProps.session}>
         <UserContext>
           <CartContext>
             <WishListContext>
@@ -45,7 +43,7 @@ const MyApp = ({
                 src="https://embed.prod.simpletix.com/assets/widget/widget.min.js"
               ></Script>
 
-              <div className="max-w-screen min-h-[150vh] bg-bg-tan bg-cover">
+              <div className="max-w-screen bg-bg-tan bg-cover">
                 <Header />
                 <Component {...pageProps} />
                 <Footer />
@@ -78,7 +76,7 @@ export default withTRPC<AppRouter>({
       /**
        * @link https://react-query.tanstack.com/reference/QueryClient
        */
-      // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
+      queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
     };
   },
   /**
@@ -86,3 +84,11 @@ export default withTRPC<AppRouter>({
    */
   ssr: true,
 })(MyApp);
+
+MyApp.getInitialProps = async ({ ctx }) => {
+  return {
+    pageProps: {
+      session: await getSession(ctx),
+    },
+  };
+};

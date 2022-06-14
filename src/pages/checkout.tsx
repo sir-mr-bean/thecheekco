@@ -65,9 +65,9 @@ export default function checkout() {
     try {
       const res = await signInWithPopup(auth, googleProvider);
       const user = res.user;
-      console.log(user);
+
       const q = query(collection(db, "users"), where("uid", "==", user.uid));
-      console.log(q);
+
       const docs = await getDocs(q);
       if (docs.docs.length === 0) {
         await addDoc(collection(db, "users"), {
@@ -90,9 +90,9 @@ export default function checkout() {
     try {
       const res = await signInWithPopup(auth, facebookProvider);
       const user = res.user;
-      console.log(user);
+
       const q = query(collection(db, "users"), where("uid", "==", user.uid));
-      console.log(q);
+
       const docs = await getDocs(q);
       if (docs.docs.length === 0) {
         await addDoc(collection(db, "users"), {
@@ -118,11 +118,9 @@ export default function checkout() {
         emailRef.current.value,
         passRef.current.value
       );
-      console.log(result);
+
       setLoggingIn(false);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const logInWithEmailAndPassword = async (
@@ -213,7 +211,7 @@ export default function checkout() {
               }),
             });
             const newOrder = await orderResponse.json();
-            console.log(newOrder);
+
             const response = await fetch("/api/pay", {
               method: "POST",
               headers: {
@@ -227,11 +225,8 @@ export default function checkout() {
                 locationId: newOrder.order.locationId,
               }),
             });
-            console.log(response);
+
             const paymentResponse = await response.json();
-            //console.log(newOrder);
-            console.log(paymentResponse);
-            //console.log(JSON.stringify(await response.json(), null, 2));
           }}
         >
           <div className="bg-white mt-16 mx-1 md:mx-16 rounded-md shadow-lg shadow-black font-gothic">

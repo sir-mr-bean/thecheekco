@@ -20,7 +20,6 @@ export const cartInitializer = (initialValue = initialCart) => {
 export const cartReducer = (state, action) => {
   switch (action.type) {
     case "ADD_TO_CART":
-      console.log(action);
       return state.find((item) => item.id === action.item.id)
         ? state.map((item) =>
             item.id === action.item.id

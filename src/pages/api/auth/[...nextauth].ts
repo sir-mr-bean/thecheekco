@@ -1,14 +1,15 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { PrismaClient, User } from "@prisma/client";
 import * as jose from "jose";
+import { setCookie } from "nookies";
 
-export default NextAuth({
+const prisma = new PrismaClient();
+export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
-  secret: process.env.NEXT_AUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   jwt: {
     encode: async ({ secret, token }) => {
       const jwtToken = await new jose.SignJWT({ token: token })
@@ -33,7 +34,6 @@ export default NextAuth({
 
   providers: [
     GoogleProvider({
-      checks: "state",
       clientId: process.env.GOOGLE_NEXT_AUTH_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_NEXT_AUTH_CLIENT_SECRET as string,
     }),
@@ -43,19 +43,17 @@ export default NextAuth({
     maxAge: 30 * 24 * 60 * 60, // 30 days
     updateAge: 24 * 60 * 60, // 24 hours
   },
+
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
       return true;
     },
-    async redirect({ url, baseUrl }) {
-      console.log(url, baseUrl);
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      else if (new URL(url).origin === baseUrl) return url;
-      return baseUrl;
-    },
+
     async session({ session, token, user }) {
-      session.user = user;
+      session.user = user as User;
       return session;
     },
   },
-});
+};
+
+export default NextAuth(authOptions);

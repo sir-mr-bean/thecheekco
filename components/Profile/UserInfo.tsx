@@ -1,48 +1,72 @@
-import { useState } from "react";
-import { useAuth } from "../../context/FirebaseAuthContext";
-import {
-  doc,
-  query,
-  getDocs,
-  collection,
-  where,
-  updateDoc,
-} from "firebase/firestore";
-import { db } from "../../utils/firebaseConfig";
-import Autocomplete from "react-google-autocomplete";
-import { UserState } from "../../context/User/userContext";
+import { useState, useEffect } from "react";
+import { trpc } from "@/utils/trpc";
+import { z } from "zod";
+import Autocomplete, {
+  ReactGoogleAutocompleteInputProps,
+} from "react-google-autocomplete";
+import { useForm } from "react-hook-form";
+import { useSession } from "next-auth/react";
+import { User } from "@prisma/client";
+
+type AutoCompletePropsExtended = ReactGoogleAutocompleteInputProps &
+  HTMLInputElement[];
 
 const UserInfo = () => {
-  const { currentUser } = useAuth();
-  const { userObj, dispatch } = UserState();
-  console.log(userObj);
+  const session = useSession();
+  //console.log(session);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const q = query(
-      collection(db, "users"),
-      where("uid", "==", currentUser.uid)
-    );
-    const userDoc = getDocs(q);
-    const user = await userDoc;
-    const updateUser = await updateDoc(
-      doc(db, "users", user.docs[0].id),
-      {
-        firstName: userObj.firstName || "",
-        lastName: userObj.lastName || "",
-        company: userObj.company || "",
-        streetAddress: userObj.streetAddress || "",
-        apartmentOrUnit: userObj.apartmentOrUnit || "",
-        city: userObj.city || "",
-        state: userObj.state || "",
-        country: userObj.country || "",
-        postalCode: userObj.postalCode || "",
-        email: userObj.email || "",
-        phoneNumber: userObj.phoneNumber || "",
-      },
-      { merge: true }
-    );
+  const [userObj, setUserObj] = useState<User>(session.data?.user as User);
+  const updateUser = trpc.useMutation(["userupdateUser"]);
+  //const userObj = props.userObj;
+  //const { currentUser } = useAuth();
+  //const { userObj, dispatch } = UserState();
+
+  //const onSubmit = (data) => console.log(data);
+  const dateSchema = z.preprocess((arg) => {
+    if (typeof arg == "string" || arg instanceof Date) return new Date(arg);
+  }, z.date());
+  type DateSchema = z.infer<typeof dateSchema>;
+
+  const handleFormSubmit = async (d) => {
+    //console.log("submitting form");
+    //console.log(userObj);
+    console.log(d);
+    const updatedUserObj = {
+      id: userObj.id,
+      createdAt: userObj.createdAt as DateSchema,
+      updatedAt: new Date(Date.now()),
+      name: d.name,
+      email: userObj.email,
+      emailVerified: userObj.emailVerified,
+      password: userObj.password,
+      image: userObj.image,
+      firstName: d["first-name"],
+      lastName: d["last-name"],
+      company: d.organization,
+      streetAddress: d["street-address"],
+      streetNumber: d["apartment-unit"],
+      apartmentOrUnit: d["apartment-unit"],
+      city: d.city,
+      state: d.state,
+      country: d.country,
+      postalCode: d.postalCode,
+      phoneNumber: d.phoneNumber,
+      isAdmin: userObj.isAdmin,
+    };
+    console.log(updatedUserObj);
+    const userUpdate = updateUser.mutate({
+      email: userObj.email,
+      user: updatedUserObj,
+    });
+    console.log(userUpdate);
   };
+  //mutation.mutate({ email: d.email, user: d });
 
   return (
     <>
@@ -73,16 +97,10 @@ const UserInfo = () => {
                     </label>
                     <input
                       type="text"
-                      name="first-name"
+                      {...register("first-name")}
                       id="first-name"
                       autoComplete="given-name"
-                      value={userObj.firstName}
-                      onChange={(e) => {
-                        dispatch({
-                          type: "SET_FIRST_NAME",
-                          payload: e.target.value,
-                        });
-                      }}
+                      defaultValue={userObj?.firstName as string}
                       className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary focus:ring rounded-md p-1"
                     />
                   </div>
@@ -96,16 +114,10 @@ const UserInfo = () => {
                     </label>
                     <input
                       type="text"
-                      name="last-name"
+                      {...register("last-name")}
                       id="last-name"
                       autoComplete="family-name"
-                      value={userObj.lastName}
-                      onChange={(e) => {
-                        dispatch({
-                          type: "SET_LAST_NAME",
-                          payload: e.target.value,
-                        });
-                      }}
+                      defaultValue={userObj?.lastName as string}
                       className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary focus:ring rounded-md p-1"
                     />
                   </div>
@@ -119,16 +131,10 @@ const UserInfo = () => {
                     </label>
                     <input
                       type="text"
-                      name="organization"
+                      {...register("organization")}
                       id="organization"
                       autoComplete="organization"
-                      value={userObj.company}
-                      onChange={(e) => {
-                        dispatch({
-                          type: "SET_COMPANY",
-                          payload: e.target.value,
-                        });
-                      }}
+                      defaultValue={userObj?.company as string}
                       className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary focus:ring rounded-md p-1"
                     />
                   </div>
@@ -142,16 +148,10 @@ const UserInfo = () => {
                     </label>
                     <input
                       type="text"
-                      name="email-address"
+                      {...register("email-address")}
                       id="email-address"
                       autoComplete="email"
-                      value={userObj.email}
-                      onChange={(e) => {
-                        dispatch({
-                          type: "SET_EMAIL",
-                          payload: e.target.value,
-                        });
-                      }}
+                      defaultValue={userObj?.email as string}
                       className="mt-1 focus:ring-text-primary focus:ring text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1"
                     />
                   </div>
@@ -163,71 +163,46 @@ const UserInfo = () => {
                       Street address
                     </label>
                     <Autocomplete
-                      apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+                      apiKey={`${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
                       onPlaceSelected={(place) => {
-                        console.log(place);
-                        const [...address_components] =
-                          place.address_components;
-                        console.log(address_components);
-                        const apartmentOrUnit = address_components.find(
+                        const apartmentOrUnit = place?.address_components?.find(
                           (component) => component.types.includes("subpremise")
                         );
-                        if (apartmentOrUnit) {
-                          console.log("found unit", apartmentOrUnit.long_name);
-                          dispatch({
-                            type: "SET_APARTMENT_OR_UNIT",
-                            payload: apartmentOrUnit.long_name,
-                          });
-                        }
-                        const streetNumber = address_components.find(
+
+                        const streetNumber = place?.address_components?.find(
                           (component) =>
                             component.types.includes("street_number")
                         );
-                        const streetAddress = address_components.find(
+                        const streetAddress = place?.address_components?.find(
                           (component) => component.types.includes("route")
                         );
-                        const city = address_components.find((component) =>
-                          component.types.includes("locality")
+                        const city = place?.address_components?.find(
+                          (component) => component.types.includes("locality")
                         );
-                        const state = address_components.find((component) =>
-                          component.types.includes(
-                            "administrative_area_level_1"
-                          )
+                        const state = place?.address_components?.find(
+                          (component) =>
+                            component.types.includes(
+                              "administrative_area_level_1"
+                            )
                         );
-                        const country = address_components.find((component) =>
-                          component.types.includes("country")
+                        const country = place?.address_components?.find(
+                          (component) => component.types.includes("country")
                         );
-                        const postalCode = address_components.find(
+                        const postalCode = place?.address_components?.find(
                           (component) => component.types.includes("postal_code")
                         );
-                        console.log("unit number is");
-                        dispatch({
-                          type: "SET_STREET_ADDRESS",
-                          payload:
-                            streetNumber.long_name +
-                            " " +
-                            streetAddress.long_name,
-                        });
-                        dispatch({
-                          type: "SET_CITY",
-                          payload: city.long_name,
-                        });
-                        dispatch({
-                          type: "SET_STATE",
-                          payload: state.long_name,
-                        });
-                        dispatch({
-                          type: "SET_COUNTRY",
-                          payload: country.long_name,
-                        });
-                        dispatch({
-                          type: "SET_POSTAL_CODE",
-                          payload: postalCode.long_name,
-                        });
 
-                        dispatch({
-                          type: "SET_STREET_NUMBER",
-                          payload: streetNumber.long_name,
+                        setUserObj({
+                          ...userObj,
+                          streetNumber: streetNumber?.long_name as string,
+                          streetAddress: streetNumber?.long_name
+                            ? `${streetNumber?.long_name} ${streetAddress?.long_name}`
+                            : `${streetAddress?.long_name}`,
+                          apartmentOrUnit: apartmentOrUnit?.long_name || "",
+                          city: city?.long_name as string,
+                          state: state?.long_name as string,
+                          country: country?.long_name as string,
+                          postalCode: postalCode?.long_name as string,
                         });
                       }}
                       options={{
@@ -235,14 +210,14 @@ const UserInfo = () => {
                         fields: ["address_components", "geometry"],
                         types: ["address"],
                       }}
-                      type="text"
-                      name="street-address"
+                      {...register("street-address")}
                       id="street-address"
-                      value={userObj?.streetAddress}
+                      defaultValue={userObj?.streetAddress as string}
                       onChange={(e) => {
-                        dispatch({
-                          type: "SET_STREET_ADDRESS",
-                          payload: e.target.value,
+                        setUserObj({
+                          ...userObj,
+                          streetAddress: (e.target as HTMLTextAreaElement)
+                            .value,
                         });
                       }}
                       className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
@@ -258,14 +233,14 @@ const UserInfo = () => {
                     </label>
                     <input
                       type="text"
-                      name="apartment-unit"
+                      {...register("apartment-unit")}
                       id="apartment-unit"
                       autoComplete="address-line1"
-                      value={userObj?.apartmentOrUnit}
+                      defaultValue={userObj?.apartmentOrUnit as string}
                       onChange={(e) => {
-                        dispatch({
-                          type: "SET_APARTMENT_OR_UNIT",
-                          payload: e.target.value,
+                        setUserObj({
+                          ...userObj,
+                          apartmentOrUnit: e.target.value,
                         });
                       }}
                       className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
@@ -281,14 +256,14 @@ const UserInfo = () => {
                     </label>
                     <input
                       type="text"
-                      name="city"
+                      {...register("city")}
                       id="city"
                       autoComplete="address-level2"
-                      value={userObj.city}
+                      defaultValue={userObj.city as string}
                       onChange={(e) => {
-                        dispatch({
-                          type: "SET_CITY",
-                          payload: e.target.value,
+                        setUserObj({
+                          ...userObj,
+                          city: e.target.value,
                         });
                       }}
                       className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
@@ -304,14 +279,14 @@ const UserInfo = () => {
                     </label>
                     <input
                       type="text"
-                      name="region"
+                      {...register("region")}
                       id="region"
                       autoComplete="address-level1"
-                      value={userObj.state}
+                      defaultValue={userObj.state as string}
                       onChange={(e) => {
-                        dispatch({
-                          type: "SET_STATE",
-                          payload: e.target.value,
+                        setUserObj({
+                          ...userObj,
+                          state: e.target.value,
                         });
                       }}
                       className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary focus:ring block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1"
@@ -327,14 +302,14 @@ const UserInfo = () => {
                     </label>
                     <input
                       type="text"
-                      name="postal-code"
+                      {...register("postal-code")}
                       id="postal-code"
                       autoComplete="postal-code"
-                      value={userObj.postalCode}
+                      defaultValue={userObj.postalCode as string}
                       onChange={(e) => {
-                        dispatch({
-                          type: "SET_POSTAL_CODE",
-                          payload: e.target.value,
+                        setUserObj({
+                          ...userObj,
+                          postalCode: e.target.value,
                         });
                       }}
                       className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary focus:ring block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1"
@@ -349,13 +324,13 @@ const UserInfo = () => {
                     </label>
                     <select
                       id="country"
-                      name="country"
+                      {...register("country")}
                       autoComplete="country-name"
-                      value={userObj.country}
+                      defaultValue={userObj.country as string}
                       onChange={(e) => {
-                        dispatch({
-                          type: "SET_COUNTRY",
-                          payload: e.target.value,
+                        setUserObj({
+                          ...userObj,
+                          country: e.target.value,
                         });
                       }}
                       className="mt-1 block w-full p-1 border-text-primary bg-white rounded-md shadow-sm shadow-text-secondary focus:outline-none focus:ring-text-primary focus:ring text-text-primary focus:border-text-primary sm:text-sm"
@@ -372,16 +347,10 @@ const UserInfo = () => {
                     </label>
                     <input
                       id="tel"
-                      name="tel"
+                      {...register("tel")}
                       autoComplete="tel"
                       type={userObj.phoneNumber ? "text" : "tel"}
-                      value={userObj.phoneNumber}
-                      onChange={(e) => {
-                        dispatch({
-                          type: "SET_PHONE_NUMBER",
-                          payload: e.target.value,
-                        });
-                      }}
+                      defaultValue={userObj.phoneNumber as string}
                       className="mt-1 block w-full p-1 border-text-primary bg-white rounded-md shadow-sm shadow-text-secondary focus:outline-none focus:ring-text-primary focus:ring text-text-primary focus:border-text-primary sm:text-sm"
                     ></input>
                   </div>
@@ -416,7 +385,7 @@ const UserInfo = () => {
                       <div className="h-5 flex items-center">
                         <input
                           id="comments"
-                          name="comments"
+                          {...register("comments")}
                           type="checkbox"
                           className="focus:ring-text-primary focus:ring text-text-primary h-4 w-4  border-text-primary rounded"
                         />
@@ -438,7 +407,7 @@ const UserInfo = () => {
                       <div className="flex items-center h-5">
                         <input
                           id="candidates"
-                          name="candidates"
+                          {...register("candidates")}
                           type="checkbox"
                           className="focus:ring-text-primary focus:ring text-text-primary h-4 w-4  border-text-primary rounded"
                         />
@@ -459,7 +428,7 @@ const UserInfo = () => {
                       <div className="flex items-center h-5">
                         <input
                           id="offers"
-                          name="offers"
+                          {...register("offers")}
                           type="checkbox"
                           className="focus:ring-text-primary focus:ring text-text-primary h-4 w-4  border-text-primary rounded"
                         />
@@ -490,7 +459,7 @@ const UserInfo = () => {
                     <div className="flex items-center">
                       <input
                         id="push-everything"
-                        name="push-notifications"
+                        {...register("push-everything")}
                         type="radio"
                         className="focus:ring-text-primary focus:ring text-text-primary h-4 w-4  border-text-primary"
                       />
@@ -504,7 +473,7 @@ const UserInfo = () => {
                     <div className="flex items-center">
                       <input
                         id="push-email"
-                        name="push-notifications"
+                        {...register("push-email")}
                         type="radio"
                         className="focus:ring-text-primary focus:ring text-text-primary h-4 w-4 border-text-primary"
                       />
@@ -518,7 +487,7 @@ const UserInfo = () => {
                     <div className="flex items-center">
                       <input
                         id="push-nothing"
-                        name="push-notifications"
+                        {...register("push-nothing")}
                         type="radio"
                         className="focus:ring-text-primary focus:ring text-text-primary h-4 w-4  border-text-primary"
                       />
@@ -531,27 +500,24 @@ const UserInfo = () => {
                     </div>
                   </div>
                 </fieldset>
+                <div className="flex justify-end sm:m-6 m-2">
+                  <button
+                    type="button"
+                    className="bg-white py-2 px-4 border border-text-primary rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-text-primary hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary "
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSubmit(handleFormSubmit)}
+                    className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm shadow-text-secondary text-sm font-medium rounded-md  bg-button hover:bg-button/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary text-text-primary"
+                  >
+                    Save
+                  </button>
+                </div>
               </form>
             </div>
           </div>
-        </div>
-
-        <div className="flex justify-end sm:m-6 m-2">
-          <button
-            type="button"
-            className="bg-white py-2 px-4 border border-text-primary rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-text-primary hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary "
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={(e) => {
-              handleSubmit(e);
-            }}
-            className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm shadow-text-secondary text-sm font-medium rounded-md  bg-button hover:bg-button/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary text-text-primary"
-          >
-            Save
-          </button>
         </div>
       </div>
     </>

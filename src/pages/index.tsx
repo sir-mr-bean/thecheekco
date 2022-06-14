@@ -31,7 +31,7 @@ export default function Home({
 }) {
   const notationRef = useRef(null);
   const { inViewport, enterCount, leaveCount } = useInViewport(notationRef);
-  const categories = trpc.useQuery(["categories"]);
+  //const categories = trpc.useQuery(["categories"]);
   const carouselRef: any = useRef();
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const { cart, dispatch } = CartState();

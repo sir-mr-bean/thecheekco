@@ -37,8 +37,8 @@ model Session {
 
 model User {
   id            String    @id @default(cuid())
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @default(now())
+  createdAt    DateTime?    @default(now())
+  updatedAt    DateTime?    @default(now())
   name          String?
   image         String?
   firstName    String? 
@@ -48,6 +48,7 @@ model User {
   password    String?
   company    String?
   streetAddress    String?
+  streetNumber    String?
   apartmentOrUnit    String?
   city   String?
   state    String?

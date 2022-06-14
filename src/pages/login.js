@@ -22,9 +22,8 @@ import {
 } from "next-auth/react";
 
 const login = ({ csrfToken, providers }) => {
-  console.log(providers);
   const { data: session, status } = useSession();
-  console.log(session);
+
   const { currentUser } = useAuth();
   const [incorrectCreds, setIncorrectCreds] = useState(false);
   const router = useRouter();
@@ -38,9 +37,9 @@ const login = ({ csrfToken, providers }) => {
     try {
       const res = await signInWithPopup(auth, googleProvider);
       const user = res?.user;
-      console.log(user);
+
       const q = query(collection(db, "users"), where("uid", "==", user.uid));
-      console.log(q);
+
       const docs = await getDocs(q);
       if (docs.docs.length === 0) {
         await addDoc(collection(db, "users"), {
@@ -63,9 +62,9 @@ const login = ({ csrfToken, providers }) => {
     try {
       const res = await signInWithPopup(auth, facebookProvider);
       const user = res?.user;
-      console.log(user);
+
       const q = query(collection(db, "users"), where("uid", "==", user.uid));
-      console.log(q);
+
       const docs = await getDocs(q);
       if (docs.docs.length === 0) {
         await addDoc(collection(db, "users"), {
@@ -89,18 +88,16 @@ const login = ({ csrfToken, providers }) => {
         emailRef.current.value,
         passRef.current.value
       );
-      console.log(result);
+
       setLoggingIn(false);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const logInWithEmailAndPassword = async (email, password) => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
       const user = result?.user;
-      console.log(user);
+
       const q = query(collection(db, "users"), where("uid", "==", user.uid));
       const docs = await getDocs(q);
       if (docs.docs.length === 0) {
@@ -113,7 +110,6 @@ const login = ({ csrfToken, providers }) => {
       }
       return result;
     } catch (err) {
-      console.log(err.message);
       if (err.message.includes("invalid-email")) {
         setIncorrectCreds(true);
         setLoggingIn(false);
@@ -161,11 +157,7 @@ const login = ({ csrfToken, providers }) => {
 
                     <div>
                       <button
-                        onClick={() =>
-                          signIn("google", {
-                            callbackUrl: "/profile",
-                          })
-                        }
+                        onClick={() => signIn("google")}
                         className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium  hover:bg-gray-50 cursor-pointer"
                       >
                         <span className="sr-only">Sign in with Google</span>
@@ -299,6 +291,7 @@ export default login;
 
 export async function getServerSideProps(context) {
   const providers = await getProviders();
+  const CSRFToken = await getCsrfToken();
   return {
     props: {
       providers,
