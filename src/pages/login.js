@@ -32,24 +32,9 @@ const login = ({ csrfToken, providers }) => {
   const [loggingIn, setLoggingIn] = useState(false);
 
   const handleGoogleLogin = async () => {
-    const googleProvider = new GoogleAuthProvider();
-
     try {
-      const res = await signInWithPopup(auth, googleProvider);
-      const user = res?.user;
-
-      const q = query(collection(db, "users"), where("uid", "==", user.uid));
-
-      const docs = await getDocs(q);
-      if (docs.docs.length === 0) {
-        await addDoc(collection(db, "users"), {
-          uid: user.uid,
-          name: user.displayName,
-          authProvider: "google",
-          email: user.email,
-        });
-      }
-
+      const result = await signIn("google");
+      console.log(result);
       router.push("/profile");
     } catch (err) {
       console.error(err);
@@ -157,7 +142,11 @@ const login = ({ csrfToken, providers }) => {
 
                     <div>
                       <button
-                        onClick={() => signIn("google")}
+                        onClick={() => {
+                          signIn("google", {
+                            callbackUrl: "/profile",
+                          });
+                        }}
                         className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium  hover:bg-gray-50 cursor-pointer"
                       >
                         <span className="sr-only">Sign in with Google</span>

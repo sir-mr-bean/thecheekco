@@ -38,15 +38,35 @@ export const userRouter = createRouter().mutation("updateUser", {
     user: UserInterface,
   }),
   async resolve({ input, ctx }) {
-    console.log(input);
-    const result = await ctx.prisma.user.update({
-      where: {
-        email: input.email,
-      },
-      data: {
-        ...input.user,
-      },
+    const { email, user } = input;
+    const { prisma } = ctx;
+    console.log("session is ", ctx.session);
+    const { id } = user;
+    const currentUser = await prisma.user.findUnique({
+      where: { id },
     });
-    console.log(result);
+    console.log("current user is ", currentUser);
+    const currentSession = await prisma.session.findFirst({
+      where: { userId: id },
+    });
+    console.log("current session is ", currentSession);
+    if (!currentUser) {
+      throw new Error("User not found");
+    }
+    if (currentUser.email !== email) {
+      throw new Error("Email cannot be changed");
+    }
+    if (currentSession) {
+      console.log(input);
+      const result = await prisma.user.update({
+        where: {
+          email: input.email,
+        },
+        data: {
+          ...input.user,
+        },
+      });
+      console.log(result);
+    }
   },
 });

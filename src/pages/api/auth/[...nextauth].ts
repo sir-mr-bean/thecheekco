@@ -9,7 +9,6 @@ const prisma = new PrismaClient();
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
-  secret: process.env.NEXTAUTH_SECRET,
   jwt: {
     encode: async ({ secret, token }) => {
       const jwtToken = await new jose.SignJWT({ token: token })
@@ -43,14 +42,22 @@ export const authOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60, // 30 days
     updateAge: 24 * 60 * 60, // 24 hours
   },
+  secret: process.env.NEXTAUTH_SECRET,
 
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
       return true;
     },
-
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
+    },
     async session({ session, token, user }) {
       session.user = user as User;
+      session.token = token;
       return session;
     },
   },

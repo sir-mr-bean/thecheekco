@@ -5,6 +5,8 @@ import { BsChevronDown, BsPerson } from "react-icons/bs";
 import { useAuth } from "../../context/FirebaseAuthContext";
 import { auth } from "../../utils/firebaseConfig";
 import { useRouter } from "next/router";
+import { trpc } from "@/utils/trpc";
+import { signOut } from "next-auth/react";
 
 function classNames(...classes: [string, string?, string?, Boolean?]): string {
   return classes.filter(Boolean).join(" ");
@@ -12,7 +14,10 @@ function classNames(...classes: [string, string?, string?, Boolean?]): string {
 
 export default function Login() {
   const router = useRouter();
-  const { currentUser } = useAuth();
+  const { data: session, status } = trpc.useQuery(["next-auth.getSession"], {
+    suspense: true,
+  });
+  const currentUser = session?.user;
 
   const handleSignOut = async () => {
     await auth.signOut();
@@ -129,7 +134,7 @@ export default function Login() {
                 <Menu.Item>
                   {({ active }) => (
                     <button
-                      onClick={() => handleSignOut()}
+                      onClick={() => signOut()}
                       className={classNames(
                         active
                           ? "bg-bg-tan text-text-primary rounded-b-md"

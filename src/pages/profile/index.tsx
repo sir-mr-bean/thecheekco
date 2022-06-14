@@ -8,7 +8,12 @@ import UserOrders from "../../../components/Profile/UserOrders";
 import UserDashboard from "../../../components/Profile/UserDashboard";
 import { UserState } from "../../../context/User/userContext";
 import { setUserObj } from "../../../context/User/userReducer";
-import { getCsrfToken, getSession, useSession } from "next-auth/react";
+import {
+  getCsrfToken,
+  getSession,
+  GetSessionParams,
+  useSession,
+} from "next-auth/react";
 import BeatLoader from "react-spinners/BeatLoader";
 import { User } from "@prisma/client";
 import { GetServerSideProps, NextPage } from "next";
@@ -16,11 +21,20 @@ import { Context } from "@/backend/context";
 import { trpc } from "@/utils/trpc";
 
 const profile: NextPage = () => {
-  const query = trpc.useQuery(["next-auth.getSession"], { suspense: true });
-  //console.log(query);
+  const { data: session, status } = trpc.useQuery(["next-auth.getSession"], {
+    suspense: false,
+  });
+  const { data } = useSession({
+    required: true,
+    onUnauthenticated: () => {
+      router.push("/login");
+    },
+  });
+  console.log(status);
+  console.log(session);
   //console.log(props);
   const router = useRouter();
-  const { data: session, status } = useSession();
+  //const { data: session, status } = useSession();
   const currentUser = session?.user as User;
   //const { currentUser } = useAuth();
   //const { userObj, dispatch } = UserState();
@@ -40,17 +54,15 @@ const profile: NextPage = () => {
     phoneNumber: "",
   });
 
-  // useEffect(() => {
-  //   if (status !== "authenticated" && status !== "loading") {
-  //     if (currentUser === null || currentUser === undefined) {
-  //       router.push("/login");
-  //     }
-  //   }
-  // }, [currentUser, status]);
+  useEffect(() => {
+    if (status === String("unauthenticated")) {
+      router.push("/login");
+    }
+  }, [status]);
 
   return (
     <>
-      {status === "loading" ? (
+      {status === String("loading") ? (
         <div className="flex h-screen w-full justify-center items-center mx-auto  text-text-primary">
           <BeatLoader
             color="#602d0d"
@@ -58,7 +70,7 @@ const profile: NextPage = () => {
             size={20}
           />
         </div>
-      ) : (
+      ) : status === String("authenticated") ? (
         <Tab.Group>
           <Tab.List className="max-h-max grid grid-cols-4 items-end border-b border-b-text-secondary text-text-primary font-gothic text-sm sm:text-xl mx-2 sm:mx-8 mt-5 mb-2 justify-between text-center h-11 md:h-16 md:w-2/3 md:mx-auto lg:whitespace-nowrap gap-1 md:gap-3">
             <Tab as={Fragment}>
@@ -129,17 +141,17 @@ const profile: NextPage = () => {
             </Tab.Panel>
           </Tab.Panels>
         </Tab.Group>
+      ) : (
+        <div className="flex h-screen w-full justify-center items-center mx-auto  text-text-primary">
+          <BeatLoader
+            color="#602d0d"
+            loading={status === "loading"}
+            size={20}
+          />
+        </div>
       )}
     </>
   );
 };
 
 export default profile;
-
-// export async function getServerSideProps(context) {
-//   return {
-//     props: {
-//       session: await getSession(context),
-//     },
-//   };
-// }
