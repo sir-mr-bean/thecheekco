@@ -56,7 +56,11 @@ export const Header = (props): JSX.Element => {
 
   useEffect(() => {
     trpcContext
-      .fetchQuery(["categories"])
+      .fetchQuery(["categories"], {
+        context: {
+          skipBatch: true,
+        },
+      })
       .then((result) => setNavigation(result));
   }, []);
 

@@ -16,6 +16,9 @@ import { AppRouter } from "@/backend/router/_app";
 import superjson from "superjson";
 import Footer from "@/components/Footer/Footer";
 import { trpc } from "@/utils/trpc";
+import { httpBatchLink } from "@trpc/client/links/httpBatchLink";
+import { httpLink } from "@trpc/client/links/httpLink";
+import { splitLink } from "@trpc/client/links/splitLink";
 
 const MyApp = ({ Component, pageProps: { ...pageProps } }: AppProps) => {
   return (
@@ -70,14 +73,32 @@ export default withTRPC<AppRouter>({
     const url = process.env.NEXT_PUBLIC_VERCEL_URL
       ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/trpc`
       : "http://localhost:3000/api/trpc";
-
+    const ONE_HOUR_IN_SECONDS = 60 * 60;
     return {
       url,
+      links: [
+        splitLink({
+          condition(op) {
+            // check for context property `skipBatch`
+            return op.context.skipBatch === true;
+          },
+          // when condition is true, use normal request
+          true: httpLink({
+            url,
+          }),
+          // when condition is false, use batching
+          false: httpBatchLink({
+            url,
+          }),
+        }),
+      ],
 
       /**
        * @link https://react-query.tanstack.com/reference/QueryClient
        */
-      queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
+      queryClientConfig: {
+        defaultOptions: { queries: { staleTime: ONE_HOUR_IN_SECONDS } },
+      },
     };
   },
   /**
