@@ -12,6 +12,6 @@ import { userRouter } from "./user";
 export const appRouter = createRouter()
   .merge(authRouter)
   .merge("user", userRouter)
-  .merge(squareRouter);
+  .merge("square.", squareRouter);
 
 export type AppRouter = typeof appRouter;
