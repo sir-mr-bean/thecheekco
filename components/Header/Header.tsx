@@ -56,9 +56,7 @@ export const Header = (props): JSX.Element => {
 
   useEffect(() => {
     trpcContext
-      .fetchQuery(["categories"], {
-        staleTime: Infinity,
-      })
+      .fetchQuery(["categories"])
       .then((result) => setNavigation(result));
   }, []);
 

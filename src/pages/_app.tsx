@@ -84,23 +84,6 @@ export default withTRPC<AppRouter>({
    * @link https://trpc.io/docs/ssr
    */
   ssr: true,
-  responseMeta({ ctx, clientErrors }) {
-    if (clientErrors.length) {
-      // propagate http first error from API calls
-      return {
-        status: clientErrors[0].data?.httpStatus ?? 500,
-      };
-    }
-
-    // cache request for 1 day + revalidate once every hour
-    const ONE_DAY_IN_SECONDS = 60 * 60 * 24;
-    const ONE_HOUR_IN_SECONDS = 60 * 60;
-    return {
-      headers: {
-        "cache-control": `s-maxage=${ONE_HOUR_IN_SECONDS}, stale-while-revalidate=${ONE_DAY_IN_SECONDS}`,
-      },
-    };
-  },
 })(MyApp);
 
 MyApp.getInitialProps = async ({ ctx }) => {

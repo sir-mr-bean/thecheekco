@@ -13,7 +13,7 @@ export default trpcNext.createNextApiHandler({
     }
   },
   batching: {
-    enabled: true,
+    enabled: false,
   },
   responseMeta({ ctx, paths, type, errors }) {
     console.log("in responseMeta");
