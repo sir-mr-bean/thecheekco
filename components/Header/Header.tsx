@@ -137,7 +137,6 @@ export const Header = (props): JSX.Element => {
           <div className="bg-header-brown text-header-text text-[10px] font-gothic bg-opacity-90 h-5 sm:h-auto">
             <ul className="hidden sm:flex justify-center pl-3 sm:space-x-6">
               {navigation &&
-                navigation?.length > 0 &&
                 navigation
                   .sort((a, b) => (a.id > b.id ? 1 : -1))
                   .filter((item) => item.category_data.name.charAt(0) != "_")
