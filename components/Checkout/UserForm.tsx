@@ -369,7 +369,10 @@ const UserForm = ({
                 type="checkbox"
                 className="h-6 w-6 border-gray-300 rounded text-text-secondary focus:ring-text-secondary accent-text-secondary"
               />
-              <label htmlFor="terms" className="text-sm text-text-primary">
+              <label
+                htmlFor="terms"
+                className="text-sm text-text-primary select-none"
+              >
                 I have read the terms and conditions and agree to the sale of my
                 personal information to the highest bidder.
               </label>
