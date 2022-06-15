@@ -108,7 +108,7 @@ export default function cart() {
                                 </p>
                               </div>
 
-                              <div className="mt-4 sm:mt-0 sm:pr-9">
+                              <div className="mt-4 sm:mt-0 sm:pr-2">
                                 <label
                                   htmlFor={`quantity-${productIdx}`}
                                   className="sr-only"
@@ -122,7 +122,7 @@ export default function cart() {
                                   id={`quantity-${productIdx}`}
                                   name={`quantity-${productIdx}`}
                                   defaultValue={product.quantity}
-                                  className="max-w-full block rounded-md border border-gray-300 py-1.5 px-1 text-base font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-text-secondary focus:border-text-secondary sm:text-sm"
+                                  className="min-w-fit  max-w-full block rounded-md border border-gray-300 py-1.5 px-1 text-base font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-text-secondary focus:border-text-secondary sm:text-sm"
                                 >
                                   <option value={1}>1</option>
                                   <option value={2}>2</option>

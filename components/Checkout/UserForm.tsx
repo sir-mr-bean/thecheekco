@@ -1,24 +1,45 @@
 import { UserState } from "../../context/User/userContext";
-import Autocomplete from "react-google-autocomplete";
-import { useState, useEffect, useRef } from "react";
-import { User } from "@/types/User";
+import Autocomplete, {
+  ReactGoogleAutocompleteInputProps,
+} from "react-google-autocomplete";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  Ref,
+  forwardRef,
+} from "react";
 import { UserAction } from "@/context/User/userReducer";
+import { User } from "@prisma/client";
+import { useForm } from "react-hook-form";
 
 const UserForm = ({
   userObj,
-  UserDispatch,
+  setUserObj,
+  termsAccepted,
+  setTermsAccepted,
 }: {
   userObj: User;
-  UserDispatch: Function;
+  setUserObj: Function;
+  termsAccepted: boolean;
+  setTermsAccepted: Function;
 }) => {
-  const termsCheckboxRef = useRef(null);
+  const termsCheckboxRef = useRef<HTMLInputElement>(null);
   const streetAddressRef = useRef<HTMLInputElement>(null);
-  const [termsAccepted, setTermsAccepted] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+
   return (
     <>
       {userObj && (
         <form autoComplete="off" className="mt-4 text-text-primary font-gothic">
-          <input type="hidden" value="something" />
+          <input type="hidden" defaultValue="something" />
           <div className="">
             <h2 className="text-lg font-medium ">Customer Information</h2>
 
@@ -36,11 +57,11 @@ const UserForm = ({
                     id="first-name"
                     name="first-name"
                     autoComplete="given-name"
-                    value={userObj?.firstName}
+                    defaultValue={userObj?.firstName as string}
                     onChange={(e) =>
-                      UserDispatch({
-                        type: "SET_FIRST_NAME",
-                        payload: e.target.value,
+                      setUserObj({
+                        ...userObj,
+                        firstName: e.target.value,
                       })
                     }
                     className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
@@ -61,11 +82,11 @@ const UserForm = ({
                     id="last-name"
                     name="last-name"
                     autoComplete="family-name"
-                    value={userObj?.lastName}
+                    defaultValue={userObj?.lastName as string}
                     onChange={(e) =>
-                      UserDispatch({
-                        type: "SET_LAST_NAME",
-                        payload: e.target.value,
+                      setUserObj({
+                        ...userObj,
+                        lastName: e.target.value,
                       })
                     }
                     className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
@@ -86,11 +107,11 @@ const UserForm = ({
                     name="company"
                     id="company"
                     autoComplete="organization"
-                    value={userObj?.company}
+                    defaultValue={userObj?.company as string}
                     onChange={(e) =>
-                      UserDispatch({
-                        type: "SET_COMPANY",
-                        payload: e.target.value,
+                      setUserObj({
+                        ...userObj,
+                        company: e.target.value,
                       })
                     }
                     className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
@@ -105,85 +126,76 @@ const UserForm = ({
                 >
                   Street address
                 </label>
-                <Autocomplete
-                  apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
-                  onPlaceSelected={(places) => {
-                    console.log(places);
-                    if (places) {
-                      const apartmentOrUnit = places?.address_components?.find(
-                        (component: any) =>
-                          component?.types?.includes("subpremise")
-                      );
-                      if (apartmentOrUnit) {
-                        UserDispatch({
-                          type: "SET_APARTMENT_OR_UNIT",
-                          payload: apartmentOrUnit.long_name,
-                        });
-                      }
-                      const streetNumber = places?.address_components?.find(
-                        (component) => component.types.includes("street_number")
-                      );
-                      const streetAddress = places?.address_components?.find(
-                        (component) => component.types.includes("route")
-                      );
-                      const city = places?.address_components?.find(
-                        (component) => component.types.includes("locality")
-                      );
-                      const state = places?.address_components?.find(
-                        (component) =>
-                          component.types.includes(
-                            "administrative_area_level_1"
-                          )
-                      );
-                      const country = places?.address_components?.find(
-                        (component) => component.types.includes("country")
-                      );
-                      const postalCode = places?.address_components?.find(
-                        (component) => component.types.includes("postal_code")
-                      );
-                      UserDispatch({
-                        type: "SET_STREET_ADDRESS",
-                        payload:
-                          streetNumber?.long_name +
-                          " " +
-                          streetAddress?.long_name,
-                      });
-                      UserDispatch({
-                        type: "SET_CITY",
-                        payload: city?.long_name,
-                      });
-                      UserDispatch({
-                        type: "SET_STATE",
-                        payload: state?.long_name,
-                      });
-                      UserDispatch({
-                        type: "SET_COUNTRY",
-                        payload: country?.long_name,
-                      });
-                      UserDispatch({
-                        type: "SET_POSTAL_CODE",
-                        payload: postalCode?.long_name,
-                      });
-                      UserDispatch({
-                        type: "SET_STREET_NUMBER",
-                        payload: streetNumber?.long_name,
-                      });
-                    }
+                <Autocomplete<
+                  ReactGoogleAutocompleteInputProps & {
+                    value: string;
+                  }
+                >
+                  apiKey={`${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
+                  onPlaceSelected={(place) => {
+                    console.log(place);
+                    const apartmentOrUnit = place?.address_components?.find(
+                      (component) => component.types.includes("subpremise")
+                    );
+
+                    const streetNumber = place?.address_components?.find(
+                      (component) => component.types.includes("street_number")
+                    );
+                    const streetAddress = place?.address_components?.find(
+                      (component) => component.types.includes("route")
+                    );
+                    const city = place?.address_components?.find((component) =>
+                      component.types.includes("locality")
+                    );
+                    const state = place?.address_components?.find((component) =>
+                      component.types.includes("administrative_area_level_1")
+                    );
+                    const country = place?.address_components?.find(
+                      (component) => component.types.includes("country")
+                    );
+                    const postalCode = place?.address_components?.find(
+                      (component) => component.types.includes("postal_code")
+                    );
+
+                    setUserObj({
+                      ...userObj,
+                      streetNumber: streetNumber?.long_name as string,
+                      streetAddress: streetNumber?.long_name
+                        ? `${streetNumber?.long_name} ${streetAddress?.long_name}`
+                        : `${streetAddress?.long_name}`,
+                      apartmentOrUnit: apartmentOrUnit
+                        ? apartmentOrUnit?.long_name
+                        : "",
+                      city: city?.long_name as string,
+                      state: state?.long_name as string,
+                      country: country?.long_name as string,
+                      postalCode: postalCode?.long_name as string,
+                    });
                   }}
                   options={{
                     componentRestrictions: { country: "au" },
-                    fields: ["place?.address_components?", "geometry"],
+                    fields: ["address_components", "formatted_address"],
                     types: ["address"],
                   }}
-                  ref={streetAddressRef}
-                  className=" mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
+                  {...register("street-address")}
+                  id="street-address"
+                  //defaultValue={userObj?.streetAddress as string}
+                  value={userObj?.streetAddress as string}
+                  inputAutocompleteValue={userObj?.streetAddress as string}
+                  onChange={(e) => {
+                    setUserObj({
+                      ...userObj,
+                      streetAddress: (e.target as HTMLTextAreaElement).value,
+                    });
+                  }}
+                  className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
                 />
                 <input
                   hidden
                   id="street-address"
                   ref={streetAddressRef}
                   type="text"
-                  defaultValue={userObj?.streetAddress}
+                  value={userObj?.streetAddress as string}
                   autoComplete="off"
                 />
               </div>
@@ -198,15 +210,20 @@ const UserForm = ({
                 <div className="mt-1">
                   <input
                     type="text"
-                    name="apartment"
-                    id="apartment"
-                    value={userObj?.apartmentOrUnit}
-                    onChange={(e) =>
-                      UserDispatch({
-                        type: "SET_APARTMENT_OR_UNIT",
-                        payload: e.target.value,
-                      })
+                    {...register("apartment-unit")}
+                    id="apartment-unit"
+                    autoComplete="address-line1"
+                    value={
+                      userObj.apartmentOrUnit
+                        ? (userObj?.apartmentOrUnit as string)
+                        : ""
                     }
+                    onChange={(e) => {
+                      setUserObj({
+                        ...userObj,
+                        apartmentOrUnit: e.target.value,
+                      });
+                    }}
                     className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                   />
                 </div>
@@ -222,16 +239,16 @@ const UserForm = ({
                 <div className="mt-1">
                   <input
                     type="text"
-                    name="city"
+                    {...register("city")}
                     id="city"
                     autoComplete="address-level2"
-                    value={userObj?.city || ""}
-                    onChange={(e) =>
-                      UserDispatch({
-                        type: "SET_CITY",
-                        payload: e.target.value,
-                      })
-                    }
+                    value={userObj?.city ? (userObj.city as string) : ""}
+                    onChange={(e) => {
+                      setUserObj({
+                        ...userObj,
+                        city: e.target.value,
+                      });
+                    }}
                     className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                   />
                 </div>
@@ -247,15 +264,15 @@ const UserForm = ({
                 <div className="mt-1">
                   <select
                     id="country"
-                    name="country"
+                    {...register("country")}
                     autoComplete="country-name"
-                    value={userObj?.country}
-                    onChange={(e) =>
-                      UserDispatch({
-                        type: "SET_COUNTRY",
-                        payload: e.target.value,
-                      })
-                    }
+                    value={userObj?.country ? (userObj.country as string) : ""}
+                    onChange={(e) => {
+                      setUserObj({
+                        ...userObj,
+                        country: e.target.value,
+                      });
+                    }}
                     className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                   >
                     <option>Australia</option>
@@ -273,16 +290,16 @@ const UserForm = ({
                 <div className="mt-1">
                   <input
                     type="text"
-                    name="region"
+                    {...register("region")}
                     id="region"
                     autoComplete="address-level1"
-                    value={userObj?.state}
-                    onChange={(e) =>
-                      UserDispatch({
-                        type: "SET_STATE",
-                        payload: e.target.value,
-                      })
-                    }
+                    value={userObj?.state ? (userObj.state as string) : ""}
+                    onChange={(e) => {
+                      setUserObj({
+                        ...userObj,
+                        state: e.target.value,
+                      });
+                    }}
                     className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                   />
                 </div>
@@ -298,16 +315,18 @@ const UserForm = ({
                 <div className="mt-1">
                   <input
                     type="text"
-                    name="postal-code"
+                    {...register("postal-code")}
                     id="postal-code"
                     autoComplete="postal-code"
-                    value={userObj?.postalCode}
-                    onChange={(e) =>
-                      UserDispatch({
-                        type: "SET_POSTAL_CODE",
-                        payload: e.target.value,
-                      })
+                    value={
+                      userObj?.postalCode ? (userObj.postalCode as string) : ""
                     }
+                    onChange={(e) => {
+                      setUserObj({
+                        ...userObj,
+                        postalCode: e.target.value,
+                      });
+                    }}
                     className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                   />
                 </div>
@@ -322,17 +341,17 @@ const UserForm = ({
                 </label>
                 <div className="mt-1">
                   <input
-                    type="text"
-                    name="phone"
-                    id="phone"
+                    id="tel"
+                    {...register("tel")}
                     autoComplete="tel"
-                    value={userObj?.phoneNumber}
-                    onChange={(e) =>
-                      UserDispatch({
-                        type: "SET_PHONE_NUMBER",
-                        payload: e.target.value,
-                      })
-                    }
+                    type={userObj.phoneNumber ? "text" : "tel"}
+                    defaultValue={userObj.phoneNumber as string}
+                    onChange={(e) => {
+                      setUserObj({
+                        ...userObj,
+                        phoneNumber: e.target.value,
+                      });
+                    }}
                     className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                   />
                 </div>
@@ -348,20 +367,13 @@ const UserForm = ({
                 id="terms"
                 name="terms"
                 type="checkbox"
-                className="h-6 w-6 border-gray-300 rounded text-text-secondary focus:ring-text-secondary"
+                className="h-6 w-6 border-gray-300 rounded text-text-secondary focus:ring-text-secondary accent-text-secondary"
               />
               <label htmlFor="terms" className="text-sm text-text-primary">
                 I have read the terms and conditions and agree to the sale of my
                 personal information to the highest bidder.
               </label>
             </div>
-            <button
-              type="button"
-              disabled={!termsAccepted}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
-            >
-              Continue
-            </button>
           </div>
         </form>
       )}

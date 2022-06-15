@@ -23,6 +23,11 @@ import GuestForm from "../../components/Checkout/GuestForm";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { UserState } from "@/context/User/userContext";
+import { User } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import Autocomplete, {
+  ReactGoogleAutocompleteInputProps,
+} from "react-google-autocomplete";
 
 export default function checkout() {
   const {
@@ -34,13 +39,12 @@ export default function checkout() {
   const router = useRouter();
   const streetAddressInputRef = useRef(null);
   const [firstLoad, setFirstLoad] = useState(true);
-  const { currentUser } = useAuth();
-  const { userObj, dispatch: UserDispatch } = UserState();
+  //const { userObj } = useAuth();
+  const { userObj: obj, dispatch: UserDispatch } = UserState();
   const emailRef = useRef<HTMLInputElement>(null);
   const passRef = useRef<HTMLInputElement>(null);
   const termsCheckboxRef = useRef(null);
   const shippingInfoCheckboxRef = useRef(null);
-  const [checkoutAs, setCheckoutAs] = useState("user");
   const { cart, dispatch } = CartState();
   const [total, setTotal] = useState(0);
   const products = cart;
@@ -48,6 +52,26 @@ export default function checkout() {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [sameAsCustomerInfo, setSameAsCustomerInfo] = useState(false);
   const [incorrectCreds, setIncorrectCreds] = useState(false);
+  const session = useSession();
+  const [userObj, setUserObj] = useState<User>(session?.data?.user as User);
+  const [userShippingObj, setUserShippingObj] = useState({
+    firstName: "",
+    lastName: "",
+    company: "",
+    streetNumber: "",
+    streetAddress: "",
+    apartmentOrUnit: "",
+    city: "",
+    state: "",
+    country: "Australia",
+    postalCode: "",
+    emailAddress: "",
+    phoneNumber: "",
+  });
+  const [customerInfoSet, setCustomerInfoSet] = useState(false);
+  const [shippingInfoSet, setShippingInfoSet] = useState(false);
+  const [readyForPayment, setReadyForPayment] = useState(false);
+  const [paymentMade, setPaymentMade] = useState(false);
 
   useEffect(() => {
     let sum: number = 0;
@@ -58,6 +82,51 @@ export default function checkout() {
     });
     setTotal(parseInt(sum.toFixed(2)));
   }, [cart]);
+
+  const handleCustomerInfoComplete = () => {
+    if (termsAccepted) {
+      if (
+        userObj.firstName &&
+        userObj.streetAddress &&
+        userObj.city &&
+        userObj.state &&
+        userObj.postalCode
+      ) {
+        setCustomerInfoSet(true);
+      }
+    }
+  };
+
+  const handleShippingInfoComplete = () => {
+    console.log("1");
+    if (sameAsCustomerInfo) {
+      console.log("2");
+      if (
+        userObj.firstName &&
+        userObj.streetAddress &&
+        userObj.city &&
+        userObj.state &&
+        userObj.postalCode
+      ) {
+        console.log("3");
+        setShippingInfoSet(true);
+      }
+    } else if (
+      userShippingObj.firstName &&
+      userShippingObj.streetAddress &&
+      userShippingObj.city &&
+      userShippingObj.state &&
+      userShippingObj.postalCode
+    ) {
+      setShippingInfoSet(true);
+    }
+  };
+
+  const handleReadyForPayment = () => {
+    if (customerInfoSet && shippingInfoSet) {
+      setReadyForPayment(true);
+    }
+  };
 
   const handleGoogleLogin = async () => {
     const googleProvider = new GoogleAuthProvider();
@@ -240,7 +309,7 @@ export default function checkout() {
                         <span className="hidden sm:block whitespace-nowrap text-xl font-medium pt-3 sm:pt-0">
                           Checkout
                         </span>
-                        {!currentUser && (
+                        {!userObj && (
                           <>
                             <h2 className="text-sm whitespace-nowrap">
                               Already have an account?
@@ -427,316 +496,484 @@ export default function checkout() {
                             </div>
                           </>
                         )}
-                        {currentUser ? (
+                        {userObj ? (
                           <UserForm
+                            termsAccepted={termsAccepted}
+                            setTermsAccepted={setTermsAccepted}
                             userObj={userObj}
-                            UserDispatch={UserDispatch}
+                            setUserObj={setUserObj}
                           />
                         ) : (
-                          <GuestForm />
+                          <GuestForm
+                            termsAccepted={termsAccepted}
+                            setTermsAccepted={setTermsAccepted}
+                          />
                         )}
+                        {!customerInfoSet && (
+                          <button
+                            type="button"
+                            onClick={handleCustomerInfoComplete}
+                            disabled={!termsAccepted}
+                            className="w-full flex justify-center py-2 my-4 px-4 border border-transparent rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
+                          >
+                            Continue
+                          </button>
+                        )}
+                        {customerInfoSet && (
+                          <>
+                            <form className="mt-4 text-text-primary font-gothic w-full">
+                              <div className="">
+                                <div className="flex justify-between">
+                                  <h2 className="text-lg font-medium ">
+                                    Shipping Information
+                                  </h2>
+                                  <div className="flex items-center space-x-2 ">
+                                    <input
+                                      onChange={() =>
+                                        setSameAsCustomerInfo(
+                                          !sameAsCustomerInfo
+                                        )
+                                      }
+                                      ref={shippingInfoCheckboxRef}
+                                      id="terms"
+                                      name="terms"
+                                      type="checkbox"
+                                      className="h-5 w-5 border-gray-300 rounded checked:bg-text-secondary accent-text-secondary text-text-secondary focus:ring-text-secondary"
+                                    />
+                                    <label
+                                      htmlFor="terms"
+                                      className="text-xs text-text-primary"
+                                    >
+                                      Same as Customer Information
+                                    </label>
+                                  </div>
+                                </div>
 
-                        <form className="mt-4 text-text-primary font-gothic">
-                          <div className="">
-                            <div className="flex justify-between">
-                              <h2 className="text-lg font-medium ">
-                                Shipping Information
-                              </h2>
-                              <div className="flex items-center space-x-2 ">
-                                <input
-                                  onChange={() =>
-                                    setSameAsCustomerInfo(!sameAsCustomerInfo)
-                                  }
-                                  ref={shippingInfoCheckboxRef}
-                                  id="terms"
-                                  name="terms"
-                                  type="checkbox"
-                                  className="h-6 w-6 border-gray-300 rounded text-text-secondary focus:ring-text-secondary"
-                                />
-                                <label
-                                  htmlFor="terms"
-                                  className="text-xs text-text-primary"
-                                >
-                                  Same as Customer Information
-                                </label>
-                              </div>
-                            </div>
+                                <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+                                  <div>
+                                    <label
+                                      htmlFor="first-name"
+                                      className="block text-sm font-medium text-gray-700"
+                                    >
+                                      First name
+                                    </label>
+                                    <div className="mt-1">
+                                      <input
+                                        type="text"
+                                        id="first-name"
+                                        name="first-name"
+                                        autoComplete="given-name"
+                                        disabled={sameAsCustomerInfo}
+                                        value={
+                                          sameAsCustomerInfo
+                                            ? (userObj.firstName as string)
+                                            : (userShippingObj.firstName as string)
+                                        }
+                                        onChange={(e) =>
+                                          setUserShippingObj({
+                                            ...userShippingObj,
+                                            firstName: e.target.value,
+                                          })
+                                        }
+                                        className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                                      />
+                                    </div>
+                                  </div>
 
-                            <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-                              <div>
-                                <label
-                                  htmlFor="first-name"
-                                  className="block text-sm font-medium text-gray-700"
-                                >
-                                  First name
-                                </label>
-                                <div className="mt-1">
-                                  <input
-                                    type="text"
-                                    id="first-name"
-                                    name="first-name"
-                                    autoComplete="given-name"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
-                                  />
+                                  <div>
+                                    <label
+                                      htmlFor="last-name"
+                                      className="block text-sm font-medium text-gray-700"
+                                    >
+                                      Last name
+                                    </label>
+                                    <div className="mt-1">
+                                      <input
+                                        type="text"
+                                        id="last-name"
+                                        name="last-name"
+                                        autoComplete="family-name"
+                                        disabled={sameAsCustomerInfo}
+                                        value={
+                                          sameAsCustomerInfo
+                                            ? (userObj.lastName as string)
+                                            : (userShippingObj.lastName as string)
+                                        }
+                                        onChange={(e) =>
+                                          setUserShippingObj({
+                                            ...userShippingObj,
+                                            lastName: e.target.value,
+                                          })
+                                        }
+                                        className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  <div className="sm:col-span-2">
+                                    <label
+                                      htmlFor="company"
+                                      className="block text-sm font-medium text-gray-700"
+                                    >
+                                      Company
+                                    </label>
+                                    <div className="mt-1">
+                                      <input
+                                        type="text"
+                                        name="company"
+                                        id="company"
+                                        disabled={sameAsCustomerInfo}
+                                        value={
+                                          sameAsCustomerInfo
+                                            ? (userObj.company as string)
+                                            : (userShippingObj.company as string)
+                                        }
+                                        onChange={(e) =>
+                                          setUserShippingObj({
+                                            ...userShippingObj,
+                                            company: e.target.value,
+                                          })
+                                        }
+                                        className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  <div className="sm:col-span-2">
+                                    <label
+                                      htmlFor="address"
+                                      className="block text-sm font-medium text-gray-700"
+                                    >
+                                      Address
+                                    </label>
+                                    <div className="mt-1">
+                                      <Autocomplete<
+                                        ReactGoogleAutocompleteInputProps & {
+                                          value: string;
+                                          disabled: boolean;
+                                        }
+                                      >
+                                        apiKey={`${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
+                                        onPlaceSelected={(place) => {
+                                          console.log(place);
+                                          const apartmentOrUnit =
+                                            place?.address_components?.find(
+                                              (component) =>
+                                                component.types.includes(
+                                                  "subpremise"
+                                                )
+                                            );
+
+                                          const streetNumber =
+                                            place?.address_components?.find(
+                                              (component) =>
+                                                component.types.includes(
+                                                  "street_number"
+                                                )
+                                            );
+                                          const streetAddress =
+                                            place?.address_components?.find(
+                                              (component) =>
+                                                component.types.includes(
+                                                  "route"
+                                                )
+                                            );
+                                          const city =
+                                            place?.address_components?.find(
+                                              (component) =>
+                                                component.types.includes(
+                                                  "locality"
+                                                )
+                                            );
+                                          const state =
+                                            place?.address_components?.find(
+                                              (component) =>
+                                                component.types.includes(
+                                                  "administrative_area_level_1"
+                                                )
+                                            );
+                                          const country =
+                                            place?.address_components?.find(
+                                              (component) =>
+                                                component.types.includes(
+                                                  "country"
+                                                )
+                                            );
+                                          const postalCode =
+                                            place?.address_components?.find(
+                                              (component) =>
+                                                component.types.includes(
+                                                  "postal_code"
+                                                )
+                                            );
+
+                                          setUserShippingObj({
+                                            ...userShippingObj,
+                                            streetNumber:
+                                              streetNumber?.long_name as string,
+                                            streetAddress:
+                                              streetNumber?.long_name
+                                                ? `${streetNumber?.long_name} ${streetAddress?.long_name}`
+                                                : `${streetAddress?.long_name}`,
+                                            apartmentOrUnit: apartmentOrUnit
+                                              ? apartmentOrUnit?.long_name
+                                              : "",
+                                            city: city?.long_name as string,
+                                            state: state?.long_name as string,
+                                            country:
+                                              country?.long_name as string,
+                                            postalCode:
+                                              postalCode?.long_name as string,
+                                          });
+                                        }}
+                                        options={{
+                                          componentRestrictions: {
+                                            country: "au",
+                                          },
+                                          fields: [
+                                            "address_components",
+                                            "formatted_address",
+                                          ],
+                                          types: ["address"],
+                                        }}
+                                        {...register("street-address")}
+                                        id="street-address"
+                                        //defaultValue={userObj?.streetAddress as string}
+                                        value={
+                                          sameAsCustomerInfo
+                                            ? (userObj.streetAddress as string)
+                                            : (userShippingObj.streetAddress as string)
+                                        }
+                                        inputAutocompleteValue={
+                                          sameAsCustomerInfo
+                                            ? (userObj.streetAddress as string)
+                                            : (userShippingObj.streetAddress as string)
+                                        }
+                                        disabled={sameAsCustomerInfo}
+                                        onChange={(e) => {
+                                          setUserShippingObj({
+                                            ...userShippingObj,
+                                            streetAddress: (
+                                              e.target as HTMLTextAreaElement
+                                            ).value,
+                                          });
+                                        }}
+                                        className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  <div className="sm:col-span-2">
+                                    <label
+                                      htmlFor="apartment"
+                                      className="block text-sm font-medium text-gray-700"
+                                    >
+                                      Apartment, suite, etc.
+                                    </label>
+                                    <div className="mt-1">
+                                      <input
+                                        type="text"
+                                        name="apartment"
+                                        id="apartment"
+                                        disabled={sameAsCustomerInfo}
+                                        value={
+                                          sameAsCustomerInfo
+                                            ? (userObj.apartmentOrUnit as string)
+                                            : (userShippingObj.apartmentOrUnit as string)
+                                        }
+                                        onChange={(e) =>
+                                          setUserShippingObj({
+                                            ...userShippingObj,
+                                            apartmentOrUnit: e.target.value,
+                                          })
+                                        }
+                                        className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  <div>
+                                    <label
+                                      htmlFor="city"
+                                      className="block text-sm font-medium text-gray-700"
+                                    >
+                                      City
+                                    </label>
+                                    <div className="mt-1">
+                                      <input
+                                        type="text"
+                                        name="city"
+                                        id="city"
+                                        autoComplete="address-level2"
+                                        disabled={sameAsCustomerInfo}
+                                        value={
+                                          sameAsCustomerInfo
+                                            ? (userObj.city as string)
+                                            : (userShippingObj.city as string)
+                                        }
+                                        onChange={(e) =>
+                                          setUserShippingObj({
+                                            ...userShippingObj,
+                                            city: e.target.value,
+                                          })
+                                        }
+                                        className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  <div>
+                                    <label
+                                      htmlFor="country"
+                                      className="block text-sm font-medium text-gray-700"
+                                    >
+                                      Country
+                                    </label>
+                                    <div className="mt-1">
+                                      <select
+                                        id="country"
+                                        name="country"
+                                        autoComplete="country-name"
+                                        disabled={sameAsCustomerInfo}
+                                        value={
+                                          sameAsCustomerInfo
+                                            ? (userObj.country as string)
+                                            : (userShippingObj.country as string)
+                                        }
+                                        onChange={(e) =>
+                                          setUserShippingObj({
+                                            ...userShippingObj,
+                                            country: e.target.value,
+                                          })
+                                        }
+                                        className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                                      >
+                                        <option>Australia</option>
+                                      </select>
+                                    </div>
+                                  </div>
+
+                                  <div>
+                                    <label
+                                      htmlFor="region"
+                                      className="block text-sm font-medium text-gray-700"
+                                    >
+                                      State / Province
+                                    </label>
+                                    <div className="mt-1">
+                                      <input
+                                        type="text"
+                                        name="region"
+                                        id="region"
+                                        disabled={sameAsCustomerInfo}
+                                        autoComplete="address-level1"
+                                        value={
+                                          sameAsCustomerInfo
+                                            ? (userObj.state as string)
+                                            : (userShippingObj.state as string)
+                                        }
+                                        onChange={(e) =>
+                                          setUserShippingObj({
+                                            ...userShippingObj,
+                                            state: e.target.value,
+                                          })
+                                        }
+                                        className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  <div>
+                                    <label
+                                      htmlFor="postal-code"
+                                      className="block text-sm font-medium text-gray-700"
+                                    >
+                                      Postal code
+                                    </label>
+                                    <div className="mt-1">
+                                      <input
+                                        type="text"
+                                        name="postal-code"
+                                        id="postal-code"
+                                        disabled={sameAsCustomerInfo}
+                                        autoComplete="postal-code"
+                                        value={
+                                          sameAsCustomerInfo
+                                            ? (userObj.postalCode as string)
+                                            : (userShippingObj.postalCode as string)
+                                        }
+                                        onChange={(e) =>
+                                          setUserShippingObj({
+                                            ...userShippingObj,
+                                            postalCode: e.target.value,
+                                          })
+                                        }
+                                        className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  <div className="sm:col-span-2">
+                                    <label
+                                      htmlFor="phone"
+                                      className="block text-sm font-medium text-gray-700"
+                                    >
+                                      Phone
+                                    </label>
+                                    <div className="mt-1">
+                                      <input
+                                        type="text"
+                                        name="phone"
+                                        id="phone"
+                                        disabled={sameAsCustomerInfo}
+                                        autoComplete="tel"
+                                        value={
+                                          sameAsCustomerInfo
+                                            ? (userObj.phoneNumber as string)
+                                            : (userShippingObj.phoneNumber as string)
+                                        }
+                                        onChange={(e) =>
+                                          setUserShippingObj({
+                                            ...userShippingObj,
+                                            phoneNumber: e.target.value,
+                                          })
+                                        }
+                                        className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                                      />
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
-
-                              <div>
-                                <label
-                                  htmlFor="last-name"
-                                  className="block text-sm font-medium text-gray-700"
-                                >
-                                  Last name
-                                </label>
-                                <div className="mt-1">
-                                  <input
-                                    type="text"
-                                    id="last-name"
-                                    name="last-name"
-                                    autoComplete="family-name"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="sm:col-span-2">
-                                <label
-                                  htmlFor="company"
-                                  className="block text-sm font-medium text-gray-700"
-                                >
-                                  Company
-                                </label>
-                                <div className="mt-1">
-                                  <input
-                                    type="text"
-                                    name="company"
-                                    id="company"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="sm:col-span-2">
-                                <label
-                                  htmlFor="address"
-                                  className="block text-sm font-medium text-gray-700"
-                                >
-                                  Address
-                                </label>
-                                <div className="mt-1">
-                                  <input
-                                    type="text"
-                                    name="address"
-                                    id="address"
-                                    autoComplete="street-address"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="sm:col-span-2">
-                                <label
-                                  htmlFor="apartment"
-                                  className="block text-sm font-medium text-gray-700"
-                                >
-                                  Apartment, suite, etc.
-                                </label>
-                                <div className="mt-1">
-                                  <input
-                                    type="text"
-                                    name="apartment"
-                                    id="apartment"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
-                                  />
-                                </div>
-                              </div>
-
-                              <div>
-                                <label
-                                  htmlFor="city"
-                                  className="block text-sm font-medium text-gray-700"
-                                >
-                                  City
-                                </label>
-                                <div className="mt-1">
-                                  <input
-                                    type="text"
-                                    name="city"
-                                    id="city"
-                                    autoComplete="address-level2"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
-                                  />
-                                </div>
-                              </div>
-
-                              <div>
-                                <label
-                                  htmlFor="country"
-                                  className="block text-sm font-medium text-gray-700"
-                                >
-                                  Country
-                                </label>
-                                <div className="mt-1">
-                                  <select
-                                    id="country"
-                                    name="country"
-                                    autoComplete="country-name"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
-                                  >
-                                    <option>United States</option>
-                                    <option>Canada</option>
-                                    <option>Mexico</option>
-                                  </select>
-                                </div>
-                              </div>
-
-                              <div>
-                                <label
-                                  htmlFor="region"
-                                  className="block text-sm font-medium text-gray-700"
-                                >
-                                  State / Province
-                                </label>
-                                <div className="mt-1">
-                                  <input
-                                    type="text"
-                                    name="region"
-                                    id="region"
-                                    autoComplete="address-level1"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
-                                  />
-                                </div>
-                              </div>
-
-                              <div>
-                                <label
-                                  htmlFor="postal-code"
-                                  className="block text-sm font-medium text-gray-700"
-                                >
-                                  Postal code
-                                </label>
-                                <div className="mt-1">
-                                  <input
-                                    type="text"
-                                    name="postal-code"
-                                    id="postal-code"
-                                    autoComplete="postal-code"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="sm:col-span-2">
-                                <label
-                                  htmlFor="phone"
-                                  className="block text-sm font-medium text-gray-700"
-                                >
-                                  Phone
-                                </label>
-                                <div className="mt-1">
-                                  <input
-                                    type="text"
-                                    name="phone"
-                                    id="phone"
-                                    autoComplete="tel"
-                                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="mt-6 flex space-x-2 space-y-2 flex-col">
-                            <div className="flex items-center space-x-2 ">
-                              <input
-                                onChange={() =>
-                                  setTermsAccepted(!termsAccepted)
-                                }
-                                ref={termsCheckboxRef}
-                                id="terms"
-                                name="terms"
-                                type="checkbox"
-                                className="h-6 w-6 border-gray-300 rounded text-text-secondary focus:ring-text-secondary"
-                              />
-                              <label
-                                htmlFor="terms"
-                                className="text-sm text-text-primary"
-                              >
-                                I have read the terms and conditions and agree
-                                to the sale of my personal information to the
-                                highest bidder.
-                              </label>
-                            </div>
+                            </form>
                             <button
                               type="button"
-                              disabled={!termsAccepted}
-                              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
+                              onClick={handleShippingInfoComplete}
+                              className="w-full flex justify-center py-2 my-4 px-4 border border-transparent rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
                             >
                               Continue
                             </button>
-                          </div>
-                        </form>
-                        <Disclosure defaultOpen>
-                          <div className="mt-10 border-t border-b border-text-primary divide-y divide-text-primary">
-                            <Disclosure.Button className="w-full py-6 text-left text-lg font-medium text-text-primary cursor-auto">
-                              Shipping address
-                            </Disclosure.Button>
-                            <Disclosure.Panel>CONTENT HERE</Disclosure.Panel>
-                            <button
-                              type="button"
-                              disabled
-                              className="w-full py-6 text-left text-lg font-medium text-text-primary cursor-auto"
-                            >
-                              Payment details
-                            </button>
-                            <button
-                              type="button"
-                              disabled
-                              className="w-full py-6 text-left text-lg font-medium text-text-primary cursor-auto"
-                            >
-                              Shipping address
-                            </button>
-                            <button
-                              type="button"
-                              disabled
-                              className="w-full py-6 text-left text-lg font-medium text-text-primary cursor-auto"
-                            >
-                              Shipping address
-                            </button>
-                            <button
-                              type="button"
-                              disabled
-                              className="w-full py-6 text-left text-lg font-medium text-text-primary cursor-auto"
-                            >
-                              Billing address
-                            </button>
-                            <button
-                              type="button"
-                              disabled
-                              className="w-full py-6 text-left text-lg font-medium text-text-primary cursor-auto"
-                            >
-                              Review
-                            </button>
-                          </div>
-                        </Disclosure>
-                        <div className="w-full flex flex-col space-y-2 pt-3">
-                          <GooglePay buttonColor="white" />
-                          <CreditCard
-                            includeInputLabels
-                            buttonProps={{
-                              css: {
-                                backgroundColor: "#a75e2f",
-                                fontSize: "14px",
-                                color: "#fff",
-                                "&:hover": {
-                                  backgroundColor: "#E3BB9D",
+                          </>
+                        )}
+                        {shippingInfoSet && (
+                          <div className="w-full flex flex-col space-y-2 pt-3">
+                            <GooglePay buttonColor="white" />
+                            <CreditCard
+                              includeInputLabels
+                              buttonProps={{
+                                css: {
+                                  backgroundColor: "#a75e2f",
+                                  fontSize: "14px",
+                                  color: "#fff",
+                                  "&:hover": {
+                                    backgroundColor: "#E3BB9D",
+                                  },
                                 },
-                              },
-                            }}
-                          >
-                            Pay ${total.toFixed(2)}
-                          </CreditCard>
-                        </div>
+                              }}
+                            >
+                              Pay ${total.toFixed(2)}
+                            </CreditCard>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
