@@ -28,7 +28,7 @@ interface PageProps {
 
 const profile: NextPage<PageProps> = (props) => {
   const { data: session, status } = trpc.useQuery(["next-auth.getSession"], {
-    suspense: false,
+    suspense: true,
   });
   const { data } = useSession({
     required: true,

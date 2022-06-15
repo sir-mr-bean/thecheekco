@@ -9,8 +9,8 @@ function classNames(...classes: [string, string?, string?, Boolean?]): string {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function MobileMenu(props: Category[]): JSX.Element {
-  const navigation = props;
+export default function MobileMenu({ navigation }): JSX.Element {
+  console.log(navigation);
   return (
     <Menu
       as="div"

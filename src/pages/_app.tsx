@@ -73,7 +73,7 @@ export default withTRPC<AppRouter>({
 
     return {
       url,
-      transformer: superjson,
+
       /**
        * @link https://react-query.tanstack.com/reference/QueryClient
        */
