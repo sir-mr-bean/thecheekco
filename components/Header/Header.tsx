@@ -35,13 +35,14 @@ function useScrollDirection() {
   return scrollDirection;
 }
 
-export const Header = (props): JSX.Element => {
-  console.log(props);
+export const Header = (): JSX.Element => {
   const scrollDirection = useScrollDirection();
   const { cart }: { cart: Product[] } = CartState();
   const [navigation, setNavigation] = useState<Category[]>();
   const { data }: SWRResponse = useSWR("/api/fetchcategories", fetcher);
   const trpcContext = trpc.useContext();
+  const ONE_HOUR_IN_SECONDS = 60 * 60;
+  const ONE_DAY_IN_SECONDS = 60 * 60 * 24;
 
   const slugify = (string: string): string => {
     return string
@@ -60,6 +61,8 @@ export const Header = (props): JSX.Element => {
         context: {
           skipBatch: true,
         },
+        cacheTime: ONE_HOUR_IN_SECONDS,
+        staleTime: ONE_DAY_IN_SECONDS,
       })
       .then((result) => setNavigation(result));
   }, []);
