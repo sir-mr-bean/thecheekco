@@ -46,7 +46,7 @@ export default function checkout() {
   const [firstLoad, setFirstLoad] = useState(true);
   //const { userObj } = useAuth();
   const { userObj: obj, dispatch: UserDispatch } = UserState();
-  const squareAPI = trpc.useMutation(["square.createOrder"]);
+  const squareAPI = trpc.useMutation(["squarecreateOrder"]);
 
   const termsCheckboxRef = useRef(null);
   const shippingInfoCheckboxRef = useRef(null);
