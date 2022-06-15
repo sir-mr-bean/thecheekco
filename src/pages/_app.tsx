@@ -11,7 +11,7 @@ import type { AppProps } from "next/app";
 import * as React from "react";
 import UserContext from "@/context/User/userContext";
 import { withTRPC } from "@trpc/next";
-import { getSession, SessionProvider } from "next-auth/react";
+import { getCsrfToken, getSession, SessionProvider } from "next-auth/react";
 import { AppRouter } from "@/backend/router/_app";
 import superjson from "superjson";
 import Footer from "@/components/Footer/Footer";
@@ -73,6 +73,7 @@ export default withTRPC<AppRouter>({
 
     return {
       url,
+      transformer: superjson,
       /**
        * @link https://react-query.tanstack.com/reference/QueryClient
        */
@@ -86,9 +87,21 @@ export default withTRPC<AppRouter>({
 })(MyApp);
 
 MyApp.getInitialProps = async ({ ctx }) => {
+  const session = await getSession(ctx);
+  const csrfToken = await getCsrfToken(ctx);
+
+  if (!session) {
+    return {
+      session: null,
+
+      csrfToken: null,
+    };
+  }
+
   return {
     pageProps: {
-      session: await getSession(ctx),
+      session: session,
+      csrfToken: csrfToken,
     },
   };
 };

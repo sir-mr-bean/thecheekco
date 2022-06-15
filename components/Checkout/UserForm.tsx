@@ -38,7 +38,10 @@ const UserForm = ({
   return (
     <>
       {userObj && (
-        <form autoComplete="off" className="mt-4 text-text-primary font-gothic">
+        <form
+          autoComplete="off"
+          className="mt-4 text-text-primary font-gothic w-full"
+        >
           <input type="hidden" defaultValue="something" />
           <div className="">
             <h2 className="text-lg font-medium ">Customer Information</h2>
@@ -96,6 +99,31 @@ const UserForm = ({
 
               <div className="sm:col-span-2">
                 <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Email Address
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="text"
+                    name="email"
+                    id="email"
+                    autoComplete="email"
+                    value={userObj?.email as string}
+                    onChange={(e) =>
+                      setUserObj({
+                        ...userObj,
+                        email: e.target.value,
+                      })
+                    }
+                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                  />
+                </div>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label
                   htmlFor="company"
                   className="block text-sm font-medium text-gray-700"
                 >
@@ -107,7 +135,7 @@ const UserForm = ({
                     name="company"
                     id="company"
                     autoComplete="organization"
-                    defaultValue={userObj?.company as string}
+                    value={userObj?.company as string}
                     onChange={(e) =>
                       setUserObj({
                         ...userObj,
@@ -373,8 +401,7 @@ const UserForm = ({
                 htmlFor="terms"
                 className="text-sm text-text-primary select-none"
               >
-                I have read the terms and conditions and agree to the sale of my
-                personal information to the highest bidder.
+                I have read the terms and conditions and privacy policy.
               </label>
             </div>
           </div>

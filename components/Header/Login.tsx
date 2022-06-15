@@ -6,7 +6,7 @@ import { useAuth } from "../../context/FirebaseAuthContext";
 import { auth } from "../../utils/firebaseConfig";
 import { useRouter } from "next/router";
 import { trpc } from "@/utils/trpc";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 function classNames(...classes: [string, string?, string?, Boolean?]): string {
   return classes.filter(Boolean).join(" ");
@@ -14,9 +14,7 @@ function classNames(...classes: [string, string?, string?, Boolean?]): string {
 
 export default function Login() {
   const router = useRouter();
-  const { data: session, status } = trpc.useQuery(["next-auth.getSession"], {
-    suspense: true,
-  });
+  const { data: session } = useSession();
   const currentUser = session?.user;
 
   const handleSignOut = async () => {

@@ -30,6 +30,9 @@ import Autocomplete, {
 } from "react-google-autocomplete";
 import toast from "react-hot-toast";
 import SignInHeader from "@/components/Checkout/SignInHeader";
+import { trpc } from "@/utils/trpc";
+import { LineItem } from "@square/web-sdk";
+import { OrderLineItem } from "square";
 
 export default function checkout() {
   const {
@@ -43,6 +46,7 @@ export default function checkout() {
   const [firstLoad, setFirstLoad] = useState(true);
   //const { userObj } = useAuth();
   const { userObj: obj, dispatch: UserDispatch } = UserState();
+  const squareAPI = trpc.useMutation(["squarecreateOrder"]);
 
   const termsCheckboxRef = useRef(null);
   const shippingInfoCheckboxRef = useRef(null);
@@ -58,6 +62,7 @@ export default function checkout() {
   const [userShippingObj, setUserShippingObj] = useState({
     firstName: "",
     lastName: "",
+    email: "",
     company: "",
     streetNumber: "",
     streetAddress: "",
@@ -75,13 +80,14 @@ export default function checkout() {
   const [paymentMade, setPaymentMade] = useState(false);
 
   useEffect(() => {
-    let sum: number = 0;
+    let sum = 0;
     cart.forEach((product: Product) => {
       sum +=
         (product.variations[0].item_variation_data.price_money.amount / 100) *
         product.quantity;
     });
     setTotal(parseInt(sum.toFixed(2)));
+    console.log("total is ", sum);
   }, [cart]);
 
   const handleCustomerInfoComplete = () => {
@@ -185,47 +191,68 @@ export default function checkout() {
                 },
               })}
               cardTokenizeResponseReceived={async (token, buyer) => {
-                const orderResponse = await fetch("/api/order", {
-                  method: "POST",
-                  headers: {
-                    "Content-type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    order: {
-                      locationId: process.env.SQUARE_LOCATION_ID,
-                      referenceID: "This is a test",
-                      lineItems: [
-                        cart.map((item: Product) => ({
-                          catalogObjectId: item.variations[0].id,
-                          quantity: item.quantity.toString(),
-                          modifiers: [
-                            {
-                              name: item.name,
-                              catalogObjectId: item.id,
-                            },
-                          ],
-                        })),
+                console.log(token);
+                const createOrder = squareAPI.mutate({
+                  lineItems: cart.map((product: Product) => {
+                    return {
+                      catalogObjectId: product.variations[0].id,
+                      quantity: product.quantity,
+                      modifiers: [
+                        {
+                          name: product.name,
+                          catalogObjectId: product.id,
+                        },
                       ],
-                    },
+                    };
                   }),
-                });
-                const newOrder = await orderResponse.json();
+                  referenceId: token.token as string,
+                  billingAddress: {
+                    email: userObj.email,
+                    displayName: `${userObj?.firstName} ${userObj.lastName}`,
+                    companyName: userObj.company as string,
+                    phoneNumber: userObj.phoneNumber as string,
+                    addressLine1: userObj.apartmentOrUnit
+                      ? `${userObj.apartmentOrUnit} / ${userObj.streetNumber} ${userObj.streetAddress}`
+                      : `${userObj.streetNumber} ${userObj.streetAddress}`,
 
-                const response = await fetch("/api/pay", {
-                  method: "POST",
-                  headers: {
-                    "Content-type": "application/json",
+                    locality: userObj.city as string,
+                    region: userObj.state as string,
+                    postalCode: userObj.postalCode as string,
+                    country: "AU",
                   },
-                  body: JSON.stringify({
-                    sourceId: token.token,
-                    // TO DO - ADD SHIPPING
-                    orderId: newOrder.order.id,
-                    amount: newOrder.order.totalMoney.amount,
-                    locationId: newOrder.order.locationId,
-                  }),
+                  shippingAddress: {
+                    email: userObj.email,
+                    displayName: `${userObj?.firstName} ${userObj.lastName}`,
+                    companyName: userObj.company as string,
+                    phoneNumber: userObj.phoneNumber as string,
+                    addressLine1: userObj.apartmentOrUnit
+                      ? `${userObj.apartmentOrUnit} / ${userObj.streetNumber} ${userObj.streetAddress}`
+                      : `${userObj.streetNumber} ${userObj.streetAddress}`,
+
+                    locality: userObj.city as string,
+                    region: userObj.state as string,
+                    postalCode: userObj.postalCode as string,
+                    country: "AU",
+                  },
                 });
 
-                const paymentResponse = await response.json();
+                console.log(createOrder);
+
+                // const response = await fetch("/api/pay", {
+                //   method: "POST",
+                //   headers: {
+                //     "Content-type": "application/json",
+                //   },
+                //   body: JSON.stringify({
+                //     sourceId: token.token,
+                //     // TO DO - ADD SHIPPING
+                //     orderId: newOrder.order.id,
+                //     amount: newOrder.order.totalMoney.amount,
+                //     locationId: newOrder.order.locationId,
+                //   }),
+                // });
+
+                // const paymentResponse = await response.json();
               }}
             >
               <h1 className="sr-only">Checkout</h1>
@@ -243,14 +270,12 @@ export default function checkout() {
                           </div>
                         )}
                         {userObj ? (
-                          <div>
-                            <UserForm
-                              termsAccepted={termsAccepted}
-                              setTermsAccepted={setTermsAccepted}
-                              userObj={userObj}
-                              setUserObj={setUserObj}
-                            />
-                          </div>
+                          <UserForm
+                            termsAccepted={termsAccepted}
+                            setTermsAccepted={setTermsAccepted}
+                            userObj={userObj}
+                            setUserObj={setUserObj}
+                          />
                         ) : (
                           <GuestForm
                             termsAccepted={termsAccepted}
@@ -351,6 +376,36 @@ export default function checkout() {
                                           setUserShippingObj({
                                             ...userShippingObj,
                                             lastName: e.target.value,
+                                          })
+                                        }
+                                        className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  <div className="sm:col-span-2">
+                                    <label
+                                      htmlFor="email"
+                                      className="block text-sm font-medium text-gray-700"
+                                    >
+                                      Email Address
+                                    </label>
+                                    <div className="mt-1">
+                                      <input
+                                        type="text"
+                                        name="email"
+                                        id="email"
+                                        autoComplete="email"
+                                        disabled={sameAsCustomerInfo}
+                                        value={
+                                          sameAsCustomerInfo
+                                            ? (userObj.email as string)
+                                            : (userShippingObj.email as string)
+                                        }
+                                        onChange={(e) =>
+                                          setUserObj({
+                                            ...userObj,
+                                            email: e.target.value,
                                           })
                                         }
                                         className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"

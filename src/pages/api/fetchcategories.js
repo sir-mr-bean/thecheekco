@@ -2,6 +2,7 @@ import getConfig from "next/config";
 
 export default async function handler(req, res) {
   const { serverRuntimeConfig } = getConfig();
+  console.log(serverRuntimeConfig);
   try {
     let sqCategories = `https://${serverRuntimeConfig.squareAPIURL}/v2/catalog/list?types=category`;
     const categories = [];
@@ -16,12 +17,14 @@ export default async function handler(req, res) {
           Authorization: `Bearer ${serverRuntimeConfig.squareAccessToken}`,
         },
       });
+
       if (!res.ok) {
         throw new Error(
           `Failed to fetch categories from Square, received status ${res.status}`
         );
       }
       const data = await res.json();
+      console.log(data);
       //console.log(data);
       categories.push(...data.objects);
       cursor = data.cursor;

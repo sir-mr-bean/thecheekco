@@ -114,7 +114,7 @@ model WishlistItem {
 model Order {
   id String @id @default(cuid())
   userId String
-  items OrderItem[]
+  lineItems OrderItem[]
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
