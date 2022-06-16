@@ -107,7 +107,6 @@ export const Header = (): JSX.Element => {
                   ) : (
                     <IoBasketSharp className="h-8 w-8 sm:h-12 sm:w-12 text-shopping-cart opacity-100 -translate-y-2 sm:translate-y-0 m-2" />
                   )}
-                  !!
                   {cartItems?.length > 0 && (
                     <div className="absolute -top-1 -left-1 bg-shopping-cart-badge w-5 h-5 rounded-full justify-center items-center flex text-white">
                       {cart.length}
