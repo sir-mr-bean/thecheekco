@@ -45,6 +45,11 @@ export const Header = (): JSX.Element => {
   const ONE_DAY_IN_SECONDS = 60 * 60 * 24;
   const [cartItems, setCartItems] = useState<Product[]>(cart);
 
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
   useEffect(() => {
     if (cart) {
       setCartItems(cart);
@@ -73,6 +78,10 @@ export const Header = (): JSX.Element => {
       })
       .then((result) => setNavigation(result));
   }, []);
+
+  if (!hasMounted) {
+    return <></>;
+  }
 
   return (
     <>
