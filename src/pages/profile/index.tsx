@@ -1,7 +1,5 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, forwardRef, Fragment } from "react";
 import { useRouter } from "next/router";
-import { Tab } from "@headlessui/react";
-import { Fragment } from "react";
 import UserInfo from "../../../components/Profile/UserInfo";
 import UserOrders from "../../../components/Profile/UserOrders";
 import UserDashboard from "../../../components/Profile/UserDashboard";
@@ -9,43 +7,21 @@ import { useSession } from "next-auth/react";
 import BeatLoader from "react-spinners/BeatLoader";
 import { User } from "@prisma/client";
 import { NextPage } from "next";
-import { trpc } from "@/utils/trpc";
-import { Session } from "next-auth";
 
-interface PageProps {
-  session: Session;
-  csrfToken: string;
-}
+const profile: NextPage = () => {
+  const [openTab, setOpenTab] = useState(1);
 
-const profile: NextPage<PageProps> = (props) => {
-  const { data: session, status } = trpc.useQuery(["next-auth.getSession"], {
-    suspense: true,
-  });
-  const { data } = useSession({
+  const { data: session, status } = useSession({
     required: true,
     onUnauthenticated: () => {
       router.push("/login");
     },
   });
-  console.log(props);
+  console.log();
   console.log("session is ", session);
   const router = useRouter();
-  const currentUser = session?.user as User;
 
-  const [userShippingObj, setUserShippingObj] = useState({
-    firstName: "",
-    lastName: "",
-    company: "",
-    streetAddress: "",
-    apartmentOrUnit: "",
-    city: "",
-    state: "",
-    country: "Australia",
-    postalCode: "",
-    emailAddress: "",
-    phoneNumber: "",
-  });
-
+  console.log(status);
   useEffect(() => {
     if (status === String("unauthenticated")) {
       router.push("/login");
@@ -54,92 +30,109 @@ const profile: NextPage<PageProps> = (props) => {
 
   return (
     <>
-      {status === String("loading") ? (
-        <div className="flex h-screen w-full justify-center items-center mx-auto  text-text-primary">
-          <BeatLoader
-            color="#602d0d"
-            loading={status === "loading"}
-            size={20}
-          />
-        </div>
-      ) : status === String("success") ? (
-        <Tab.Group>
-          <Tab.List className="max-h-max grid grid-cols-4 items-end border-b border-b-text-secondary text-text-primary font-gothic text-sm sm:text-xl mx-2 sm:mx-8 mt-5 mb-2 justify-between text-center h-11 md:h-16 md:w-2/3 md:mx-auto lg:whitespace-nowrap gap-1 md:gap-3">
-            <Tab as={Fragment}>
-              {({ selected }) => (
-                <span
-                  className={
-                    selected
-                      ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full`
-                      : `cursor-pointer`
-                  }
-                >
-                  Dashboard
-                </span>
-              )}
-            </Tab>
-            <Tab as={Fragment}>
-              {({ selected }) => (
-                <span
-                  className={
-                    selected
-                      ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full`
-                      : `cursor-pointer`
-                  }
-                >
-                  Account Details
-                </span>
-              )}
-            </Tab>
-            <Tab as={Fragment}>
-              {({ selected }) => (
-                <span
-                  className={
-                    selected
-                      ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full`
-                      : `cursor-pointer`
-                  }
-                >
-                  Orders
-                </span>
-              )}
-            </Tab>
-            <Tab as={Fragment}>
-              {({ selected }) => (
-                <span
-                  className={
-                    selected
-                      ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full`
-                      : `cursor-pointer`
-                  }
-                >
-                  Payment Methods
-                </span>
-              )}
-            </Tab>
-          </Tab.List>
-          <Tab.Panels>
-            <Tab.Panel>
-              <UserDashboard />
-            </Tab.Panel>
-            <Tab.Panel>
-              <UserInfo />
-            </Tab.Panel>
-            <Tab.Panel>
-              <UserOrders />
-            </Tab.Panel>
-            <Tab.Panel>
-              <UserInfo />
-            </Tab.Panel>
-          </Tab.Panels>
-        </Tab.Group>
-      ) : (
-        <div className="flex h-screen w-full justify-center items-center mx-auto  text-text-primary">
-          <BeatLoader
-            color="#602d0d"
-            loading={status === "loading"}
-            size={20}
-          />
+      {status && (
+        <div>
+          {status === String("loading") ? (
+            <div className="flex h-screen w-full justify-center items-center mx-auto  text-text-primary">
+              <BeatLoader
+                color="#602d0d"
+                loading={status === String("loading")}
+                size={20}
+              />
+            </div>
+          ) : (
+            status === String("authenticated") && (
+              <div>
+                <div className="max-h-max grid grid-cols-4 items-end border-b border-b-text-secondary text-text-primary font-gothic text-sm sm:text-lg mx-2 sm:mx-8 mt-5 mb-2 justify-between text-center h-11 md:h-16 md:w-2/3 md:mx-auto lg:whitespace-nowrap gap-1 md:gap-3">
+                  <div
+                    onClick={() => {
+                      setOpenTab(1);
+                    }}
+                    className={
+                      openTab === 1
+                        ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full select-none no-underline:`
+                        : ` border-b-text-primary cursor-pointer w-full`
+                    }
+                  >
+                    <span
+                      className={openTab === 1 ? `font-bold` : `font-normal`}
+                    >
+                      Dashboard
+                    </span>
+                  </div>
+                  <div
+                    onClick={() => {
+                      setOpenTab(2);
+                    }}
+                    className={
+                      openTab === 2
+                        ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full select-none no-underline:`
+                        : ` border-b-text-primary cursor-pointer w-full`
+                    }
+                  >
+                    <span
+                      className={openTab === 2 ? `font-bold` : `font-normal`}
+                    >
+                      Account Details
+                    </span>
+                  </div>
+                  <div
+                    onClick={() => {
+                      setOpenTab(3);
+                    }}
+                    className={
+                      openTab === 3
+                        ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full select-none no-underline:`
+                        : ` border-b-text-primary cursor-pointer w-full`
+                    }
+                  >
+                    <span
+                      className={openTab === 3 ? `font-bold` : `font-normal`}
+                    >
+                      Orders
+                    </span>
+                  </div>
+
+                  <div
+                    onClick={() => {
+                      setOpenTab(4);
+                    }}
+                    className={
+                      openTab === 4
+                        ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full select-none no-underline:`
+                        : ` border-b-text-primary cursor-pointer w-full`
+                    }
+                  >
+                    <span
+                      className={openTab === 4 ? `font-bold` : `font-normal`}
+                    >
+                      Payment Methods
+                    </span>
+                  </div>
+                </div>
+                {openTab === 1 && (
+                  <>
+                    <UserDashboard />
+                  </>
+                )}
+                {openTab === 2 && (
+                  <>
+                    <UserInfo session={session} />
+                  </>
+                )}
+                {openTab === 3 && (
+                  <>
+                    <UserOrders />
+                  </>
+                )}
+                {openTab === 4 && (
+                  <>
+                    <UserInfo session={session} />
+                  </>
+                )}
+              </div>
+            )
+          )}
         </div>
       )}
     </>
@@ -147,10 +140,3 @@ const profile: NextPage<PageProps> = (props) => {
 };
 
 export default profile;
-
-interface Props {
-  props: {
-    session: Session;
-    csrfToken: string;
-  };
-}

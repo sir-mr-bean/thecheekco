@@ -24,10 +24,8 @@ const customerorders = [
         imageAlt:
           "Olive drab green insulated bottle with flared screw lid and flat top.",
       },
-      // More products...
     ],
   },
-  // More orders...
 ];
 
 const orders = () => {

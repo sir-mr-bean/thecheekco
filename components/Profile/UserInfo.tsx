@@ -11,20 +11,15 @@ import { User } from "@prisma/client";
 type AutoCompletePropsExtended = ReactGoogleAutocompleteInputProps &
   HTMLInputElement[];
 
-const UserInfo = () => {
-  const session = useSession();
-  //console.log(session);
+const UserInfo = ({ session }) => {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm();
-
-  const [userObj, setUserObj] = useState<User>(session.data?.user as User);
+  const [userObj, setUserObj] = useState<User>(session.user as User);
   const updateUser = trpc.useMutation(["userupdateUser"]);
-  //const userObj = props.userObj;
-  //const { userObj, dispatch } = UserState();
 
   //const onSubmit = (data) => console.log(data);
   const dateSchema = z.preprocess((arg) => {
@@ -68,7 +63,7 @@ const UserInfo = () => {
   //mutation.mutate({ email: d.email, user: d });
 
   return (
-    <>
+    <div>
       <div className="flex flex-col space-y-2">
         <div className="bg-white sm:p-3 m-2 sm:m-6 font-gothic sm:w-3/4 sm:mx-auto rounded-md sm:rounded-lg shadow">
           <div className="max-w-4xl mx-auto py-3 sm:px-6 sm:py-4">
@@ -538,7 +533,7 @@ const UserInfo = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

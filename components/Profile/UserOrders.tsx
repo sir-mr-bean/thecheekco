@@ -30,7 +30,7 @@ const orders = [
     ],
   },
   {
-    number: "WU88191111",
+    number: "WU88191112",
     date: "January 22, 2021",
     datetime: "2021-01-22",
     href: "#",
@@ -60,7 +60,7 @@ const orders = [
 
 const UserOrders = () => {
   return (
-    <>
+    <div>
       <div className="flex flex-col space-y-2">
         <div className="bg-white sm:p-3 m-2 sm:m-6 font-gothic sm:w-3/4 sm:mx-auto rounded-md sm:rounded-lg shadow">
           <div className="max-w-4xl mx-auto py-3 sm:px-6 sm:py-4">
@@ -208,7 +208,7 @@ const UserOrders = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
