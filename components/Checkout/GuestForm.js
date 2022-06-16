@@ -1,9 +1,7 @@
-import { UserState } from "../../context/User/userContext.js.old";
 import Autocomplete from "react-google-autocomplete";
 import { useState, useEffect, useRef } from "react";
 
 const GuestForm = ({ termsAccepted, setTermsAccepted }) => {
-  const { userObj, dispatch } = UserState();
   const termsCheckboxRef = useRef(null);
   const [firstRun, setFirstRun] = useState(true);
   useEffect(() => {
