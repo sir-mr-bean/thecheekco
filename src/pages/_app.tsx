@@ -45,7 +45,11 @@ const MyApp = ({ Component, pageProps: { ...pageProps } }: AppProps) => {
             <Header />
             <Component {...pageProps} />
             <Footer />
-            <Toaster position="top-right" reverseOrder={false} gutter={-40} />
+            {pageProps.mobileView ? (
+              <Toaster position="bottom-center" />
+            ) : (
+              <Toaster position="top-right" reverseOrder={false} gutter={-40} />
+            )}
           </div>
         </WishListContext>
       </CartContext>
@@ -97,6 +101,10 @@ export default withTRPC<AppRouter>({
 })(MyApp);
 
 MyApp.getInitialProps = async ({ ctx }) => {
+  let isMobileView = (
+    ctx.req ? ctx.req.headers["user-agent"] : navigator.userAgent
+  ).match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i);
+
   const session = await getSession(ctx);
   const csrfToken = await getCsrfToken(ctx);
 
@@ -112,6 +120,7 @@ MyApp.getInitialProps = async ({ ctx }) => {
     pageProps: {
       session: session,
       csrfToken: csrfToken,
+      isMobileView: Boolean(isMobileView),
     },
   };
 };

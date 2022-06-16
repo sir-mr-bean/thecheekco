@@ -27,7 +27,7 @@ const GuestForm = ({
           className="mt-4 text-text-primary font-gothic "
         >
           <div className="">
-            <h2 className="text-lg font-medium ">Customer Information</h2>
+            <h2 className="text-lg font-medium ">Billing Contact</h2>
 
             <div className="mt-4 grid grid-cols-2 gap-y-6 sm:gap-x-2">
               <div>

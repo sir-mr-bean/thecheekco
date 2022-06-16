@@ -296,7 +296,7 @@ export default function checkout() {
                               <div className="">
                                 <div className="flex justify-between">
                                   <h2 className="text-lg font-medium ">
-                                    Shipping Information
+                                    Shipping Contact
                                   </h2>
                                   <div className="flex items-center space-x-2 ">
                                     <input
@@ -315,7 +315,7 @@ export default function checkout() {
                                       htmlFor="sameAsCustomerInfo"
                                       className="text-xs text-text-primary select-none"
                                     >
-                                      Same as Customer Information
+                                      Same as Billing Contact
                                     </label>
                                   </div>
                                 </div>

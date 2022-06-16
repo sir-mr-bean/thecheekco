@@ -35,7 +35,7 @@ const UserForm = ({
         >
           <input type="hidden" defaultValue="something" />
           <div className="">
-            <h2 className="text-lg font-medium ">Customer Information</h2>
+            <h2 className="text-lg font-medium ">Billing Contact</h2>
 
             <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
               <div className="col-span-6 sm:col-span-2">
