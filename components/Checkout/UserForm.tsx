@@ -37,8 +37,8 @@ const UserForm = ({
           <div className="">
             <h2 className="text-lg font-medium ">Customer Information</h2>
 
-            <div className="mt-4 grid grid-flow-row grid-cols-1 sm:gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-              <div>
+            <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+              <div className="col-span-6 sm:col-span-2">
                 <label
                   htmlFor="first-name"
                   className="block text-sm font-medium text-gray-700"
@@ -63,7 +63,7 @@ const UserForm = ({
                 </div>
               </div>
 
-              <div>
+              <div className="col-span-6 sm:col-span-2">
                 <label
                   htmlFor="last-name"
                   className="block text-sm font-medium text-gray-700"
@@ -88,7 +88,7 @@ const UserForm = ({
                 </div>
               </div>
 
-              <div className="sm:col-span-2">
+              <div className="col-span-6 sm:col-span-2">
                 <label
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
@@ -113,7 +113,7 @@ const UserForm = ({
                 </div>
               </div>
 
-              <div className="sm:col-span-2">
+              <div className="col-span-6 sm:col-span-2">
                 <label
                   htmlFor="company"
                   className="block text-sm font-medium text-gray-700"
@@ -219,7 +219,7 @@ const UserForm = ({
                 />
               </div>
 
-              <div className="sm:col-span-2">
+              <div className="col-span-3 sm:col-span-2">
                 <label
                   htmlFor="apartment"
                   className="block text-sm font-medium text-gray-700"
@@ -248,7 +248,7 @@ const UserForm = ({
                 </div>
               </div>
 
-              <div>
+              <div className="pl-2 col-span-3 sm:col-span-2">
                 <label
                   htmlFor="city"
                   className="block text-sm font-medium text-gray-700"
@@ -273,7 +273,7 @@ const UserForm = ({
                 </div>
               </div>
 
-              <div>
+              <div className="col-span-6 sm:col-span-2">
                 <label
                   htmlFor="country"
                   className="block text-sm font-medium text-gray-700"
@@ -299,7 +299,7 @@ const UserForm = ({
                 </div>
               </div>
 
-              <div>
+              <div className="col-span-3 sm:col-span-2">
                 <label
                   htmlFor="region"
                   className="block text-sm font-medium text-gray-700"
@@ -324,7 +324,7 @@ const UserForm = ({
                 </div>
               </div>
 
-              <div>
+              <div className="pl-2 col-span-3 sm:col-span-2">
                 <label
                   htmlFor="postal-code"
                   className="block text-sm font-medium text-gray-700"
@@ -351,7 +351,7 @@ const UserForm = ({
                 </div>
               </div>
 
-              <div className="sm:col-span-2">
+              <div className="col-span-6 sm:col-span-2">
                 <label
                   htmlFor="phone"
                   className="block text-sm font-medium text-gray-700"
