@@ -10,7 +10,6 @@ function classNames(...classes: [string, string?, string?, Boolean?]): string {
 }
 
 export default function MobileMenu({ navigation }): JSX.Element {
-  console.log(navigation);
   return (
     <Menu
       as="div"

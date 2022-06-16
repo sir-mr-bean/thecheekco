@@ -1,33 +1,39 @@
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { Category, Product } from "@/types/Product";
 
-const products = [
-  {
-    id: 1,
-    name: "Leather Long Wallet",
-    color: "Natural",
-    price: "$75",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/home-page-04-trending-product-02.jpg",
-    imageAlt: "Hand stitched, orange leather long wallet.",
-  },
-  // More products...
-];
+export default function shop({
+  categoriesData,
+  productsData,
+}: {
+  categoriesData: Category[];
+  productsData: Product[];
+}) {
+  const [products, setProducts] = useState(productsData);
+  const [categories, setCategories] = useState(categoriesData);
 
-export default function shop({ categoriesData, productsData }) {
-  const categories = categoriesData.filter(
-    (category) => !category.category_data.name.startsWith("_")
-  );
-  const products = productsData?.[0];
+  useEffect(() => {
+    if (productsData) {
+      setProducts(productsData);
+    }
+    if (categoriesData) {
+      setCategories(
+        categoriesData.filter(
+          (category) => !category.category_data.name.startsWith("_")
+        )
+      );
+    }
+  }, [productsData, categoriesData]);
+
   return (
     <div className="mx-2 sm:mx-10 px-4 bg-white shadow-md shadow-black text-text-primary font-gothic">
       <div className="flex flex-wrap justify-between">
         <div className="w-full">
           <div className="flex flex-wrap justify-between divide-y">
-            {!!(products.length > 0) &&
-              categories.map((category) => (
-                <div className="w-full sm:px-4 sm:mx-10">
+            {products &&
+              categories.map((category, i) => (
+                <div key={i} className="w-full sm:px-4 sm:mx-10">
                   <div className="relative">
                     <Link
                       href="/shop/[category]"
@@ -52,10 +58,12 @@ export default function shop({ categoriesData, productsData }) {
                           category.category_data.name
                       )
                       ?.map((product, i) => {
-                        console.log(product.image);
                         while (i < 6)
                           return (
-                            <div className="w-fit h-fit space-y-1 px-2 lg:px-4">
+                            <div
+                              key={i}
+                              className="w-fit h-fit space-y-1 px-2 lg:px-4"
+                            >
                               <div className="relative">
                                 <Link
                                   href="/shop/[category]/[id]"
@@ -216,7 +224,8 @@ export const getStaticProps = async ({ params }) => {
       "User-Agent": "*",
     },
   });
-  const productsData = await productsResult.json();
+  const productsDataRaw = await productsResult.json();
+  const productsData = productsDataRaw?.[0];
 
   if (!productsResult.ok || !categoriesResult.ok) {
     throw new Error(
