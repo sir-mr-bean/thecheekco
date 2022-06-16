@@ -21,7 +21,6 @@ import UserForm from "../../components/Checkout/UserForm";
 import GuestForm from "../../components/Checkout/GuestForm";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import { UserState } from "@/context/User/userContext";
 import { User } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Autocomplete, {
@@ -43,7 +42,6 @@ export default function checkout() {
   const router = useRouter();
   const streetAddressInputRef = useRef(null);
   const [firstLoad, setFirstLoad] = useState(true);
-  const { userObj: obj, dispatch: UserDispatch } = UserState();
   const squareAPI = trpc.useMutation(["createOrder"]);
 
   const termsCheckboxRef = useRef(null);

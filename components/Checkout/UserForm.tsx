@@ -1,16 +1,7 @@
-import { UserState } from "../../context/User/userContext";
 import Autocomplete, {
   ReactGoogleAutocompleteInputProps,
 } from "react-google-autocomplete";
-import {
-  useState,
-  useEffect,
-  useRef,
-  useImperativeHandle,
-  Ref,
-  forwardRef,
-} from "react";
-import { UserAction } from "@/context/User/userReducer";
+import { useRef } from "react";
 import { User } from "@prisma/client";
 import { useForm } from "react-hook-form";
 

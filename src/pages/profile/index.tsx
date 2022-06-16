@@ -5,18 +5,10 @@ import { Fragment } from "react";
 import UserInfo from "../../../components/Profile/UserInfo";
 import UserOrders from "../../../components/Profile/UserOrders";
 import UserDashboard from "../../../components/Profile/UserDashboard";
-import { UserState } from "../../../context/User/userContext";
-import { setUserObj } from "../../../context/User/userReducer";
-import {
-  getCsrfToken,
-  getSession,
-  GetSessionParams,
-  useSession,
-} from "next-auth/react";
+import { useSession } from "next-auth/react";
 import BeatLoader from "react-spinners/BeatLoader";
 import { User } from "@prisma/client";
-import { GetServerSideProps, GetServerSidePropsContext, NextPage } from "next";
-import { Context } from "@/backend/context";
+import { NextPage } from "next";
 import { trpc } from "@/utils/trpc";
 import { Session } from "next-auth";
 
