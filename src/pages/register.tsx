@@ -19,7 +19,7 @@ import {
   signInWithPopup,
   FacebookAuthProvider,
 } from "firebase/auth";
-import { useAuth } from "../../context/FirebaseAuthContext";
+
 import { auth, db } from "../../utils/firebaseConfig";
 import { query, getDocs, collection, where, addDoc } from "firebase/firestore";
 import BeatLoader from "react-spinners/BeatLoader";
@@ -28,7 +28,6 @@ import { useSession } from "next-auth/react";
 
 const register = () => {
   const { data: session, status } = useSession();
-  const { currentUser } = useAuth();
   const router = useRouter();
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);

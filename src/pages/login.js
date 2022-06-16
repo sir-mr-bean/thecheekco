@@ -6,7 +6,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth, db } from "../../utils/firebaseConfig";
-import { useAuth } from "../../context/FirebaseAuthContext";
+
 import Image from "next/image";
 import Logo from "../../public/images/logo.png";
 import { AiOutlineFacebook } from "react-icons/ai";
@@ -25,7 +25,6 @@ import {
 const login = ({ csrfToken, providers }) => {
   const { data: session, status } = useSession();
 
-  const { currentUser } = useAuth();
   const [incorrectCreds, setIncorrectCreds] = useState(false);
   const router = useRouter();
   const emailRef = useRef(null);

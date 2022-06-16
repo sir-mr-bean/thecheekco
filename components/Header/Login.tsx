@@ -2,7 +2,6 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { BsChevronDown, BsPerson } from "react-icons/bs";
-import { useAuth } from "../../context/FirebaseAuthContext";
 import { auth } from "../../utils/firebaseConfig";
 import { useRouter } from "next/router";
 import { trpc } from "@/utils/trpc";

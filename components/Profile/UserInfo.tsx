@@ -24,7 +24,6 @@ const UserInfo = () => {
   const [userObj, setUserObj] = useState<User>(session.data?.user as User);
   const updateUser = trpc.useMutation(["userupdateUser"]);
   //const userObj = props.userObj;
-  //const { currentUser } = useAuth();
   //const { userObj, dispatch } = UserState();
 
   //const onSubmit = (data) => console.log(data);

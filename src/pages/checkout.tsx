@@ -5,7 +5,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineFacebook } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { Disclosure } from "@headlessui/react";
-import { useAuth } from "../../context/FirebaseAuthContext";
 import {
   GoogleAuthProvider,
   FacebookAuthProvider,
@@ -44,7 +43,6 @@ export default function checkout() {
   const router = useRouter();
   const streetAddressInputRef = useRef(null);
   const [firstLoad, setFirstLoad] = useState(true);
-  //const { userObj } = useAuth();
   const { userObj: obj, dispatch: UserDispatch } = UserState();
   const squareAPI = trpc.useMutation(["createOrder"]);
 
