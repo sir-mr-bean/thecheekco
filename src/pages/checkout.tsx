@@ -274,6 +274,8 @@ export default function checkout() {
                           />
                         ) : (
                           <GuestForm
+                            userObj={userObj}
+                            setUserObj={setUserObj}
                             termsAccepted={termsAccepted}
                             setTermsAccepted={setTermsAccepted}
                           />

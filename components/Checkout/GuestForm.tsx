@@ -1,28 +1,24 @@
-import Autocomplete from "react-google-autocomplete";
+import Autocomplete, {
+  ReactGoogleAutocompleteInputProps,
+} from "react-google-autocomplete";
 import { useState, useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
 
-const GuestForm = ({ termsAccepted, setTermsAccepted }) => {
+const GuestForm = ({
+  termsAccepted,
+  setTermsAccepted,
+  userObj,
+  setUserObj,
+}) => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
   const termsCheckboxRef = useRef(null);
   const [firstRun, setFirstRun] = useState(true);
-  useEffect(() => {
-    dispatch({
-      type: "SET_USER",
-      payload: {
-        firstName: "",
-        lastName: "",
-        company: "",
-        streetAddress: "",
-        apartmentOrUnit: "",
-        city: "",
-        state: "",
-        country: "Australia",
-        postalCode: "",
-        email: "",
-        phoneNumber: "",
-      },
-    });
-    setFirstRun(false);
-  }, []);
+
   return (
     <>
       {!firstRun && (
@@ -49,10 +45,7 @@ const GuestForm = ({ termsAccepted, setTermsAccepted }) => {
                     autoComplete="given-name"
                     value={userObj.firstName}
                     onChange={(e) =>
-                      dispatch({
-                        type: "SET_FIRST_NAME",
-                        payload: e.target.value,
-                      })
+                      setUserObj({ ...userObj, firstName: e.target.value })
                     }
                     className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                   />
@@ -74,10 +67,7 @@ const GuestForm = ({ termsAccepted, setTermsAccepted }) => {
                     autoComplete="family-name"
                     value={userObj.lastName}
                     onChange={(e) =>
-                      dispatch({
-                        type: "SET_LAST_NAME",
-                        payload: e.target.value,
-                      })
+                      setUserObj({ ...userObj, lastName: e.target.value })
                     }
                     className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                   />
@@ -99,10 +89,7 @@ const GuestForm = ({ termsAccepted, setTermsAccepted }) => {
                     autoComplete="organization"
                     value={userObj.company}
                     onChange={(e) =>
-                      dispatch({
-                        type: "SET_COMPANY",
-                        payload: e.target.value,
-                      })
+                      setUserObj({ ...userObj, company: e.target.value })
                     }
                     className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                   />
@@ -116,81 +103,66 @@ const GuestForm = ({ termsAccepted, setTermsAccepted }) => {
                 >
                   Street address
                 </label>
-                <Autocomplete
-                  apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+                <Autocomplete<
+                  ReactGoogleAutocompleteInputProps & {
+                    value: string;
+                  }
+                >
+                  apiKey={`${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
                   onPlaceSelected={(place) => {
                     console.log(place);
-                    const [...address_components] = place.address_components;
-                    console.log(address_components);
-                    const apartmentOrUnit = address_components.find(
+                    const apartmentOrUnit = place?.address_components?.find(
                       (component) => component.types.includes("subpremise")
                     );
-                    if (apartmentOrUnit) {
-                      console.log("found unit", apartmentOrUnit.long_name);
-                      dispatch({
-                        type: "SET_APARTMENT_OR_UNIT",
-                        payload: apartmentOrUnit.long_name,
-                      });
-                    }
-                    const streetNumber = address_components.find((component) =>
-                      component.types.includes("street_number")
+
+                    const streetNumber = place?.address_components?.find(
+                      (component) => component.types.includes("street_number")
                     );
-                    const streetAddress = address_components.find((component) =>
-                      component.types.includes("route")
+                    const streetAddress = place?.address_components?.find(
+                      (component) => component.types.includes("route")
                     );
-                    const city = address_components.find((component) =>
+                    const city = place?.address_components?.find((component) =>
                       component.types.includes("locality")
                     );
-                    const state = address_components.find((component) =>
+                    const state = place?.address_components?.find((component) =>
                       component.types.includes("administrative_area_level_1")
                     );
-                    const country = address_components.find((component) =>
-                      component.types.includes("country")
+                    const country = place?.address_components?.find(
+                      (component) => component.types.includes("country")
                     );
-                    const postalCode = address_components.find((component) =>
-                      component.types.includes("postal_code")
+                    const postalCode = place?.address_components?.find(
+                      (component) => component.types.includes("postal_code")
                     );
-                    console.log("unit number is");
-                    dispatch({
-                      type: "SET_STREET_ADDRESS",
-                      payload:
-                        streetNumber.long_name + " " + streetAddress.long_name,
-                    });
-                    dispatch({
-                      type: "SET_CITY",
-                      payload: city.long_name,
-                    });
-                    dispatch({
-                      type: "SET_STATE",
-                      payload: state.long_name,
-                    });
-                    dispatch({
-                      type: "SET_COUNTRY",
-                      payload: country.long_name,
-                    });
-                    dispatch({
-                      type: "SET_POSTAL_CODE",
-                      payload: postalCode.long_name,
-                    });
 
-                    dispatch({
-                      type: "SET_STREET_NUMBER",
-                      payload: streetNumber.long_name,
+                    setUserObj({
+                      ...userObj,
+                      streetNumber: streetNumber?.long_name as string,
+                      streetAddress: streetNumber?.long_name
+                        ? `${streetNumber?.long_name} ${streetAddress?.long_name}`
+                        : `${streetAddress?.long_name}`,
+                      apartmentOrUnit: apartmentOrUnit
+                        ? apartmentOrUnit?.long_name
+                        : "",
+                      city: city?.long_name as string,
+                      state: state?.long_name as string,
+                      country: country?.long_name as string,
+                      postalCode: postalCode?.long_name as string,
                     });
                   }}
                   options={{
                     componentRestrictions: { country: "au" },
-                    fields: ["address_components", "geometry"],
+                    fields: ["address_components", "formatted_address"],
                     types: ["address"],
                   }}
-                  type="search"
-                  name="street-address"
-                  id="guest-street-address"
-                  value={userObj.streetAddress}
+                  {...register("street-address")}
+                  id="street-address"
+                  //defaultValue={userObj?.streetAddress as string}
+                  value={userObj?.streetAddress as string}
+                  inputAutocompleteValue={userObj?.streetAddress as string}
                   onChange={(e) => {
-                    dispatch({
-                      type: "SET_STREET_ADDRESS",
-                      payload: e.target.value,
+                    setUserObj({
+                      ...userObj,
+                      streetAddress: (e.target as HTMLTextAreaElement).value,
                     });
                   }}
                   className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
@@ -211,9 +183,9 @@ const GuestForm = ({ termsAccepted, setTermsAccepted }) => {
                     id="guest-apartment"
                     value={userObj.apartmentOrUnit}
                     onChange={(e) =>
-                      dispatch({
-                        type: "SET_APARTMENT_OR_UNIT",
-                        payload: e.target.value,
+                      setUserObj({
+                        ...userObj,
+                        apartmentOrUnit: e.target.value,
                       })
                     }
                     className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
@@ -236,10 +208,7 @@ const GuestForm = ({ termsAccepted, setTermsAccepted }) => {
                     autoComplete="address-level2"
                     value={userObj.city || ""}
                     onChange={(e) =>
-                      dispatch({
-                        type: "SET_CITY",
-                        payload: e.target.value,
-                      })
+                      setUserObj({ ...userObj, city: e.target.value })
                     }
                     className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                   />
@@ -260,10 +229,7 @@ const GuestForm = ({ termsAccepted, setTermsAccepted }) => {
                     autoComplete="country-name"
                     value={userObj.country}
                     onChange={(e) =>
-                      dispatch({
-                        type: "SET_COUNTRY",
-                        payload: e.target.value,
-                      })
+                      setUserObj({ ...userObj, country: e.target.value })
                     }
                     className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                   >
@@ -287,10 +253,7 @@ const GuestForm = ({ termsAccepted, setTermsAccepted }) => {
                     autoComplete="address-level1"
                     value={userObj.state}
                     onChange={(e) =>
-                      dispatch({
-                        type: "SET_STATE",
-                        payload: e.target.value,
-                      })
+                      setUserObj({ ...userObj, state: e.target.value })
                     }
                     className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                   />
@@ -312,10 +275,7 @@ const GuestForm = ({ termsAccepted, setTermsAccepted }) => {
                     autoComplete="postal-code"
                     value={userObj.postalCode}
                     onChange={(e) =>
-                      dispatch({
-                        type: "SET_POSTAL_CODE",
-                        payload: e.target.value,
-                      })
+                      setUserObj({ ...userObj, postalCode: e.target.value })
                     }
                     className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                   />
@@ -337,10 +297,7 @@ const GuestForm = ({ termsAccepted, setTermsAccepted }) => {
                     autoComplete="tel"
                     value={userObj.phoneNumber}
                     onChange={(e) =>
-                      dispatch({
-                        type: "SET_PHONE_NUMBER",
-                        payload: e.target.value,
-                      })
+                      setUserObj({ ...userObj, phoneNumber: e.target.value })
                     }
                     className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                   />
