@@ -25,7 +25,7 @@ export default function shop({ categoriesData, productsData }) {
       <div className="flex flex-wrap justify-between">
         <div className="w-full">
           <div className="flex flex-wrap justify-between divide-y">
-            {products.length &&
+            {!!(products.length > 0) &&
               categories.map((category) => (
                 <div className="w-full sm:px-4 sm:mx-10">
                   <div className="relative">
@@ -46,12 +46,12 @@ export default function shop({ categoriesData, productsData }) {
                   </div>
                   <div className="flex flex-wrap md:gap-1 w-full justify-start sm:justify-start xl:justify-evenly items-center">
                     {products
-                      .filter(
+                      ?.filter(
                         (item) =>
                           item.category?.category_data.name ===
                           category.category_data.name
                       )
-                      .map((product, i) => {
+                      ?.map((product, i) => {
                         console.log(product.image);
                         while (i < 6)
                           return (

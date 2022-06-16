@@ -13,7 +13,6 @@ import { getCsrfToken, getSession, SessionProvider } from "next-auth/react";
 import { AppRouter } from "@/backend/router/_app";
 import superjson from "superjson";
 import Footer from "@/components/Footer/Footer";
-import { trpc } from "@/utils/trpc";
 import { httpBatchLink } from "@trpc/client/links/httpBatchLink";
 import { httpLink } from "@trpc/client/links/httpLink";
 import { splitLink } from "@trpc/client/links/splitLink";
