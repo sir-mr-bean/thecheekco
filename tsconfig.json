@@ -34,10 +34,7 @@
     "src/**/*",
     "src/pages",
     "components/Checkout/UserForm.tsx",
-    "utils/jwt.ts.old",
-    "context/User/context.ts.old",
-    "context/FirebaseAuthContext.js.old",
-    "context/User/userContext.js.old"
+    "utils/jwt.ts.old"
   ],
   "exclude": ["node_modules"]
 }

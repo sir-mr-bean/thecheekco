@@ -43,6 +43,13 @@ export const Header = (): JSX.Element => {
   const trpcContext = trpc.useContext();
   const ONE_HOUR_IN_SECONDS = 60 * 60;
   const ONE_DAY_IN_SECONDS = 60 * 60 * 24;
+  const [cartItems, setCartItems] = useState<Product[]>(cart);
+
+  useEffect(() => {
+    if (cart) {
+      setCartItems(cart);
+    }
+  }, [cart]);
 
   const slugify = (string: string): string => {
     return string
@@ -86,14 +93,13 @@ export const Header = (): JSX.Element => {
               </Link>
               <Link href="/cart">
                 <div className="ml-10 mb-3 cursor-pointer sm:block relative sm:absolute top-3 right-3 lg:right-20 md:rounded-full md:bg-white md:border-text-secondary md:bg-opacity-100 md:z-[100] md:shadow-text-primary md:shadow-md md:w-[65px] md:h-[65px]">
-                  <IoBasketSharp
-                    className={
-                      cart.length > 0
-                        ? `h-6 w-6 sm:h-12 sm:w-12 text-shopping-cart opacity-100 m-2`
-                        : `h-8 w-8 sm:h-12 sm:w-12 text-shopping-cart opacity-100 -translate-y-2 sm:translate-y-0 m-2`
-                    }
-                  />
-                  {cart.length > 0 && (
+                  {cartItems?.length > 0 ? (
+                    <IoBasketSharp className="h-6 w-6 sm:h-12 sm:w-12 text-shopping-cart opacity-100 m-2" />
+                  ) : (
+                    <IoBasketSharp className="h-8 w-8 sm:h-12 sm:w-12 text-shopping-cart opacity-100 -translate-y-2 sm:translate-y-0 m-2" />
+                  )}
+                  !!
+                  {cartItems?.length > 0 && (
                     <div className="absolute -top-1 -left-1 bg-shopping-cart-badge w-5 h-5 rounded-full justify-center items-center flex text-white">
                       {cart.length}
                     </div>

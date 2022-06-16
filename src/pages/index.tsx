@@ -263,7 +263,7 @@ export default function Home({
 
         <div className="flex flex-col divide-y divide-text-primary px-6 space-y-3">
           <div className="grid grid-cols-3 content-center gap-40 w-full pb-10 px-20 max-w-7xl mx-auto">
-            {productsData.slice(0, 3).map((product) => {
+            {productsData?.slice(0, 3).map((product) => {
               return (
                 <div
                   key={product.name}
@@ -456,7 +456,7 @@ export default function Home({
               </div>
               <div className="flex flex-wrap w-full h-fit items-center justify-center sm:justify-evenly pt-10">
                 {productsData
-                  .filter((product) => product.isAllNatural === true)
+                  ?.filter((product) => product.isAllNatural === true)
                   .slice(0, 6)
                   .map((product) => {
                     return (
