@@ -7,6 +7,7 @@ import Autocomplete, {
 import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { User } from "@prisma/client";
+import toast from "react-hot-toast";
 
 type AutoCompletePropsExtended = ReactGoogleAutocompleteInputProps &
   HTMLInputElement[];
@@ -58,7 +59,10 @@ const UserInfo = ({ session }) => {
       email: userObj.email,
       user: updatedUserObj,
     });
-    console.log(userUpdate);
+    if (updateUser?.data?.result === "success") {
+      console.log("user updated");
+      toast.success("Profile updated successfully");
+    }
   };
   //mutation.mutate({ email: d.email, user: d });
 

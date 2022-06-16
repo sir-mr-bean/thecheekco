@@ -78,7 +78,15 @@ export const userRouter = createRouter()
           },
         });
         console.log(result);
+        return {
+          result: "success",
+          user: result,
+        };
       }
+      return {
+        result: "success",
+        user: currentUser,
+      };
     },
   })
   .mutation("addToCart", {
