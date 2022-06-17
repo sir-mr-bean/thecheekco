@@ -1,19 +1,3 @@
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-const session = useSession();
-
-useEffect(() => {
-  if (session.status === "authenticated") {
-    event({
-      action: "login",
-      category: "user",
-      label: session?.data.user?.email,
-      value: new Date().getTime(),
-    });
-    set(session.data.user.email);
-  }
-}, [session]);
-
 export const GA_TRACKING_ID = process.env
   .NEXT_PUBLIC_GOOGLE_ANALYTICS as string;
 
@@ -33,6 +17,6 @@ export const event = ({ action, category, label, value }) => {
   });
 };
 
-export const set = (userId) => {
-  window.gtag("set", { userId });
+export const setUser = ({ userId }) => {
+  window.gtag("set", { user_id: userId });
 };

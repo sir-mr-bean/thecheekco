@@ -32,6 +32,15 @@ const MyApp = ({ Component, pageProps: { ...pageProps } }: AppProps) => {
       router.events.off("hashChangeComplete", handleRouteChange);
     };
   }, [router.events]);
+
+  useEffect(() => {
+    if (pageProps.session?.data?.user) {
+      gtag.setUser({
+        userId: pageProps.session.data.user.email,
+      });
+    }
+  }, [pageProps.session]);
+
   return (
     <SessionProvider session={pageProps.session}>
       <CartContext>
