@@ -8,9 +8,26 @@ import BeatLoader from "react-spinners/BeatLoader";
 import { User } from "@prisma/client";
 import { NextPage } from "next";
 
-const profile: NextPage = () => {
-  const [openTab, setOpenTab] = useState(1);
+const tabs = [
+  {
+    index: 1,
+    name: "dashboard",
+  },
+  {
+    index: 2,
+    name: "account",
+  },
+  {
+    index: 3,
+    name: "orders",
+  },
+  {
+    index: 4,
+    name: "payment",
+  },
+];
 
+const profile: NextPage = () => {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated: () => {
@@ -20,6 +37,8 @@ const profile: NextPage = () => {
   console.log();
   console.log("session is ", session);
   const router = useRouter();
+  const tabFromQuery = tabs.find((tab) => tab.name === router.query?.tab);
+  const [openTab, setOpenTab] = useState(tabFromQuery?.index || 1);
 
   console.log(status);
   useEffect(() => {

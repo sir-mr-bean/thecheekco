@@ -101,18 +101,20 @@ export const Header = (): JSX.Element => {
                 </div>
               </Link>
               <Link href="/cart">
-                <div className="ml-10 mb-3 cursor-pointer sm:block relative sm:absolute top-3 right-3 lg:right-20 md:rounded-full md:bg-white md:border-text-secondary md:bg-opacity-100 md:z-[100] md:shadow-text-primary md:shadow-md md:w-[65px] md:h-[65px]">
-                  {cartItems?.length > 0 ? (
-                    <IoBasketSharp className="h-6 w-6 sm:h-12 sm:w-12 text-shopping-cart opacity-100 m-2" />
-                  ) : (
-                    <IoBasketSharp className="h-8 w-8 sm:h-12 sm:w-12 text-shopping-cart opacity-100 -translate-y-2 sm:translate-y-0 m-2" />
-                  )}
-                  {cartItems?.length > 0 && (
-                    <div className="absolute -top-1 -left-1 bg-shopping-cart-badge w-5 h-5 rounded-full justify-center items-center flex text-white">
-                      {cart.length}
-                    </div>
-                  )}
-                </div>
+                <a>
+                  <div className="ml-10 mb-3 cursor-pointer sm:block relative sm:absolute top-3 right-3 lg:right-20 sm:rounded-full sm:bg-white md:border-text-secondary sm:bg-opacity-100 md:shadow-text-primary md:shadow-md md:w-[65px] md:h-[65px]">
+                    {cartItems?.length > 0 ? (
+                      <IoBasketSharp className="h-6 w-6 sm:h-12 sm:w-12 text-shopping-cart opacity-100 m-2" />
+                    ) : (
+                      <IoBasketSharp className="h-8 w-8 sm:h-12 sm:w-12 text-shopping-cart opacity-100 -translate-y-2 sm:translate-y-0 m-2" />
+                    )}
+                    {cartItems?.length > 0 && (
+                      <div className="absolute -top-1 -left-1 bg-shopping-cart-badge w-5 h-5 rounded-full justify-center items-center flex text-white">
+                        {cart.length}
+                      </div>
+                    )}
+                  </div>
+                </a>
               </Link>
               <div className="flex items-center justify-between font-gothic text-header-brown">
                 {/* Mobile Menu */}
@@ -123,7 +125,7 @@ export const Header = (): JSX.Element => {
                 </div>
                 <div className="flex items-center justify-center sm:space-x-8 whitespace-nowrap">
                   {/* Eco Innovation */}
-                  <span className="hidden sm:block font-medium font-gothic">
+                  <span className="hidden md:block font-medium font-gothic">
                     Eco Innovation
                   </span>
                   {/* Wishlist */}

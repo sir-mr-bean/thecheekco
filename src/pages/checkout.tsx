@@ -2,19 +2,6 @@ import { CreditCard, GooglePay } from "react-square-web-payments-sdk";
 import { PaymentForm } from "react-square-web-payments-sdk";
 import { CartState } from "../../context/Context";
 import React, { useState, useEffect, useRef } from "react";
-import { AiOutlineFacebook } from "react-icons/ai";
-import { FcGoogle } from "react-icons/fc";
-import { Disclosure } from "@headlessui/react";
-import {
-  GoogleAuthProvider,
-  FacebookAuthProvider,
-  signInWithPopup,
-  signInWithEmailAndPassword,
-  sendPasswordResetEmail,
-  UserCredential,
-} from "firebase/auth";
-import { query, getDocs, collection, where, addDoc } from "firebase/firestore";
-import { auth, db } from "../../utils/firebaseConfig";
 import BeatLoader from "react-spinners/BeatLoader";
 import { Product } from "@/types/Product";
 import UserForm from "../../components/Checkout/UserForm";
@@ -29,8 +16,6 @@ import Autocomplete, {
 import toast from "react-hot-toast";
 import SignInHeader from "@/components/Checkout/SignInHeader";
 import { trpc } from "@/utils/trpc";
-import { LineItem } from "@square/web-sdk";
-import { OrderLineItem } from "square";
 
 export default function checkout() {
   const {
@@ -42,8 +27,11 @@ export default function checkout() {
   const router = useRouter();
   const streetAddressInputRef = useRef(null);
   const [firstLoad, setFirstLoad] = useState(true);
-  const squareAPI = trpc.useMutation(["createOrder"]);
-
+  const orderMutation = trpc.useMutation(["createOrder"]);
+  const paymentMutation = trpc.useMutation(["createOrderPayment"]);
+  const completeOrderMutation = trpc.useMutation(["completeOrderPayment"]);
+  const updateOrderMutation = trpc.useMutation(["updateOrder"]);
+  const [orderProcessing, setOrderProcessing] = useState(false);
   const termsCheckboxRef = useRef(null);
   const shippingInfoCheckboxRef = useRef(null);
   const { cart, dispatch } = CartState();
@@ -187,68 +175,91 @@ export default function checkout() {
                 },
               })}
               cardTokenizeResponseReceived={async (token, buyer) => {
-                console.log(token);
-                const createOrder = squareAPI.mutate({
-                  lineItems: cart.map((product: Product) => {
-                    return {
-                      catalogObjectId: product.variations[0].id,
-                      quantity: product.quantity,
-                      modifiers: [
+                setOrderProcessing(true);
+                const createOrder = orderMutation.mutate(
+                  {
+                    lineItems: cart.map((product: Product) => {
+                      return {
+                        catalogObjectId: product.variations[0].id,
+                        quantity: product.quantity,
+                        modifiers: [
+                          {
+                            name: product.name,
+                            catalogObjectId: product.id,
+                          },
+                        ],
+                      };
+                    }),
+                    referenceId: token.token as string,
+                    billingAddress: {
+                      email: userObj.email,
+                      displayName: `${userObj?.firstName} ${userObj.lastName}`,
+                      companyName: userObj.company as string,
+                      phoneNumber: userObj.phoneNumber as string,
+                      addressLine1: userObj.apartmentOrUnit
+                        ? `${userObj.apartmentOrUnit} / ${userObj.streetNumber} ${userObj.streetAddress}`
+                        : `${userObj.streetNumber} ${userObj.streetAddress}`,
+
+                      locality: userObj.city as string,
+                      region: userObj.state as string,
+                      postalCode: userObj.postalCode as string,
+                      country: "AU",
+                    },
+                    shippingAddress: {
+                      email: userObj.email,
+                      displayName: `${userObj?.firstName} ${userObj.lastName}`,
+                      companyName: userObj.company as string,
+                      phoneNumber: userObj.phoneNumber as string,
+                      addressLine1: userObj.apartmentOrUnit
+                        ? `${userObj.apartmentOrUnit} / ${userObj.streetNumber} ${userObj.streetAddress}`
+                        : `${userObj.streetNumber} ${userObj.streetAddress}`,
+
+                      locality: userObj.city as string,
+                      region: userObj.state as string,
+                      postalCode: userObj.postalCode as string,
+                      country: "AU",
+                    },
+                  },
+                  {
+                    onSuccess(data, variables, context) {
+                      const orderId = data?.id as string;
+                      const totalMoney =
+                        data?.totalMoney?.amount?.toString() as string;
+                      console.log("orderId is ", orderId);
+                      console.log("totalMoney is ", totalMoney);
+                      paymentMutation.mutate(
                         {
-                          name: product.name,
-                          catalogObjectId: product.id,
+                          orderId: orderId,
+                          totalMoney: totalMoney,
+                          token: token.token as string,
                         },
-                      ],
-                    };
-                  }),
-                  referenceId: token.token as string,
-                  billingAddress: {
-                    email: userObj.email,
-                    displayName: `${userObj?.firstName} ${userObj.lastName}`,
-                    companyName: userObj.company as string,
-                    phoneNumber: userObj.phoneNumber as string,
-                    addressLine1: userObj.apartmentOrUnit
-                      ? `${userObj.apartmentOrUnit} / ${userObj.streetNumber} ${userObj.streetAddress}`
-                      : `${userObj.streetNumber} ${userObj.streetAddress}`,
-
-                    locality: userObj.city as string,
-                    region: userObj.state as string,
-                    postalCode: userObj.postalCode as string,
-                    country: "AU",
-                  },
-                  shippingAddress: {
-                    email: userObj.email,
-                    displayName: `${userObj?.firstName} ${userObj.lastName}`,
-                    companyName: userObj.company as string,
-                    phoneNumber: userObj.phoneNumber as string,
-                    addressLine1: userObj.apartmentOrUnit
-                      ? `${userObj.apartmentOrUnit} / ${userObj.streetNumber} ${userObj.streetAddress}`
-                      : `${userObj.streetNumber} ${userObj.streetAddress}`,
-
-                    locality: userObj.city as string,
-                    region: userObj.state as string,
-                    postalCode: userObj.postalCode as string,
-                    country: "AU",
-                  },
-                });
-
-                console.log(createOrder);
-
-                // const response = await fetch("/api/pay", {
-                //   method: "POST",
-                //   headers: {
-                //     "Content-type": "application/json",
-                //   },
-                //   body: JSON.stringify({
-                //     sourceId: token.token,
-                //     // TO DO - ADD SHIPPING
-                //     orderId: newOrder.order.id,
-                //     amount: newOrder.order.totalMoney.amount,
-                //     locationId: newOrder.order.locationId,
-                //   }),
-                // });
-
-                // const paymentResponse = await response.json();
+                        {
+                          onSuccess(data, variables, context) {
+                            console.log(data);
+                            if (data?.status === "APPROVED") {
+                              completeOrderMutation.mutate(
+                                {
+                                  orderId: orderId,
+                                  paymentId: data?.id as string,
+                                },
+                                {
+                                  onSuccess(data, variables, context) {
+                                    console.log(data);
+                                    setOrderProcessing(false);
+                                    dispatch({
+                                      type: "CLEAR_CART",
+                                    });
+                                    router.push("/profile?orders");
+                                  },
+                                }
+                              );
+                            }
+                          },
+                        }
+                      );
+                    },
+                  }
+                );
               }}
             >
               <h1 className="sr-only">Checkout</h1>
@@ -659,7 +670,7 @@ export default function checkout() {
                                       htmlFor="region"
                                       className="block text-sm font-medium text-gray-700"
                                     >
-                                      State / Province
+                                      State
                                     </label>
                                     <div className="mt-1">
                                       <input
@@ -771,7 +782,16 @@ export default function checkout() {
                                 },
                               }}
                             >
-                              Pay ${total.toFixed(2)}
+                              <div className="w-full h-full flex items-center justify-center">
+                                {orderProcessing ? (
+                                  <div className="flex w-full items-center justify-center space-x-2">
+                                    <span>Processing Order</span>
+                                    <BeatLoader size={8} color="#602d0d" />
+                                  </div>
+                                ) : (
+                                  <span>Pay ${total.toFixed(2)}</span>
+                                )}
+                              </div>
                             </CreditCard>
                           </div>
                         )}

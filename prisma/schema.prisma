@@ -59,7 +59,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   cart        Cart[]
-  orders       Order[]
+  orders       Order[] @relation()
   wishlist    Wishlist[]
 }
 
@@ -112,18 +112,18 @@ model WishlistItem {
 }
 
 model Order {
-  id String @id @default(cuid())
-  userId String
-  lineItems OrderItem[]
+  id String @id 
+  userId String 
+  lineItems OrderItem[] @relation()
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model OrderItem {
-  id String @id @default(cuid())
+  id String @id 
   orderId String
   productId String
   quantity Int
-  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order Order? @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
 
 
