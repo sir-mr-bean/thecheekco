@@ -30,16 +30,6 @@ const MyApp = ({ Component, pageProps: { ...pageProps } }: AppProps) => {
             />
             <link rel="icon" href="/favicon.ico" />
           </Head>
-          <Script
-            id="google-tags-script"
-            strategy="afterInteractive"
-            defer
-            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
-          />
-          <Script
-            id="simple-tix-widget"
-            src="https://embed.prod.simpletix.com/assets/widget/widget.min.js"
-          ></Script>
 
           <div className="max-w-screen bg-bg-tan bg-cover">
             <Header />
