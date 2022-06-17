@@ -1,4 +1,3 @@
-import { React } from "react";
 import Image from "next/image";
 import { BsStarFill, BsStarHalf, BsStar } from "react-icons/bs";
 import { CartState } from "../../../../context/Context";
@@ -9,7 +8,6 @@ import { useRouter } from "next/router";
 import * as gtag from "lib/gtag";
 
 const CategoryPage = ({ currentProducts, currentCategory }) => {
-  const session = useSession();
   const router = useRouter();
   const query = router.query;
   const { cart, dispatch } = CartState();
