@@ -6,8 +6,10 @@ import { addToCart } from "../../../../context/Reducer";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import * as gtag from "lib/gtag";
 
 const CategoryPage = ({ currentProducts, currentCategory }) => {
+  const session = useSession();
   const router = useRouter();
   const query = router.query;
   const { cart, dispatch } = CartState();
@@ -19,8 +21,12 @@ const CategoryPage = ({ currentProducts, currentCategory }) => {
       item: product,
       qty: 1,
     });
-    if (window !== undefined) {
-    }
+    gtag.event({
+      action: "add_to_cart",
+      category: "ecommerce",
+      label: product.name,
+      value: `/shop/${query.category}`,
+    });
     toast.custom((t) => (
       <div
         className={`${
