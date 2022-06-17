@@ -277,7 +277,7 @@ export default function checkout() {
                             <SignInHeader />
                           </div>
                         )}
-                        {userObj ? (
+                        {session?.data?.user ? (
                           <UserForm
                             termsAccepted={termsAccepted}
                             setTermsAccepted={setTermsAccepted}

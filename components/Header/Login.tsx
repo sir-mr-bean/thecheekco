@@ -13,8 +13,8 @@ function classNames(...classes: [string, string?, string?, Boolean?]): string {
 
 export default function Login() {
   const router = useRouter();
-  const { data: session } = useSession();
-  const currentUser = session?.user;
+  const session = useSession();
+  const currentUser = session?.data?.user;
 
   const handleSignOut = async () => {
     await auth.signOut();
@@ -28,7 +28,8 @@ export default function Login() {
     >
       <div className="">
         <Menu.Button className="inline-flex justify-center w-full rounded-md shadow-sm py-2 font-medium font-gothic">
-          {!currentUser ? (
+          {session.status != String("loading") &&
+          session.status != String("authenticated") ? (
             <div className="hidden sm:flex items-center">
               Login
               <BsChevronDown
@@ -37,13 +38,16 @@ export default function Login() {
               />
             </div>
           ) : (
-            <div className="hidden sm:flex items-center sm:pr-10 whitespace-nowrap">
-              My Account
-              <BsChevronDown
-                className="-mr-1 ml-2 h-4 w-4 bg-transparent"
-                aria-hidden="true"
-              />
-            </div>
+            session.status != String("loading") &&
+            session.status === String("authenticated") && (
+              <div className="hidden sm:flex items-center sm:pr-10 whitespace-nowrap">
+                My Account
+                <BsChevronDown
+                  className="-mr-1 ml-2 h-4 w-4 bg-transparent"
+                  aria-hidden="true"
+                />
+              </div>
+            )
           )}
 
           <div className="active:bg-black rounded-md active:bg-opacity-10 py-1.5 px-1.5 sm:hidden">

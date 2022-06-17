@@ -2,12 +2,12 @@
 import "./globals.css";
 import "@/styles/widget.min.css";
 import Header from "@/components/Header/Header";
-import Script from "next/script";
+import * as gtag from "lib/gtag";
 import Head from "next/head";
 import { Toaster } from "react-hot-toast";
 import CartContext, { WishListContext } from "@/context/Context";
 import type { AppProps } from "next/app";
-import * as React from "react";
+import { useEffect } from "react";
 import { withTRPC } from "@trpc/next";
 import { getCsrfToken, getSession, SessionProvider } from "next-auth/react";
 import { AppRouter } from "@/backend/router/_app";
@@ -16,8 +16,22 @@ import Footer from "@/components/Footer/Footer";
 import { httpBatchLink } from "@trpc/client/links/httpBatchLink";
 import { httpLink } from "@trpc/client/links/httpLink";
 import { splitLink } from "@trpc/client/links/splitLink";
+import { useRouter } from "next/router";
+import Script from "next/script";
 
 const MyApp = ({ Component, pageProps: { ...pageProps } }: AppProps) => {
+  const router = useRouter();
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      gtag.pageview(url);
+    };
+    router.events.on("routeChangeComplete", handleRouteChange);
+    router.events.on("hashChangeComplete", handleRouteChange);
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+      router.events.off("hashChangeComplete", handleRouteChange);
+    };
+  }, [router.events]);
   return (
     <SessionProvider session={pageProps.session}>
       <CartContext>
@@ -30,7 +44,24 @@ const MyApp = ({ Component, pageProps: { ...pageProps } }: AppProps) => {
             />
             <link rel="icon" href="/favicon.ico" />
           </Head>
-
+          <Script
+            strategy="afterInteractive"
+            src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
+          />
+          <Script
+            id="gtag-init"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${gtag.GA_TRACKING_ID}', {
+              page_path: window.location.pathname,
+            });
+          `,
+            }}
+          />
           <div className="max-w-screen bg-bg-tan bg-cover">
             <Header />
             <Component {...pageProps} />
