@@ -1,3 +1,4 @@
+import { trpc } from "@/utils/trpc";
 import { BsCheck2 } from "react-icons/bs";
 
 const customerorders = [
@@ -29,6 +30,7 @@ const customerorders = [
 ];
 
 const orders = () => {
+  //const ordersQuery = trpc.useQuery([])
   return (
     <div className="bg-white">
       <div className="max-w-4xl mx-auto py-16 sm:px-6 sm:py-24">

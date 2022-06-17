@@ -45,11 +45,8 @@ const MyApp = ({ Component, pageProps: { ...pageProps } }: AppProps) => {
             <Header />
             <Component {...pageProps} />
             <Footer />
-            {pageProps.mobileView ? (
-              <Toaster position="bottom-center" />
-            ) : (
-              <Toaster position="top-right" reverseOrder={false} gutter={-40} />
-            )}
+
+            <Toaster position="top-right" reverseOrder={false} gutter={-40} />
           </div>
         </WishListContext>
       </CartContext>
@@ -120,7 +117,6 @@ MyApp.getInitialProps = async ({ ctx }) => {
     pageProps: {
       session: session,
       csrfToken: csrfToken,
-      isMobileView: Boolean(isMobileView),
     },
   };
 };

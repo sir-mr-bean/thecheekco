@@ -222,41 +222,42 @@ export default function checkout() {
                   },
                   {
                     onSuccess(data, variables, context) {
-                      const orderId = data?.id as string;
-                      const totalMoney =
-                        data?.totalMoney?.amount?.toString() as string;
-                      console.log("orderId is ", orderId);
-                      console.log("totalMoney is ", totalMoney);
-                      paymentMutation.mutate(
-                        {
-                          orderId: orderId,
-                          totalMoney: totalMoney,
-                          token: token.token as string,
-                        },
-                        {
-                          onSuccess(data, variables, context) {
-                            console.log(data);
-                            if (data?.status === "APPROVED") {
-                              completeOrderMutation.mutate(
-                                {
-                                  orderId: orderId,
-                                  paymentId: data?.id as string,
-                                },
-                                {
-                                  onSuccess(data, variables, context) {
-                                    console.log(data);
-                                    setOrderProcessing(false);
-                                    dispatch({
-                                      type: "CLEAR_CART",
-                                    });
-                                    router.push("/profile?orders");
-                                  },
-                                }
-                              );
-                            }
-                          },
-                        }
-                      );
+                      console.log(data);
+                      // const orderId = data?.id as string;
+                      // const totalMoney =
+                      //   data?.totalMoney?.amount?.toString() as string;
+                      // console.log("orderId is ", orderId);
+                      // console.log("totalMoney is ", totalMoney);
+                      // paymentMutation.mutate(
+                      //   {
+                      //     orderId: orderId,
+                      //     totalMoney: totalMoney,
+                      //     token: token.token as string,
+                      //   },
+                      //   {
+                      //     onSuccess(data, variables, context) {
+                      //       console.log(data);
+                      //       if (data?.status === "APPROVED") {
+                      //         completeOrderMutation.mutate(
+                      //           {
+                      //             orderId: orderId,
+                      //             paymentId: data?.id as string,
+                      //           },
+                      //           {
+                      //             onSuccess(data, variables, context) {
+                      //               console.log(data);
+                      //               setOrderProcessing(false);
+                      //               dispatch({
+                      //                 type: "CLEAR_CART",
+                      //               });
+                      //               router.push("/profile?orders");
+                      //             },
+                      //           }
+                      //         );
+                      //       }
+                      //     },
+                      //   }
+                      // );
                     },
                   }
                 );

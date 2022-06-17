@@ -20,7 +20,7 @@ const { serverRuntimeConfig } = getConfig();
   return this.toString();
 };
 
-const { ordersApi, paymentsApi } = new Client({
+const { ordersApi, paymentsApi, customersApi } = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
   environment: Environment.Production,
 });
@@ -68,6 +68,20 @@ export const squareRouter = createRouter()
     }),
     async resolve({ input, ctx }) {
       const { lineItems, referenceId, billingAddress, shippingAddress } = input;
+      const customer = await customersApi.searchCustomers({
+        query: {
+          filter: {
+            emailAddress: {
+              exact: "maddisonwebster@hotmail.com",
+            },
+          },
+        },
+      });
+      console.log(customer);
+      // if (customer?.result?.customers?.length === 0) {
+      //   const newCustomer = await customersApi.createCustomer({
+
+      return customer;
 
       const order: ApiResponse<CreateOrderResponse> =
         await ordersApi.createOrder({
@@ -219,6 +233,15 @@ export const squareRouter = createRouter()
       return orderResult;
     },
   })
+  // }).query("getOrders", {
+  //   input: z.object({
+  //     userId: z.string(),
+  //   }),
+  //   async resolve({ input, ctx }) {
+  //     console.log("getting orders");
+  //     console.log(input);
+  //     const { userId } = input;
+  //     const getOrders = await ordersApi.retrieveOrder({
 
   .query("categories", {
     input: z
