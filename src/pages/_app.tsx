@@ -22,7 +22,7 @@ import Script from "next/script";
 const MyApp = ({ Component, pageProps: { ...pageProps } }: AppProps) => {
   const router = useRouter();
   useEffect(() => {
-    const handleRouteChange = (url) => {
+    const handleRouteChange = (url: string) => {
       gtag.pageview(url);
     };
     router.events.on("routeChangeComplete", handleRouteChange);
