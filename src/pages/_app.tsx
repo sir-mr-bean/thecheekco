@@ -91,14 +91,6 @@ MyApp.getInitialProps = async ({ ctx }) => {
   const session = await getSession(ctx);
   const csrfToken = await getCsrfToken(ctx);
 
-  if (!session) {
-    return {
-      session: null,
-
-      csrfToken: null,
-    };
-  }
-
   return {
     pageProps: {
       session: session,
