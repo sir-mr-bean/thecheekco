@@ -32,7 +32,11 @@ const login = ({ csrfToken, providers }) => {
 
   const handleGoogleLogin = async () => {
     try {
-      await signIn("google");
+      await signIn("google", { callbackUrl: "/profile" });
+      if (session?.user) {
+        console.log("found user!");
+        router.push("/profile");
+      }
     } catch (err) {
       console.error(err);
       alert(err.message);

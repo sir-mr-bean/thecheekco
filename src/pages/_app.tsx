@@ -8,7 +8,12 @@ import { Toaster } from "react-hot-toast";
 import CartContext, { WishListContext } from "@/context/Context";
 import { useEffect } from "react";
 import { withTRPC } from "@trpc/next";
-import { getCsrfToken, getSession, SessionProvider } from "next-auth/react";
+import {
+  getCsrfToken,
+  getSession,
+  SessionProvider,
+  useSession,
+} from "next-auth/react";
 import { AppRouter } from "@/backend/router/_app";
 import superjson from "superjson";
 import Footer from "@/components/Footer/Footer";
@@ -19,7 +24,7 @@ import { useRouter } from "next/router";
 import Script from "next/script";
 import { AppProps } from "next/app";
 
-const MyApp = ({ Component, pageProps }: AppProps<typeof pageProps>) => {
+const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
   const router = useRouter();
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -74,7 +79,13 @@ const MyApp = ({ Component, pageProps }: AppProps<typeof pageProps>) => {
           />
           <div className="max-w-screen bg-bg-tan bg-cover">
             <Header />
-            <Component {...pageProps} />
+            {Component.auth ? (
+              <Auth>
+                <Component {...pageProps} />
+              </Auth>
+            ) : (
+              <Component {...pageProps} />
+            )}
             <Footer />
 
             <Toaster position="top-right" reverseOrder={false} gutter={-40} />
@@ -84,6 +95,17 @@ const MyApp = ({ Component, pageProps }: AppProps<typeof pageProps>) => {
     </SessionProvider>
   );
 };
+
+function Auth({ children }) {
+  // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
+  const { status } = useSession({ required: true });
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  return children;
+}
 
 export default withTRPC<AppRouter>({
   config({ ctx }) {

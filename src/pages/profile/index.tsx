@@ -26,8 +26,8 @@ const tabs = [
     name: "payment",
   },
 ];
-
-const profile: NextPage = () => {
+Profile.auth = {};
+export default function Profile(): JSX.Element {
   const { data: session, status } = useSession();
   console.log();
   console.log("session is ", session);
@@ -151,6 +151,4 @@ const profile: NextPage = () => {
       )}
     </>
   );
-};
-
-export default profile;
+}

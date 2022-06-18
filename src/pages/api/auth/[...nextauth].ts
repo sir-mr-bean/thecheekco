@@ -16,11 +16,14 @@ export const authOptions: NextAuthOptions = {
 
   providers: [
     GoogleProvider({
+      id: "google",
+      name: "google",
       clientId: process.env.GOOGLE_NEXT_AUTH_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_NEXT_AUTH_CLIENT_SECRET as string,
       checks: "pkce",
     }),
   ],
+
   session: {
     strategy: "database",
     maxAge: 30 * 24 * 60 * 60, // 30 days
