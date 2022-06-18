@@ -248,6 +248,19 @@ const SignInHeader = () => {
                             )}
                           </button>
                         </div>
+                        <div className="mt-6 relative">
+                          <div
+                            className="absolute inset-0 flex items-center"
+                            aria-hidden="true"
+                          >
+                            <div className="w-full border-t border-gray-300" />
+                          </div>
+                          <div className="relative flex justify-center text-sm">
+                            <span className="px-2 bg-white text-text-primary">
+                              Or continue as guest
+                            </span>
+                          </div>
+                        </div>
                       </form>
                     </div>
                   </div>

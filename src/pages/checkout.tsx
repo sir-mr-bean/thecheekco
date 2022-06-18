@@ -16,6 +16,7 @@ import Autocomplete, {
 import toast from "react-hot-toast";
 import SignInHeader from "@/components/Checkout/SignInHeader";
 import { trpc } from "@/utils/trpc";
+import SuccessModal from "@/components/Checkout/SuccessModal";
 
 export default function checkout() {
   const {
@@ -32,6 +33,7 @@ export default function checkout() {
   const completeOrderMutation = trpc.useMutation(["completeOrderPayment"]);
   const updateOrderMutation = trpc.useMutation(["updateOrder"]);
   const [orderProcessing, setOrderProcessing] = useState(false);
+  const [orderComplete, setOrderComplete] = useState(false);
   const termsCheckboxRef = useRef(null);
   const shippingInfoCheckboxRef = useRef(null);
   const { cart, dispatch } = CartState();
@@ -42,7 +44,30 @@ export default function checkout() {
   const [sameAsCustomerInfo, setSameAsCustomerInfo] = useState(false);
 
   const session = useSession();
-  const [userObj, setUserObj] = useState<User>(session?.data?.user as User);
+  const [userObj, setUserObj] = useState<User>(
+    (session?.data?.user as User) || {
+      id: "",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      name: "",
+      image: "",
+      emailVerified: false,
+      password: "",
+      firstName: "",
+      lastName: "",
+      company: "",
+      streetAddress: "",
+      streetNumber: "",
+      apartmentOrUnit: "",
+      city: "",
+      state: "",
+      country: "",
+      postalCode: "",
+      email: "",
+      phoneNumber: "",
+      isAdmin: false,
+    }
+  );
   const [userShippingObj, setUserShippingObj] = useState({
     firstName: "",
     lastName: "",
@@ -61,7 +86,6 @@ export default function checkout() {
   const [customerInfoSet, setCustomerInfoSet] = useState(false);
   const [shippingInfoSet, setShippingInfoSet] = useState(false);
   const [readyForPayment, setReadyForPayment] = useState(false);
-  const [paymentMade, setPaymentMade] = useState(false);
 
   useEffect(() => {
     let sum = 0;
@@ -133,6 +157,10 @@ export default function checkout() {
 
   return (
     <>
+      <SuccessModal
+        orderComplete={orderComplete}
+        setOrderComplete={setOrderComplete}
+      />
       <div className="bg-white mt-16 mx-1 md:mx-16 rounded-md shadow-lg shadow-black font-gothic min-h-screen">
         <div className="max-w-7xl mx-auto px-4 pt-4 pb-16 sm:px-6 sm:pt-8 sm:pb-24 lg:px-8 xl:px-2 xl:pt-14">
           {total && (
@@ -272,10 +300,10 @@ export default function checkout() {
                         <span className="hidden sm:block whitespace-nowrap text-xl font-medium pt-3 sm:pt-0">
                           Checkout
                         </span>
-                        {!userObj && (
-                          <div>
+                        {!session.data?.user && (
+                          <>
                             <SignInHeader />
-                          </div>
+                          </>
                         )}
                         {session?.data?.user ? (
                           <UserForm
