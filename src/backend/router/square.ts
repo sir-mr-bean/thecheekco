@@ -68,20 +68,6 @@ export const squareRouter = createRouter()
     }),
     async resolve({ input, ctx }) {
       const { lineItems, referenceId, billingAddress, shippingAddress } = input;
-      const customer = await customersApi.searchCustomers({
-        query: {
-          filter: {
-            emailAddress: {
-              exact: "maddisonwebster@hotmail.com",
-            },
-          },
-        },
-      });
-
-      // if (customer?.result?.customers?.length === 0) {
-      //   const newCustomer = await customersApi.createCustomer({
-
-      return customer;
 
       const order: ApiResponse<CreateOrderResponse> =
         await ordersApi.createOrder({
@@ -231,16 +217,28 @@ export const squareRouter = createRouter()
       return orderResult;
     },
   })
-  // }).query("getOrders", {
-  //   input: z.object({
-  //     userId: z.string(),
-  //   }),
-  //   async resolve({ input, ctx }) {
-  //     console.log("getting orders");
-  //     console.log(input);
-  //     const { userId } = input;
-  //     const getOrders = await ordersApi.retrieveOrder({
-
+  .query("getOrders", {
+    input: z.object({
+      userId: z.string(),
+    }),
+    async resolve({ input, ctx }) {
+      console.log("getting orders");
+      console.log(input);
+      const { userId } = input;
+      const getOrders = await ordersApi.searchOrders({
+        query: {
+          filter: {
+            customerFilter: {
+              customerIds: [userId],
+            },
+          },
+        },
+      });
+      console.log(getOrders);
+      const ordersResult = getOrders?.result?.orders;
+      return ordersResult;
+    },
+  })
   .query("categories", {
     input: z
       .object({
@@ -284,15 +282,105 @@ export const squareRouter = createRouter()
       return categories;
     },
   })
-  .query("hello", {
-    input: z
-      .object({
-        text: z.string().nullish(),
-      })
-      .nullish(),
-    resolve({ input }) {
-      return {
-        greeting: `hello ${input?.text ?? "world"}`,
-      };
+  .query("searchCustomer", {
+    input: z.object({
+      email: z.string(),
+    }),
+    async resolve({ input, ctx }) {
+      console.log("searching customer");
+      console.log(input);
+      const { email } = input;
+      const searchCustomer = await customersApi.searchCustomers({
+        query: {
+          filter: {
+            emailAddress: {
+              exact: email,
+            },
+          },
+        },
+      });
+      console.log(searchCustomer);
+      const customerResult = searchCustomer?.result?.customers;
+      return customerResult;
+    },
+  })
+  .mutation("createCustomer", {
+    input: z.object({
+      email: z.string(),
+      firstName: z.string(),
+      lastName: z.string(),
+      phoneNumber: z.string(),
+      address: z
+        .object({
+          addressLine1: z.string(),
+          addressLine2: z.string(),
+          locality: z.string(),
+          region: z.string(),
+          postalCode: z.string(),
+          country: z.string(),
+        })
+        .nullable(),
+    }),
+    async resolve({ input, ctx }) {
+      console.log("creating customer");
+      console.log(input);
+      const { email, firstName, lastName, phoneNumber, address } = input;
+      const createCustomer = await customersApi.createCustomer({
+        emailAddress: email,
+        givenName: firstName,
+        familyName: lastName,
+        phoneNumber: phoneNumber,
+        address: {
+          addressLine1: address?.addressLine1,
+          addressLine2: address?.addressLine2,
+          administrativeDistrictLevel1: address?.region,
+          locality: address?.locality,
+          country: address?.country,
+          postalCode: address?.postalCode,
+        },
+        idempotencyKey: randomUUID(),
+      });
+      console.log(createCustomer);
+      const customerResult = createCustomer?.result?.customer;
+      return customerResult;
+    },
+  })
+  .mutation("updateCustomer", {
+    input: z.object({
+      customerId: z.string(),
+      firstName: z.string(),
+      lastName: z.string(),
+      phoneNumber: z.string(),
+      address: z
+        .object({
+          addressLine1: z.string(),
+          addressLine2: z.string(),
+          locality: z.string(),
+          region: z.string(),
+          postalCode: z.string(),
+          country: z.string(),
+        })
+        .nullable(),
+    }),
+    async resolve({ input, ctx }) {
+      console.log("updating customer");
+      console.log(input);
+      const { customerId, firstName, lastName, phoneNumber, address } = input;
+      const updateCustomer = await customersApi.updateCustomer(customerId, {
+        givenName: firstName,
+        familyName: lastName,
+        phoneNumber: phoneNumber,
+        address: {
+          addressLine1: address?.addressLine1,
+          addressLine2: address?.addressLine2,
+          administrativeDistrictLevel1: address?.region,
+          locality: address?.locality,
+          country: address?.country,
+          postalCode: address?.postalCode,
+        },
+      });
+      console.log(updateCustomer);
+      const customerResult = updateCustomer?.result?.customer;
+      return customerResult;
     },
   });

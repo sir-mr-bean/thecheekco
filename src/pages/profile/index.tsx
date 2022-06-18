@@ -36,11 +36,11 @@ export default function Profile(): JSX.Element {
   const [openTab, setOpenTab] = useState(tabFromQuery?.index || 1);
 
   console.log(status);
-  useEffect(() => {
-    if (status === String("unauthenticated")) {
-      router.push("/login");
-    }
-  }, [status]);
+  // useEffect(() => {
+  //   if (status === String("unauthenticated")) {
+  //     router.push("/login");
+  //   }
+  // }, [status]);
 
   return (
     <>

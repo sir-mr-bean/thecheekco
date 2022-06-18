@@ -30,7 +30,11 @@ const customerorders = [
 ];
 
 const orders = () => {
-  //const ordersQuery = trpc.useQuery([])
+  const ordersQuery = trpc.useQuery([
+    "searchCustomer",
+    { email: "kroucher.1019@gmail.com" },
+  ]);
+  console.log(ordersQuery);
   return (
     <div className="bg-white">
       <div className="max-w-4xl mx-auto py-16 sm:px-6 sm:py-24">

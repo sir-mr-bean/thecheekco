@@ -30,9 +30,15 @@ const login = ({ csrfToken, providers }) => {
   const passRef = useRef<HTMLInputElement>(null);
   const [loggingIn, setLoggingIn] = useState(false);
 
+  useEffect(() => {
+    console.log(window.location);
+  }, []);
+
   const handleGoogleLogin = async () => {
     try {
-      await signIn("google", { callbackUrl: "/profile" });
+      await signIn("google", {
+        redirect: false,
+      });
       if (session?.user) {
         console.log("found user!");
         router.push("/profile");
