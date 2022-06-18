@@ -77,7 +77,7 @@ export const squareRouter = createRouter()
           },
         },
       });
-      console.log(customer);
+
       // if (customer?.result?.customers?.length === 0) {
       //   const newCustomer = await customersApi.createCustomer({
 
@@ -118,7 +118,7 @@ export const squareRouter = createRouter()
             ],
           },
         });
-      console.log(order);
+
       const orderResult = order?.result?.order;
       return orderResult;
     },
@@ -130,8 +130,6 @@ export const squareRouter = createRouter()
       token: z.string(),
     }),
     async resolve({ input, ctx }) {
-      console.log("creating payment");
-      console.log(input);
       const { orderId, totalMoney, token } = input;
       const totalPayment = BigInt(totalMoney);
       const payment = await paymentsApi.createPayment({
@@ -145,7 +143,7 @@ export const squareRouter = createRouter()
         locationId: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string,
         autocomplete: false,
       });
-      console.log(payment);
+
       const paymentResult = payment?.result?.payment;
       return paymentResult;
     },

@@ -6,7 +6,6 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth, db } from "../../utils/firebaseConfig";
-
 import Image from "next/image";
 import Logo from "../../public/images/logo.png";
 import { AiOutlineFacebook } from "react-icons/ai";
@@ -27,13 +26,13 @@ const login = ({ csrfToken, providers }) => {
 
   const [incorrectCreds, setIncorrectCreds] = useState(false);
   const router = useRouter();
-  const emailRef = useRef(null);
-  const passRef = useRef(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passRef = useRef<HTMLInputElement>(null);
   const [loggingIn, setLoggingIn] = useState(false);
 
   const handleGoogleLogin = async () => {
     try {
-      await signIn("google", { callbackUrl: "http://localhost:3000/profile" });
+      await signIn("google");
     } catch (err) {
       console.error(err);
       alert(err.message);
@@ -68,8 +67,8 @@ const login = ({ csrfToken, providers }) => {
     setLoggingIn(true);
     try {
       const result = await logInWithEmailAndPassword(
-        emailRef.current.value,
-        passRef.current.value
+        emailRef?.current?.value,
+        passRef?.current?.value
       );
 
       setLoggingIn(false);

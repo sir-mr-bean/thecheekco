@@ -29,9 +29,6 @@ const UserInfo = ({ session }) => {
   type DateSchema = z.infer<typeof dateSchema>;
 
   const handleFormSubmit = async (d) => {
-    //console.log("submitting form");
-    //console.log(userObj);
-    console.log(d);
     const updatedUserObj = {
       id: userObj.id,
       createdAt: userObj.createdAt as DateSchema,
@@ -54,7 +51,7 @@ const UserInfo = ({ session }) => {
       phoneNumber: d.tel,
       isAdmin: userObj.isAdmin,
     };
-    console.log(updatedUserObj);
+
     const userUpdate = updateUser.mutate({
       email: userObj.email,
       user: updatedUserObj,

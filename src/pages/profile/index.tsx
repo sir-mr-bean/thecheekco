@@ -28,12 +28,7 @@ const tabs = [
 ];
 
 const profile: NextPage = () => {
-  const { data: session, status } = useSession({
-    required: true,
-    onUnauthenticated: () => {
-      router.push("/login");
-    },
-  });
+  const { data: session, status } = useSession();
   console.log();
   console.log("session is ", session);
   const router = useRouter();

@@ -6,7 +6,6 @@ import * as gtag from "lib/gtag";
 import Head from "next/head";
 import { Toaster } from "react-hot-toast";
 import CartContext, { WishListContext } from "@/context/Context";
-import type { AppProps } from "next/app";
 import { useEffect } from "react";
 import { withTRPC } from "@trpc/next";
 import { getCsrfToken, getSession, SessionProvider } from "next-auth/react";
@@ -18,8 +17,9 @@ import { httpLink } from "@trpc/client/links/httpLink";
 import { splitLink } from "@trpc/client/links/splitLink";
 import { useRouter } from "next/router";
 import Script from "next/script";
+import { AppProps } from "next/app";
 
-const MyApp = ({ Component, pageProps: { ...pageProps } }: AppProps) => {
+const MyApp = ({ Component, pageProps }: AppProps<typeof pageProps>) => {
   const router = useRouter();
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -129,13 +129,9 @@ export default withTRPC<AppRouter>({
 })(MyApp);
 
 MyApp.getInitialProps = async ({ ctx }) => {
-  const session = await getSession(ctx);
-  const csrfToken = await getCsrfToken(ctx);
-
   return {
     pageProps: {
-      session: session,
-      csrfToken: csrfToken,
+      session: await getSession(ctx),
     },
   };
 };

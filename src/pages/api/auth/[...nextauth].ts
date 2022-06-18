@@ -9,23 +9,6 @@ const prisma = new PrismaClient();
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
-  // jwt: {
-  //   encode: async ({ secret, token }) => {
-  //     const jwtToken = await new jose.SignJWT({ token: token })
-  //       .setProtectedHeader({ alg: "HS256" })
-  //       .setIssuedAt()
-  //       .setExpirationTime("30d")
-  //       .sign(new TextEncoder().encode(`${secret}`));
-  //     return jwtToken;
-  //   },
-  //   decode: async ({ secret, token }) => {
-  //     const { payload: jwtData } = await jose.jwtVerify(
-  //       token as string,
-  //       new TextEncoder().encode(`${secret}`)
-  //     );
-  //     return jwtData;
-  //   },
-  // },
   pages: {
     signIn: "/login",
     signOut: "/",
@@ -56,9 +39,8 @@ export const authOptions: NextAuthOptions = {
       else if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     },
-    async session({ session, token, user }) {
+    async session({ session, user }) {
       session.user = user as User;
-      session.token = token;
       return session;
     },
   },
