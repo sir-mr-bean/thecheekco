@@ -131,19 +131,21 @@ const GuestForm = ({
                     (component) => component.types.includes("postal_code")
                   );
 
-                  setUserObj({
-                    ...userObj,
-                    streetNumber: streetNumber?.long_name as string,
-                    streetAddress: streetNumber?.long_name
-                      ? `${streetNumber?.long_name} ${streetAddress?.long_name}`
-                      : `${streetAddress?.long_name}`,
-                    apartmentOrUnit: apartmentOrUnit
-                      ? apartmentOrUnit?.long_name
-                      : "",
-                    city: city?.long_name as string,
-                    state: state?.long_name as string,
-                    country: country?.long_name as string,
-                    postalCode: postalCode?.long_name as string,
+                  setUserObj(({ userObj }) => {
+                    return {
+                      ...userObj,
+                      streetNumber: streetNumber?.long_name as string,
+                      streetAddress: streetNumber?.long_name
+                        ? `${streetNumber?.long_name} ${streetAddress?.long_name}`
+                        : `${streetAddress?.long_name}`,
+                      apartmentOrUnit: apartmentOrUnit
+                        ? apartmentOrUnit?.long_name
+                        : "",
+                      city: city?.long_name as string,
+                      state: state?.long_name as string,
+                      country: country?.long_name as string,
+                      postalCode: postalCode?.long_name as string,
+                    };
                   });
                 }}
                 options={{
