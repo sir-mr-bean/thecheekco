@@ -155,6 +155,15 @@ export default function checkout() {
     }
   };
 
+  useEffect(() => {
+    if (firstLoad) {
+      if (session.data?.user) {
+        setUserObj(session?.data?.user as User);
+        setFirstLoad(false);
+      }
+    }
+  }, [session]);
+
   return (
     <>
       <SuccessModal
@@ -221,12 +230,14 @@ export default function checkout() {
                     referenceId: token.token as string,
                     billingAddress: {
                       email: userObj.email,
+                      firstName: userObj.firstName || "",
+                      lastName: userObj.lastName || "",
                       displayName: `${userObj?.firstName} ${userObj.lastName}`,
                       companyName: userObj.company as string,
                       phoneNumber: userObj.phoneNumber as string,
                       addressLine1: userObj.apartmentOrUnit
-                        ? `${userObj.apartmentOrUnit} / ${userObj.streetNumber} ${userObj.streetAddress}`
-                        : `${userObj.streetNumber} ${userObj.streetAddress}`,
+                        ? `${userObj.apartmentOrUnit} / ${userObj.streetAddress}`
+                        : `${userObj.streetAddress}`,
 
                       locality: userObj.city as string,
                       region: userObj.state as string,
@@ -235,12 +246,14 @@ export default function checkout() {
                     },
                     shippingAddress: {
                       email: userObj.email,
+                      firstName: userObj.firstName as string,
+                      lastName: userObj.lastName as string,
                       displayName: `${userObj?.firstName} ${userObj.lastName}`,
                       companyName: userObj.company as string,
                       phoneNumber: userObj.phoneNumber as string,
                       addressLine1: userObj.apartmentOrUnit
-                        ? `${userObj.apartmentOrUnit} / ${userObj.streetNumber} ${userObj.streetAddress}`
-                        : `${userObj.streetNumber} ${userObj.streetAddress}`,
+                        ? `${userObj.apartmentOrUnit} / ${userObj.streetAddress}`
+                        : `${userObj.streetAddress}`,
 
                       locality: userObj.city as string,
                       region: userObj.state as string,
@@ -251,41 +264,41 @@ export default function checkout() {
                   {
                     onSuccess(data, variables, context) {
                       console.log(data);
-                      // const orderId = data?.id as string;
-                      // const totalMoney =
-                      //   data?.totalMoney?.amount?.toString() as string;
-                      // console.log("orderId is ", orderId);
-                      // console.log("totalMoney is ", totalMoney);
-                      // paymentMutation.mutate(
-                      //   {
-                      //     orderId: orderId,
-                      //     totalMoney: totalMoney,
-                      //     token: token.token as string,
-                      //   },
-                      //   {
-                      //     onSuccess(data, variables, context) {
-                      //       console.log(data);
-                      //       if (data?.status === "APPROVED") {
-                      //         completeOrderMutation.mutate(
-                      //           {
-                      //             orderId: orderId,
-                      //             paymentId: data?.id as string,
-                      //           },
-                      //           {
-                      //             onSuccess(data, variables, context) {
-                      //               console.log(data);
-                      //               setOrderProcessing(false);
-                      //               dispatch({
-                      //                 type: "CLEAR_CART",
-                      //               });
-                      //               router.push("/profile?orders");
-                      //             },
-                      //           }
-                      //         );
-                      //       }
-                      //     },
-                      //   }
-                      // );
+                      const orderId = data?.id as string;
+                      const totalMoney =
+                        data?.totalMoney?.amount?.toString() as string;
+                      console.log("orderId is ", orderId);
+                      console.log("totalMoney is ", totalMoney);
+                      paymentMutation.mutate(
+                        {
+                          orderId: orderId,
+                          totalMoney: totalMoney,
+                          token: token.token as string,
+                        },
+                        {
+                          onSuccess(data, variables, context) {
+                            console.log(data);
+                            if (data?.status === "APPROVED") {
+                              completeOrderMutation.mutate(
+                                {
+                                  orderId: orderId,
+                                  paymentId: data?.id as string,
+                                },
+                                {
+                                  onSuccess(data, variables, context) {
+                                    console.log(data);
+                                    setOrderProcessing(false);
+                                    dispatch({
+                                      type: "CLEAR_CART",
+                                    });
+                                    router.push("/profile?orders");
+                                  },
+                                }
+                              );
+                            }
+                          },
+                        }
+                      );
                     },
                   }
                 );
@@ -316,6 +329,7 @@ export default function checkout() {
                           <GuestForm
                             userObj={userObj}
                             setUserObj={setUserObj}
+                            register={register}
                             termsAccepted={termsAccepted}
                             setTermsAccepted={setTermsAccepted}
                           />

@@ -3,20 +3,23 @@ import Autocomplete, {
 } from "react-google-autocomplete";
 import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
+import { User } from "@prisma/client";
 
 const GuestForm = ({
   termsAccepted,
   setTermsAccepted,
   userObj,
   setUserObj,
+  register,
+}: {
+  userObj: User;
+  setUserObj: Function;
+  termsAccepted: boolean;
+  setTermsAccepted: Function;
+  register: Function;
 }) => {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
   const termsCheckboxRef = useRef(null);
+  const streetAddressRef = useRef<HTMLInputElement>(null);
 
   return (
     <>
@@ -38,7 +41,7 @@ const GuestForm = ({
                   id="guest-first-name"
                   name="first-name"
                   autoComplete="given-name"
-                  value={userObj.firstName}
+                  value={userObj.firstName as string}
                   onChange={(e) =>
                     setUserObj({ ...userObj, firstName: e.target.value })
                   }
@@ -60,7 +63,7 @@ const GuestForm = ({
                   id="guest-last-name"
                   name="last-name"
                   autoComplete="family-name"
-                  value={userObj.lastName}
+                  value={userObj.lastName as string}
                   onChange={(e) =>
                     setUserObj({ ...userObj, lastName: e.target.value })
                   }
@@ -82,7 +85,7 @@ const GuestForm = ({
                   name="company"
                   id="guest-company"
                   autoComplete="organization"
-                  value={userObj.company}
+                  value={userObj.company as string}
                   onChange={(e) =>
                     setUserObj({ ...userObj, company: e.target.value })
                   }
@@ -161,6 +164,20 @@ const GuestForm = ({
                 }}
                 className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
               />
+              <input
+                hidden
+                id="street-address"
+                ref={streetAddressRef}
+                type="text"
+                value={userObj?.streetAddress as string}
+                autoComplete="off"
+                onChange={(e) => {
+                  setUserObj({
+                    ...userObj,
+                    streetAddress: (e.target as HTMLInputElement).value,
+                  });
+                }}
+              />
             </div>
 
             <div className="sm:col-span-2">
@@ -175,7 +192,7 @@ const GuestForm = ({
                   type="text"
                   name="apartment"
                   id="guest-apartment"
-                  value={userObj.apartmentOrUnit}
+                  value={userObj.apartmentOrUnit as string}
                   onChange={(e) =>
                     setUserObj({
                       ...userObj,
@@ -221,7 +238,7 @@ const GuestForm = ({
                   id="guest-country"
                   name="country"
                   autoComplete="country-name"
-                  value={userObj.country}
+                  value={userObj.country as string}
                   onChange={(e) =>
                     setUserObj({ ...userObj, country: e.target.value })
                   }
@@ -245,7 +262,7 @@ const GuestForm = ({
                   name="region"
                   id="guest-region"
                   autoComplete="address-level1"
-                  value={userObj.state}
+                  value={userObj.state as string}
                   onChange={(e) =>
                     setUserObj({ ...userObj, state: e.target.value })
                   }
@@ -267,7 +284,7 @@ const GuestForm = ({
                   name="postal-code"
                   id="guest-postal-code"
                   autoComplete="postal-code"
-                  value={userObj.postalCode}
+                  value={userObj.postalCode as string}
                   onChange={(e) =>
                     setUserObj({ ...userObj, postalCode: e.target.value })
                   }
@@ -289,7 +306,7 @@ const GuestForm = ({
                   name="phone"
                   id="guest-phone"
                   autoComplete="tel"
-                  value={userObj.phoneNumber}
+                  value={userObj.phoneNumber as string}
                   onChange={(e) =>
                     setUserObj({ ...userObj, phoneNumber: e.target.value })
                   }

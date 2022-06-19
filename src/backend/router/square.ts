@@ -5,6 +5,7 @@ import {
   Client,
   CreateOrderResponse,
   Environment,
+  ListCustomersResponse,
   Order,
   OrderCreated,
 } from "square";
@@ -14,6 +15,7 @@ import getConfig from "next/config";
 import { CategoryType } from "@/types/Product";
 import { Category } from "@/types/Category";
 import { OrderItem } from "@prisma/client";
+import { bigint, unknown } from "square/dist/schema";
 const { serverRuntimeConfig } = getConfig();
 
 (BigInt.prototype as any).toJSON = function () {
@@ -43,6 +45,8 @@ export const squareRouter = createRouter()
       referenceId: z.string(),
       billingAddress: z.object({
         email: z.string(),
+        firstName: z.string(),
+        lastName: z.string(),
         displayName: z.string(),
         companyName: z.string(),
         phoneNumber: z.string(),
@@ -56,6 +60,8 @@ export const squareRouter = createRouter()
       shippingAddress: z.object({
         email: z.string(),
         displayName: z.string(),
+        firstName: z.string(),
+        lastName: z.string(),
         companyName: z.string(),
         phoneNumber: z.string(),
         addressLine1: z.string(),
@@ -68,6 +74,56 @@ export const squareRouter = createRouter()
     }),
     async resolve({ input, ctx }) {
       const { lineItems, referenceId, billingAddress, shippingAddress } = input;
+      // check if customer exists in square, if not create one
+      const customer = await customersApi.listCustomers();
+      let customerId: string | undefined;
+      const existingCustomer = customer?.result?.customers?.find(
+        (customer) => customer.emailAddress === billingAddress.email
+      );
+      if (!existingCustomer) {
+        const newCustomer = await customersApi.createCustomer({
+          address: {
+            addressLine1: billingAddress.addressLine1,
+            addressLine2: billingAddress.addressLine2 as string,
+            administrativeDistrictLevel1: billingAddress.region,
+            locality: billingAddress.locality,
+            postalCode: billingAddress.postalCode,
+            country: billingAddress.country,
+          },
+          companyName: billingAddress.companyName,
+          givenName: billingAddress.firstName,
+          familyName: billingAddress.lastName,
+          emailAddress: billingAddress.email,
+          phoneNumber: billingAddress.phoneNumber,
+        });
+        customerId = newCustomer?.result?.customer?.id;
+        if (!customerId) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Failed to create customer",
+          });
+        }
+      } else {
+        customerId = existingCustomer?.id;
+        const updatedUser = await customersApi.updateCustomer(
+          customerId as string,
+          {
+            address: {
+              addressLine1: billingAddress.addressLine1,
+              addressLine2: billingAddress.addressLine2 as string,
+              administrativeDistrictLevel1: billingAddress.region,
+              locality: billingAddress.locality,
+              postalCode: billingAddress.postalCode,
+              country: billingAddress.country,
+            },
+            companyName: billingAddress.companyName,
+            givenName: billingAddress.firstName,
+            familyName: billingAddress.lastName,
+            emailAddress: billingAddress.email,
+            phoneNumber: billingAddress.phoneNumber,
+          }
+        );
+      }
 
       const order: ApiResponse<CreateOrderResponse> =
         await ordersApi.createOrder({
@@ -75,7 +131,7 @@ export const squareRouter = createRouter()
           order: {
             locationId: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string,
             referenceId: referenceId,
-
+            customerId: customerId,
             lineItems: lineItems.map(({ catalogObjectId, quantity }) => ({
               catalogObjectId,
               quantity: quantity.toString(),
@@ -219,24 +275,29 @@ export const squareRouter = createRouter()
   })
   .query("getOrders", {
     input: z.object({
-      userId: z.string(),
+      email: z.string(),
     }),
     async resolve({ input, ctx }) {
       console.log("getting orders");
       console.log(input);
-      const { userId } = input;
-      const getOrders = await ordersApi.searchOrders({
-        query: {
-          filter: {
-            customerFilter: {
-              customerIds: [userId],
-            },
+      const { email } = input;
+      const prisma = ctx.prisma;
+      const orders = await prisma.order.findMany({
+        where: {
+          user: {
+            email,
           },
         },
       });
-      console.log(getOrders);
-      const ordersResult = getOrders?.result?.orders;
-      return ordersResult;
+      if (orders?.length) {
+        const getOrders = await ordersApi.batchRetrieveOrders({
+          locationId: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string,
+          orderIds: orders.map((order) => order.id),
+        });
+        console.log(getOrders);
+        const orderResult = getOrders?.result?.orders;
+        return orderResult;
+      }
     },
   })
   .query("categories", {
@@ -298,9 +359,10 @@ export const squareRouter = createRouter()
             },
           },
         },
+        limit: 1 as unknown as bigint,
       });
       console.log(searchCustomer);
-      const customerResult = searchCustomer?.result?.customers;
+      const customerResult = searchCustomer?.result?.customers?.[0];
       return customerResult;
     },
   })

@@ -5,8 +5,9 @@ import UserOrders from "../../../components/Profile/UserOrders";
 import UserDashboard from "../../../components/Profile/UserDashboard";
 import { useSession } from "next-auth/react";
 import BeatLoader from "react-spinners/BeatLoader";
-import { User } from "@prisma/client";
 import { NextPage } from "next";
+import { trpc } from "@/utils/trpc";
+import { Customer, Order } from "square";
 
 const tabs = [
   {
@@ -34,12 +35,46 @@ export default function Profile(): JSX.Element {
   const router = useRouter();
   const tabFromQuery = tabs.find((tab) => tab.name === router.query?.tab);
   const [openTab, setOpenTab] = useState(tabFromQuery?.index || 1);
+  const queryContext = trpc.useContext();
+  const [customerOrders, setCustomerOrders] = useState<Order[]>([]);
+
+  const fetchCustomer = async () => {
+    const customer = await queryContext.fetchQuery([
+      "searchCustomer",
+      { email: session?.user?.email as string },
+    ]);
+    return customer;
+  };
+
+  const fetchOrders = async (customer: Customer) => {
+    const orders = await queryContext.fetchQuery([
+      "getOrders",
+      { email: customer?.emailAddress as string },
+    ]);
+    return orders;
+  };
 
   console.log(status);
   useEffect(() => {
     if (status === String("unauthenticated")) {
       router.push("/login");
     }
+    fetchCustomer().then((customer) => {
+      console.log("customer is ", customer);
+      if (customer?.emailAddress) {
+        try {
+          fetchOrders(customer).then((orders) => {
+            console.log("orders is ", orders);
+            if (orders?.length) {
+              setCustomerOrders(orders);
+            }
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    });
+    console.log("orders are ", customerOrders);
   }, [status]);
 
   return (
@@ -136,7 +171,7 @@ export default function Profile(): JSX.Element {
                 )}
                 {openTab === 3 && (
                   <>
-                    <UserOrders />
+                    <UserOrders customerOrders={customerOrders} />
                   </>
                 )}
                 {openTab === 4 && (
