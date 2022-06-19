@@ -339,18 +339,26 @@ const UserForm = ({
                 <div className="mt-1">
                   <input
                     type="text"
-                    {...register("postal-code")}
+                    {...(register("postal-code"),
+                    {
+                      value: userObj?.postalCode
+                        ? (userObj.postalCode as string)
+                        : "",
+                      onChange: (e) => {
+                        setUserObj({
+                          ...userObj,
+                          postalCode: e.target.value,
+                        });
+                      },
+                      maxLength: 4,
+                      required: true,
+                      pattern: "/^[0-9]{4}$/",
+                      validate: (value) =>
+                        value.length === 4 ? undefined : "Invalid post code",
+                    })}
+                    maxLength={4}
                     id="postal-code"
                     autoComplete="postal-code"
-                    value={
-                      userObj?.postalCode ? (userObj.postalCode as string) : ""
-                    }
-                    onChange={(e) => {
-                      setUserObj({
-                        ...userObj,
-                        postalCode: e.target.value,
-                      });
-                    }}
                     className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
                   />
                 </div>

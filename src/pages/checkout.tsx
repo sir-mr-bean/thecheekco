@@ -18,6 +18,16 @@ import SignInHeader from "@/components/Checkout/SignInHeader";
 import { trpc } from "@/utils/trpc";
 import SuccessModal from "@/components/Checkout/SuccessModal";
 
+export type validationErrors = {
+  name: boolean;
+  email: boolean;
+  phone: boolean;
+  streetAddress: boolean;
+  city: boolean;
+  state: boolean;
+  zip: boolean;
+};
+
 export default function checkout() {
   const {
     register,
@@ -26,7 +36,6 @@ export default function checkout() {
     formState: { errors },
   } = useForm();
   const router = useRouter();
-  const streetAddressInputRef = useRef(null);
   const [firstLoad, setFirstLoad] = useState(true);
   const orderMutation = trpc.useMutation(["createOrder"]);
   const paymentMutation = trpc.useMutation(["createOrderPayment"]);
@@ -34,15 +43,22 @@ export default function checkout() {
   const updateOrderMutation = trpc.useMutation(["updateOrder"]);
   const [orderProcessing, setOrderProcessing] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
-  const termsCheckboxRef = useRef(null);
-  const shippingInfoCheckboxRef = useRef(null);
+  const termsCheckboxRef = useRef<HTMLInputElement>(null);
+  const shippingInfoCheckboxRef = useRef<HTMLInputElement>(null);
   const { cart, dispatch } = CartState();
   const [total, setTotal] = useState(0);
   const products = cart;
-  const [loggingIn, setLoggingIn] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [sameAsCustomerInfo, setSameAsCustomerInfo] = useState(false);
-
+  const [validationErrors, setValidationErrors] = useState<validationErrors>({
+    name: false,
+    email: false,
+    phone: false,
+    streetAddress: false,
+    city: false,
+    state: false,
+    zip: false,
+  });
   const session = useSession();
   const [userObj, setUserObj] = useState<User>(
     (session?.data?.user as User) || {
@@ -60,8 +76,8 @@ export default function checkout() {
       streetNumber: "",
       apartmentOrUnit: "",
       city: "",
-      state: "",
-      country: "",
+      state: "ACT",
+      country: "Australia",
       postalCode: "",
       email: "",
       phoneNumber: "",
@@ -98,21 +114,69 @@ export default function checkout() {
     console.log("total is ", sum);
   }, [cart]);
 
-  const handleCustomerInfoComplete = () => {
+  const handleCustomerInfoComplete = (userObject: typeof userObj) => {
+    console.log(userObject);
     if (termsAccepted) {
       if (
-        userObj.firstName &&
-        userObj.streetAddress &&
-        userObj.city &&
-        userObj.state &&
-        userObj.postalCode
+        userObject.firstName &&
+        userObject.streetAddress &&
+        userObject.city &&
+        userObject.postalCode
       ) {
         setCustomerInfoSet(true);
       } else {
         toast.error("Please fill out all fields");
+        console.log(validationErrors);
+        if (userObject.firstName === "") {
+          console.log("first name is empty");
+          setValidationErrors((validationErrors) => {
+            console.log("setting name to true");
+            return { ...validationErrors, name: true };
+          });
+        }
+        if (userObject.streetAddress === "") {
+          console.log("street address is empty");
+          setValidationErrors((validationErrors) => {
+            console.log("setting street address to true");
+            return { ...validationErrors, streetAddress: true };
+          });
+        }
+        if (userObject.city === "") {
+          console.log("city is empty");
+          setValidationErrors((validationErrors) => {
+            console.log("setting city to true");
+            return { ...validationErrors, city: true };
+          });
+        }
+        if (userObject.postalCode === "") {
+          console.log("postal code is empty");
+          setValidationErrors((validationErrors) => {
+            console.log("setting postal code to true");
+            return { ...validationErrors, zip: true };
+          });
+        }
+        if (userObject.phoneNumber === "") {
+          console.log("phone number is empty");
+          setValidationErrors((validationErrors) => {
+            console.log("setting phone number to true");
+            return { ...validationErrors, phone: true };
+          });
+        }
+        if (userObject.email === "") {
+          console.log("email is empty");
+          setValidationErrors((validationErrors) => {
+            console.log("setting email to true");
+            return { ...validationErrors, email: true };
+          });
+        }
+
+        console.log(validationErrors);
       }
     } else {
       toast.error("You must accept the terms and conditions to continue.");
+      if (termsCheckboxRef.current) {
+        termsCheckboxRef.current.focus();
+      }
     }
   };
 
@@ -126,7 +190,9 @@ export default function checkout() {
           userObj.streetAddress &&
           userObj.city &&
           userObj.state &&
-          userObj.postalCode
+          userObj.postalCode &&
+          userObj.phoneNumber &&
+          userObj.email
         ) {
           console.log("3");
           setShippingInfoSet(true);
@@ -141,7 +207,9 @@ export default function checkout() {
       userShippingObj.streetAddress &&
       userShippingObj.city &&
       userShippingObj.state &&
-      userShippingObj.postalCode
+      userShippingObj.postalCode &&
+      userShippingObj.phoneNumber &&
+      userShippingObj.email
     ) {
       setShippingInfoSet(true);
     } else {
@@ -332,12 +400,14 @@ export default function checkout() {
                             register={register}
                             termsAccepted={termsAccepted}
                             setTermsAccepted={setTermsAccepted}
+                            validationErrors={validationErrors}
+                            setValidationErrors={setValidationErrors}
                           />
                         )}
                         {!customerInfoSet && (
                           <button
                             type="button"
-                            onClick={handleCustomerInfoComplete}
+                            onClick={() => handleCustomerInfoComplete(userObj)}
                             disabled={!termsAccepted}
                             className="w-full flex justify-center py-2 my-4 px-4 border border-transparent rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
                           >
