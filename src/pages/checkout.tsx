@@ -944,14 +944,20 @@ export default function checkout() {
                                 className="grid grid-cols-3 content-center items-center justify-center min-w-full"
                               >
                                 <td className="py-4 pl-4 text-sm font-medium text-text-primary sm:pl-6 flex flex-nowrap items-center">
-                                  <Image
-                                    src={
-                                      product.image ||
-                                      "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
-                                    }
-                                    alt={product.name}
-                                    className="flex-none w-16 h-16 object-center object-cover bg-gray-100 rounded-md"
-                                  />
+                                  <div className="relative h-20 w-20">
+                                    <Image
+                                      src={
+                                        product.image ||
+                                        "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
+                                      }
+                                      alt={product.name}
+                                      width={75}
+                                      height={75}
+                                      layout="fixed"
+                                      priority={true}
+                                      className="flex-none w-16 h-16 object-center object-cover bg-gray-100 rounded-md"
+                                    />
+                                  </div>
 
                                   <h3 className="text-text-primary pl-2  py-4 text-xs lg:whitespace-nowrap">
                                     <a href={"#"}>{product.name}</a>
