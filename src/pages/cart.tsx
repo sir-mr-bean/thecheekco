@@ -8,6 +8,7 @@ import { CartState } from "@/context/Context";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Product } from "@/types/Product";
+import Image from "next/image";
 
 export default function cart() {
   const [total, setTotal] = useState(0);
@@ -75,8 +76,12 @@ export default function cart() {
                       return (
                         <li key={product.id} className="flex py-6 px-2 ">
                           <div className="flex-shrink-0">
-                            <img
-                              src={product.image}
+                            <Image
+                              src={
+                                product.image
+                                  ? product.image
+                                  : "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
+                              }
                               alt={product.name}
                               className="w-24 h-24 rounded-md object-center object-cover sm:w-48 sm:h-48"
                             />

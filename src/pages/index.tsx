@@ -151,8 +151,8 @@ export default function Home(
         <div className="flex-1 w-0 p-4">
           <div className="flex items-start">
             <div className="flex-shrink-0 pt-0.5">
-              <img
-                className="h-10 w-10 rounded-full"
+              className="h-10 w-10 rounded-full"
+              <Image
                 src={
                   product.image ||
                   "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
@@ -660,7 +660,8 @@ export default function Home(
           >
             <div className="relative rounded-lg overflow-hidden">
               <div className="absolute inset-0">
-                <img
+                <Image
+                  layout="fill"
                   src="https://tailwindui.com/img/ecommerce-images/home-page-01-feature-section-02.jpg"
                   alt=""
                   className="w-full h-full object-center object-cover"

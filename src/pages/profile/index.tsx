@@ -27,7 +27,14 @@ const tabs = [
     name: "payment",
   },
 ];
-Profile.auth = {};
+Profile.auth = {
+  isAuthenticated: async (session) => {
+    if (session) {
+      return true;
+    }
+    return false;
+  },
+};
 export default function Profile(): JSX.Element {
   const { data: session, status } = useSession();
   console.log();

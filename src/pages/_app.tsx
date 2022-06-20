@@ -103,8 +103,9 @@ function Auth({ children }) {
   if (status === "loading") {
     return <div>Loading...</div>;
   }
-
-  return children;
+  if (status === "authenticated") {
+    return children;
+  }
 }
 
 export default withTRPC<AppRouter>({
