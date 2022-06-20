@@ -1,4 +1,4 @@
-import { Fragment, useRef } from "react";
+import { Fragment, useRef, useState } from "react";
 import { Tab } from "@headlessui/react";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import Image from "next/image";
@@ -17,9 +17,25 @@ import { createSSGHelpers } from "@trpc/react/ssg";
 import { appRouter } from "@/backend/router/_app";
 import { inferRouterContext } from "@trpc/server";
 import superjson from "superjson";
+import { useRouter } from "next/router";
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
+
+const tabs = [
+  {
+    index: 1,
+    name: "additionalinfo",
+  },
+  {
+    index: 2,
+    name: "faq",
+  },
+  {
+    index: 3,
+    name: "license",
+  },
+];
 
 const reviews = {
   average: 4,
@@ -98,7 +114,7 @@ const Markdown = (content) => {
   var converter = new showdown.Converter();
   var html = converter.makeHtml(content.content);
   return (
-    <div className="bg-transparent text-text-primary font-gothic prose prose-stone py-3">
+    <div className="bg-transparent text-text-primary font-gothic prose prose-stone py-1">
       {ReactHtmlParser(html)}
     </div>
   );
@@ -108,6 +124,9 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const quantity = useRef<HTMLSelectElement>(null);
   const { cart, dispatch } = CartState();
   const product = props;
+  const router = useRouter();
+  const tabFromQuery = tabs.find((tab) => tab.name === router.query?.tab);
+  const [openTab, setOpenTab] = useState(tabFromQuery?.index || 1);
   //const product = data?.[0];
   console.log(product);
 
@@ -332,80 +351,86 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 </div>
               </div>
             </div>
-            <div className="lg:mt-0 lg:col-span-4 bg-white rounded-lg flex justify-start items-center pb-20 px-4">
-              <Tab.Group as="div">
-                <div className="border-b border-gray-200">
-                  <Tab.List className="-mb-px flex space-x-8">
-                    <Tab
-                      className={({ selected }) =>
-                        classNames(
-                          selected
-                            ? "border-text-primary text-text-primary"
-                            : "border-transparent text-gray-700 hover:text-gray-800 hover:border-gray-300",
-                          "whitespace-nowrap py-6 border-b-2 font-medium text-base"
-                        )
-                      }
-                    >
-                      Additional Info
-                    </Tab>
-                    <Tab
-                      className={({ selected }) =>
-                        classNames(
-                          selected
-                            ? "border-text-primary text-text-primary"
-                            : "border-transparent text-gray-700 hover:text-gray-800 hover:border-gray-300",
-                          "whitespace-nowrap py-6 border-b-2 font-medium text-base"
-                        )
-                      }
-                    >
-                      FAQ
-                    </Tab>
-                    <Tab
-                      className={({ selected }) =>
-                        classNames(
-                          selected
-                            ? "border-text-primary text-text-primary"
-                            : "border-transparent text-gray-700 hover:text-gray-800 hover:border-gray-300",
-                          "whitespace-nowrap py-6 border-b-2 font-medium text-base"
-                        )
-                      }
-                    >
-                      License
-                    </Tab>
-                  </Tab.List>
+            <div className="flex flex-col w-full justify-center items-start bg-white rounded-lg ">
+              <div className="lg:mt-0 lg:col-span-4  flex flex-row justify-center items-center pb-5 px-4 w-full">
+                <div
+                  onClick={() => {
+                    setOpenTab(1);
+                  }}
+                  className={
+                    openTab === 1
+                      ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full select-none text-center`
+                      : ` border-b-text-primary cursor-pointer w-full text-center`
+                  }
+                >
+                  <span
+                    className={openTab === 1 ? `font-bold` : `font-normal `}
+                  >
+                    Additional Info
+                  </span>
                 </div>
-                <Tab.Panels as={Fragment}>
-                  <Tab.Panel className="-mb-10">
-                    <h3 className="sr-only">Additional Info</h3>
-                    <Markdown content={product.description} />
-                  </Tab.Panel>
+                <div
+                  onClick={() => {
+                    setOpenTab(2);
+                  }}
+                  className={
+                    openTab === 2
+                      ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full select-none  text-center`
+                      : ` border-b-text-primary cursor-pointer w-full text-center`
+                  }
+                >
+                  <span className={openTab === 2 ? `font-bold` : `font-normal`}>
+                    FAQ
+                  </span>
+                </div>
+                <div
+                  onClick={() => {
+                    setOpenTab(3);
+                  }}
+                  className={
+                    openTab === 3
+                      ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full select-none  text-center`
+                      : ` border-b-text-primary cursor-pointer w-full text-center`
+                  }
+                >
+                  <span className={openTab === 3 ? `font-bold` : `font-normal`}>
+                    Reviews
+                  </span>
+                </div>
+              </div>
+              {openTab === 1 && (
+                <div className="p-2">
+                  <h3 className="sr-only">Additional Info</h3>
+                  <Markdown content={product.description} />
+                </div>
+              )}
+              {openTab === 2 && (
+                <div className="text-sm text-gray-500 p-2">
+                  <h3 className="sr-only">Frequently Asked Questions</h3>
 
-                  <Tab.Panel className="text-sm text-gray-500">
-                    <h3 className="sr-only">Frequently Asked Questions</h3>
+                  <dl>
+                    {faqs.map((faq) => (
+                      <Fragment key={faq.question}>
+                        <dt className="mt-5 font-medium text-gray-900">
+                          {faq.question}
+                        </dt>
+                        <dd className="mt-2 prose prose-sm max-w-none text-gray-500">
+                          <p>{faq.answer}</p>
+                        </dd>
+                      </Fragment>
+                    ))}
+                  </dl>
+                </div>
+              )}
+              {openTab === 3 && (
+                <div className="p-2">
+                  <h3 className="sr-only">License</h3>
 
-                    <dl>
-                      {faqs.map((faq) => (
-                        <Fragment key={faq.question}>
-                          <dt className="mt-10 font-medium text-gray-900">
-                            {faq.question}
-                          </dt>
-                          <dd className="mt-2 prose prose-sm max-w-none text-gray-500">
-                            <p>{faq.answer}</p>
-                          </dd>
-                        </Fragment>
-                      ))}
-                    </dl>
-                  </Tab.Panel>
-
-                  <Tab.Panel className="pt-10">
-                    <h3 className="sr-only">License</h3>
-
-                    <div className="max-w-none text-gray-500">
-                      {license.content}
-                    </div>
-                  </Tab.Panel>
-                </Tab.Panels>
-              </Tab.Group>
+                  <div className="max-w-none text-gray-500">
+                    {license.content}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
