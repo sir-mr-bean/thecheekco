@@ -6,7 +6,17 @@ import showdown from "showdown";
 import ReactHtmlParser from "react-html-parser";
 import { CartState } from "../../../../context/Context";
 import toast from "react-hot-toast";
-
+import {
+  GetStaticPaths,
+  GetStaticPathsContext,
+  GetStaticProps,
+  GetStaticPropsContext,
+  InferGetStaticPropsType,
+} from "next";
+import { createSSGHelpers } from "@trpc/react/ssg";
+import { appRouter } from "@/backend/router/_app";
+import { inferRouterContext } from "@trpc/server";
+import superjson from "superjson";
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -94,17 +104,18 @@ const Markdown = (content) => {
   );
 };
 
-const Product = ({ data }) => {
-  const quantity = useRef(null);
+const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const quantity = useRef<HTMLSelectElement>(null);
   const { cart, dispatch } = CartState();
-  const product = data?.[0];
-  console.log(data);
+  const product = props;
+  //const product = data?.[0];
+  console.log(product);
 
   const handleAdd = (product) => {
     dispatch({
       type: "ADD_TO_CART",
       item: product,
-      qty: parseInt(quantity.current.value),
+      qty: parseInt(quantity?.current?.value as string),
     });
     if (window !== undefined) {
     }
@@ -131,7 +142,7 @@ const Product = ({ data }) => {
             </div>
             <div className="ml-3 flex-1 my-auto">
               <p className="mt-1 text-sm text-text-primary font-gothic">
-                {quantity.current.value} {product.name} added to cart.
+                {quantity?.current?.value} {product.name} added to cart.
               </p>
             </div>
           </div>
@@ -403,26 +414,15 @@ const Product = ({ data }) => {
   );
 };
 
-export const getStaticPaths = async () => {
-  const productsURL = `https://thecheekco.vercel.app/api/fetchproducts`;
-  console.log(productsURL);
-  const productsResult = await fetch(productsURL, {
-    headers: {
-      Accept: "application/json, text/plain, */*",
-      "User-Agent": "*",
-    },
+export const getStaticPaths = async (context: GetStaticPathsContext) => {
+  const ssg = createSSGHelpers({
+    router: appRouter,
+    ctx: context as inferRouterContext<typeof appRouter>,
+    transformer: superjson,
   });
-
-  const productsData = await productsResult.json();
-
-  if (!productsResult.ok) {
-    throw new Error(
-      `Failed to fetch paths for [id].js, received status ${productsResult.status}`
-    );
-  }
-  //console.log(productsData?.[0].filter((i) => i.category?.category_data));
+  const productsQuery = await ssg.fetchQuery("products");
   return {
-    paths: productsData?.[0]
+    paths: productsQuery
       .filter((i) => i.category?.category_data.name)
       .map((item) => ({
         params: {
@@ -437,30 +437,24 @@ export const getStaticPaths = async () => {
   };
 };
 
-export async function getStaticProps({ params }) {
-  const productName = params.id.replaceAll("-", " ");
-  const productsURL = `https://thecheekco.vercel.app/api/fetchproducts`;
-  const productRes = await fetch(productsURL, {
-    headers: {
-      Accept: "application/json",
-    },
+export const getStaticProps: GetStaticProps = async (
+  context: GetStaticPropsContext<{ id: string }>
+) => {
+  const ssg = createSSGHelpers({
+    router: appRouter,
+    ctx: context as inferRouterContext<typeof appRouter>,
+    transformer: superjson,
   });
-  if (!productRes.ok) {
-    throw new Error(
-      `Failed to fetch props for [id].js, received status ${productRes.status}`
-    );
-  }
-  const dataResult = await productRes.json();
-  //console.log(dataResult?.[0]);
-  const currentProduct = dataResult?.[0].filter(
-    (item) =>
-      item.name.toLowerCase().replaceAll(" ", "-").toString() === params.id
+  const productsQuery = await ssg.fetchQuery("products");
+  const product = productsQuery.find(
+    (i) =>
+      i.name.toLowerCase().replaceAll(" ", "-").toString() ===
+      context?.params?.id
   );
-  //console.log(currentProduct?.[0]);
-  const data = currentProduct;
+  console.log(product);
   return {
-    props: { data },
+    props: JSON.parse(JSON.stringify(product)),
   };
-}
+};
 
 export default Product;
