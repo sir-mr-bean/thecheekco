@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import validator from "validator";
 import { useForm } from "react-hook-form";
+import { trpc } from "@/utils/trpc";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -18,42 +19,33 @@ const contactus = () => {
   } = useForm();
   const router = useRouter();
   const [agreed, setAgreed] = useState(false);
-  const [message, setMessage] = useState("");
   const [emailSent, setEmailSent] = useState(false);
-  const [missingNameError, setMissingNameError] = useState(false);
   const [missingLastNameError, setMissingLastNameError] = useState(false);
-  const [missingEmailError, setMissingEmailError] = useState(false);
-  const [missingPhoneError, setMissingPhoneError] = useState(false);
-  const [missingMessageError, setMissingMessageError] = useState(false);
-  const [missingAgreeError, setMissingAgreeError] = useState(false);
+  const emailMutation = trpc.useMutation(["email.sendEmail"]);
 
   const handleFormSubmit = async (d) => {
     console.log(d);
     const { firstName, lastName, company, email, phoneNumber, message } = d;
 
-    const body = JSON.stringify({
-      firstName: firstName,
-      lastName: lastName,
-      company: company?.length ? company : "",
-      email: email,
-      phoneNumber: phoneNumber,
-      message: message,
-    });
-    const headers = {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-    };
-    const result = await fetch("http://localhost:3000/api/email/send", {
-      method: "POST",
-      headers: headers,
-      body: body,
-    });
-    const data = await result.json();
-    console.log(data);
-    setEmailSent(true);
-    setTimeout(() => {
-      router.push("/");
-    }, 3000);
+    emailMutation.mutate(
+      {
+        firstName: firstName,
+        lastName: lastName,
+        company: company,
+        email: email,
+        phoneNumber: phoneNumber,
+        message: message,
+      },
+      {
+        onSuccess: (data) => {
+          console.log(data);
+          setEmailSent(true);
+          setTimeout(() => {
+            router.push("/");
+          }, 3000);
+        },
+      }
+    );
   };
   return (
     <>

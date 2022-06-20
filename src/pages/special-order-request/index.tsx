@@ -6,6 +6,7 @@ import validator from "validator";
 import { useForm } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { trpc } from "@/utils/trpc";
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -19,48 +20,44 @@ const SpecialOrderRequest = () => {
   } = useForm();
   const router = useRouter();
   const [agreed, setAgreed] = useState(false);
-  const [message, setMessage] = useState("");
+  const [agreedError, setAgreedError] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
-  const [missingNameError, setMissingNameError] = useState(false);
   const [missingLastNameError, setMissingLastNameError] = useState(false);
-  const [missingEmailError, setMissingEmailError] = useState(false);
-  const [missingPhoneError, setMissingPhoneError] = useState(false);
-  const [missingMessageError, setMissingMessageError] = useState(false);
-  const [missingAgreeError, setMissingAgreeError] = useState(false);
+  const emailMutation = trpc.useMutation(["email.sendEmail"]);
   const [requiredDate, setRequiredDate] = useState(new Date());
   console.log(errors);
+
   const handleFormSubmit = async (d) => {
     console.log("handling request");
     console.log(d);
     const { firstName, lastName, company, email, phoneNumber, type, message } =
       d;
     console.log(requiredDate);
-
-    const body = JSON.stringify({
-      firstName: firstName,
-      lastName: lastName,
-      company: company?.length ? company : "",
-      email: email,
-      phoneNumber: phoneNumber,
-      type: type,
-      dateRequired: requiredDate,
-      message: message,
-    });
-    const headers = {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-    };
-    const result = await fetch("https://thecheekco.vercel.app/api/email/send", {
-      method: "POST",
-      headers: headers,
-      body: body,
-    });
-    const data = await result.json();
-    console.log(data);
-    setEmailSent(true);
-    setTimeout(() => {
-      router.push("/");
-    }, 3000);
+    if (agreed) {
+      emailMutation.mutate(
+        {
+          firstName: firstName,
+          lastName: lastName,
+          company: company,
+          email: email,
+          phoneNumber: phoneNumber,
+          type: type,
+          message: message,
+          requiredDate: requiredDate.toString(),
+        },
+        {
+          onSuccess: (data) => {
+            console.log(data);
+            setEmailSent(true);
+            setTimeout(() => {
+              router.push("/");
+            }, 3000);
+          },
+        }
+      );
+    } else {
+      setAgreedError(true);
+    }
   };
   return (
     <>
@@ -188,7 +185,7 @@ const SpecialOrderRequest = () => {
                     <div className="relative mt-1 flex w-full px-3 py-2 border shadow-sm rounded-md focus:outline-none shadow-text-primary focus:shadow-outline-blue focus:border-text-primary transition duration-150 ease-in-out sm:text-sm sm:leading-5">
                       <div
                         className={
-                          errors["phone-number"]
+                          errors.phoneNumber
                             ? `opacity-100 absolute bg-white inset-y-0 right-3 -translate-y-2 transition-all duration-500 ease-in-out`
                             : `hidden opacity-0 absolute `
                         }
@@ -218,18 +215,6 @@ const SpecialOrderRequest = () => {
                       Date Required By:
                     </label>
                     <div className="relative mt-1 flex w-full px-3 py-2 border shadow-sm rounded-md focus:outline-none shadow-text-primary focus:shadow-outline-blue focus:border-text-primary transition duration-150 ease-in-out sm:text-sm sm:leading-5">
-                      <div
-                        className={
-                          errors["phone-number"]
-                            ? `opacity-100 absolute bg-white inset-y-0 right-3 -translate-y-2 transition-all duration-500 ease-in-out`
-                            : `hidden opacity-0 absolute `
-                        }
-                      >
-                        <span className="text-red-300">
-                          This field is required, please enter a valid phone
-                          number
-                        </span>
-                      </div>
                       <DatePicker
                         selected={requiredDate}
                         onChange={(date: Date) => setRequiredDate(date)}
@@ -244,23 +229,13 @@ const SpecialOrderRequest = () => {
                     >
                       Type of Order
                     </label>
-                    <div className="relative mt-1 flex flex-col space-y-2 w-full px-3 py-2 text-text-primary transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
-                      <div
-                        className={
-                          errors.email
-                            ? `opacity-100 absolute bg-white inset-y-0 right-3 -translate-y-2 transition-all duration-500 ease-in-out`
-                            : `hidden opacity-0 absolute `
-                        }
-                      >
-                        <span className="text-red-300">
-                          This field is required, please enter a valid email
-                        </span>
-                      </div>
+                    <div className="relative mt-1 flex flex-col space-y-2 w-full px-3 py-2 text-text-primary transition duration-2000 ease-in-out sm:text-sm sm:leading-5 ">
                       <div className="flex space-x-2 items-center">
                         <input
                           {...register("type")}
                           type="radio"
                           value="Customisation"
+                          defaultChecked
                           className="w-4 h-4 accent-text-primary"
                         />
                         <span className="text-base">Customisation</span>
@@ -292,7 +267,7 @@ const SpecialOrderRequest = () => {
                     >
                       Message
                     </label>
-                    <div className="relative mt-1 flex w-full px-3 py-2 border shadow-sm rounded-md focus:outline-none shadow-text-primary focus:shadow-outline-blue focus:border-text-primary transition duration-150 ease-in-out sm:text-sm sm:leading-5">
+                    <div className="relative mt-1 flex w-full px-3 py-2 border shadow-sm rounded-md focus:outline-none shadow-text-primary focus:shadow-outline-blue focus:border-text-primary transition duration-2000 ease-in-out sm:text-sm sm:leading-5">
                       <div
                         className={
                           errors.message
@@ -312,15 +287,18 @@ const SpecialOrderRequest = () => {
                       />
                     </div>
                   </div>
-                  <div className="sm:col-span-2">
+                  <div className="sm:col-span-2 relative">
                     <div className="flex items-start">
                       <div className="flex-shrink-0">
                         <Switch
                           checked={agreed}
-                          onChange={setAgreed}
+                          onChange={() => {
+                            setAgreed((agreed) => !agreed);
+                            setAgreedError(false);
+                          }}
                           className={classNames(
                             agreed ? "bg-text-secondary" : "bg-gray-200",
-                            "relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary"
+                            "relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-2000 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary"
                           )}
                         >
                           <span className="sr-only">Agree to policies</span>
@@ -328,7 +306,7 @@ const SpecialOrderRequest = () => {
                             aria-hidden="true"
                             className={classNames(
                               agreed ? "translate-x-5" : "translate-x-0",
-                              "inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200"
+                              "inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-2000"
                             )}
                           />
                         </Switch>
@@ -345,8 +323,20 @@ const SpecialOrderRequest = () => {
                           .
                         </p>
                       </div>
+                      <div
+                        className={
+                          agreedError
+                            ? `opacity-100 absolute bg-white inset-y-0 -right-20 -translate-y-0 transition-all duration-2000 ease-in-out h-fit`
+                            : `absolute opacity-0 invisible`
+                        }
+                      >
+                        <span className="text-red-300">
+                          Please agree to the privacy policy
+                        </span>
+                      </div>
                     </div>
                   </div>
+
                   <div className="sm:col-span-2">
                     <button
                       type="button"
