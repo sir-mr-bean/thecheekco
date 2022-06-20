@@ -2,6 +2,8 @@ import { TRPCError } from "@trpc/server";
 import { createRouter } from "../createRouter";
 import {
   ApiResponse,
+  CatalogItem,
+  CatalogProductSet,
   Client,
   CreateOrderResponse,
   Environment,
@@ -12,9 +14,8 @@ import {
 import { randomUUID } from "crypto";
 import { z } from "zod";
 import getConfig from "next/config";
-import { CategoryType } from "@/types/Product";
-import { Category } from "@/types/Category";
-import { OrderItem } from "@prisma/client";
+import { CategoryType, Product, Category } from "@/types/Product";
+
 import { bigint, unknown } from "square/dist/schema";
 const { serverRuntimeConfig } = getConfig();
 
@@ -307,15 +308,15 @@ export const squareRouter = createRouter()
       })
       .nullish(),
     async resolve() {
-      const categories: Category[] = [];
+      const categoriesArray: Category[] = [];
       console.log("fetching categories");
       try {
         let sqCategories = `https://${serverRuntimeConfig.squareAPIURL}/v2/catalog/list?types=category`;
+        const categories = [];
         let cursor = null;
         do {
           if (cursor != null)
             sqCategories = `https://${serverRuntimeConfig.squareAPIURL}/v2/catalog/list?types=category&cursor=${cursor}`;
-          console.log(sqCategories);
           const res = await fetch(sqCategories, {
             headers: {
               "Square-Version": "2022-05-12",
@@ -330,17 +331,97 @@ export const squareRouter = createRouter()
             );
           }
           const data = await res.json();
-          //console.log(data);
-          //console.log(data);
-          categories.push(...(data?.objects as never[]));
+          categoriesArray.push(...(data.objects as never[]));
           cursor = data.cursor;
         } while (cursor != "" && cursor != null);
       } catch (e) {
         console.log(e);
         throw new TRPCError(e.message);
       }
-      console.log(categories);
-      return categories;
+
+      return categoriesArray;
+    },
+  })
+  .query("products", {
+    input: z
+      .object({
+        categoryId: z.string().nullish(),
+        text: z.string().nullish(),
+      })
+      .nullish(),
+    async resolve({ input, ctx }) {
+      console.log("fetching products");
+      const productArray: Product[] = [];
+      try {
+        let sqProducts = `https://${serverRuntimeConfig.squareAPIURL}/v2/catalog/search`;
+        let cursor = null;
+        do {
+          if (cursor != null)
+            sqProducts = `https://${serverRuntimeConfig.squareAPIURL}/v2/catalog/search?cursor=${cursor}`;
+          const res = await fetch(sqProducts, {
+            method: "POST",
+            headers: {
+              "User-Agent": "*",
+              "Square-Version": "2022-05-12",
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${serverRuntimeConfig.squareAccessToken}`,
+            },
+            body: JSON.stringify({
+              include_related_objects: true,
+              object_types: ["ITEM"],
+            }),
+          });
+          if (!res.ok) {
+            throw new Error(
+              `Failed to fetch products from Square, received status ${res.status}`
+            );
+          }
+          const data = await res.json();
+          console.log("data is ", data);
+          const products = data.objects.map((item) => {
+            const currentImage = data.related_objects.filter(
+              (image) => image.id === item.item_data.image_ids?.[0]
+            );
+            const currentCategory = data.related_objects.filter(
+              (category) => category.id === item.item_data.category_id
+            );
+            let isAllNatural = false;
+
+            if (item?.item_data.variations?.[0].custom_attribute_values) {
+              const keys = Object.keys(
+                item?.item_data.variations?.[0].custom_attribute_values
+              );
+              if (keys.length) {
+                const allNaturalAttr = keys?.some((key) => {
+                  return (
+                    item?.item_data.variations?.[0].custom_attribute_values[key]
+                      .name === "All-Natural" &&
+                    item?.item_data.variations?.[0].custom_attribute_values[key]
+                      .boolean_value === true
+                  );
+                });
+                isAllNatural = allNaturalAttr;
+              }
+            }
+            return {
+              id: item.id,
+              name: item.item_data.name,
+              description: item?.item_data?.description,
+              variations: item.item_data.variations,
+              image: currentImage?.[0]?.image_data?.url,
+              category: currentCategory?.[0],
+              isAllNatural: isAllNatural,
+            };
+          });
+          productArray.push(...(products as never[]));
+          cursor = data.cursor;
+        } while (cursor != "" && cursor != null);
+
+        return productArray;
+      } catch (e) {
+        console.log(e);
+        throw new TRPCError(e.message);
+      }
     },
   })
   .query("searchCustomer", {

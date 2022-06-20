@@ -1,10 +1,14 @@
 import { RoughNotation, RoughNotationGroup } from "react-rough-notation";
 import { CartState } from "../../context/Context";
-import * as React from "react";
 import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { GetStaticProps } from "next";
+import {
+  GetStaticProps,
+  GetStaticPropsContext,
+  InferGetStaticPropsType,
+  NextPageContext,
+} from "next";
 import {
   BsStarFill,
   BsStarHalf,
@@ -16,24 +20,26 @@ import {
 import { FaKissWinkHeart, FaShippingFast } from "react-icons/fa";
 import { HiCursorClick } from "react-icons/hi";
 import toast from "react-hot-toast";
-import * as icons from "react-icons";
-import { FaIcons } from "react-icons/fa";
-import { Product, Category } from "../../@types/Product";
-import { trpc } from "@/utils/trpc";
+import superjson from "superjson";
 import { useInViewport } from "react-in-viewport";
+import { createSSGHelpers } from "@trpc/react/ssg";
+import { AppRouter, appRouter } from "@/backend/router/_app";
+import { inferRouterContext } from "@trpc/server";
+import { GiConsoleController } from "react-icons/gi";
+import { trpc } from "@/utils/trpc";
+import { Category, Product } from "@/types/Product";
 
-export default function Home({
-  productsData: productsData,
-  categoriesData: categoriesData,
-}: {
-  productsData: [Product];
-  categoriesData: [Category];
-}) {
+export default function Home(
+  props: InferGetStaticPropsType<typeof getStaticProps>
+) {
   const notationRef = useRef(null);
   const { inViewport, enterCount, leaveCount } = useInViewport(notationRef);
-  //const categories = trpc.useQuery(["categories"]);
+  const categories = trpc.useQuery(["categories"]);
+  const products = trpc.useQuery(["products"]);
+  const { data: categoriesData } = categories;
+  const { data: productsData } = products;
+
   const carouselRef: any = useRef();
-  const [activeItemIndex, setActiveItemIndex] = useState(0);
   const { cart, dispatch } = CartState();
 
   //create a typesafe function to return an icon from the react-icons library based on the icon name
@@ -263,7 +269,7 @@ export default function Home({
 
         <div className="flex flex-col divide-y divide-text-primary px-6 space-y-3">
           <div className="grid grid-cols-3 content-center gap-40 w-full pb-10 px-20 max-w-7xl mx-auto">
-            {productsData?.slice(0, 3).map((product) => {
+            {productsData?.slice(0, 3).map((product: Product) => {
               return (
                 <div
                   key={product.name}
@@ -368,14 +374,12 @@ export default function Home({
                         item.category_data.name.charAt(0) != "_"
                     )
                     .map((category: Category) => {
-                      const randomProduct = productsData.find(
-                        (product: Product) => {
-                          return (
-                            product.category?.category_data.name ===
-                            category.category_data.name
-                          );
-                        }
-                      );
+                      const randomProduct = productsData.find((product) => {
+                        return (
+                          product.category?.category_data.name ===
+                          category.category_data.name
+                        );
+                      });
 
                       return (
                         <Link
@@ -693,36 +697,22 @@ export default function Home({
   );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  const categoriesURL = `https://thecheekco.vercel.app/api/fetchcategories`;
-  const categoriesResult = await fetch(categoriesURL, {
-    headers: {
-      Accept: "application/json, text/plain, */*",
-      "User-Agent": "*",
-    },
+export const getStaticProps: GetStaticProps = async (
+  context: GetStaticPropsContext<{ id: string }>
+) => {
+  const ssg = createSSGHelpers({
+    router: appRouter,
+    ctx: context as inferRouterContext<typeof appRouter>,
+    transformer: superjson,
   });
-  const categoriesData: [Category] = await categoriesResult.json();
 
-  const productsURL = `https://thecheekco.vercel.app/api/fetchproducts`;
-  const productsResult = await fetch(productsURL, {
-    headers: {
-      Accept: "application/json, text/plain, */*",
-      "User-Agent": "*",
-    },
-  });
-  const productsDataResult: [Product] = await productsResult.json();
-  const productsData = productsDataResult[0];
-
-  if (!productsResult.ok || !categoriesResult.ok) {
-    throw new Error(
-      `Failed to fetch posts, received status ${productsResult.status}, ${categoriesResult.status}`
-    );
-  }
+  const catFetch = await ssg.fetchQuery("categories");
+  await ssg.fetchQuery("products");
+  console.log(catFetch);
 
   return {
     props: {
-      productsData,
-      categoriesData,
+      trpcState: ssg.dehydrate({}),
     },
   };
 };

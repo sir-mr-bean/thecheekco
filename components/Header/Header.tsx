@@ -5,9 +5,6 @@ import Login from "./Login";
 import { CartState } from "../../context/Context";
 import { useEffect, useState } from "react";
 import MobileMenu from "./MobileMenu";
-import fetcher from "../../lib/fetcher";
-import useSWR, { SWRResponse } from "swr";
-import { Category } from "@/types/Category";
 import { Product } from "@/types/Product";
 import { trpc } from "@/utils/trpc";
 import { squareRouter } from "@/backend/router/square";
@@ -38,11 +35,8 @@ function useScrollDirection() {
 export const Header = (): JSX.Element => {
   const scrollDirection = useScrollDirection();
   const { cart }: { cart: Product[] } = CartState();
-  const [navigation, setNavigation] = useState<Category[]>();
-  const { data }: SWRResponse = useSWR("/api/fetchcategories", fetcher);
-  const trpcContext = trpc.useContext();
-  const ONE_HOUR_IN_SECONDS = 60 * 60;
-  const ONE_DAY_IN_SECONDS = 60 * 60 * 24;
+  const categoryQuery = trpc.useQuery(["categories"]);
+  const { data: navigation } = categoryQuery;
   const [cartItems, setCartItems] = useState<Product[]>(cart);
 
   const [hasMounted, setHasMounted] = useState(false);
@@ -66,18 +60,6 @@ export const Header = (): JSX.Element => {
       .replace(/^-+/, "")
       .replace(/-+$/, "");
   };
-
-  useEffect(() => {
-    trpcContext
-      .fetchQuery(["categories"], {
-        context: {
-          skipBatch: true,
-        },
-        cacheTime: ONE_HOUR_IN_SECONDS,
-        staleTime: ONE_DAY_IN_SECONDS,
-      })
-      .then((result) => setNavigation(result));
-  }, []);
 
   if (!hasMounted) {
     return <></>;
