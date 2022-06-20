@@ -50,7 +50,7 @@ const SpecialOrderRequest = () => {
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
     };
-    const result = await fetch("http://thecheekco.vercel.app/api/email/send", {
+    const result = await fetch("https://thecheekco.vercel.app/api/email/send", {
       method: "POST",
       headers: headers,
       body: body,
