@@ -2,7 +2,6 @@ import getConfig from "next/config";
 
 export default async function handler(req, res) {
   const { serverRuntimeConfig } = getConfig();
-  //console.log(serverRuntimeConfig);
   try {
     let sqCategories = `https://${serverRuntimeConfig.squareAPIURL}/v2/catalog/list?types=category`;
     const categories = [];

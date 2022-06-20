@@ -17,7 +17,7 @@ export default trpcNext.createNextApiHandler({
   },
   responseMeta({ ctx, paths, type, errors }) {
     const allPublic =
-      paths && paths.every((path) => path.includes("categories"));
+      paths && paths.every((path) => path.startsWith("categories"));
     // checking that no procedures errored
     const allOk = errors.length === 0;
     // checking we're doing a query request
