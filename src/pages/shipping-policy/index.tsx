@@ -25,7 +25,7 @@ const deliveryOptions = [
     deliveryTime:
       "One of our team members who will contact you directly within 1 business day.",
     deliveryCosts: "Shipping estimate will be supplied upon application.",
-    href: "/special-orders-request",
+    href: "/special-order-request",
   },
 ];
 
@@ -107,7 +107,14 @@ const ShippingPolicy = () => {
                           {option.deliveryTime}
                         </td>
                         <td className="px-3 py-4 text-sm text-text-secondary lg:table-cell">
-                          {option.cutoff}
+                          {option.cutoff}{" "}
+                          {option.href ? (
+                            <Link href={option.href}>
+                              <a className="text-text-primary underline cursor-pointer">
+                                Apply here
+                              </a>
+                            </Link>
+                          ) : null}
                         </td>
                         <td className="px-3 py-4 text-sm text-text-secondary">
                           {option.deliveryCosts}
