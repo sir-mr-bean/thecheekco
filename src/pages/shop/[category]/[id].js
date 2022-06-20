@@ -118,7 +118,10 @@ const Product = ({ data }) => {
           <div className="flex items-start">
             <div className="flex-shrink-0 pt-0.5">
               <Image
-                className="h-10 w-10 rounded-full"
+                className="w-24 h-24 rounded-full"
+                height={50}
+                width={50}
+                objectFit="cover"
                 src={
                   product.image ||
                   "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"

@@ -66,7 +66,7 @@ const SpecialOrderRequest = () => {
           <div className="mx-auto px-3 pt-4 pb-16 sm:px-6 sm:pt-8 sm:pb-24 lg:px-8 xl:px-2 xl:pt-14">
             <div className="relative max-w-xl mx-auto">
               <div className="text-center">
-                <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                <h2 className="text-3xl  tracking-tight text-text-primary font-gothic sm:text-4xl">
                   Special Order Request
                 </h2>
               </div>

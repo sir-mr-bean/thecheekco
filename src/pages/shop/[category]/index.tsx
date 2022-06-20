@@ -49,14 +49,17 @@ const CategoryPage = (
       >
         <div className="flex-1 w-0 p-4">
           <div className="flex items-start">
-            <div className="flex-shrink-0 pt-0.5">
+            <div className="flex-shrink-0 pt-0.5 relative">
               <Image
-                className="h-10 w-10 rounded-full"
+                className="w-24 h-24 rounded-full"
+                height={50}
+                width={50}
+                objectFit="cover"
                 src={
                   product.image ||
                   "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
                 }
-                alt=""
+                alt={product.name}
               />
             </div>
             <div className="ml-3 flex-1 my-auto">
