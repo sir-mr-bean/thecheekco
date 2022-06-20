@@ -75,13 +75,16 @@ export default function cart() {
                     {products.map((product: Product, productIdx: number) => {
                       return (
                         <li key={product.id} className="flex py-6 px-2 ">
-                          <div className="flex-shrink-0">
+                          <div className="flex-shrink-0 relative w-20 h-20">
                             <Image
                               src={
                                 product.image
                                   ? product.image
                                   : "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
                               }
+                              width={200}
+                              height={200}
+                              layout="responsive"
                               alt={product.name}
                               className="w-24 h-24 rounded-md object-center object-cover sm:w-48 sm:h-48"
                             />
