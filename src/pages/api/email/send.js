@@ -2,8 +2,16 @@ import { SMTPClient } from "emailjs";
 
 export default function handler(req, res) {
   console.log(req.body);
-  const { firstName, lastName, company, email, phoneNumber, message } =
-    req.body;
+  const {
+    firstName,
+    lastName,
+    company,
+    email,
+    phoneNumber,
+    message,
+    type,
+    dateRequired,
+  } = req.body;
 
   const client = new SMTPClient({
     user: process.env.EMAILACCOUNT,
@@ -31,17 +39,41 @@ export default function handler(req, res) {
         Phone Number: ${phoneNumber}
     </p>
     `;
+  const requestBody = `
+    <h1>The Cheek Co</h1>
+    <p>
+        ${firstName} ${lastName} has sent you a special request!
+    </p>
+    <p>
+        ${type}
+    </p>
+    <p>
+        ${dateRequired}
+    </p>
+    <p>
+        ${message}
+    </p>
+    <p>
+        Company: ${company}
+    </p>
+    <p>
+        Email Address: ${email}
+    </p>
+    <p>
+        Phone Number: ${phoneNumber}
+    </p>
+    `;
 
   try {
     client.send(
       {
-        text: emailBody,
+        text: type != null ? emailBody : requestBody,
         from: process.env.EMAILACCOUNT,
         to: "danieldeveney@hotmail.com",
         subject: "testing emailjs",
         attachment: [
           {
-            data: emailBody,
+            data: type != null ? emailBody : requestBody,
             alternative: true,
           },
         ],
