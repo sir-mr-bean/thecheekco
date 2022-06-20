@@ -45,7 +45,7 @@ const Footer = () => {
                 target="_blank"
                 rel="noopener"
               >
-                <img
+                <Image
                   alt="Eco Alliance Badge"
                   src="https://images.ctfassets.net/xmruv773lc7r/7iHSIdcOgBqG8KsVcw9wmm/46902df9b1125bfede12980be687dd7a/Eco-A.gif"
                   height="300"
