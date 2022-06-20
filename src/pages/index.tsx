@@ -34,7 +34,11 @@ export default function Home(
 ) {
   const notationRef = useRef(null);
   const { inViewport, enterCount, leaveCount } = useInViewport(notationRef);
-  const categories = trpc.useQuery(["categories"]);
+  const categories = trpc.useQuery(["categories"], {
+    context: {
+      skipBatch: true,
+    },
+  });
   const products = trpc.useQuery(["products"]);
   const { data: categoriesData } = categories;
   const { data: productsData } = products;

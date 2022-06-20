@@ -35,7 +35,12 @@ function useScrollDirection() {
 export const Header = (): JSX.Element => {
   const scrollDirection = useScrollDirection();
   const { cart }: { cart: Product[] } = CartState();
-  const categoryQuery = trpc.useQuery(["categories"]);
+  const categoryQuery = trpc.useQuery(["categories"], {
+    context: {
+      skipBatch: true,
+    },
+  });
+
   const { data: navigation } = categoryQuery;
   const [cartItems, setCartItems] = useState<Product[]>(cart);
 
