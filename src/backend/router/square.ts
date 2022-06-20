@@ -312,7 +312,7 @@ export const squareRouter = createRouter()
       console.log("fetching categories");
       try {
         let sqCategories = `https://${serverRuntimeConfig.squareAPIURL}/v2/catalog/list?types=category`;
-        const categories = [];
+
         let cursor = null;
         do {
           if (cursor != null)
@@ -338,8 +338,10 @@ export const squareRouter = createRouter()
         console.log(e);
         throw new TRPCError(e.message);
       }
-
-      return categoriesArray;
+      const categoriesResponse = categoriesArray.filter(
+        (category) => !category.category_data.name.startsWith("_")
+      );
+      return categoriesResponse;
     },
   })
   .query("products", {

@@ -2,29 +2,25 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Category, Product } from "@/types/Product";
+import {
+  GetStaticProps,
+  GetStaticPropsContext,
+  InferGetStaticPropsType,
+} from "next";
+import { createSSGHelpers } from "@trpc/react/ssg";
+import { appRouter } from "@/backend/router/_app";
+import { inferRouterContext } from "@trpc/server";
+import superjson from "superjson";
+import { trpc } from "@/utils/trpc";
 
-export default function shop({
-  categoriesData,
-  productsData,
-}: {
-  categoriesData: Category[];
-  productsData: Product[];
-}) {
-  const [products, setProducts] = useState(productsData);
-  const [categories, setCategories] = useState(categoriesData);
-
-  useEffect(() => {
-    if (productsData) {
-      setProducts(productsData);
-    }
-    if (categoriesData) {
-      setCategories(
-        categoriesData.filter(
-          (category) => !category.category_data.name.startsWith("_")
-        )
-      );
-    }
-  }, [productsData, categoriesData]);
+export default function shop(
+  props: InferGetStaticPropsType<typeof getStaticProps>
+) {
+  const categoriesQuery = trpc.useQuery(["categories"]);
+  const productsQuery = trpc.useQuery(["products"]);
+  const { data: categories } = categoriesQuery;
+  const { data: products } = productsQuery;
+  console.log(categories);
 
   return (
     <div className="mx-2 sm:mx-10 px-4 bg-white shadow-md shadow-black text-text-primary font-gothic">
@@ -32,6 +28,7 @@ export default function shop({
         <div className="w-full">
           <div className="flex flex-wrap justify-between divide-y">
             {products &&
+              categories &&
               categories.map((category, i) => (
                 <div key={i} className="w-full sm:px-4 sm:mx-10">
                   <div className="relative">
@@ -207,36 +204,21 @@ export default function shop({
   // );
 }
 
-export const getStaticProps = async ({ params }) => {
-  const categoriesURL = `https://thecheekco.vercel.app/api/fetchcategories`;
-  const categoriesResult = await fetch(categoriesURL, {
-    headers: {
-      Accept: "application/json, text/plain, */*",
-      "User-Agent": "*",
-    },
+export const getStaticProps: GetStaticProps = async (
+  context: GetStaticPropsContext<{ id: string }>
+) => {
+  const ssg = createSSGHelpers({
+    router: appRouter,
+    ctx: context as inferRouterContext<typeof appRouter>,
+    transformer: superjson,
   });
-  const categoriesData = await categoriesResult.json();
 
-  const productsURL = `https://thecheekco.vercel.app/api/fetchproducts`;
-  const productsResult = await fetch(productsURL, {
-    headers: {
-      Accept: "application/json, text/plain, */*",
-      "User-Agent": "*",
-    },
-  });
-  const productsDataRaw = await productsResult.json();
-  const productsData = productsDataRaw?.[0];
-
-  if (!productsResult.ok || !categoriesResult.ok) {
-    throw new Error(
-      `Failed to fetch posts, received status ${productsResult.status}, ${categoriesResult.status}`
-    );
-  }
+  await ssg.fetchQuery("categories");
+  await ssg.fetchQuery("products");
 
   return {
     props: {
-      productsData,
-      categoriesData,
+      trpcState: ssg.dehydrate(),
     },
   };
 };
