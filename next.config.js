@@ -13,6 +13,7 @@ module.exports = withTM({
     domains: [
       "thecheekcomedia.s3.ap-southeast-2.amazonaws.com",
       "items-images-production.s3.us-west-2.amazonaws.com",
+      "images.ctfassets.net",
     ],
   },
   experimental: {
