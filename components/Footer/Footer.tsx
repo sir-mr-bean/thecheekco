@@ -10,7 +10,7 @@ const Footer = () => {
             <Link href="/contact-us">
               <span className="cursor-pointer hover:scale-105">Contact</span>
             </Link>
-            <Link href="/contact-us">
+            <Link href="/shipping-policy">
               <span className="cursor-pointer hover:scale-105">Shipping</span>
             </Link>
             <Link href="/contact-us">
