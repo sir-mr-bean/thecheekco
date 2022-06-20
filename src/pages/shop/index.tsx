@@ -20,7 +20,6 @@ export default function shop(
   const productsQuery = trpc.useQuery(["products"]);
   const { data: categories } = categoriesQuery;
   const { data: products } = productsQuery;
-  console.log(categories);
 
   return (
     <div className="mx-2 sm:mx-10 px-4 bg-white shadow-md shadow-black text-text-primary font-gothic">

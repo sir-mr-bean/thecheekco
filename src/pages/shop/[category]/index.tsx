@@ -6,12 +6,28 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import * as gtag from "lib/gtag";
+import {
+  GetStaticPaths,
+  GetStaticPathsContext,
+  GetStaticProps,
+  GetStaticPropsContext,
+  InferGetStaticPropsType,
+} from "next";
+import { createSSGHelpers } from "@trpc/react/ssg";
+import { appRouter } from "@/backend/router/_app";
+import { inferRouterContext } from "@trpc/server";
+import superjson from "superjson";
+import { trpc } from "@/utils/trpc";
 
-const CategoryPage = ({ currentProducts, currentCategory }) => {
+const CategoryPage = (
+  props: InferGetStaticPropsType<typeof getStaticProps>
+) => {
+  console.log(props);
+  const currentCategory = props.currentCategory;
   const router = useRouter();
   const query = router.query;
   const { cart, dispatch } = CartState();
-  const products = currentProducts;
+  const products = props.products;
 
   const handleAdd = (product) => {
     dispatch({
@@ -64,7 +80,7 @@ const CategoryPage = ({ currentProducts, currentCategory }) => {
       <div className="max-w-screen min-h-screen border-2 flex justify-center">
         <div className="py-4 px-4 sm:py-10 sm:px-6 lg:px-8 bg-bg-lighttan mt-24 shadow-[0_0px_7px_1px_rgba(0,0,0,0.51)] w-full h-full mx-6 md:mx-16 sm:mx-20">
           <h2 className="text-4xl text-text-primary font-gothic font-extralight capitalize">
-            {currentCategory?.[0].category_data.name}
+            {currentCategory.category_data.name}
           </h2>
           <div className="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-3 lg:grid-cols-4 xl:gap-x-10 ">
             {products &&
@@ -114,7 +130,7 @@ const CategoryPage = ({ currentProducts, currentCategory }) => {
                         ).toFixed(2)}
                       </p>
                       <p className="mt-1 text-sm text-gray-500">
-                        {product.color}
+                        {/* {product.color} */}
                       </p>
                     </div>
                   </div>
@@ -138,23 +154,18 @@ const CategoryPage = ({ currentProducts, currentCategory }) => {
 
 export default CategoryPage;
 
-export const getStaticPaths = async () => {
-  const categoriesURL = `https://thecheekco.vercel.app/api/fetchcategories`;
-  const res = await fetch(categoriesURL, {
-    headers: {
-      Accept: "application/json, text/plain, */*",
-      "User-Agent": "*",
-    },
+export const getStaticPaths: GetStaticPaths = async (
+  context: GetStaticPathsContext
+) => {
+  const ssg = createSSGHelpers({
+    router: appRouter,
+    ctx: context as inferRouterContext<typeof appRouter>,
+    transformer: superjson,
   });
-  const data = await res.json();
+  const categoryQuery = await ssg.fetchQuery("categories");
 
-  if (!res.ok) {
-    throw new Error(
-      `Failed to fetch paths in [categories].js, received status ${res.status}`
-    );
-  }
   return {
-    paths: data.map((item) => ({
+    paths: categoryQuery.map((item) => ({
       params: {
         category: item.category_data.name
           .toString()
@@ -166,44 +177,34 @@ export const getStaticPaths = async () => {
   };
 };
 
-export const getStaticProps = async ({ params }) => {
-  const categoriesURL = `https://thecheekco.vercel.app/api/fetchcategories`;
-  const categoriesResult = await fetch(categoriesURL, {
-    headers: {
-      Accept: "application/json, text/plain, */*",
-      "User-Agent": "*",
-    },
+export const getStaticProps: GetStaticProps = async (
+  context: GetStaticPropsContext<{ category: string }>
+) => {
+  //console.log(context);
+  const params = context.params?.category as string;
+  const ssg = createSSGHelpers({
+    router: appRouter,
+    ctx: context as inferRouterContext<typeof appRouter>,
+    transformer: superjson,
   });
-  const categoriesData = await categoriesResult.json();
+  const categoryQuery = await ssg.fetchQuery("categories");
 
-  const productsURL = `https://thecheekco.vercel.app/api/fetchproducts`;
-  const productsResult = await fetch(productsURL, {
-    headers: {
-      Accept: "application/json, text/plain, */*",
-      "User-Agent": "*",
-    },
+  const category = categoryQuery.find(
+    (item) =>
+      item.category_data.name.toLowerCase().replaceAll(" ", "-") === params
+  );
+  console.log(category);
+  const products = await ssg.fetchQuery("products", {
+    categoryId: params,
   });
-  const productsData = await productsResult.json();
-
-  if (!productsResult.ok || !categoriesResult.ok) {
-    throw new Error(
-      `Failed to fetch props in [category].js, received status ${productsResult.status}, ${categoriesResult.status}`
-    );
-  }
-  const currentCategory = categoriesData.filter((item) => {
-    return (
-      item.category_data.name.toString().toLowerCase().replaceAll(" ", "-") ===
-      params.category
-    );
-  });
-  const currentProducts = productsData?.[0].filter((product) => {
-    return product?.category?.id === currentCategory[0].id;
-  });
-
+  const productsByCategory = products.filter(
+    (item) => item.category?.id === category?.id
+  );
+  console.log(productsByCategory.length);
   return {
     props: {
-      currentProducts,
-      currentCategory,
+      currentCategory: JSON.parse(JSON.stringify(category)),
+      products: JSON.parse(JSON.stringify(productsByCategory)),
     },
   };
 };

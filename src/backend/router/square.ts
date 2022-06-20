@@ -15,7 +15,7 @@ import { randomUUID } from "crypto";
 import { z } from "zod";
 import getConfig from "next/config";
 import { CategoryType, Product, Category } from "@/types/Product";
-
+import superjson from "superjson";
 import { bigint, unknown } from "square/dist/schema";
 const { serverRuntimeConfig } = getConfig();
 
@@ -29,6 +29,7 @@ const { ordersApi, paymentsApi, customersApi } = new Client({
 });
 
 export const squareRouter = createRouter()
+  .transformer(superjson)
   .mutation("createOrder", {
     input: z.object({
       lineItems: z.array(
@@ -198,14 +199,13 @@ export const squareRouter = createRouter()
     }),
     async resolve({ input, ctx }) {
       const prisma = ctx.prisma;
-      console.log("completing order");
-      console.log(input);
+
       const { orderId, paymentId } = input;
       const payOrder = await ordersApi.payOrder(orderId, {
         idempotencyKey: randomUUID(),
         paymentIds: [paymentId],
       });
-      console.log(payOrder);
+
       const orderResult = payOrder?.result?.order;
       // push order to prisma
       if (
@@ -245,8 +245,6 @@ export const squareRouter = createRouter()
       state: z.string(),
     }),
     async resolve({ input, ctx }) {
-      console.log("updating order");
-      console.log(input);
       const { orderId, state } = input;
       const updateOrder = await ordersApi.updateOrder(orderId, {
         order: {
@@ -255,7 +253,7 @@ export const squareRouter = createRouter()
         },
         idempotencyKey: randomUUID(),
       });
-      console.log(updateOrder);
+
       const orderResult = updateOrder?.result?.order;
       return orderResult;
     },
@@ -265,11 +263,9 @@ export const squareRouter = createRouter()
       orderId: z.string(),
     }),
     async resolve({ input, ctx }) {
-      console.log("getting order");
-      console.log(input);
       const { orderId } = input;
       const getOrder = await ordersApi.retrieveOrder(orderId);
-      console.log(getOrder);
+
       const orderResult = getOrder?.result?.order;
       return orderResult;
     },
@@ -279,8 +275,6 @@ export const squareRouter = createRouter()
       email: z.string(),
     }),
     async resolve({ input, ctx }) {
-      console.log("getting orders");
-      console.log(input);
       const { email } = input;
       const prisma = ctx.prisma;
       const orders = await prisma.order.findMany({
@@ -295,7 +289,6 @@ export const squareRouter = createRouter()
           locationId: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string,
           orderIds: orders.map((order) => order.id),
         });
-        console.log(getOrders);
         const orderResult = getOrders?.result?.orders;
         return orderResult;
       }
@@ -309,7 +302,6 @@ export const squareRouter = createRouter()
       .nullish(),
     async resolve() {
       const categoriesArray: Category[] = [];
-      console.log("fetching categories");
       try {
         let sqCategories = `https://${serverRuntimeConfig.squareAPIURL}/v2/catalog/list?types=category`;
 
@@ -352,7 +344,6 @@ export const squareRouter = createRouter()
       })
       .nullish(),
     async resolve({ input, ctx }) {
-      console.log("fetching products");
       const productArray: Product[] = [];
       try {
         let sqProducts = `https://${serverRuntimeConfig.squareAPIURL}/v2/catalog/search`;
@@ -371,6 +362,7 @@ export const squareRouter = createRouter()
             body: JSON.stringify({
               include_related_objects: true,
               object_types: ["ITEM"],
+              category_ids: input?.categoryId ? [input.categoryId] : null,
             }),
           });
           if (!res.ok) {
@@ -379,7 +371,7 @@ export const squareRouter = createRouter()
             );
           }
           const data = await res.json();
-          console.log("data is ", data);
+
           const products = data.objects.map((item) => {
             const currentImage = data.related_objects.filter(
               (image) => image.id === item.item_data.image_ids?.[0]
@@ -431,8 +423,6 @@ export const squareRouter = createRouter()
       email: z.string(),
     }),
     async resolve({ input, ctx }) {
-      console.log("searching customer");
-      console.log(input);
       const { email } = input;
       const searchCustomer = await customersApi.searchCustomers({
         query: {
@@ -444,7 +434,7 @@ export const squareRouter = createRouter()
         },
         limit: 1 as unknown as bigint,
       });
-      console.log(searchCustomer);
+
       const customerResult = searchCustomer?.result?.customers?.[0];
       return customerResult;
     },
@@ -467,8 +457,6 @@ export const squareRouter = createRouter()
         .nullable(),
     }),
     async resolve({ input, ctx }) {
-      console.log("creating customer");
-      console.log(input);
       const { email, firstName, lastName, phoneNumber, address } = input;
       const createCustomer = await customersApi.createCustomer({
         emailAddress: email,
@@ -485,7 +473,7 @@ export const squareRouter = createRouter()
         },
         idempotencyKey: randomUUID(),
       });
-      console.log(createCustomer);
+
       const customerResult = createCustomer?.result?.customer;
       return customerResult;
     },
@@ -508,8 +496,6 @@ export const squareRouter = createRouter()
         .nullable(),
     }),
     async resolve({ input, ctx }) {
-      console.log("updating customer");
-      console.log(input);
       const { customerId, firstName, lastName, phoneNumber, address } = input;
       const updateCustomer = await customersApi.updateCustomer(customerId, {
         givenName: firstName,
@@ -524,7 +510,7 @@ export const squareRouter = createRouter()
           postalCode: address?.postalCode,
         },
       });
-      console.log(updateCustomer);
+
       const customerResult = updateCustomer?.result?.customer;
       return customerResult;
     },

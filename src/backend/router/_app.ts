@@ -3,6 +3,7 @@ import { authRouter } from "./auth";
 import { emailRouter } from "./email";
 import { squareRouter } from "./square";
 import { userRouter } from "./user";
+import superjson from "superjson";
 
 /**
  * Create your application's root router
@@ -11,6 +12,7 @@ import { userRouter } from "./user";
  * @link https://trpc.io/docs/router
  */
 export const appRouter = createRouter()
+  .transformer(superjson)
   .merge(authRouter)
   .merge("user", userRouter)
   .merge(squareRouter)

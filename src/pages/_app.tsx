@@ -119,6 +119,7 @@ export default withTRPC<AppRouter>({
     const ONE_HOUR_IN_SECONDS = 60 * 60;
     return {
       url,
+      transformer: superjson,
       links: [
         splitLink({
           condition(op) {
