@@ -90,7 +90,7 @@ const CategoryPage = (
           </h2>
           <div className="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-3 lg:grid-cols-4 xl:gap-x-10 ">
             {products &&
-              products.map((product) => (
+              products.map((product, index) => (
                 <div key={product.id}>
                   <div className="relative">
                     <Link
@@ -105,6 +105,14 @@ const CategoryPage = (
                             layout="fill"
                             src={product?.image}
                             alt={product.name}
+                            priority={
+                              index === 1 ||
+                              index === 2 ||
+                              index === 3 ||
+                              index === 4
+                                ? true
+                                : false
+                            }
                             className="w-full h-full object-center object-cover"
                           />
                         )}
