@@ -8,6 +8,7 @@ import BeatLoader from "react-spinners/BeatLoader";
 import { NextPage } from "next";
 import { trpc } from "@/utils/trpc";
 import { Customer, Order } from "square";
+import { Session } from "next-auth";
 
 const tabs = [
   {
@@ -28,7 +29,8 @@ const tabs = [
   },
 ];
 Profile.auth = {
-  isAuthenticated: async (session) => {
+  isAuthenticated: async (session: Session) => {
+    console.log(session);
     if (session) {
       return true;
     }
@@ -56,16 +58,16 @@ export default function Profile(): JSX.Element {
   const fetchOrders = async (customer: Customer) => {
     const orders = await queryContext.fetchQuery([
       "getOrders",
-      { email: customer?.emailAddress as string },
+      { customerId: customer?.id as string },
     ]);
     return orders;
   };
 
   console.log(status);
   useEffect(() => {
-    if (status === String("unauthenticated")) {
-      router.push("/login");
-    }
+    // if (status === String("unauthenticated")) {
+    //   router.push("/login");
+    // }
     fetchCustomer().then((customer) => {
       console.log("customer is ", customer);
       if (customer?.emailAddress) {

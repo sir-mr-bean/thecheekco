@@ -10,6 +10,7 @@ import {
   ListCustomersResponse,
   Order,
   OrderCreated,
+  OrderLineItem,
 } from "square";
 import { randomUUID } from "crypto";
 import { z } from "zod";
@@ -272,23 +273,27 @@ export const squareRouter = createRouter()
   })
   .query("getOrders", {
     input: z.object({
-      email: z.string(),
+      customerId: z.string(),
     }),
     async resolve({ input, ctx }) {
-      const { email } = input;
-      const prisma = ctx.prisma;
-      const orders = await prisma.order.findMany({
-        where: {
-          user: {
-            email,
+      const { customerId } = input;
+      const ordersQuery = await ordersApi.searchOrders({
+        locationIds: [process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string],
+        query: {
+          filter: {
+            customerFilter: {
+              customerIds: [customerId],
+            },
           },
         },
       });
-      if (orders?.length) {
+      if (ordersQuery?.result?.orders) {
+        const orders = ordersQuery.result.orders;
         const getOrders = await ordersApi.batchRetrieveOrders({
           locationId: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string,
-          orderIds: orders.map((order) => order.id),
+          orderIds: orders.map((order: Order) => order.id) as string[],
         });
+        console.log(getOrders);
         const orderResult = getOrders?.result?.orders;
         return orderResult;
       }

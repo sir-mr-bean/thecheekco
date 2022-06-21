@@ -208,7 +208,7 @@ export default function cart() {
                         Subtotal (ex GST)
                       </dt>
                       <dd className="text-sm font-medium text-gray-900">
-                        ${total - parseFloat(tax)}
+                        ${(total - parseFloat(tax)).toFixed(2)}
                       </dd>
                     </div>
 
