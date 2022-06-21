@@ -48,6 +48,7 @@ export default function checkout() {
   const shippingInfoCheckboxRef = useRef<HTMLInputElement>(null);
   const { cart, dispatch } = CartState();
   const [total, setTotal] = useState(0);
+  const tax = (parseInt(total.toFixed(2)) * 0.1).toFixed(2);
   const products = cart;
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [sameAsCustomerInfo, setSameAsCustomerInfo] = useState(false);
@@ -105,14 +106,16 @@ export default function checkout() {
   const [readyForPayment, setReadyForPayment] = useState(false);
 
   useEffect(() => {
-    let sum = 0;
+    let sum: number = 0;
     cart.forEach((product: Product) => {
-      sum +=
-        (product.variations[0].item_variation_data.price_money.amount / 100) *
-        product.quantity;
+      sum += parseFloat(
+        (
+          (product.variations[0].item_variation_data.price_money.amount / 100) *
+          product.quantity
+        ).toFixed(2)
+      );
     });
-    setTotal(parseInt(sum.toFixed(2)));
-    console.log("total is ", sum);
+    setTotal(sum);
   }, [cart]);
 
   const handleCustomerInfoComplete = (userObject: typeof userObj) => {

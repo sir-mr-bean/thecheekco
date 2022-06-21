@@ -14,19 +14,17 @@ export default function cart() {
   const [total, setTotal] = useState(0);
   const { cart, dispatch } = CartState();
   const [mounted, setMounted] = useState(false);
-
-  function floorFigure(figure) {
-    var decimals = 2;
-    var d = Math.pow(10, decimals);
-    return ((figure * d) / d).toFixed(decimals);
-  }
+  const tax = (parseInt(total.toFixed(2)) * 0.1).toFixed(2);
 
   useEffect(() => {
     let sum: number = 0;
     cart.forEach((product: Product) => {
-      sum +=
-        (product.variations[0].item_variation_data.price_money.amount / 100) *
-        product.quantity;
+      sum += parseFloat(
+        (
+          (product.variations[0].item_variation_data.price_money.amount / 100) *
+          product.quantity
+        ).toFixed(2)
+      );
     });
     setTotal(sum);
   }, [cart]);
@@ -210,7 +208,7 @@ export default function cart() {
                         Subtotal (ex GST)
                       </dt>
                       <dd className="text-sm font-medium text-gray-900">
-                        ${total - 0.1 * total}
+                        ${total - parseFloat(tax)}
                       </dd>
                     </div>
 
@@ -218,7 +216,7 @@ export default function cart() {
                       <dt className="text-sm text-gray-900">GST</dt>
 
                       <dd className="text-sm font-medium text-gray-900">
-                        ${(0.1 * total).toString().substring(0, 4)}
+                        ${tax}
                       </dd>
                     </div>
                     <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
