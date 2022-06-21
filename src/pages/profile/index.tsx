@@ -28,15 +28,15 @@ const tabs = [
     name: "payment",
   },
 ];
-Profile.auth = {
-  isAuthenticated: async (session: Session) => {
-    console.log(session);
-    if (session) {
-      return true;
-    }
-    return false;
-  },
-};
+// Profile.auth = {
+//   isAuthenticated: async (session: Session) => {
+//     console.log(session);
+//     if (session) {
+//       return true;
+//     }
+//     return false;
+//   },
+// };
 export default function Profile(): JSX.Element {
   const { data: session, status } = useSession();
   console.log();
@@ -48,17 +48,19 @@ export default function Profile(): JSX.Element {
   const [customerOrders, setCustomerOrders] = useState<Order[]>([]);
 
   const fetchCustomer = async () => {
+    if (!session?.user?.email) return;
     const customer = await queryContext.fetchQuery([
       "searchCustomer",
-      { email: session?.user?.email as string },
+      { email: session.user.email },
     ]);
     return customer;
   };
 
   const fetchOrders = async (customer: Customer) => {
+    if (!customer?.id) return;
     const orders = await queryContext.fetchQuery([
       "getOrders",
-      { customerId: customer?.id as string },
+      { customerId: "Q0DV3QQ7TX7YZ7CWB34HSE3K9M" },
     ]);
     return orders;
   };

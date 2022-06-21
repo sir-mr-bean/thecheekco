@@ -287,6 +287,8 @@ export const squareRouter = createRouter()
           },
         },
       });
+      console.log(ordersQuery);
+      console.log(ordersQuery?.result?.orders);
       if (ordersQuery?.result?.orders) {
         const orders = ordersQuery.result.orders;
         const getOrders = await ordersApi.batchRetrieveOrders({
