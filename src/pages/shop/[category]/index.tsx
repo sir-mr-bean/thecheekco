@@ -205,26 +205,29 @@ export const getStaticPaths: GetStaticPaths = async (
     ctx: context as inferRouterContext<typeof appRouter>,
     transformer: superjson,
   });
-  const categoryQuery = await ssg.fetchQuery("categories");
-
+  const categoryQuery = await ssg.fetchQuery("all-categories");
+  const categoryNames = categoryQuery?.filter(
+    (category) => category.categoryData?.name as string
+  );
+  const paths = categoryNames?.map((category) => ({
+    params: {
+      category: category.categoryData?.name?.replace(/ /g, "-").toLowerCase(),
+      id: category.id,
+    },
+  }));
+  console.log(paths);
   return {
-    paths: categoryQuery.map((item) => ({
-      params: {
-        category: item.category_data.name
-          .toString()
-          .toLowerCase()
-          .replaceAll(" ", "-"),
-      },
-    })),
+    paths: paths || [],
     fallback: false,
   };
 };
 
 export const getStaticProps: GetStaticProps = async (
-  context: GetStaticPropsContext<{ category: string }>
+  context: GetStaticPropsContext<{ category: string; id: string }>
 ) => {
   //console.log(context);
   const params = context.params?.category as string;
+  const id = context.params?.id as string;
   const ssg = createSSGHelpers({
     router: appRouter,
     ctx: context as inferRouterContext<typeof appRouter>,
@@ -237,7 +240,7 @@ export const getStaticProps: GetStaticProps = async (
       item.category_data.name.toLowerCase().replaceAll(" ", "-") === params
   );
   const products = await ssg.fetchQuery("search-products", {
-    categoryId: category?.id as string,
+    categoryId: id as string,
   });
 
   return {
