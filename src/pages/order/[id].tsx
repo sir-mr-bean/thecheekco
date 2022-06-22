@@ -10,22 +10,21 @@ import { useRouter } from "next/router";
 import superjson from "superjson";
 import { trpc } from "@/utils/trpc";
 import moment from "moment";
+import { BeatLoader } from "react-spinners";
 
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
 };
 
 function truncateMiddle(str: string, length: number) {
-  if (str.length <= length) {
+  if (str?.length <= length) {
     return str;
   }
   const half = Math.floor(length / 2);
   return str.substring(0, half) + "..." + str.substring(str.length - half);
 }
 
-const UserDashboard = (
-  props: InferGetServerSidePropsType<typeof getServerSideProps>
-) => {
+const UserDashboard = () => {
   const router = useRouter();
   const { id } = router.query;
   const { data: order, status } = trpc.useQuery([
@@ -33,6 +32,18 @@ const UserDashboard = (
     { orderId: id as string },
   ]);
   console.log(order);
+
+  if (status === "loading") {
+    return (
+      <div className="flex h-screen w-full justify-center items-center mx-auto  text-text-primary">
+        <BeatLoader
+          color="#602d0d"
+          loading={status === String("loading")}
+          size={20}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col space-y-2 font-gothic">
@@ -264,21 +275,21 @@ const UserDashboard = (
 
 export default UserDashboard;
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetStaticPropsContext
-) => {
-  const ssg = createSSGHelpers({
-    router: appRouter,
-    ctx: context as inferRouterContext<typeof appRouter>,
-    transformer: superjson,
-  });
-  console.log(context);
-  const orderQuery = await ssg.fetchQuery("getOrder", {
-    orderId: context?.params?.id as string,
-  });
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetStaticPropsContext
+// ) => {
+//   const ssg = createSSGHelpers({
+//     router: appRouter,
+//     ctx: context as inferRouterContext<typeof appRouter>,
+//     transformer: superjson,
+//   });
+//   console.log(context);
+//   const orderQuery = await ssg.fetchQuery("getOrder", {
+//     orderId: context?.params?.id as string,
+//   });
 
-  if (!orderQuery?.id) {
-    return { props: {} };
-  }
-  return { props: { order: ssg.dehydrate() } };
-};
+//   if (!orderQuery?.id) {
+//     return { props: {} };
+//   }
+//   return { props: { order: ssg.dehydrate() } };
+// };
