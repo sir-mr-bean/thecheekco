@@ -39,8 +39,6 @@ const tabs = [
 // };
 export default function Profile(): JSX.Element {
   const { data: session, status } = useSession();
-  console.log();
-  console.log("session is ", session);
   const router = useRouter();
   const tabFromQuery = tabs.find((tab) => tab.name === router.query?.tab);
   const [openTab, setOpenTab] = useState(tabFromQuery?.index || 1);
@@ -60,16 +58,15 @@ export default function Profile(): JSX.Element {
     if (!customer?.id) return;
     const orders = await queryContext.fetchQuery([
       "getOrders",
-      { customerId: "Q0DV3QQ7TX7YZ7CWB34HSE3K9M" },
+      { customerId: customer?.id as string },
     ]);
     return orders;
   };
 
-  console.log(status);
   useEffect(() => {
-    // if (status === String("unauthenticated")) {
-    //   router.push("/login");
-    // }
+    if (status === String("unauthenticated")) {
+      router.push("/login");
+    }
     fetchCustomer().then((customer) => {
       console.log("customer is ", customer);
       if (customer?.emailAddress) {

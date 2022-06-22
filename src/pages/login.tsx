@@ -31,8 +31,10 @@ const login = ({ csrfToken, providers }) => {
   const [loggingIn, setLoggingIn] = useState(false);
 
   useEffect(() => {
-    console.log(window.location);
-  }, []);
+    if (status === String("authenticated")) {
+      router.push("/profile");
+    }
+  }, [status]);
 
   const handleGoogleLogin = async () => {
     try {
