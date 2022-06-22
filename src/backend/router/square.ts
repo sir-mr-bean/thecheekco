@@ -267,10 +267,14 @@ export const squareRouter = createRouter()
     }),
     async resolve({ input, ctx }) {
       const { orderId } = input;
-      const getOrder = await ordersApi.retrieveOrder(orderId);
-
-      const orderResult = getOrder?.result?.order;
-      return orderResult;
+      try {
+        const getOrder = await ordersApi.retrieveOrder(orderId);
+        const orderResult = getOrder?.result?.order;
+        return orderResult;
+      } catch (e) {
+        console.log(e);
+        return null;
+      }
     },
   })
   .query("getOrders", {
@@ -279,24 +283,31 @@ export const squareRouter = createRouter()
     }),
     async resolve({ input, ctx }) {
       const { customerId } = input;
-      const ordersQuery = await ordersApi.searchOrders({
-        locationIds: [process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string],
-        query: {
-          filter: {
-            customerFilter: {
-              customerIds: [customerId],
+      try {
+        const ordersQuery = await ordersApi.searchOrders({
+          locationIds: [process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string],
+          query: {
+            filter: {
+              customerFilter: {
+                customerIds: [customerId],
+              },
             },
           },
-        },
-      });
-      if (ordersQuery?.result?.orders) {
-        const orders = ordersQuery.result.orders;
-        const getOrders = await ordersApi.batchRetrieveOrders({
-          locationId: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string,
-          orderIds: orders.map((order: Order) => order.id) as string[],
         });
-        const orderResult = getOrders?.result?.orders;
-        return orderResult;
+        if (ordersQuery?.result?.orders) {
+          const orders = ordersQuery.result.orders;
+          const getOrders = await ordersApi.batchRetrieveOrders({
+            locationId: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string,
+            orderIds: orders.map((order: Order) => order.id) as string[],
+          });
+          const orderResult = getOrders?.result?.orders;
+          return orderResult;
+        } else {
+          return [];
+        }
+      } catch (error) {
+        console.log("Failed to fetch order!");
+        return [];
       }
     },
   })
