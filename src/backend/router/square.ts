@@ -333,7 +333,6 @@ export const squareRouter = createRouter()
           cursor = data.cursor;
         } while (cursor != "" && cursor != null);
       } catch (e) {
-        console.log(e);
         throw new TRPCError(e.message);
       }
       const categoriesResponse = categoriesArray.filter(
@@ -371,6 +370,18 @@ export const squareRouter = createRouter()
         (product) => !product.itemData?.name?.startsWith("_")
       );
       return productsResponse;
+    },
+  })
+  .query("all-categories", {
+    async resolve({ input, ctx }) {
+      const categoryQuery = await catalogApi.searchCatalogObjects({
+        objectTypes: ["CATEGORY"],
+      });
+      const categories = categoryQuery.result.objects;
+      const categoriesResult = categories?.filter(
+        (category) => !category?.categoryData?.name?.startsWith("_")
+      );
+      return categoriesResult;
     },
   })
   .query("search-products", {

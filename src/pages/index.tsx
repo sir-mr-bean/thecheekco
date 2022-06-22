@@ -27,23 +27,20 @@ import { AppRouter, appRouter } from "@/backend/router/_app";
 import { inferRouterContext } from "@trpc/server";
 import { GiConsoleController } from "react-icons/gi";
 import { trpc } from "@/utils/trpc";
-import { Category, Product } from "@/types/Product";
+import { CatalogCategory, CatalogObject } from "square";
+import { Category } from "@/types/Category";
 
 export default function Home(
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) {
   const notationRef = useRef(null);
   const { inViewport, enterCount, leaveCount } = useInViewport(notationRef);
-  const categories = trpc.useQuery(["categories"], {
+  const { data: categoriesData } = trpc.useQuery(["all-categories"], {
     context: {
       skipBatch: true,
     },
   });
-  const products = trpc.useQuery(["products"]);
-  const { data: categoriesData } = categories;
-  const { data: productsData } = products;
-
-  const carouselRef: any = useRef();
+  const { data: productsData } = trpc.useQuery(["all-products"]);
   const { cart, dispatch } = CartState();
 
   //create a typesafe function to return an icon from the react-icons library based on the icon name
@@ -138,7 +135,7 @@ export default function Home(
     },
   ];
 
-  const handleAdd = (product: Product) => {
+  const handleAdd = (product: CatalogObject) => {
     dispatch({
       type: "ADD_TO_CART",
       item: product,
@@ -146,45 +143,50 @@ export default function Home(
     });
     if (window !== undefined) {
     }
-    toast.custom((t) => (
-      <div
-        className={`${
-          t.visible ? "animate-enter" : "animate-leave"
-        } max-w-md w-full bg-bg-tan shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
-      >
-        <div className="flex-1 w-0 p-4">
-          <div className="flex items-start">
-            <div className="flex-shrink-0 pt-0.5">
-              className="h-10 w-10 rounded-full"
-              <Image
-                className="w-24 h-24 rounded-full"
-                height={50}
-                width={50}
-                objectFit="cover"
-                src={
-                  product.image ||
-                  "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
-                }
-                alt={product.name}
-              />
-            </div>
-            <div className="ml-3 flex-1 my-auto">
-              <p className="mt-1 text-sm text-text-primary font-gothic">
-                {product.name} added to cart.
-              </p>
+    toast.custom((t) => {
+      const productImage = productsData?.find(
+        (p) => p.type === "IMAGE" && product.itemData?.imageIds?.includes(p.id)
+      );
+      return (
+        <div
+          className={`${
+            t.visible ? "animate-enter" : "animate-leave"
+          } max-w-md w-full bg-bg-tan shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+        >
+          <div className="flex-1 w-0 p-4">
+            <div className="flex items-start">
+              <div className="flex-shrink-0 pt-0.5">
+                className="h-10 w-10 rounded-full"
+                <Image
+                  className="w-24 h-24 rounded-full"
+                  height={50}
+                  width={50}
+                  objectFit="cover"
+                  src={
+                    productImage?.imageData?.url ||
+                    "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
+                  }
+                  alt={product.imageData?.name}
+                />
+              </div>
+              <div className="ml-3 flex-1 my-auto">
+                <p className="mt-1 text-sm text-text-primary font-gothic">
+                  {product.imageData?.name} added to cart.
+                </p>
+              </div>
             </div>
           </div>
+          <div className="flex border-l border-text-primary border-opacity-10">
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:text-text-primary"
+            >
+              Close
+            </button>
+          </div>
         </div>
-        <div className="flex border-l border-text-primary border-opacity-10">
-          <button
-            onClick={() => toast.dismiss(t.id)}
-            className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:text-text-primary"
-          >
-            Close
-          </button>
-        </div>
-      </div>
-    ));
+      );
+    });
   };
 
   return (
@@ -277,16 +279,21 @@ export default function Home(
 
         <div className="flex flex-col divide-y divide-text-primary px-6 space-y-3">
           <div className="grid grid-cols-3 content-center gap-40 w-full pb-10 px-20 max-w-7xl mx-auto">
-            {productsData?.slice(0, 3).map((product: Product) => {
+            {productsData?.slice(0, 3).map((product: CatalogObject) => {
+              const productImage = productsData?.find(
+                (p) =>
+                  p.type === "IMAGE" &&
+                  product.itemData?.imageIds?.includes(p.id)
+              );
               return (
                 <div
-                  key={product.name}
+                  key={product?.id}
                   className="flex flex-col justify-center items-center text-text-primary "
                 >
                   <div className="relative w-full h-full">
                     <Image
                       src={
-                        product.image ||
+                        productImage?.imageData?.url ||
                         "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
                       }
                       width={200}
@@ -376,24 +383,26 @@ export default function Home(
                 {categoriesData &&
                   productsData &&
                   categoriesData
-
                     .filter(
-                      (item: Category) =>
-                        item.category_data.name.charAt(0) != "_"
+                      (item: CatalogObject) =>
+                        item.itemData?.name?.charAt(0) != "_"
                     )
-                    .map((category: Category) => {
+                    .map((category) => {
                       const randomProduct = productsData.find((product) => {
-                        return (
-                          product.category?.category_data.name ===
-                          category.category_data.name
-                        );
+                        return product.itemData?.categoryId === category.id;
                       });
-
+                      const productImage = productsData?.find(
+                        (p) =>
+                          p.type === "IMAGE" &&
+                          randomProduct?.itemData?.imageIds?.includes(p.id)
+                      );
                       return (
                         <Link
-                          key={category.category_data.name}
-                          href={`/shop/${category.category_data.name}`}
-                          as={`/shop/${slugify(category?.category_data?.name)}`}
+                          key={category?.categoryData?.name}
+                          href={`/shop/${category.itemData?.name}`}
+                          as={`/shop/${slugify(
+                            category?.categoryData?.name as string
+                          )}`}
                           className="relative overflow-hidden"
                         >
                           <div className="flex flex-wrap justify-center items-center m-4 md:m-8  cursor-pointer">
@@ -401,7 +410,7 @@ export default function Home(
                               <Image
                                 priority={true}
                                 src={
-                                  randomProduct?.image ||
+                                  productImage?.imageData?.url ||
                                   "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
                                 }
                                 width={100}
@@ -416,7 +425,7 @@ export default function Home(
                                   <div className="flex items-center justify-between">
                                     <div className="flex-1 px-2 sm:px-4">
                                       <h3 className="text-sm sm:text-lg font-medium text-text-primary">
-                                        {category.category_data.name}
+                                        {category?.categoryData?.name}
                                       </h3>
                                     </div>
                                   </div>
@@ -468,16 +477,45 @@ export default function Home(
               </div>
               <div className="flex flex-wrap w-full h-fit items-center justify-center sm:justify-evenly pt-10">
                 {productsData
-                  ?.filter((product) => product.isAllNatural === true)
+                  ?.filter((product) => {
+                    if (
+                      product?.itemData?.variations?.[0].customAttributeValues
+                    ) {
+                      const keys = Object.keys(
+                        product?.itemData?.variations?.[0]
+                          ?.customAttributeValues as object
+                      );
+                      if (keys.length) {
+                        const allNaturalAttr = keys?.some((key) => {
+                          product?.itemData?.variations?.[0]
+                            ?.customAttributeValues?.[key]?.name ===
+                            "All-Natural" &&
+                            product?.itemData.variations?.[0]
+                              .customAttributeValues?.[key]?.booleanValue ===
+                              true;
+                        });
+                        return allNaturalAttr;
+                      }
+                    }
+                  })
                   .slice(0, 6)
                   .map((product) => {
+                    const productImage = productsData?.find(
+                      (p) =>
+                        p.type === "IMAGE" &&
+                        product?.itemData?.imageIds?.includes(p.id)
+                    );
+                    const productCategory = categoriesData?.find(
+                      (category) =>
+                        category.id === product?.itemData?.categoryId
+                    );
                     return (
                       <Link
                         key={product.id}
-                        href={`/shop/${product.category?.category_data.name}/${product.name}`}
+                        href={`/shop/${productCategory?.categoryData?.name}/${product.itemData?.name}`}
                         as={`/shop/${
-                          product.category?.category_data.name
-                        }/${slugify(product.name)}`}
+                          productCategory?.categoryData?.name
+                        }/${slugify(product.itemData?.name as string)}`}
                         className="relative overflow-hidden"
                       >
                         <div className="flex flex-col justify-center items-center h-32 w-32 m-4 md:m-4 cursor-pointer hover:scale-105">
@@ -485,7 +523,7 @@ export default function Home(
                             <Image
                               priority={true}
                               src={
-                                product?.image ||
+                                productImage?.imageData?.url ||
                                 "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
                               }
                               width={150}
@@ -496,7 +534,7 @@ export default function Home(
                             />
                           </div>
                           <span className="text-xs font-bold whitespace-nowrap text-text-primary w-full text-left py-2">
-                            {product.name}
+                            {product?.itemData?.name}
                           </span>
                         </div>
                       </Link>
@@ -561,25 +599,35 @@ export default function Home(
                   <div className="w-fit">
                     {productsData &&
                       productsData
-                        .filter((item: Product) => item.name === "The Gua Sha")
-                        .map((product: Product) => {
+                        .filter((item) => item.itemData?.name === "The Gua Sha")
+                        .map((product) => {
+                          const productImage = productsData?.find(
+                            (p) =>
+                              p.type === "IMAGE" &&
+                              product?.itemData?.imageIds?.includes(p.id)
+                          );
+                          const productCategory = categoriesData?.find(
+                            (category) =>
+                              category.id === product?.itemData?.categoryId
+                          );
+
                           return (
                             <div key={product.id}>
                               <div className="relative">
                                 <Link
                                   href="/shop/[category]/[id]"
                                   as={`/shop/${
-                                    product.category?.category_data?.name
-                                  }/${product.name
-                                    .replace(/ /g, "-")
-                                    .toLowerCase()}`}
+                                    productCategory?.categoryData?.name
+                                  }/${slugify(
+                                    product.itemData?.name as string
+                                  )}`}
                                 >
                                   <div className="relative  mx-4 w-60 h-60 rounded-lg overflow-hidden cursor-pointer border-2 border-[#DBA37D]">
-                                    {product.image && (
+                                    {productImage?.imageData?.url && (
                                       <Image
                                         layout="fill"
-                                        src={product?.image}
-                                        alt={product.name}
+                                        src={productImage?.imageData?.url}
+                                        alt={product.itemData?.name}
                                         className="object-center object-cover"
                                       />
                                     )}
@@ -589,13 +637,13 @@ export default function Home(
                                   <Link
                                     href="/shop/[category]/[id]"
                                     as={`/shop/${
-                                      product.category?.category_data?.name
-                                    }/${product.name
-                                      .replace(/ /g, "-")
-                                      .toLowerCase()}`}
+                                      productCategory?.categoryData?.name
+                                    }/${slugify(
+                                      product.itemData?.name as string
+                                    )}`}
                                   >
                                     <h3 className="text-sm font-medium text-gray-900">
-                                      {product.name}
+                                      {product?.itemData?.name}
                                     </h3>
                                   </Link>
                                   <div className="flex text-header-brown justify-center">
@@ -608,9 +656,11 @@ export default function Home(
                                   <p className="relative text-lg font-bold text-black">
                                     $
                                     {(
-                                      product.variations?.[0]
-                                        ?.item_variation_data?.price_money
-                                        ?.amount / 100
+                                      Number(
+                                        product.itemData?.variations?.[0]
+                                          ?.itemVariationData?.priceMoney
+                                          ?.amount
+                                      ) / 100
                                     ).toFixed(2)}
                                   </p>
                                 </div>
@@ -622,7 +672,7 @@ export default function Home(
                                 >
                                   Add to cart
                                   <span className="sr-only">
-                                    {product.name}
+                                    {product.itemData?.name}
                                   </span>
                                 </button>
                               </div>
@@ -715,9 +765,8 @@ export const getStaticProps: GetStaticProps = async (
     transformer: superjson,
   });
 
-  const catFetch = await ssg.fetchQuery("categories");
-  await ssg.fetchQuery("products");
-  console.log(catFetch);
+  await ssg.fetchQuery("all-categories");
+  await ssg.fetchQuery("all-products");
 
   return {
     props: {
