@@ -212,10 +212,8 @@ export const getStaticPaths: GetStaticPaths = async (
   const paths = categoryNames?.map((category) => ({
     params: {
       category: category.categoryData?.name?.replace(/ /g, "-").toLowerCase(),
-      id: category.id,
     },
   }));
-  console.log(paths);
   return {
     paths: paths || [],
     fallback: false,
@@ -223,31 +221,29 @@ export const getStaticPaths: GetStaticPaths = async (
 };
 
 export const getStaticProps: GetStaticProps = async (
-  context: GetStaticPropsContext<{ category: string; id: string }>
+  context: GetStaticPropsContext
 ) => {
-  //console.log(context);
   const params = context.params?.category as string;
-  const id = context.params?.id as string;
+  //const id = context.params?.id as string;
   const ssg = createSSGHelpers({
     router: appRouter,
     ctx: context as inferRouterContext<typeof appRouter>,
     transformer: superjson,
   });
-  const categoryQuery = await ssg.fetchQuery("categories");
-
-  const category = categoryQuery.find(
-    (item) =>
-      item.category_data.name.toLowerCase().replaceAll(" ", "-") === params
+  const categoryQuery = await ssg.fetchQuery("all-categories");
+  const categoryObject = categoryQuery?.find(
+    (category) =>
+      category?.categoryData?.name?.replace(/ /g, "-").toLowerCase() === params
   );
-  const products = await ssg.fetchQuery("search-products", {
-    categoryId: id as string,
+  await ssg.fetchQuery("search-products", {
+    categoryId: categoryObject?.id as string,
   });
-
   return {
     props: {
       trpcState: ssg.dehydrate(),
-      currentCategoryID: category?.id as string,
-      currentCategoryName: category?.category_data.name as string,
+      currentCategoryID: categoryObject?.id as string,
+      currentCategoryName: categoryObject?.categoryData?.name as string,
     },
+    revalidate: 900,
   };
 };
