@@ -4,6 +4,7 @@ import { Menu, Transition } from "@headlessui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import Link from "next/link";
 import { Category } from "@/types/Category";
+import { CatalogObject } from "square";
 
 function classNames(...classes: [string, string?, string?, Boolean?]): string {
   return classes.filter(Boolean).join(" ");
@@ -40,11 +41,14 @@ export default function MobileMenu({ navigation }): JSX.Element {
                   {navigation &&
                     navigation?.length > 0 &&
                     navigation
-                      .sort((a, b) => (a.id > b.id ? 1 : -1))
-                      .filter(
-                        (item) => item.category_data.name.charAt(0) != "_"
+                      .sort((a: CatalogObject, b: CatalogObject) =>
+                        a.id > b.id ? 1 : -1
                       )
-                      .map((nav, i) => {
+                      .filter(
+                        (item: CatalogObject) =>
+                          item?.categoryData?.name?.charAt(0) != "_"
+                      )
+                      .map((nav: CatalogObject, i: number) => {
                         return (
                           <li key={i}>
                             <Menu.Item as="div">
@@ -52,8 +56,8 @@ export default function MobileMenu({ navigation }): JSX.Element {
                                 <Link
                                   key={nav.id}
                                   href="/shop/[id]/"
-                                  as={`/shop/${nav.category_data.name
-                                    .toLowerCase()
+                                  as={`/shop/${nav.categoryData?.name
+                                    ?.toLowerCase()
                                     .replaceAll(" ", "-")}`}
                                 >
                                   <div
@@ -65,7 +69,7 @@ export default function MobileMenu({ navigation }): JSX.Element {
                                       "block px-4 py-2 text-sm hover:bg-bg-tan cursor-pointer"
                                     )}
                                   >
-                                    {nav.category_data.name}
+                                    {nav.categoryData?.name}
                                   </div>
                                 </Link>
                               )}

@@ -35,15 +35,13 @@ function useScrollDirection() {
 export const Header = (): JSX.Element => {
   const scrollDirection = useScrollDirection();
   const { cart }: { cart: Product[] } = CartState();
-  const categoryQuery = trpc.useQuery(["categories"], {
+  const categoryQuery = trpc.useQuery(["all-categories"], {
     context: {
       skipBatch: true,
     },
   });
-
   const { data: navigation } = categoryQuery;
   const [cartItems, setCartItems] = useState<Product[]>(cart);
-
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
     setHasMounted(true);
@@ -147,20 +145,22 @@ export const Header = (): JSX.Element => {
               {navigation &&
                 navigation
                   .sort((a, b) => (a.id > b.id ? 1 : -1))
-                  .filter((item) => item.category_data.name.charAt(0) != "_")
+                  .filter((item) => item?.categoryData?.name?.charAt(0) != "_")
                   .map((nav, i) => {
                     return (
                       <Link
                         key={nav.id}
                         href="/shop/[id]/"
-                        as={`/shop/${slugify(nav.category_data.name)}`}
+                        as={`/shop/${slugify(
+                          nav?.categoryData?.name as string
+                        )}`}
                       >
                         <li
                           key={i}
                           className="px-1.5 py-1 hover:transform hover:transition-all hover:scale-125 cursor-pointer h-full"
                         >
                           <span className="font-gothic font-normal text-xs capitalize">
-                            {nav.category_data.name}
+                            {nav.categoryData?.name}
                           </span>
                         </li>
                       </Link>

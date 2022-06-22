@@ -300,47 +300,6 @@ export const squareRouter = createRouter()
       }
     },
   })
-  .query("categories", {
-    input: z
-      .object({
-        text: z.string().nullish(),
-      })
-      .nullish(),
-    async resolve() {
-      const categoriesArray: Category[] = [];
-      try {
-        let sqCategories = `https://${serverRuntimeConfig.squareAPIURL}/v2/catalog/list?types=category`;
-
-        let cursor = null;
-        do {
-          if (cursor != null)
-            sqCategories = `https://${serverRuntimeConfig.squareAPIURL}/v2/catalog/list?types=category&cursor=${cursor}`;
-          const res = await fetch(sqCategories, {
-            headers: {
-              "Square-Version": "2022-05-12",
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${serverRuntimeConfig.squareAccessToken}`,
-            },
-          });
-
-          if (!res.ok) {
-            throw new Error(
-              `Failed to fetch categories from Square, received status ${res.status}`
-            );
-          }
-          const data = await res.json();
-          categoriesArray.push(...(data.objects as never[]));
-          cursor = data.cursor;
-        } while (cursor != "" && cursor != null);
-      } catch (e) {
-        throw new TRPCError(e.message);
-      }
-      const categoriesResponse = categoriesArray.filter(
-        (category) => !category.category_data.name.startsWith("_")
-      );
-      return categoriesResponse;
-    },
-  })
   .query("all-products", {
     async resolve() {
       const productsArray: CatalogObject[] = [];
