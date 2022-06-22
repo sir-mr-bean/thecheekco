@@ -1,6 +1,6 @@
 import { RoughNotation, RoughNotationGroup } from "react-rough-notation";
 import { CartState } from "../../context/Context";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -23,12 +23,11 @@ import toast from "react-hot-toast";
 import superjson from "superjson";
 import { useInViewport } from "react-in-viewport";
 import { createSSGHelpers } from "@trpc/react/ssg";
-import { AppRouter, appRouter } from "@/backend/router/_app";
+import { appRouter } from "@/backend/router/_app";
 import { inferRouterContext } from "@trpc/server";
-import { GiConsoleController } from "react-icons/gi";
+
 import { trpc } from "@/utils/trpc";
-import { CatalogCategory, CatalogObject } from "square";
-import { Category } from "@/types/Category";
+import { CatalogObject } from "square";
 
 export default function Home(
   props: InferGetStaticPropsType<typeof getStaticProps>

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { BsStarFill, BsStarHalf, BsStar } from "react-icons/bs";
+import { BsStarFill, BsStar } from "react-icons/bs";
 import { CartState } from "../../../../context/Context";
 import { addToCart } from "../../../../context/Reducer";
 import toast from "react-hot-toast";
@@ -19,6 +19,10 @@ import { inferRouterContext } from "@trpc/server";
 import superjson from "superjson";
 import { CatalogObject } from "square";
 import { trpc } from "@/utils/trpc";
+
+(BigInt.prototype as any).toJSON = function () {
+  return this.toString();
+};
 
 const CategoryPage = (
   props: InferGetStaticPropsType<typeof getStaticProps>
