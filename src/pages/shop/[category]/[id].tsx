@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState } from "react";
+import { Dispatch, Fragment, useRef, useState } from "react";
 import { Tab } from "@headlessui/react";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import Image from "next/image";
@@ -122,14 +122,28 @@ const Markdown = (content) => {
   );
 };
 
+type CartObject = CatalogObject & {
+  quantity?: number;
+  productImage?: string;
+};
+
 const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const quantity = useRef<HTMLSelectElement>(null);
-  const { dispatch } = CartState();
+  const {
+    cart,
+    dispatch,
+  }: {
+    cart: CartObject[];
+    dispatch: Dispatch<{
+      type: string;
+      item?: CartObject;
+      quantity?: number;
+      productImage?: string;
+    }>;
+  } = CartState();
   const router = useRouter();
   const tabFromQuery = tabs.find((tab) => tab.name === router.query?.tab);
   const [openTab, setOpenTab] = useState(tabFromQuery?.index || 1);
-  //const product = data?.[0];
-  //console.log(product);
   const { data: productQuery } = trpc.useQuery([
     "search-product",
     { productName: router.query?.id as string },
@@ -144,7 +158,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     dispatch({
       type: "ADD_TO_CART",
       item: product,
-      qty: parseInt(quantity?.current?.value as string),
+      quantity: parseInt(quantity?.current?.value as string),
       productImage: productImage?.imageData?.url,
     });
     if (window !== undefined) {

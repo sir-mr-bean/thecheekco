@@ -19,9 +19,15 @@ import { inferRouterContext } from "@trpc/server";
 import superjson from "superjson";
 import { CatalogObject } from "square";
 import { trpc } from "@/utils/trpc";
+import { Dispatch } from "react";
 
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
+};
+
+type CartObject = CatalogObject & {
+  quantity?: number;
+  productImage?: string;
 };
 
 const CategoryPage = (
@@ -31,7 +37,18 @@ const CategoryPage = (
   const currentCategoryName = props.currentCategoryName;
   const router = useRouter();
   const query = router.query;
-  const { cart, dispatch } = CartState();
+  const {
+    cart,
+    dispatch,
+  }: {
+    cart: CartObject[];
+    dispatch: Dispatch<{
+      type: string;
+      item?: CartObject;
+      quantity?: number;
+      productImage?: string;
+    }>;
+  } = CartState();
   const { data: products } = trpc.useQuery([
     "search-products",
     {
@@ -39,11 +56,15 @@ const CategoryPage = (
     },
   ]);
 
-  const handleAdd = (product: CatalogObject) => {
+  const handleAdd = (product: CartObject) => {
+    const productImage = products?.find(
+      (p) => p.type === "IMAGE" && product.itemData?.imageIds?.includes(p.id)
+    );
     dispatch({
       type: "ADD_TO_CART",
       item: product,
-      qty: 1,
+      quantity: 1,
+      productImage: productImage?.imageData?.url,
     });
     gtag.event({
       action: "add_to_cart",
@@ -52,9 +73,6 @@ const CategoryPage = (
       value: `/shop/${query.category}`,
     });
     toast.custom((t) => {
-      const productImage = products?.find(
-        (p) => p.type === "IMAGE" && product.itemData?.imageIds?.includes(p.id)
-      );
       return (
         <div
           className={`${

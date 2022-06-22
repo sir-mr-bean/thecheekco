@@ -1,6 +1,6 @@
 import { RoughNotation, RoughNotationGroup } from "react-rough-notation";
 import { CartState } from "../../context/Context";
-import { useRef } from "react";
+import { Dispatch, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -29,6 +29,11 @@ import { inferRouterContext } from "@trpc/server";
 import { trpc } from "@/utils/trpc";
 import { CatalogObject } from "square";
 
+type CartObject = CatalogObject & {
+  quantity: number;
+  productImage: string;
+};
+
 export default function Home(
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) {
@@ -40,7 +45,18 @@ export default function Home(
     },
   });
   const { data: productsData } = trpc.useQuery(["all-products"]);
-  const { cart, dispatch } = CartState();
+  const {
+    cart,
+    dispatch,
+  }: {
+    cart: CartObject[];
+    dispatch: Dispatch<{
+      type: string;
+      item?: CartObject;
+      quantity?: number;
+      productImage?: string;
+    }>;
+  } = CartState();
   console.log(productsData);
   const allNaturalProducts = productsData?.filter(
     (p) =>
@@ -143,27 +159,27 @@ export default function Home(
   ];
 
   const handleAdd = (product: CatalogObject) => {
+    const productImage = productsData?.find(
+      (p) => p.type === "IMAGE" && product.itemData?.imageIds?.includes(p.id)
+    );
     dispatch({
       type: "ADD_TO_CART",
-      item: product,
-      qty: 1,
+      item: product as CartObject,
+      quantity: 1,
+      productImage: productImage?.imageData?.url,
     });
     if (window !== undefined) {
     }
     toast.custom((t) => {
-      const productImage = productsData?.find(
-        (p) => p.type === "IMAGE" && product.itemData?.imageIds?.includes(p.id)
-      );
       return (
         <div
           className={`${
-            t.visible ? "animate-enter" : "animate-leave"
-          } max-w-md w-full bg-bg-tan shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            t.visible ? "animate-enter" : "animate-leave after:opacity-0"
+          } max-w-md w-full bg-bg-tan shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 shadow-text-primary`}
         >
           <div className="flex-1 w-0 p-4">
             <div className="flex items-start">
               <div className="flex-shrink-0 pt-0.5">
-                className="h-10 w-10 rounded-full"
                 <Image
                   className="w-24 h-24 rounded-full"
                   height={50}
@@ -173,12 +189,12 @@ export default function Home(
                     productImage?.imageData?.url ||
                     "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
                   }
-                  alt={product.imageData?.name}
+                  alt={product.itemData?.name}
                 />
               </div>
               <div className="ml-3 flex-1 my-auto">
                 <p className="mt-1 text-sm text-text-primary font-gothic">
-                  {product.imageData?.name} added to cart.
+                  1 {product.itemData?.name} added to cart.
                 </p>
               </div>
             </div>

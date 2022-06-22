@@ -57,7 +57,12 @@ export default function checkout() {
     dispatch,
   }: {
     cart: CartObject[];
-    dispatch: Dispatch<{ type: string; item?: CartObject; payload?: number }>;
+    dispatch: Dispatch<{
+      type: string;
+      item?: CartObject;
+      quantity?: number;
+      productImage?: string;
+    }>;
   } = CartState();
   const [total, setTotal] = useState(0);
   const tax = (parseInt(total.toFixed(2)) * 0.1).toFixed(2);

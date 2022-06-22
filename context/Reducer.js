@@ -25,7 +25,7 @@ export const cartReducer = (state, action) => {
             item.id === action.item.id
               ? {
                   ...item,
-                  quantity: item.quantity + action.qty,
+                  quantity: item.quantity + parseInt(action.quantity),
                 }
               : { ...item, productImage: action?.productImage, quantity: 1 }
           )
@@ -58,7 +58,7 @@ export const cartReducer = (state, action) => {
             item.name === action.item.name
               ? {
                   ...item,
-                  quantity: parseInt(action.payload),
+                  quantity: parseInt(action.quantity),
                 }
               : item
           )

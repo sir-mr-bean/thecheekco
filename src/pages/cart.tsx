@@ -28,7 +28,12 @@ export default function cart() {
     dispatch,
   }: {
     cart: CartObject[];
-    dispatch: Dispatch<{ type: string; item?: CartObject; payload?: number }>;
+    dispatch: Dispatch<{
+      type: string;
+      item?: CartObject;
+      quantity?: number;
+      productImage?: string;
+    }>;
   } = CartState();
   const [mounted, setMounted] = useState(false);
   const tax = (parseInt(total.toFixed(2)) * 0.1).toFixed(2);
@@ -64,7 +69,7 @@ export default function cart() {
     dispatch({
       type: "SET_QUANTITY",
       item: product,
-      payload: parseInt(qty.target.value),
+      quantity: parseInt(qty.target.value),
     });
   };
 

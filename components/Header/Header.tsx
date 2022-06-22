@@ -45,7 +45,12 @@ export const Header = (): JSX.Element => {
     dispatch,
   }: {
     cart: CartObject[];
-    dispatch: Dispatch<{ type: string; item?: CartObject; payload?: number }>;
+    dispatch: Dispatch<{
+      type: string;
+      item?: CartObject;
+      quantity?: number;
+      productImage?: string;
+    }>;
   } = CartState();
   const categoryQuery = trpc.useQuery(["all-categories"], {
     context: {
