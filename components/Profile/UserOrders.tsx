@@ -65,7 +65,6 @@ const orders = [
 ];
 
 const UserOrders = ({ customerOrders }) => {
-  console.log("customerOrders is ", customerOrders);
   return (
     <div>
       <div className="flex flex-col space-y-2">

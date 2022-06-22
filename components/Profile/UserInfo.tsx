@@ -22,7 +22,6 @@ const UserInfo = ({ session }) => {
   const [userObj, setUserObj] = useState<User>(session.user as User);
   const updateUser = trpc.useMutation(["userupdateUser"]);
 
-  //const onSubmit = (data) => console.log(data);
   const dateSchema = z.preprocess((arg) => {
     if (typeof arg == "string" || arg instanceof Date) return new Date(arg);
   }, z.date());
@@ -57,7 +56,6 @@ const UserInfo = ({ session }) => {
       user: updatedUserObj,
     });
     if (updateUser?.data?.result === "success") {
-      console.log("user updated");
       toast.success("Profile updated successfully");
     }
   };
@@ -164,7 +162,6 @@ const UserInfo = ({ session }) => {
                     >
                       apiKey={`${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
                       onPlaceSelected={(place) => {
-                        console.log(place);
                         const apartmentOrUnit = place?.address_components?.find(
                           (component) => component.types.includes("subpremise")
                         );

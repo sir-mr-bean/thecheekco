@@ -12,14 +12,18 @@ import { appRouter } from "@/backend/router/_app";
 import { inferRouterContext } from "@trpc/server";
 import superjson from "superjson";
 import { trpc } from "@/utils/trpc";
+import { CatalogObject, SearchCatalogObjectsResponse } from "square";
+
+(BigInt.prototype as any).toJSON = function () {
+  return this.toString();
+};
 
 export default function shop(
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) {
   const categoriesQuery = trpc.useQuery(["categories"]);
-  const productsQuery = trpc.useQuery(["products"]);
   const { data: categories } = categoriesQuery;
-  const { data: products } = productsQuery;
+  const { data: products } = trpc.useQuery(["all-products"]);
 
   return (
     <div className="mx-2 sm:mx-10 px-4 bg-white shadow-md shadow-black text-text-primary font-gothic">
@@ -28,7 +32,7 @@ export default function shop(
           <div className="flex flex-wrap justify-between divide-y">
             {products &&
               categories &&
-              categories.map((category, i) => (
+              categories?.map((category, i) => (
                 <div key={i} className="w-full sm:px-4 sm:mx-10">
                   <div className="relative">
                     <Link
@@ -49,11 +53,14 @@ export default function shop(
                   <div className="flex flex-wrap md:gap-1 w-full justify-start sm:justify-start xl:justify-evenly items-center">
                     {products
                       ?.filter(
-                        (item) =>
-                          item.category?.category_data.name ===
-                          category.category_data.name
+                        (item) => item.itemData?.categoryId === category.id
                       )
                       ?.map((product, i) => {
+                        const productImage = products?.find(
+                          (p) =>
+                            p.type === "IMAGE" &&
+                            product.itemData?.imageIds?.includes(p.id)
+                        );
                         while (i < 6)
                           return (
                             <div
@@ -63,10 +70,10 @@ export default function shop(
                               <div className="relative">
                                 <Link
                                   href="/shop/[category]/[id]"
-                                  as={`/shop/${product?.category?.category_data?.name
+                                  as={`/shop/${category.category_data.name
                                     .replace(/ /g, "-")
-                                    .toLowerCase()}/${product.name
-                                    .replace(/ /g, "-")
+                                    .toLowerCase()}/${product.itemData?.name
+                                    ?.replace(/ /g, "-")
                                     .toLowerCase()}`}
                                 >
                                   <a className="px-4 ">
@@ -74,10 +81,10 @@ export default function shop(
                                       <div className="relative w-64 min-w-xl">
                                         <Image
                                           src={
-                                            product.image ||
+                                            productImage?.imageData?.url ||
                                             "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
                                           }
-                                          alt={product.name}
+                                          alt={product.itemData?.name}
                                           width={1920}
                                           height={1080}
                                           layout="responsive"
@@ -86,14 +93,16 @@ export default function shop(
                                       </div>
                                       <div className="relative mt-4 flex flex-col sm:flex-row items-center justify-between w-full">
                                         <h1 className="text-sm font-medium sm:whitespace-nowrap">
-                                          {product.name}
+                                          {product.itemData?.name}
                                         </h1>
                                         <h3 className="text-xs font-medium sm:whitespace-nowrap pr-2">
                                           $
                                           {(
-                                            product.variations?.[0]
-                                              ?.item_variation_data?.price_money
-                                              ?.amount / 100
+                                            Number(
+                                              product?.itemData?.variations?.[0]
+                                                ?.itemVariationData?.priceMoney
+                                                ?.amount
+                                            ) / 100
                                           ).toFixed(2)}
                                         </h3>
                                       </div>
@@ -213,11 +222,12 @@ export const getStaticProps: GetStaticProps = async (
   });
 
   await ssg.fetchQuery("categories");
-  await ssg.fetchQuery("products");
+  await ssg.fetchQuery("all-products");
 
   return {
     props: {
       trpcState: ssg.dehydrate(),
     },
+    revalidate: 900,
   };
 };

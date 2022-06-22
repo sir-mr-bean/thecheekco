@@ -3,6 +3,7 @@ import { createRouter } from "../createRouter";
 import {
   ApiResponse,
   CatalogItem,
+  CatalogObject,
   CatalogProductSet,
   Client,
   CreateOrderResponse,
@@ -11,6 +12,7 @@ import {
   Order,
   OrderCreated,
   OrderLineItem,
+  SearchCatalogItemsResponse,
 } from "square";
 import { randomUUID } from "crypto";
 import { z } from "zod";
@@ -24,7 +26,7 @@ const { serverRuntimeConfig } = getConfig();
   return this.toString();
 };
 
-const { ordersApi, paymentsApi, customersApi } = new Client({
+const { ordersApi, paymentsApi, customersApi, catalogApi } = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
   environment: Environment.Production,
 });
@@ -287,15 +289,12 @@ export const squareRouter = createRouter()
           },
         },
       });
-      console.log(ordersQuery);
-      console.log(ordersQuery?.result?.orders);
       if (ordersQuery?.result?.orders) {
         const orders = ordersQuery.result.orders;
         const getOrders = await ordersApi.batchRetrieveOrders({
           locationId: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string,
           orderIds: orders.map((order: Order) => order.id) as string[],
         });
-        console.log(getOrders);
         const orderResult = getOrders?.result?.orders;
         return orderResult;
       }
@@ -343,14 +342,158 @@ export const squareRouter = createRouter()
       return categoriesResponse;
     },
   })
+  .query("all-products", {
+    async resolve() {
+      const productsArray: CatalogObject[] = [];
+      try {
+        let listProductsResponse = await catalogApi.listCatalog(
+          undefined,
+          "item,image"
+        );
+        productsArray.push(...(listProductsResponse.result.objects as never[]));
+        let cursor = listProductsResponse.result.cursor;
+        do {
+          if (cursor != null)
+            listProductsResponse = await catalogApi.listCatalog(
+              cursor,
+              "item,image"
+            );
+          productsArray.push(
+            ...(listProductsResponse.result.objects as never[])
+          );
+          cursor = listProductsResponse.result.cursor;
+        } while (cursor != "" && cursor != null);
+      } catch (e) {
+        console.log(e);
+        throw new TRPCError(e.message);
+      }
+      const productsResponse = productsArray.filter(
+        (product) => !product.itemData?.name?.startsWith("_")
+      );
+      return productsResponse;
+    },
+  })
+  .query("search-products", {
+    input: z.object({
+      categoryId: z.string(),
+    }),
+    async resolve({ input, ctx }) {
+      const { categoryId } = input;
+      const productsQuery = await catalogApi.searchCatalogObjects({
+        objectTypes: ["ITEM", "CATEGORY", "IMAGE"],
+        includeRelatedObjects: true,
+      });
+      if (productsQuery?.result?.objects) {
+        const products = productsQuery.result.objects;
+        const productsResult = products.filter(
+          (product) =>
+            product.itemData?.categoryId === categoryId ||
+            product.type === "IMAGE"
+        );
+        return productsResult;
+      }
+    },
+  })
+  .query("search-product", {
+    input: z.object({
+      productName: z.string(),
+    }),
+    async resolve({ input, ctx }) {
+      const { productName } = input;
+      const productsQuery = await catalogApi.searchCatalogObjects({
+        objectTypes: ["ITEM", "CATEGORY", "IMAGE"],
+        includeRelatedObjects: true,
+      });
+      if (productsQuery?.result?.objects) {
+        const products = productsQuery.result.objects;
+        const productsResults = products.filter(
+          (product) =>
+            product.itemData?.name?.toLowerCase().replaceAll(" ", "-") ===
+              productName.toLowerCase() || product.type === "IMAGE"
+        );
+        const singleProduct = productsResults.find(
+          (product) => product.type === "ITEM"
+        );
+        const productsResult = productsResults.filter(
+          (product) =>
+            product.id === singleProduct?.id ||
+            (product.type === "IMAGE" &&
+              product.id === singleProduct?.itemData?.imageIds?.[0])
+        );
+
+        return productsResult;
+      }
+    },
+  })
   .query("products", {
     input: z
       .object({
         categoryId: z.string().nullish(),
-        text: z.string().nullish(),
       })
       .nullish(),
     async resolve({ input, ctx }) {
+      console.log("fetching products");
+      const productsQuery = await catalogApi.searchCatalogObjects({
+        objectTypes: ["ITEM", "CATEGORY"],
+        includeRelatedObjects: true,
+      });
+      console.log("productsQuery", productsQuery);
+      if (input?.categoryId) {
+        const productsResponse = productsQuery.result.objects?.filter(
+          (product) =>
+            product?.itemData?.categoryId?.includes(
+              input?.categoryId as string
+            ) && product?.type === "ITEM"
+        );
+        const products = productsResponse?.map((item) => {
+          const currentImage = productsQuery.result?.relatedObjects?.find(
+            (image) => image.id === item.itemData?.imageIds?.[0]
+          );
+          const categories = productsQuery.result?.objects?.filter(
+            (category) => category.type === "CATEGORY"
+          );
+          console.log("All categories: ", categories);
+          const currentCategory = productsQuery.result?.objects?.find(
+            (category) =>
+              category.type === "CATEGORY" &&
+              category.id === item?.itemData?.categoryId
+          );
+          console.log("current category", currentCategory);
+          let isAllNatural = false;
+
+          if (item?.itemData?.variations?.[0].customAttributeValues) {
+            const keys = Object.keys(
+              item?.itemData.variations?.[0]?.customAttributeValues
+            );
+            if (keys.length) {
+              const allNaturalAttr = keys?.some((key) => {
+                return (
+                  item?.itemData?.variations?.[0]?.customAttributeValues?.[key]
+                    ?.name === "All-Natural" &&
+                  item?.itemData.variations?.[0].customAttributeValues?.[key]
+                    ?.booleanValue === true
+                );
+              });
+              isAllNatural = allNaturalAttr;
+            }
+          }
+          console.log(item);
+          return {
+            item: item,
+            id: item.id,
+            name: item.itemData?.name,
+            description: item.itemData?.description,
+            category: currentCategory,
+            price: item?.itemData?.variations?.[0],
+            image: currentImage?.imageData?.url,
+            isAllNatural,
+          };
+        });
+        return products;
+      } else {
+        return productsQuery;
+      }
+
       const productArray: Product[] = [];
       try {
         let sqProducts = `https://${serverRuntimeConfig.squareAPIURL}/v2/catalog/search`;
@@ -369,7 +512,7 @@ export const squareRouter = createRouter()
             body: JSON.stringify({
               include_related_objects: true,
               object_types: ["ITEM"],
-              category_ids: input?.categoryId ? [input.categoryId] : null,
+              category_ids: input?.categoryId ? [input?.categoryId] : null,
             }),
           });
           if (!res.ok) {
@@ -379,7 +522,7 @@ export const squareRouter = createRouter()
           }
           const data = await res.json();
 
-          const products = data.objects.map((item) => {
+          const products: CatalogItem[] = data.objects.map((item) => {
             const currentImage = data.related_objects.filter(
               (image) => image.id === item.item_data.image_ids?.[0]
             );

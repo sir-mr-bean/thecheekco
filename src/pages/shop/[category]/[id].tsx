@@ -18,6 +18,8 @@ import { appRouter } from "@/backend/router/_app";
 import { inferRouterContext } from "@trpc/server";
 import superjson from "superjson";
 import { useRouter } from "next/router";
+import { CatalogObject } from "square";
+import { trpc } from "@/utils/trpc";
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -123,12 +125,17 @@ const Markdown = (content) => {
 const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const quantity = useRef<HTMLSelectElement>(null);
   const { cart, dispatch } = CartState();
-  const product = props;
   const router = useRouter();
   const tabFromQuery = tabs.find((tab) => tab.name === router.query?.tab);
   const [openTab, setOpenTab] = useState(tabFromQuery?.index || 1);
   //const product = data?.[0];
-  console.log(product);
+  //console.log(product);
+  const { data: productQuery } = trpc.useQuery([
+    "search-product",
+    { productName: router.query?.id as string },
+  ]);
+  const product = productQuery?.find((product) => product.type === "ITEM");
+  const image = productQuery?.find((product) => product.type === "IMAGE");
 
   const handleAdd = (product) => {
     dispatch({
@@ -194,8 +201,11 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   objectFit="cover"
                   height={1920}
                   width={1080}
-                  src={product.image}
-                  alt={product.name}
+                  src={
+                    image?.imageData?.url ||
+                    "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
+                  }
+                  alt={product?.itemData?.name}
                   className="object-cover rounded-lg"
                 />
               </div>
@@ -204,7 +214,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
               <div className="max-w-xl sm:max-w-none border rounded-lg bg-white sm:px-10 flex flex-col justify-around w-full px-4">
                 <div className="flex flex-col space-y-2 items-center justify-center">
                   <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl px-3 pt-4">
-                    {product.name}
+                    {product?.itemData?.name}
                   </h1>
 
                   <h2 id="information-heading" className="sr-only">
@@ -271,8 +281,10 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   <span className="text-black text-2xl">
                     $
                     {(
-                      product.variations?.[0]?.item_variation_data?.price_money
-                        ?.amount / 100
+                      Number(
+                        product?.itemData?.variations?.[0]?.itemVariationData
+                          ?.priceMoney?.amount
+                      ) / 100
                     ).toFixed(2)}
                   </span>
                 </div>
@@ -352,7 +364,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
               </div>
             </div>
             <div className="flex flex-col w-full justify-center items-start bg-white rounded-lg ">
-              <div className="lg:mt-0 lg:col-span-4  flex flex-row justify-center items-center pb-5 px-4 w-full">
+              <div className="lg:mt-0 lg:col-span-4  flex flex-row justify-center items-center pb-5 px-4 w-full py-4">
                 <div
                   onClick={() => {
                     setOpenTab(1);
@@ -364,7 +376,9 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   }
                 >
                   <span
-                    className={openTab === 1 ? `font-bold` : `font-normal `}
+                    className={
+                      openTab === 1 ? `font-bold my-4` : `font-normal py-1`
+                    }
                   >
                     Additional Info
                   </span>
@@ -401,7 +415,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
               {openTab === 1 && (
                 <div className="p-2">
                   <h3 className="sr-only">Additional Info</h3>
-                  <Markdown content={product.description} />
+                  <Markdown content={product?.itemData?.description} />
                 </div>
               )}
               {openTab === 2 && (
@@ -445,20 +459,22 @@ export const getStaticPaths = async (context: GetStaticPathsContext) => {
     ctx: context as inferRouterContext<typeof appRouter>,
     transformer: superjson,
   });
-  const productsQuery = await ssg.fetchQuery("products");
+  const productsQuery = await ssg.fetchQuery("all-products");
   return {
     paths: productsQuery
-      .filter((i) => i.category?.category_data.name)
+      .filter((i) => i.categoryData?.name)
       .map((item) => ({
         params: {
-          id: item?.name.toLowerCase().replaceAll(" ", "-").toString(),
+          id: item?.itemData?.name
+            ?.toLowerCase()
+            .replaceAll(" ", "-")
+            .toString(),
           category:
-            item?.category?.category_data.name
-              .toLowerCase()
-              .replaceAll(" ", "-") || null,
+            item?.categoryData?.name?.toLowerCase().replaceAll(" ", "-") ||
+            null,
         },
       })),
-    fallback: true,
+    fallback: "blocking",
   };
 };
 
@@ -470,15 +486,13 @@ export const getStaticProps: GetStaticProps = async (
     ctx: context as inferRouterContext<typeof appRouter>,
     transformer: superjson,
   });
-  const productsQuery = await ssg.fetchQuery("products");
-  const product = productsQuery.find(
-    (i) =>
-      i.name.toLowerCase().replaceAll(" ", "-").toString() ===
-      context?.params?.id
-  );
-  console.log(product);
+  const productsQuery = await ssg.fetchQuery("search-product", {
+    productName: context?.params?.id as string,
+  });
+
   return {
-    props: JSON.parse(JSON.stringify(product)),
+    props: ssg.dehydrate(),
+    revalidate: 900,
   };
 };
 

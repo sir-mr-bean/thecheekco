@@ -193,7 +193,7 @@ const GuestForm = ({
                 const postalCode = place?.address_components?.find(
                   (component) => component.types.includes("postal_code")
                 );
-                console.log(place);
+
                 setUserObj((userObj) => {
                   return {
                     ...userObj,

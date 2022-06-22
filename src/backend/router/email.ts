@@ -26,7 +26,6 @@ export const emailRouter = createRouter().mutation("sendEmail", {
       requiredDate,
     } = input;
     const { prisma } = ctx;
-    console.log(input);
     const client = new SMTPClient({
       user: process.env.EMAILACCOUNT,
       password: process.env.EMAIL_PASS,

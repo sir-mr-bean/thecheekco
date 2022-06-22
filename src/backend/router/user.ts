@@ -51,16 +51,13 @@ export const userRouter = createRouter()
     async resolve({ input, ctx }) {
       const { email, user } = input;
       const { prisma } = ctx;
-      console.log("session is ", ctx.session);
       const { id } = user as User;
       const currentUser = await prisma.user.findUnique({
         where: { id },
       });
-      console.log("current user is ", currentUser);
       const currentSession = await prisma.session.findFirst({
         where: { userId: id },
       });
-      console.log("current session is ", currentSession);
       if (!currentUser) {
         throw new Error("User not found");
       }
@@ -68,7 +65,6 @@ export const userRouter = createRouter()
         throw new Error("Email cannot be changed");
       }
       if (currentSession) {
-        console.log(input);
         const result = await prisma.user.update({
           where: {
             email: input.email,
@@ -77,7 +73,7 @@ export const userRouter = createRouter()
             ...input.user,
           },
         });
-        console.log(result);
+
         return {
           result: "success",
           user: result,

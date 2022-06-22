@@ -78,7 +78,6 @@ export default function UserReducer(state: User, action: UserAction): User {
         company: action.payload,
       };
     case "SET_STREET_ADDRESS":
-      console.log("setting address with", action.payload);
       return {
         ...state,
         streetAddress: action.payload,
