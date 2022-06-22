@@ -42,6 +42,14 @@ export default function Home(
   });
   const { data: productsData } = trpc.useQuery(["all-products"]);
   const { cart, dispatch } = CartState();
+  console.log(productsData);
+  const allNaturalProducts = productsData?.filter(
+    (p) =>
+      p.itemData?.variations?.[0]?.customAttributeValues?.[
+        "Square:a1089928-7880-407e-93f3-08dfe506ac14"
+      ]?.booleanValue === true
+  );
+  console.log(allNaturalProducts);
 
   //create a typesafe function to return an icon from the react-icons library based on the icon name
   const Icon = (iconName: string) => {
@@ -476,70 +484,46 @@ export default function Home(
                 <span>picks.</span>
               </div>
               <div className="flex flex-wrap w-full h-fit items-center justify-center sm:justify-evenly pt-10">
-                {productsData
-                  ?.filter((product) => {
-                    if (
-                      product?.itemData?.variations?.[0].customAttributeValues
-                    ) {
-                      const keys = Object.keys(
-                        product?.itemData?.variations?.[0]
-                          ?.customAttributeValues as object
-                      );
-                      if (keys.length) {
-                        const allNaturalAttr = keys?.some((key) => {
-                          product?.itemData?.variations?.[0]
-                            ?.customAttributeValues?.[key]?.name ===
-                            "All-Natural" &&
-                            product?.itemData.variations?.[0]
-                              .customAttributeValues?.[key]?.booleanValue ===
-                              true;
-                        });
-                        return allNaturalAttr;
-                      }
-                    }
-                  })
-                  .slice(0, 6)
-                  .map((product) => {
-                    const productImage = productsData?.find(
-                      (p) =>
-                        p.type === "IMAGE" &&
-                        product?.itemData?.imageIds?.includes(p.id)
-                    );
-                    const productCategory = categoriesData?.find(
-                      (category) =>
-                        category.id === product?.itemData?.categoryId
-                    );
-                    return (
-                      <Link
-                        key={product.id}
-                        href={`/shop/${productCategory?.categoryData?.name}/${product.itemData?.name}`}
-                        as={`/shop/${
-                          productCategory?.categoryData?.name
-                        }/${slugify(product.itemData?.name as string)}`}
-                        className="relative overflow-hidden"
-                      >
-                        <div className="flex flex-col justify-center items-center h-32 w-32 m-4 md:m-4 cursor-pointer hover:scale-105">
-                          <div className="relative h-full w-full">
-                            <Image
-                              priority={true}
-                              src={
-                                productImage?.imageData?.url ||
-                                "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
-                              }
-                              width={150}
-                              height={150}
-                              objectFit="cover"
-                              layout="responsive"
-                              className="rounded-md"
-                            />
-                          </div>
-                          <span className="text-xs font-bold whitespace-nowrap text-text-primary w-full text-left py-2">
-                            {product?.itemData?.name}
-                          </span>
+                {allNaturalProducts?.slice(0, 6).map((product) => {
+                  const productImage = productsData?.find(
+                    (p) =>
+                      p.type === "IMAGE" &&
+                      product?.itemData?.imageIds?.includes(p.id)
+                  );
+                  const productCategory = categoriesData?.find(
+                    (category) => category.id === product?.itemData?.categoryId
+                  );
+                  return (
+                    <Link
+                      key={product.id}
+                      href={`/shop/${productCategory?.categoryData?.name}/${product.itemData?.name}`}
+                      as={`/shop/${
+                        productCategory?.categoryData?.name
+                      }/${slugify(product.itemData?.name as string)}`}
+                      className="relative overflow-hidden"
+                    >
+                      <div className="flex flex-col justify-center items-center h-32 w-32 m-4 md:m-4 cursor-pointer hover:scale-105">
+                        <div className="relative h-full w-full">
+                          <Image
+                            priority={true}
+                            src={
+                              productImage?.imageData?.url ||
+                              "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
+                            }
+                            width={150}
+                            height={150}
+                            objectFit="cover"
+                            layout="responsive"
+                            className="rounded-md"
+                          />
                         </div>
-                      </Link>
-                    );
-                  })}
+                        <span className="text-xs font-bold whitespace-nowrap text-text-primary w-full text-left py-2">
+                          {product?.itemData?.name}
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </section>
