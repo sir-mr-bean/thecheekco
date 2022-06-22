@@ -27,7 +27,7 @@ export const cartReducer = (state, action) => {
                   ...item,
                   quantity: item.quantity + parseInt(action.quantity),
                 }
-              : { ...item, productImage: action?.productImage, quantity: 1 }
+              : { ...item, quantity: 1 }
           )
         : [
             ...state,
