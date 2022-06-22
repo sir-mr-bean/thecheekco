@@ -33,6 +33,18 @@ const UserDashboard = () => {
   ]);
   console.log(order);
 
+  const { data: products } = trpc.useQuery(
+    [
+      "search-products",
+      {
+        categoryIds: order?.lineItems?.map((i) => i.catalogObjectId as string),
+      },
+    ],
+    {
+      enabled: !!order,
+    }
+  );
+  console.log(products);
   if (status === "loading") {
     return (
       <div className="flex h-screen w-full justify-center items-center mx-auto  text-text-primary">
@@ -57,7 +69,7 @@ const UserDashboard = () => {
               href="#"
               className="hidden text-sm font-medium text-text-primary hover:text-text-secondary sm:block"
             >
-              View invoice<span aria-hidden="true"> &rarr;</span>
+              Print Order<span aria-hidden="true"> &rarr;</span>
             </a>
           </div>
           <p className="text-sm text-text-secondary">
@@ -68,7 +80,7 @@ const UserDashboard = () => {
             href="#"
             className="text-sm font-medium text-text-primary hover:text-text-secondary sm:hidden"
           >
-            View invoice<span aria-hidden="true"> &rarr;</span>
+            Print Order<span aria-hidden="true"> &rarr;</span>
           </a>
         </div>
       </div>

@@ -5,48 +5,66 @@ import {
   AiOutlineClose,
 } from "react-icons/ai";
 import { CartState } from "@/context/Context";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch } from "react";
 import Link from "next/link";
 import { Product } from "@/types/Product";
 import Image from "next/image";
+import { CatalogObject } from "square";
+import { bigint } from "square/dist/schema";
+
+type CartObject = CatalogObject & {
+  quantity: number;
+  productImage: string;
+};
+
+(BigInt.prototype as any).toJSON = function () {
+  return this.toString();
+};
 
 export default function cart() {
   const [total, setTotal] = useState(0);
-  const { cart, dispatch } = CartState();
+  const {
+    cart,
+    dispatch,
+  }: {
+    cart: CartObject[];
+    dispatch: Dispatch<{ type: string; item: CartObject; payload?: number }>;
+  } = CartState();
   const [mounted, setMounted] = useState(false);
   const tax = (parseInt(total.toFixed(2)) * 0.1).toFixed(2);
 
   useEffect(() => {
-    let sum: number = 0;
-    cart.forEach((product: Product) => {
-      sum += parseFloat(
-        (
-          (product.variations[0].item_variation_data.price_money.amount / 100) *
-          product.quantity
-        ).toFixed(2)
+    const total = cart.reduce((acc: number, cur: CartObject) => {
+      return (
+        acc +
+        (cur.quantity *
+          Number(
+            cur.itemData?.variations?.[0]?.itemVariationData?.priceMoney?.amount
+          )) /
+          100
       );
-    });
-    setTotal(sum);
+    }, 0);
+    setTotal(total);
   }, [cart]);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const handleRemove = (product: Product) => {
+  const handleRemove = (product: CartObject) => {
     dispatch({
       type: "REMOVE_FROM_CART",
       item: product,
     });
   };
   const handleSetQuantity = (
-    product: Product,
+    product: CartObject,
     qty: React.ChangeEvent<HTMLSelectElement>
   ) => {
     dispatch({
       type: "SET_QUANTITY",
       item: product,
-      payload: qty.target.value,
+      payload: parseInt(qty.target.value),
     });
   };
 
@@ -70,20 +88,20 @@ export default function cart() {
                     role="list"
                     className="border-t border-b border-gray-200 divide-y divide-gray-200 w-full"
                   >
-                    {products.map((product: Product, productIdx: number) => {
+                    {products.map((product: CartObject, productIdx: number) => {
                       return (
                         <li key={product.id} className="flex py-6 px-2 ">
                           <div className="flex-shrink-0 relative w-20 h-20">
                             <Image
                               src={
-                                product.image
-                                  ? product.image
+                                product?.productImage
+                                  ? product?.productImage
                                   : "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
                               }
                               width={200}
                               height={200}
                               layout="responsive"
-                              alt={product.name}
+                              alt={product.itemData?.name}
                               className="w-24 h-24 rounded-md object-center object-cover sm:w-48 sm:h-48"
                             />
                           </div>
@@ -96,13 +114,13 @@ export default function cart() {
                                     <Link
                                       href="/shop/[category]/[id]"
                                       as={`/shop/${
-                                        product?.category?.category_data.name
-                                      }/${product.name
-                                        .replace(/ /g, "-")
+                                        product?.categoryData?.name
+                                      }/${product.itemData?.name
+                                        ?.replace(/ /g, "-")
                                         .toLowerCase()}`}
                                     >
                                       <span className="font-medium text-text-primary hover:text-text-secondary">
-                                        {product.name}
+                                        {product.itemData?.name}
                                       </span>
                                     </Link>
                                   </h3>
@@ -112,9 +130,9 @@ export default function cart() {
                                   $
                                   {(
                                     parseInt(
-                                      product.variations[0].item_variation_data.price_money.amount.toFixed(
-                                        2
-                                      )
+                                      parseInt(
+                                        product.itemData?.variations?.[0].itemVariationData?.priceMoney?.amount?.toString() as string
+                                      ).toFixed(2)
                                     ) / 100
                                   ).toFixed(2)}
                                 </p>
@@ -125,7 +143,7 @@ export default function cart() {
                                   htmlFor={`quantity-${productIdx}`}
                                   className="sr-only"
                                 >
-                                  Quantity, {product.name}
+                                  Quantity, {product.itemData?.name}
                                 </label>
                                 <select
                                   onChange={(e) =>

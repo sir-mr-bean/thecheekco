@@ -124,7 +124,7 @@ const Markdown = (content) => {
 
 const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const quantity = useRef<HTMLSelectElement>(null);
-  const { cart, dispatch } = CartState();
+  const { dispatch } = CartState();
   const router = useRouter();
   const tabFromQuery = tabs.find((tab) => tab.name === router.query?.tab);
   const [openTab, setOpenTab] = useState(tabFromQuery?.index || 1);
@@ -138,17 +138,18 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const image = productQuery?.find((product) => product.type === "IMAGE");
 
   const handleAdd = (product: CatalogObject) => {
+    const productImage = productQuery?.find(
+      (p) => p.type === "IMAGE" && product.itemData?.imageIds?.includes(p.id)
+    );
     dispatch({
       type: "ADD_TO_CART",
       item: product,
       qty: parseInt(quantity?.current?.value as string),
+      productImage: productImage?.imageData?.url,
     });
     if (window !== undefined) {
     }
     toast.custom((t) => {
-      const productImage = productQuery?.find(
-        (p) => p.type === "IMAGE" && product.itemData?.imageIds?.includes(p.id)
-      );
       return (
         <div
           className={`${

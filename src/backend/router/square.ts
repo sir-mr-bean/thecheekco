@@ -356,22 +356,26 @@ export const squareRouter = createRouter()
   })
   .query("search-products", {
     input: z.object({
-      categoryId: z.string(),
+      categoryIds: z.array(z.string()).nullish(),
     }),
     async resolve({ input, ctx }) {
-      const { categoryId } = input;
       const productsQuery = await catalogApi.searchCatalogObjects({
         objectTypes: ["ITEM", "CATEGORY", "IMAGE"],
         includeRelatedObjects: true,
       });
-      if (productsQuery?.result?.objects) {
-        const products = productsQuery.result.objects;
-        const productsResult = products.filter(
-          (product) =>
-            product.itemData?.categoryId === categoryId ||
-            product.type === "IMAGE"
-        );
-        return productsResult;
+      if (input?.categoryIds) {
+        if (productsQuery?.result?.objects) {
+          const products = productsQuery.result.objects;
+          const productsResult = products.filter(
+            (product) =>
+              input?.categoryIds?.includes(
+                product.itemData?.categoryId as string
+              ) || product.type === "IMAGE"
+          );
+          return productsResult;
+        }
+      } else {
+        return productsQuery?.result?.objects;
       }
     },
   })

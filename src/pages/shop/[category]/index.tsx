@@ -35,7 +35,7 @@ const CategoryPage = (
   const { data: products } = trpc.useQuery([
     "search-products",
     {
-      categoryId: currentCategoryID,
+      categoryIds: [currentCategoryID],
     },
   ]);
 
@@ -240,7 +240,7 @@ export const getStaticProps: GetStaticProps = async (
       category?.categoryData?.name?.replace(/ /g, "-").toLowerCase() === params
   );
   await ssg.fetchQuery("search-products", {
-    categoryId: categoryObject?.id as string,
+    categoryIds: [categoryObject?.id as string],
   });
   return {
     props: {

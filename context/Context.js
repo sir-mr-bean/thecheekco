@@ -4,7 +4,11 @@ import {
   cartInitializer,
   wishListReducer,
   wishListInitializer,
-} from "../context/Reducer";
+} from "./Reducer";
+
+BigInt.prototype.toJSON = function () {
+  return this.toString();
+};
 
 const Cart = createContext();
 const WishList = createContext();

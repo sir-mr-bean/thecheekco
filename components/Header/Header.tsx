@@ -8,6 +8,12 @@ import MobileMenu from "./MobileMenu";
 import { Product } from "@/types/Product";
 import { trpc } from "@/utils/trpc";
 import { squareRouter } from "@/backend/router/square";
+import { CatalogObject } from "square";
+
+type CartObject = CatalogObject & {
+  quantity: number;
+  productImage: string;
+};
 
 function useScrollDirection() {
   const [scrollDirection, setScrollDirection] = useState("");
@@ -34,14 +40,14 @@ function useScrollDirection() {
 
 export const Header = (): JSX.Element => {
   const scrollDirection = useScrollDirection();
-  const { cart }: { cart: Product[] } = CartState();
+  const { cart }: { cart: CartObject[] } = CartState();
   const categoryQuery = trpc.useQuery(["all-categories"], {
     context: {
       skipBatch: true,
     },
   });
   const { data: navigation } = categoryQuery;
-  const [cartItems, setCartItems] = useState<Product[]>(cart);
+  const [cartItems, setCartItems] = useState<CatalogObject[]>(cart);
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
     setHasMounted(true);

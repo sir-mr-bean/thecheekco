@@ -27,9 +27,12 @@ export const cartReducer = (state, action) => {
                   ...item,
                   quantity: item.quantity + action.qty,
                 }
-              : { ...item, quantity: 1 }
+              : { ...item, productImage: action?.productImage, quantity: 1 }
           )
-        : [...state, { ...action.item, quantity: 1 }];
+        : [
+            ...state,
+            { ...action.item, productImage: action?.productImage, quantity: 1 },
+          ];
 
     case "REMOVE_FROM_CART":
       return state.filter((item) => item.id !== action.item.id);
