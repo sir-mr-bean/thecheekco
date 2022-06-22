@@ -417,12 +417,11 @@ export const squareRouter = createRouter()
       })
       .nullish(),
     async resolve({ input, ctx }) {
-      console.log("fetching products");
       const productsQuery = await catalogApi.searchCatalogObjects({
         objectTypes: ["ITEM", "CATEGORY"],
         includeRelatedObjects: true,
       });
-      console.log("productsQuery", productsQuery);
+
       if (input?.categoryId) {
         const productsResponse = productsQuery.result.objects?.filter(
           (product) =>
@@ -437,13 +436,13 @@ export const squareRouter = createRouter()
           const categories = productsQuery.result?.objects?.filter(
             (category) => category.type === "CATEGORY"
           );
-          console.log("All categories: ", categories);
+
           const currentCategory = productsQuery.result?.objects?.find(
             (category) =>
               category.type === "CATEGORY" &&
               category.id === item?.itemData?.categoryId
           );
-          console.log("current category", currentCategory);
+
           let isAllNatural = false;
 
           if (item?.itemData?.variations?.[0].customAttributeValues) {
@@ -462,9 +461,8 @@ export const squareRouter = createRouter()
               isAllNatural = allNaturalAttr;
             }
           }
-          console.log(item);
+
           return {
-            item: item,
             id: item.id,
             name: item.itemData?.name,
             description: item.itemData?.description,

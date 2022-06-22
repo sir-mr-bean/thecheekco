@@ -99,7 +99,6 @@ const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
 function Auth({ children }) {
   // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
   const { status } = useSession({ required: true });
-  console.log(status);
 
   if (status === "loading") {
     return <div>Loading...</div>;
