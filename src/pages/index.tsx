@@ -160,7 +160,7 @@ export default function Home(
 
   const handleAdd = (product: CatalogObject) => {
     const productImage = productsData?.find(
-      (p) => p.type === "IMAGE" && product.itemData?.imageIds?.includes(p.id)
+      (p) => p.type === "IMAGE" && product?.itemData?.imageIds?.includes(p.id)
     );
     dispatch({
       type: "ADD_TO_CART",
