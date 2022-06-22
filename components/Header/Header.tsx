@@ -3,7 +3,7 @@ import { IoBasketSharp } from "react-icons/io5";
 import Link from "next/link";
 import Login from "./Login";
 import { CartState } from "../../context/Context";
-import { useEffect, useState } from "react";
+import { Dispatch, useEffect, useState } from "react";
 import MobileMenu from "./MobileMenu";
 import { Product } from "@/types/Product";
 import { trpc } from "@/utils/trpc";
@@ -40,7 +40,13 @@ function useScrollDirection() {
 
 export const Header = (): JSX.Element => {
   const scrollDirection = useScrollDirection();
-  const { cart }: { cart: CartObject[] } = CartState();
+  const {
+    cart,
+    dispatch,
+  }: {
+    cart: CartObject[];
+    dispatch: Dispatch<{ type: string; item?: CartObject; payload?: number }>;
+  } = CartState();
   const categoryQuery = trpc.useQuery(["all-categories"], {
     context: {
       skipBatch: true,

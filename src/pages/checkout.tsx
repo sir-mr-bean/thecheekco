@@ -1,7 +1,7 @@
 import { CreditCard, GooglePay } from "react-square-web-payments-sdk";
 import { PaymentForm } from "react-square-web-payments-sdk";
 import { CartState } from "../../context/Context";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Dispatch } from "react";
 import BeatLoader from "react-spinners/BeatLoader";
 import { Product } from "@/types/Product";
 import UserForm from "../../components/Checkout/UserForm";
@@ -18,6 +18,7 @@ import SignInHeader from "@/components/Checkout/SignInHeader";
 import { trpc } from "@/utils/trpc";
 import SuccessModal from "@/components/Checkout/SuccessModal";
 import Image from "next/image";
+import { CatalogObject } from "square";
 
 export type validationErrors = {
   name: boolean;
@@ -27,6 +28,11 @@ export type validationErrors = {
   city: boolean;
   state: boolean;
   zip: boolean;
+};
+
+type CartObject = CatalogObject & {
+  quantity: number;
+  productImage: string;
 };
 
 export default function checkout() {
@@ -46,7 +52,13 @@ export default function checkout() {
   const [orderComplete, setOrderComplete] = useState(false);
   const termsCheckboxRef = useRef<HTMLInputElement>(null);
   const shippingInfoCheckboxRef = useRef<HTMLInputElement>(null);
-  const { cart, dispatch } = CartState();
+  const {
+    cart,
+    dispatch,
+  }: {
+    cart: CartObject[];
+    dispatch: Dispatch<{ type: string; item?: CartObject; payload?: number }>;
+  } = CartState();
   const [total, setTotal] = useState(0);
   const tax = (parseInt(total.toFixed(2)) * 0.1).toFixed(2);
   const products = cart;
@@ -106,16 +118,17 @@ export default function checkout() {
   const [readyForPayment, setReadyForPayment] = useState(false);
 
   useEffect(() => {
-    let sum: number = 0;
-    cart.forEach((product: Product) => {
-      sum += parseFloat(
-        (
-          (product.variations[0].item_variation_data.price_money.amount / 100) *
-          product.quantity
-        ).toFixed(2)
+    const total = cart.reduce((acc: number, cur: CartObject) => {
+      return (
+        acc +
+        (cur.quantity *
+          Number(
+            cur.itemData?.variations?.[0]?.itemVariationData?.priceMoney?.amount
+          )) /
+          100
       );
-    });
-    setTotal(sum);
+    }, 0);
+    setTotal(total);
   }, [cart]);
 
   const handleCustomerInfoComplete = (userObject: typeof userObj) => {
@@ -287,13 +300,14 @@ export default function checkout() {
                 setOrderProcessing(true);
                 const createOrder = orderMutation.mutate(
                   {
-                    lineItems: cart.map((product: Product) => {
+                    lineItems: cart.map((product) => {
                       return {
-                        catalogObjectId: product.variations[0].id,
+                        catalogObjectId: product.itemData?.variations?.[0]
+                          .id as string,
                         quantity: product.quantity,
                         modifiers: [
                           {
-                            name: product.name,
+                            name: product.itemData?.name as string,
                             catalogObjectId: product.id,
                           },
                         ],
@@ -941,7 +955,7 @@ export default function checkout() {
                         </thead>
                         <tbody className="divide-y divide-gray-200 bg-white rounded-b-lg min-w-full">
                           {products &&
-                            products.map((product: Product) => (
+                            products.map((product) => (
                               <tr
                                 key={product.id}
                                 className="grid grid-cols-3 content-center items-center justify-center min-w-full"
@@ -950,10 +964,10 @@ export default function checkout() {
                                   <div className="relative h-20 w-20">
                                     <Image
                                       src={
-                                        product.image ||
+                                        product.productImage ||
                                         "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
                                       }
-                                      alt={product.name}
+                                      alt={product.itemData?.name}
                                       width={75}
                                       height={75}
                                       layout="fixed"
@@ -963,7 +977,7 @@ export default function checkout() {
                                   </div>
 
                                   <h3 className="text-text-primary pl-2  py-4 text-xs lg:whitespace-nowrap">
-                                    <a href={"#"}>{product.name}</a>
+                                    <a href={"#"}>{product.itemData?.name}</a>
                                   </h3>
                                 </td>
                                 <td className="whitespace-nowrap translate-x-3 justify-self-end px-3 py-4 text-sm">
@@ -973,9 +987,9 @@ export default function checkout() {
                                   $
                                   {(
                                     parseInt(
-                                      product.variations[0].item_variation_data.price_money.amount.toFixed(
-                                        2
-                                      )
+                                      parseInt(
+                                        product.itemData?.variations?.[0].itemVariationData?.priceMoney?.amount?.toString() as string
+                                      ).toFixed(2)
                                     ) / 100
                                   ).toFixed(2)}
                                 </td>

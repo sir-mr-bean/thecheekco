@@ -31,14 +31,15 @@ const GuestForm = ({
       autoComplete="off"
       className="mt-4 text-text-primary font-gothic w-full"
     >
+      <input type="hidden" defaultValue="something" />
       <div className="">
         <h2 className="text-lg font-medium ">Billing Contact</h2>
 
         <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-          <div>
+          <div className="">
             <label
               htmlFor="first-name"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-text-primary"
             >
               First name
             </label>
@@ -73,7 +74,7 @@ const GuestForm = ({
           <div>
             <label
               htmlFor="last-name"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-text-primary"
             >
               Last name
             </label>
@@ -94,10 +95,10 @@ const GuestForm = ({
             </div>
           </div>
 
-          <div className="col-span-6 sm:col-span-2">
+          <div className="sm:col-span-2">
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-text-primary"
             >
               Email Address
             </label>
@@ -130,7 +131,7 @@ const GuestForm = ({
           <div className="sm:col-span-2">
             <label
               htmlFor="company"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-text-primary"
             >
               Company
             </label>
@@ -257,7 +258,7 @@ const GuestForm = ({
           <div className="sm:col-span-2">
             <label
               htmlFor="apartment"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-text-primary"
             >
               Apartment, suite, etc.
             </label>
@@ -281,7 +282,7 @@ const GuestForm = ({
           <div>
             <label
               htmlFor="city"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-text-primary"
             >
               City
             </label>
@@ -326,7 +327,7 @@ const GuestForm = ({
           <div>
             <label
               htmlFor="country"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-text-primary"
             >
               Country
             </label>
@@ -350,7 +351,7 @@ const GuestForm = ({
           <div>
             <label
               htmlFor="region"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-text-primary"
             >
               State
             </label>
@@ -381,7 +382,7 @@ const GuestForm = ({
           <div>
             <label
               htmlFor="postal-code"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-text-primary"
             >
               Post code
             </label>
@@ -427,7 +428,7 @@ const GuestForm = ({
           <div className="sm:col-span-2">
             <label
               htmlFor="phone"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-text-primary"
             >
               Phone
             </label>

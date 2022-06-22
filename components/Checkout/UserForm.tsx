@@ -41,7 +41,7 @@ const UserForm = ({
               <div>
                 <label
                   htmlFor="first-name"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-text-primary"
                 >
                   First name
                 </label>
@@ -66,7 +66,7 @@ const UserForm = ({
               <div>
                 <label
                   htmlFor="last-name"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-text-primary"
                 >
                   Last name
                 </label>
@@ -88,10 +88,10 @@ const UserForm = ({
                 </div>
               </div>
 
-              <div className="col-span-6 sm:col-span-2">
+              <div className="sm:col-span-2">
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-text-primary"
                 >
                   Email Address
                 </label>
@@ -113,10 +113,10 @@ const UserForm = ({
                 </div>
               </div>
 
-              <div className="col-span-6 sm:col-span-2">
+              <div className="sm:col-span-2">
                 <label
                   htmlFor="company"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-text-primary"
                 >
                   Company
                 </label>
@@ -138,7 +138,7 @@ const UserForm = ({
                 </div>
               </div>
 
-              <div className="col-span-6 sm:col-span-2">
+              <div className="col-span-1 sm:col-span-2">
                 <label
                   htmlFor="street-address"
                   className="block text-sm font-medium text-text-primary"
@@ -224,10 +224,10 @@ const UserForm = ({
                 />
               </div>
 
-              <div className="col-span-3 sm:col-span-2">
+              <div className="sm:col-span-2">
                 <label
                   htmlFor="apartment"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-text-primary"
                 >
                   Apartment, suite, etc.
                 </label>
@@ -256,7 +256,7 @@ const UserForm = ({
               <div>
                 <label
                   htmlFor="city"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-text-primary"
                 >
                   City
                 </label>
@@ -281,7 +281,7 @@ const UserForm = ({
               <div>
                 <label
                   htmlFor="country"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-text-primary"
                 >
                   Country
                 </label>
@@ -307,32 +307,38 @@ const UserForm = ({
               <div>
                 <label
                   htmlFor="region"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-text-primary"
                 >
                   State
                 </label>
                 <div className="mt-1">
-                  <input
-                    type="text"
-                    {...register("region")}
-                    id="region"
+                  <select
+                    {...(register("guest-region"),
+                    {
+                      value: (userObj.state as string) || "ACT",
+                      onChange: (e) =>
+                        setUserObj({ ...userObj, state: e.target.value }),
+                    })}
+                    id="guest-region"
                     autoComplete="address-level1"
-                    value={userObj?.state ? (userObj.state as string) : ""}
-                    onChange={(e) => {
-                      setUserObj({
-                        ...userObj,
-                        state: e.target.value,
-                      });
-                    }}
-                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
-                  />
+                    className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
+                  >
+                    <option>ACT</option>
+                    <option>NSW</option>
+                    <option>NT</option>
+                    <option>QLD</option>
+                    <option>SA</option>
+                    <option>TAS</option>
+                    <option>VIC</option>
+                    <option>WA</option>
+                  </select>
                 </div>
               </div>
 
               <div>
                 <label
                   htmlFor="postal-code"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-text-primary"
                 >
                   Post code
                 </label>
@@ -364,10 +370,10 @@ const UserForm = ({
                 </div>
               </div>
 
-              <div className="col-span-6 sm:col-span-2">
+              <div className="sm:col-span-2">
                 <label
                   htmlFor="phone"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-text-primary"
                 >
                   Phone
                 </label>

@@ -28,7 +28,7 @@ export default function cart() {
     dispatch,
   }: {
     cart: CartObject[];
-    dispatch: Dispatch<{ type: string; item: CartObject; payload?: number }>;
+    dispatch: Dispatch<{ type: string; item?: CartObject; payload?: number }>;
   } = CartState();
   const [mounted, setMounted] = useState(false);
   const tax = (parseInt(total.toFixed(2)) * 0.1).toFixed(2);
