@@ -67,7 +67,7 @@ const GuestForm = ({
                   },
                 })}
                 autoComplete="given-name"
-                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring appearance-none appearance-none"
+                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring appearance-none"
               />
             </div>
           </div>

@@ -69,7 +69,7 @@ const CategoryPage = (
     gtag.event({
       action: "add_to_cart",
       category: "ecommerce",
-      label: product.itemData?.name,
+      label: product.itemData?.name as string,
       value: `/shop/${query.category}`,
     });
     toast.custom((t) => {
