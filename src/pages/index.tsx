@@ -121,7 +121,7 @@ export default function Home(
       name: "Click & Collect",
       icon: "HiCursorClick",
 
-      href: "#",
+      href: "/click-and-collect",
     },
   ];
 

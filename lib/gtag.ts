@@ -9,7 +9,17 @@ export const pageview = (url: string) => {
 };
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/events
-export const event = ({ action, category, label, value }) => {
+export const event = ({
+  action,
+  category,
+  label,
+  value,
+}: {
+  action: string;
+  category: string;
+  label: string;
+  value: string;
+}) => {
   window.gtag("event", action, {
     event_category: category,
     event_label: label,
@@ -17,6 +27,6 @@ export const event = ({ action, category, label, value }) => {
   });
 };
 
-export const setUser = ({ userId }) => {
+export const setUser = (userId: Gtag.CustomParams) => {
   window.gtag("set", { user_id: userId });
 };

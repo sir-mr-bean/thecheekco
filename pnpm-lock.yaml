@@ -71,7 +71,6 @@ dependencies:
   '@trpc/next': 9.25.3_jzelg6ngsy7hxywokhnb67zsxq
   '@trpc/react': 9.25.3_ub67m26lhncw2csxgbgk2dkbcm
   '@trpc/server': 9.25.3
-  '@types/gtag.js': 0.0.10
   bcryptjs: 2.4.3
   emailjs: 4.0.0_typescript@4.7.4
   firebase: 9.8.3
@@ -108,6 +107,7 @@ dependencies:
 
 devDependencies:
   '@types/google.maps': 3.49.2
+  '@types/gtag.js': 0.0.10
   '@types/jsonwebtoken': 8.5.8
   '@types/react': 18.0.14
   autoprefixer: 10.4.7_postcss@8.4.14
@@ -1419,7 +1419,7 @@ packages:
 
   /@types/gtag.js/0.0.10:
     resolution: {integrity: sha512-98Hy7woUb3jMAMXkZQwfIOYNyfxmI0+U4m0PpCGdnd/FHk0tDpQFCqgXdNkdEoXsKkcGya/2Gew1cAJjKJspVw==}
-    dev: false
+    dev: true
 
   /@types/json5/0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}

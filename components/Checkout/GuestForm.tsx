@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { User } from "@prisma/client";
 import type { validationErrors } from "@/pages/checkout";
+import { BsChevronDown } from "react-icons/bs";
 
 const GuestForm = ({
   termsAccepted,
@@ -29,7 +30,7 @@ const GuestForm = ({
   return (
     <form
       autoComplete="off"
-      className="mt-4 text-text-primary font-gothic w-full"
+      className="mt-4 text-text-primary font-gothic w-full appearance-none"
     >
       <input type="hidden" defaultValue="something" />
       <div className="">
@@ -66,7 +67,7 @@ const GuestForm = ({
                   },
                 })}
                 autoComplete="given-name"
-                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
+                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring appearance-none appearance-none"
               />
             </div>
           </div>
@@ -90,7 +91,7 @@ const GuestForm = ({
                     setUserObj({ ...userObj, lastName: e.target.value }),
                 })}
                 autoComplete="family-name"
-                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
+                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring appearance-none"
               />
             </div>
           </div>
@@ -123,7 +124,7 @@ const GuestForm = ({
                     email: e.target.value,
                   });
                 }}
-                className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring appearance-none"
               />
             </div>
           </div>
@@ -146,7 +147,7 @@ const GuestForm = ({
                 })}
                 id="guest-company"
                 autoComplete="organization"
-                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
+                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring appearance-none"
               />
             </div>
           </div>
@@ -237,7 +238,7 @@ const GuestForm = ({
                 });
               }}
               inputAutocompleteValue={userObj?.streetAddress as string}
-              className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
+              className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring appearance-none"
             />
             <input
               hidden
@@ -274,7 +275,7 @@ const GuestForm = ({
                     apartmentOrUnit: e.target.value,
                   })
                 }
-                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
+                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring appearance-none"
               />
             </div>
           </div>
@@ -319,7 +320,7 @@ const GuestForm = ({
                 })}
                 id="guest-city"
                 autoComplete="address-level2"
-                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
+                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring appearance-none"
               />
             </div>
           </div>
@@ -341,7 +342,7 @@ const GuestForm = ({
                     setUserObj({ ...userObj, country: e.target.value }),
                 })}
                 autoComplete="country-name"
-                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
+                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 py-1.5 focus:ring appearance-none"
               >
                 <option>Australia</option>
               </select>
@@ -355,7 +356,10 @@ const GuestForm = ({
             >
               State
             </label>
-            <div className="mt-1">
+            <div className="mt-1 relative w-full">
+              <div className="inset-y-0 right-0 flex items-center pr-4 absolute text-text-primary">
+                <BsChevronDown />
+              </div>
               <select
                 {...(register("guest-region"),
                 {
@@ -365,7 +369,7 @@ const GuestForm = ({
                 })}
                 id="guest-region"
                 autoComplete="address-level1"
-                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
+                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring appearance-none bg-white"
               >
                 <option>ACT</option>
                 <option>NSW</option>
@@ -420,7 +424,7 @@ const GuestForm = ({
                 })}
                 id="guest-postal-code"
                 autoComplete="postal-code"
-                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
+                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring appearance-none"
               />
             </div>
           </div>
@@ -455,7 +459,7 @@ const GuestForm = ({
                     phoneNumber: e.target.value,
                   });
                 }}
-                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
+                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring appearance-none"
               />
             </div>
           </div>

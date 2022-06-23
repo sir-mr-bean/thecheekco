@@ -325,7 +325,7 @@ const ShippingForm = ({
                     country: e.target.value,
                   })
                 }
-                className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 py-1.5"
               >
                 <option>Australia</option>
               </select>
@@ -340,25 +340,26 @@ const ShippingForm = ({
               State
             </label>
             <div className="mt-1">
-              <input
-                type="text"
-                name="region"
-                id="region"
-                disabled={sameAsCustomerInfo}
+              <select
+                {...(register("guest-region"),
+                {
+                  value: (userObj.state as string) || "ACT",
+                  onChange: (e) =>
+                    setUserObj({ ...userObj, state: e.target.value }),
+                })}
+                id="guest-region"
                 autoComplete="address-level1"
-                value={
-                  sameAsCustomerInfo
-                    ? (userObj.state as string)
-                    : (userShippingObj.state as string)
-                }
-                onChange={(e) =>
-                  setUserShippingObj({
-                    ...userShippingObj,
-                    state: e.target.value,
-                  })
-                }
-                className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
-              />
+                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 py-1.5 focus:ring"
+              >
+                <option>ACT</option>
+                <option>NSW</option>
+                <option>NT</option>
+                <option>QLD</option>
+                <option>SA</option>
+                <option>TAS</option>
+                <option>VIC</option>
+                <option>WA</option>
+              </select>
             </div>
           </div>
 

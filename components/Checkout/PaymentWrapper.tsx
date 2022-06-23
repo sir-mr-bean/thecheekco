@@ -1,11 +1,22 @@
 import { CartState } from "@/context/Context";
 import { CartObject } from "@/types/CartObject";
 import { trpc } from "@/utils/trpc";
+import { User } from "@prisma/client";
 import { useRouter } from "next/router";
 import { Dispatch } from "react";
 import { PaymentForm } from "react-square-web-payments-sdk";
 
-const PaymentWrapper = ({ children, setOrderProcessing, total, userObj }) => {
+const PaymentWrapper = ({
+  children,
+  setOrderProcessing,
+  total,
+  userObj,
+}: {
+  children: React.ReactNode;
+  setOrderProcessing: Dispatch<boolean>;
+  total: number;
+  userObj: User;
+}) => {
   const router = useRouter();
   const orderMutation = trpc.useMutation(["createOrder"]);
   const paymentMutation = trpc.useMutation(["createOrderPayment"]);

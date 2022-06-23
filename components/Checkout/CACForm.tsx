@@ -49,7 +49,7 @@ const CACForm = ({
                         firstName: e.target.value,
                       })
                     }
-                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
                   />
                 </div>
               </div>
@@ -74,7 +74,7 @@ const CACForm = ({
                         lastName: e.target.value,
                       })
                     }
-                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
                   />
                 </div>
               </div>
@@ -99,7 +99,7 @@ const CACForm = ({
                         email: e.target.value,
                       })
                     }
-                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
                   />
                 </div>
               </div>
@@ -124,7 +124,7 @@ const CACForm = ({
                         phoneNumber: e.target.value,
                       });
                     }}
-                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
                   />
                 </div>
               </div>

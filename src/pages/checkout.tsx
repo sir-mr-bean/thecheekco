@@ -242,7 +242,7 @@ export default function checkout() {
         orderComplete={orderComplete}
         setOrderComplete={setOrderComplete}
       />
-      <div className="bg-white mt-16 mx-1 md:mx-16 rounded-md shadow-lg shadow-black font-gothic min-h-screen">
+      <div className="bg-white mt-16 mx-1 md:mx-16 rounded-md shadow-sm shadow-text-primary font-gothic min-h-screen">
         <div className="max-w-7xl mx-auto px-4 pt-4 pb-16 sm:px-6 sm:pt-8 sm:pb-24 lg:px-8 xl:px-2 xl:pt-14">
           {total && (
             <>

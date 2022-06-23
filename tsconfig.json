@@ -16,6 +16,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "baseUrl": "./",
+    "types": ["node", "gtag.js"],
     "paths": {
       "@/components/*": ["components/*"],
       "@/pages/*": ["src/pages/*"],

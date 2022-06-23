@@ -52,7 +52,7 @@ const UserForm = ({
                         firstName: e.target.value,
                       })
                     }
-                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
                   />
                 </div>
               </div>
@@ -77,7 +77,7 @@ const UserForm = ({
                         lastName: e.target.value,
                       })
                     }
-                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
                   />
                 </div>
               </div>
@@ -102,7 +102,7 @@ const UserForm = ({
                         email: e.target.value,
                       })
                     }
-                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
                   />
                 </div>
               </div>
@@ -127,7 +127,7 @@ const UserForm = ({
                         company: e.target.value,
                       })
                     }
-                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
                   />
                 </div>
               </div>
@@ -242,7 +242,7 @@ const UserForm = ({
                         apartmentOrUnit: e.target.value,
                       });
                     }}
-                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
                   />
                 </div>
               </div>
@@ -267,7 +267,7 @@ const UserForm = ({
                         city: e.target.value,
                       });
                     }}
-                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
                   />
                 </div>
               </div>
@@ -291,7 +291,7 @@ const UserForm = ({
                         country: e.target.value,
                       });
                     }}
-                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
                   >
                     <option>Australia</option>
                   </select>
@@ -315,7 +315,7 @@ const UserForm = ({
                     })}
                     id="guest-region"
                     autoComplete="address-level1"
-                    className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
+                    className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 py-1.5 focus:ring"
                   >
                     <option>ACT</option>
                     <option>NSW</option>
@@ -359,7 +359,7 @@ const UserForm = ({
                     maxLength={4}
                     id="postal-code"
                     autoComplete="postal-code"
-                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
                   />
                 </div>
               </div>
@@ -384,7 +384,7 @@ const UserForm = ({
                         phoneNumber: e.target.value,
                       });
                     }}
-                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                    className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
                   />
                 </div>
               </div>
