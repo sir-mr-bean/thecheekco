@@ -400,7 +400,9 @@ const UserForm = ({
           <div className="mt-6 flex space-x-2 space-y-2 flex-col">
             <div className="flex items-center space-x-2 ">
               <input
-                onChange={() => setTermsAccepted(!termsAccepted)}
+                onChange={() =>
+                  setTermsAccepted((termsAccepted) => !termsAccepted)
+                }
                 ref={termsCheckboxRef}
                 id="terms"
                 name="terms"
