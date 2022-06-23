@@ -1,24 +1,23 @@
 import { CreditCard, GooglePay } from "react-square-web-payments-sdk";
-import { PaymentForm } from "react-square-web-payments-sdk";
 import { CartState } from "../../context/Context";
 import React, { useState, useEffect, useRef, Dispatch } from "react";
 import BeatLoader from "react-spinners/BeatLoader";
-import { Product } from "@/types/Product";
 import UserForm from "../../components/Checkout/UserForm";
 import GuestForm from "../../components/Checkout/GuestForm";
-import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { User } from "@prisma/client";
 import { useSession } from "next-auth/react";
-
 import toast from "react-hot-toast";
 import SignInHeader from "@/components/Checkout/SignInHeader";
-import { trpc } from "@/utils/trpc";
 import SuccessModal from "@/components/Checkout/SuccessModal";
 import Image from "next/image";
 import { CatalogObject } from "square";
 import PickupToggle from "@/components/Checkout/PickupToggle";
 import ShippingForm from "@/components/Checkout/ShippingForm";
+import PaymentWrapper from "@/components/Checkout/PaymentWrapper";
+import { CartObject } from "@/types/CartObject";
+import { Session } from "next-auth";
+import CACForm from "@/components/Checkout/CACForm";
 
 export type validationErrors = {
   name: boolean;
@@ -29,12 +28,6 @@ export type validationErrors = {
   state: boolean;
   zip: boolean;
 };
-
-type CartObject = CatalogObject & {
-  quantity: number;
-  productImage: string;
-};
-
 export default function checkout() {
   const {
     register,
@@ -42,28 +35,16 @@ export default function checkout() {
     watch,
     formState: { errors },
   } = useForm();
-  const router = useRouter();
-  const [pickup, setPickup] = useState(true);
+  const [pickup, setPickup] = useState(false);
   const [firstLoad, setFirstLoad] = useState(true);
-  const orderMutation = trpc.useMutation(["createOrder"]);
-  const paymentMutation = trpc.useMutation(["createOrderPayment"]);
-  const completeOrderMutation = trpc.useMutation(["completeOrderPayment"]);
-  const updateOrderMutation = trpc.useMutation(["updateOrder"]);
   const [orderProcessing, setOrderProcessing] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
   const termsCheckboxRef = useRef<HTMLInputElement>(null);
   const shippingInfoCheckboxRef = useRef<HTMLInputElement>(null);
   const {
     cart,
-    dispatch,
   }: {
     cart: CartObject[];
-    dispatch: Dispatch<{
-      type: string;
-      item?: CartObject;
-      quantity?: number;
-      productImage?: string;
-    }>;
   } = CartState();
   const [total, setTotal] = useState(0);
   const tax = (parseInt(total.toFixed(2)) * 0.1).toFixed(2);
@@ -79,15 +60,15 @@ export default function checkout() {
     state: false,
     zip: false,
   });
-  const session = useSession();
+  const { data: session, status } = useSession();
   const [userObj, setUserObj] = useState<User>(
-    (session?.data?.user as User) || {
+    session?.user || {
       id: "",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
       name: "",
       image: "",
-      emailVerified: false,
+      emailVerified: null,
       password: "",
       firstName: "",
       lastName: "",
@@ -248,8 +229,8 @@ export default function checkout() {
 
   useEffect(() => {
     if (firstLoad) {
-      if (session.data?.user) {
-        setUserObj(session?.data?.user as User);
+      if (session?.user) {
+        setUserObj(session?.user);
         setFirstLoad(false);
       }
     }
@@ -271,26 +252,76 @@ export default function checkout() {
                   <div className="w-full">
                     <div className="flex flex-col justify-start items-start text-text-primary w-full">
                       <div className="flex flex-col justify-between w-full items-center p-2 sm:p-4">
-                        <span className="hidden sm:block whitespace-nowrap text-xl font-medium pt-3 sm:pt-0">
+                        <span className="hidden sm:block whitespace-nowrap text-xl font-medium pt-3 sm:pt-0 my-3">
                           Checkout
                         </span>
-                        {!session.data?.user && (
-                          <>
+                        {status != "loading" && !session?.user && (
+                          <div className="my-3 w-full flex flex-col items-center justify-center">
                             <SignInHeader />
-                          </>
+                          </div>
                         )}
 
                         <PickupToggle pickup={pickup} setPickup={setPickup} />
                         {pickup ? (
-                          <div>Hello!</div>
+                          <>
+                            <CACForm
+                              termsAccepted={termsAccepted}
+                              setTermsAccepted={setTermsAccepted}
+                              userObj={userObj}
+                              setUserObj={setUserObj}
+                              register={register}
+                            />
+                            <div className="w-full">
+                              <PaymentWrapper
+                                setOrderProcessing={setOrderProcessing}
+                                total={total}
+                                userObj={userObj}
+                              >
+                                <div className="w-full flex flex-col space-y-4 pt-3">
+                                  <h2 className="text-lg font-medium py-3">
+                                    Payment Method
+                                  </h2>
+                                  <GooglePay buttonColor="white" />
+                                  <CreditCard
+                                    includeInputLabels
+                                    buttonProps={{
+                                      css: {
+                                        backgroundColor: "#a75e2f",
+                                        fontSize: "14px",
+                                        color: "#fff",
+                                        "&:hover": {
+                                          backgroundColor: "#E3BB9D",
+                                        },
+                                      },
+                                    }}
+                                  >
+                                    <div className="w-full h-full flex items-center justify-center">
+                                      {orderProcessing ? (
+                                        <div className="flex w-full items-center justify-center space-x-2">
+                                          <span>Processing Order</span>
+                                          <BeatLoader
+                                            size={8}
+                                            color="#602d0d"
+                                          />
+                                        </div>
+                                      ) : (
+                                        <span>Pay ${total.toFixed(2)}</span>
+                                      )}
+                                    </div>
+                                  </CreditCard>
+                                </div>
+                              </PaymentWrapper>
+                            </div>
+                          </>
                         ) : (
                           <>
-                            {session?.data?.user ? (
+                            {session?.user ? (
                               <UserForm
                                 termsAccepted={termsAccepted}
                                 setTermsAccepted={setTermsAccepted}
                                 userObj={userObj}
                                 setUserObj={setUserObj}
+                                register={register}
                               />
                             ) : (
                               <GuestForm
@@ -340,170 +371,15 @@ export default function checkout() {
                             )}
                             {shippingInfoSet && (
                               <div className="w-full">
-                                <PaymentForm
-                                  applicationId={
-                                    process.env.NEXT_PUBLIC_SQUARE_APP_ID
-                                      ? process.env.NEXT_PUBLIC_SQUARE_APP_ID
-                                      : ""
-                                  }
-                                  locationId={
-                                    process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID
-                                      ? process.env
-                                          .NEXT_PUBLIC_SQUARE_LOCATION_ID
-                                      : ""
-                                  }
-                                  createPaymentRequest={() => ({
-                                    countryCode: "AU",
-                                    currencyCode: "AUD",
-                                    displayItems: [
-                                      {
-                                        amount: "22.15",
-                                        label: "Item to be purchased",
-                                        id: "SKU-12345",
-                                        imageUrl: "https://url-cdn.com/123ABC",
-                                        pending: true,
-                                        productUrl:
-                                          "https://my-company.com/product-123ABC",
-                                      },
-                                    ],
-                                    taxLineItems: [
-                                      {
-                                        label: "State Tax",
-                                        amount: "8.95",
-                                        pending: true,
-                                      },
-                                    ],
-                                    requestBillingContact: false,
-                                    requestShippingContact: false,
-                                    total: {
-                                      amount: total.toString(),
-                                      label: "Total",
-                                    },
-                                  })}
-                                  cardTokenizeResponseReceived={async (
-                                    token,
-                                    buyer
-                                  ) => {
-                                    setOrderProcessing(true);
-                                    const createOrder = orderMutation.mutate(
-                                      {
-                                        lineItems: cart.map((product) => {
-                                          return {
-                                            catalogObjectId: product.itemData
-                                              ?.variations?.[0].id as string,
-                                            quantity: product.quantity,
-                                            modifiers: [
-                                              {
-                                                name: product.itemData
-                                                  ?.name as string,
-                                                catalogObjectId: product.id,
-                                              },
-                                            ],
-                                          };
-                                        }),
-                                        referenceId: token.token as string,
-                                        billingAddress: {
-                                          email: userObj.email,
-                                          firstName: userObj.firstName || "",
-                                          lastName: userObj.lastName || "",
-                                          displayName: `${userObj?.firstName} ${userObj.lastName}`,
-                                          companyName:
-                                            userObj.company as string,
-                                          phoneNumber:
-                                            userObj.phoneNumber as string,
-                                          addressLine1: userObj.apartmentOrUnit
-                                            ? `${userObj.apartmentOrUnit} / ${userObj.streetAddress}`
-                                            : `${userObj.streetAddress}`,
-
-                                          locality: userObj.city as string,
-                                          region: userObj.state as string,
-                                          postalCode:
-                                            userObj.postalCode as string,
-                                          country: "AU",
-                                        },
-                                        shippingAddress: {
-                                          email: userObj.email,
-                                          firstName:
-                                            userObj.firstName as string,
-                                          lastName: userObj.lastName as string,
-                                          displayName: `${userObj?.firstName} ${userObj.lastName}`,
-                                          companyName:
-                                            userObj.company as string,
-                                          phoneNumber:
-                                            userObj.phoneNumber as string,
-                                          addressLine1: userObj.apartmentOrUnit
-                                            ? `${userObj.apartmentOrUnit} / ${userObj.streetAddress}`
-                                            : `${userObj.streetAddress}`,
-
-                                          locality: userObj.city as string,
-                                          region: userObj.state as string,
-                                          postalCode:
-                                            userObj.postalCode as string,
-                                          country: "AU",
-                                        },
-                                      },
-                                      {
-                                        onSuccess(data, variables, context) {
-                                          console.log(data);
-                                          const orderId = data?.id as string;
-                                          const totalMoney =
-                                            data?.totalMoney?.amount?.toString() as string;
-                                          console.log("orderId is ", orderId);
-                                          console.log(
-                                            "totalMoney is ",
-                                            totalMoney
-                                          );
-                                          paymentMutation.mutate(
-                                            {
-                                              orderId: orderId,
-                                              totalMoney: totalMoney,
-                                              token: token.token as string,
-                                            },
-                                            {
-                                              onSuccess(
-                                                data,
-                                                variables,
-                                                context
-                                              ) {
-                                                console.log(data);
-                                                if (
-                                                  data?.status === "APPROVED"
-                                                ) {
-                                                  completeOrderMutation.mutate(
-                                                    {
-                                                      orderId: orderId,
-                                                      paymentId:
-                                                        data?.id as string,
-                                                    },
-                                                    {
-                                                      onSuccess(
-                                                        data,
-                                                        variables,
-                                                        context
-                                                      ) {
-                                                        console.log(data);
-                                                        setOrderProcessing(
-                                                          false
-                                                        );
-                                                        dispatch({
-                                                          type: "CLEAR_CART",
-                                                        });
-                                                        router.push(
-                                                          "/profile?orders"
-                                                        );
-                                                      },
-                                                    }
-                                                  );
-                                                }
-                                              },
-                                            }
-                                          );
-                                        },
-                                      }
-                                    );
-                                  }}
+                                <PaymentWrapper
+                                  setOrderProcessing={setOrderProcessing}
+                                  total={total}
+                                  userObj={userObj}
                                 >
                                   <div className="w-full flex flex-col space-y-4 pt-3">
+                                    <h2 className="text-lg font-medium py-3">
+                                      Payment Method
+                                    </h2>
                                     <GooglePay buttonColor="white" />
                                     <CreditCard
                                       includeInputLabels
@@ -533,7 +409,7 @@ export default function checkout() {
                                       </div>
                                     </CreditCard>
                                   </div>
-                                </PaymentForm>
+                                </PaymentWrapper>
                               </div>
                             )}
                           </>
@@ -541,7 +417,7 @@ export default function checkout() {
                       </div>
                     </div>
                   </div>
-                  <div className="w-full h-min md:sticky md:top-44">
+                  <div className="w-full h-min md:sticky md:top-44 scroll-smooth">
                     <div className="w-full h-min flex flex-col justify-center items-center p-3">
                       <h2 className="sr-only">Order summary</h2>
                       <table className="inline-flex flex-col rounded-lg border divide-y divide-gray-300 bg-button text-text-primary min-w-full">
@@ -623,10 +499,12 @@ export default function checkout() {
                             ${(total * 0.1).toFixed(2)}
                           </dd>
                         </div>
-                        <div className="flex justify-between">
-                          <dt>Shipping</dt>
-                          <dd className="text-text-primary">$14.00</dd>
-                        </div>
+                        {!pickup && (
+                          <div className="flex justify-between">
+                            <dt>Shipping</dt>
+                            <dd className="text-text-primary">$14.00</dd>
+                          </div>
+                        )}
                         <div className="flex justify-between border-t border-text-primary text-text-primary pt-6">
                           <dt className="text-base">Total</dt>
                           <dd className="text-base">${total.toFixed(2)}</dd>

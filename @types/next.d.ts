@@ -1,3 +1,4 @@
+import { User } from "@prisma/client";
 import type { NextComponentType, NextPageContext } from "next";
 import type { Session } from "next-auth";
 import type { Router } from "next/router";
@@ -10,7 +11,7 @@ declare module "next/app" {
     __N_SSP?: boolean;
     pageProps: P & {
       /** Initial session passed in from `getServerSideProps` or `getInitialProps` */
-      session?: Session;
+      session?: Session & User;
     };
   };
 }

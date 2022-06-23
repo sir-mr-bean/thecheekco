@@ -3,28 +3,22 @@ import Autocomplete, {
 } from "react-google-autocomplete";
 import { useRef } from "react";
 import { User } from "@prisma/client";
-import { useForm } from "react-hook-form";
 
 const UserForm = ({
   userObj,
   setUserObj,
   termsAccepted,
   setTermsAccepted,
+  register,
 }: {
   userObj: User;
   setUserObj: Function;
   termsAccepted: boolean;
   setTermsAccepted: Function;
+  register: Function;
 }) => {
   const termsCheckboxRef = useRef<HTMLInputElement>(null);
   const streetAddressRef = useRef<HTMLInputElement>(null);
-
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
 
   return (
     <>
