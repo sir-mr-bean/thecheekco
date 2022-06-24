@@ -57,22 +57,24 @@ export default function Profile(): JSX.Element {
   );
   console.log(customerQuery);
   console.log("fetching orders with customer id: ", customerQuery.data?.id);
-  const orderIDsQuery = trpc.useQuery(
+  const { data: customerOrders, status: orderQueryStatus } = trpc.useQuery(
     ["get-order-ids", { customerId: customerQuery?.data?.id as string }],
     {
       enabled: !!customerQuery.data,
     }
   );
-  console.log(orderIDsQuery);
-  const customerOrderIDs = orderIDsQuery?.data?.map(
-    (order) => order.id
-  ) as string[];
-  console.log(customerOrderIDs);
-  const { data: customerOrders, status: orderQueryStatus } = trpc.useQuery([
-    "get-orders-by-ids",
-    { orderIds: customerOrderIDs },
-  ]);
   console.log(customerOrders);
+  // const customerOrderIDs = orderIDsQuery?.data?.map(
+  //   (order) => order.id
+  // ) as string[];
+  // console.log(customerOrderIDs);
+  // const { data: customerOrders, status: orderQueryStatus } = trpc.useQuery(
+  //   ["get-orders-by-ids", { orderIds: customerOrderIDs }],
+  //   {
+  //     enabled: !!orderIDsQuery.data,
+  //   }
+  // );
+  // console.log(customerOrders);
 
   useEffect(() => {
     if (status === String("unauthenticated")) {
