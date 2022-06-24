@@ -5,10 +5,14 @@ import UserOrders from "../../../components/Profile/UserOrders";
 import UserDashboard from "../../../components/Profile/UserDashboard";
 import { getSession, useSession } from "next-auth/react";
 import BeatLoader from "react-spinners/BeatLoader";
-import { NextPage } from "next";
+import { GetServerSidePropsContext, NextPage } from "next";
 import { trpc } from "@/utils/trpc";
 import { Customer, Order } from "square";
 import { Session } from "next-auth";
+import { createSSGHelpers } from "@trpc/react/ssg";
+import { appRouter } from "@/backend/router/_app";
+import superjson from "superjson";
+import { inferRouterContext } from "@trpc/server";
 
 const tabs = [
   {
@@ -179,5 +183,3 @@ export default function Profile(): JSX.Element {
     </>
   );
 }
-
-import { GetServerSideProps } from "next";
