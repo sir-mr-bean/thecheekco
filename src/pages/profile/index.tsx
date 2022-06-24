@@ -44,21 +44,19 @@ export default function Profile(): JSX.Element {
   const router = useRouter();
   const tabFromQuery = tabs.find((tab) => tab.name === router.query?.tab);
   const [openTab, setOpenTab] = useState(tabFromQuery?.index || 1);
-  const queryContext = trpc.useContext();
+  console.log("searching customers with email", user?.email);
   const customerQuery = trpc.useQuery(
     ["searchCustomer", { email: session?.user.email as string }],
     {
-      // The query will not execute until the userId exists
-      enabled: !!session?.user.email,
+      enabled: !!session,
     }
   );
   console.log(customerQuery);
-  //const currentCustomer = customerQuery.data;
+  console.log("fetching orders with customer id: ", customerQuery.data?.id);
   const orderQuery = trpc.useQuery(
     ["getOrders", { customerId: customerQuery?.data?.id as string }],
     {
-      // The query will not execute until the userId exists
-      enabled: !!customerQuery.data?.id,
+      enabled: !!customerQuery.data,
     }
   );
   console.log(orderQuery);

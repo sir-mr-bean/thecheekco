@@ -283,6 +283,7 @@ export const squareRouter = createRouter()
     }),
     async resolve({ input, ctx }) {
       const { customerId } = input;
+      console.log(customerId);
       try {
         const ordersQuery = await ordersApi.searchOrders({
           locationIds: [process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string],
