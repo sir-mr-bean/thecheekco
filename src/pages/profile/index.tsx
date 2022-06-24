@@ -48,21 +48,9 @@ export default function Profile(): JSX.Element {
   const router = useRouter();
   const tabFromQuery = tabs.find((tab) => tab.name === router.query?.tab);
   const [openTab, setOpenTab] = useState(tabFromQuery?.index || 1);
-  console.log("searching customers with email", user?.email);
-  const customerQuery = trpc.useQuery(
-    ["searchCustomer", { email: session?.user.email as string }],
-    {
-      enabled: !!session,
-    }
-  );
-  console.log(customerQuery);
-  console.log("fetching orders with customer id: ", customerQuery.data?.id);
-  const orderQuery = trpc.useQuery(
-    ["getOrders", { customerId: customerQuery?.data?.id as string }],
-    {
-      enabled: !!customerQuery.data,
-    }
-  );
+  const orderQuery = trpc.useQuery(["getOrders"], {
+    enabled: !!session,
+  });
   console.log(orderQuery);
   const customerOrders = orderQuery.data;
   console.log(customerOrders);

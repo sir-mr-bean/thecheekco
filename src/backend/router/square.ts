@@ -278,19 +278,33 @@ export const squareRouter = createRouter()
     },
   })
   .query("getOrders", {
-    input: z.object({
-      customerId: z.string(),
-    }),
+    input: z
+      .object({
+        customerId: z.string(),
+      })
+      .nullish(),
     async resolve({ input, ctx }) {
-      const { customerId } = input;
-      console.log(customerId);
+      console.log(ctx.session);
+
       try {
+        const searchCustomer = await customersApi.searchCustomers({
+          query: {
+            filter: {
+              emailAddress: {
+                exact: ctx.session?.user?.email,
+              },
+            },
+          },
+          limit: 1 as unknown as bigint,
+        });
         const ordersQuery = await ordersApi.searchOrders({
           locationIds: [process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string],
           query: {
             filter: {
               customerFilter: {
-                customerIds: [customerId],
+                customerIds: [
+                  searchCustomer.result?.customers?.[0]?.id as string,
+                ],
               },
             },
           },
