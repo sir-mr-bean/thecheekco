@@ -52,15 +52,17 @@ export default function Profile(): JSX.Element {
       enabled: !!user,
     }
   );
+  console.log(customerQuery);
   const currentCustomer = customerQuery.data;
-  const { data: customerOrders } = trpc.useQuery(
+  const orderQuery = trpc.useQuery(
     ["getOrders", { customerId: customerQuery?.data?.id as string }],
     {
       // The query will not execute until the userId exists
       enabled: !!currentCustomer,
     }
   );
-
+  console.log(orderQuery);
+  const customerOrders = orderQuery.data;
   console.log(customerOrders);
 
   useEffect(() => {
