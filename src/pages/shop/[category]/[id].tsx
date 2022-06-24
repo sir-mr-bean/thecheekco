@@ -481,10 +481,9 @@ export const getStaticPaths = async (context: GetStaticPathsContext) => {
     transformer: superjson,
   });
   const productsQuery = await ssg.fetchQuery("all-products");
-  console.log(productsQuery);
   return {
     paths: productsQuery
-      .filter((i) => i.categoryData?.name !== null && i.itemData?.name !== null)
+      .filter((i) => i.categoryData?.name)
       .map((item) => ({
         params: {
           id: item?.itemData?.name
@@ -492,9 +491,11 @@ export const getStaticPaths = async (context: GetStaticPathsContext) => {
             .replaceAll(" ", "-")
             .toString(),
           category:
-            item?.categoryData?.name?.toLowerCase().replaceAll(" ", "-") || "",
+            item?.categoryData?.name?.toLowerCase().replaceAll(" ", "-") ||
+            null,
         },
       })),
+    fallback: "blocking",
   };
 };
 
