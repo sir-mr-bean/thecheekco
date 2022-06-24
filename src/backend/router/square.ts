@@ -26,11 +26,7 @@ const { serverRuntimeConfig } = getConfig();
   return this.toString();
 };
 
-const { paymentsApi, customersApi, catalogApi } = new Client({
-  accessToken: process.env.SQUARE_ACCESS_TOKEN,
-  environment: Environment.Production,
-});
-const { ordersApi } = new Client({
+const { ordersApi, paymentsApi, customersApi, catalogApi } = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
   environment: Environment.Production,
 });
@@ -281,50 +277,42 @@ export const squareRouter = createRouter()
       }
     },
   })
-  .query("getOrders", {
-    input: z
-      .object({
-        customerId: z.string(),
-      })
-      .nullish(),
+  .query("get-order-ids", {
+    input: z.object({
+      customerId: z.string(),
+    }),
     async resolve({ input, ctx }) {
-      console.log(ctx.session);
-
+      const { customerId } = input;
       try {
-        const searchCustomer = await customersApi.searchCustomers({
-          query: {
-            filter: {
-              emailAddress: {
-                exact: ctx.session?.user?.email,
-              },
-            },
-          },
-          limit: 1 as unknown as bigint,
-        });
         const ordersQuery = await ordersApi.searchOrders({
           locationIds: [process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string],
           query: {
             filter: {
               customerFilter: {
-                customerIds: [
-                  searchCustomer.result?.customers?.[0]?.id as string,
-                ],
+                customerIds: [customerId],
               },
             },
           },
         });
-        console.log(ordersQuery);
-        const orders: Order[] = ordersQuery?.result?.orders as Order[];
-        const getOrders = await ordersApi.batchRetrieveOrders({
-          locationId: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string,
-          orderIds: orders?.map((order: Order) => order.id) as string[],
-        });
-        const orderResult = getOrders?.result?.orders;
-        return orderResult;
+        return ordersQuery?.result?.orders;
       } catch (error) {
-        console.log("Failed to fetch orders!", error);
+        console.log("Failed to fetch order!");
         return [];
       }
+    },
+  })
+  .query("get-orders-by-ids", {
+    input: z.object({
+      orderIds: z.array(z.string()),
+    }),
+    async resolve({ input, ctx }) {
+      const { orderIds } = input;
+      const getOrders = await ordersApi.batchRetrieveOrders({
+        locationId: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string,
+        orderIds: orderIds.map((order) => order),
+      });
+      const orderResult = getOrders?.result?.orders;
+      return orderResult;
     },
   })
   .query("all-products", {
