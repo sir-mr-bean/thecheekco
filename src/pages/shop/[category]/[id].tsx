@@ -491,12 +491,10 @@ export const getStaticPaths = async (context: GetStaticPathsContext) => {
             ?.toLowerCase()
             .replaceAll(" ", "-")
             .toString(),
-          category: item?.categoryData?.name
-            ?.toLowerCase()
-            .replaceAll(" ", "-"),
+          category:
+            item?.categoryData?.name?.toLowerCase().replaceAll(" ", "-") || "",
         },
       })),
-    fallback: false,
   };
 };
 
