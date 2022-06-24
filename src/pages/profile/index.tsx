@@ -49,16 +49,16 @@ export default function Profile(): JSX.Element {
     ["searchCustomer", { email: session?.user.email as string }],
     {
       // The query will not execute until the userId exists
-      enabled: !!user,
+      enabled: !!session?.user.email,
     }
   );
   console.log(customerQuery);
-  const currentCustomer = customerQuery.data;
+  //const currentCustomer = customerQuery.data;
   const orderQuery = trpc.useQuery(
     ["getOrders", { customerId: customerQuery?.data?.id as string }],
     {
       // The query will not execute until the userId exists
-      enabled: !!currentCustomer,
+      enabled: !!customerQuery.data?.id,
     }
   );
   console.log(orderQuery);
