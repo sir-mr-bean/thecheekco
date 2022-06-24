@@ -481,21 +481,14 @@ export const getStaticPaths = async (context: GetStaticPathsContext) => {
     transformer: superjson,
   });
   const productsQuery = await ssg.fetchQuery("all-products");
+  console.log(productsQuery);
   return {
-    paths: productsQuery
-      .filter((i) => i.categoryData?.name)
-      .map((item) => ({
-        params: {
-          id: item?.itemData?.name
-            ?.toLowerCase()
-            .replaceAll(" ", "-")
-            .toString(),
-          category:
-            item?.categoryData?.name?.toLowerCase().replaceAll(" ", "-") ||
-            null,
-        },
-      })),
-    fallback: "blocking",
+    paths: productsQuery.map((item) => ({
+      params: {
+        id: item?.itemData?.name?.toLowerCase().replaceAll(" ", "-").toString(),
+      },
+    })),
+    fallback: false,
   };
 };
 
