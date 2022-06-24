@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import UserInfo from "../../../components/Profile/UserInfo";
 import UserOrders from "../../../components/Profile/UserOrders";
 import UserDashboard from "../../../components/Profile/UserDashboard";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import BeatLoader from "react-spinners/BeatLoader";
 import { NextPage } from "next";
 import { trpc } from "@/utils/trpc";
@@ -39,55 +39,39 @@ const tabs = [
 // };
 export default function Profile(): JSX.Element {
   const { data: session, status } = useSession();
+  const user = session?.user;
+  console.log(session);
   const router = useRouter();
   const tabFromQuery = tabs.find((tab) => tab.name === router.query?.tab);
   const [openTab, setOpenTab] = useState(tabFromQuery?.index || 1);
   const queryContext = trpc.useContext();
-  const [customerOrders, setCustomerOrders] = useState<Order[]>([]);
+  const customerQuery = trpc.useQuery(
+    ["searchCustomer", { email: session?.user.email as string }],
+    {
+      // The query will not execute until the userId exists
+      enabled: !!user,
+    }
+  );
+  const currentCustomer = customerQuery.data;
+  const { data: customerOrders } = trpc.useQuery(
+    ["getOrders", { customerId: customerQuery?.data?.id as string }],
+    {
+      // The query will not execute until the userId exists
+      enabled: !!currentCustomer,
+    }
+  );
 
-  const fetchCustomer = async () => {
-    if (!session?.user?.email) return;
-    const customer = await queryContext.fetchQuery([
-      "searchCustomer",
-      { email: session.user.email },
-    ]);
-    return customer;
-  };
-
-  const fetchOrders = async (customer: Customer) => {
-    if (!customer?.id) return;
-    const orders = await queryContext.fetchQuery([
-      "getOrders",
-      { customerId: customer?.id as string },
-    ]);
-    return orders;
-  };
+  console.log(customerOrders);
 
   useEffect(() => {
     if (status === String("unauthenticated")) {
       router.push("/login");
     }
-    fetchCustomer().then((customer) => {
-      console.log("customer is ", customer);
-      if (customer?.emailAddress) {
-        try {
-          fetchOrders(customer).then((orders) => {
-            console.log("orders is ", orders);
-            if (orders?.length) {
-              setCustomerOrders(orders);
-            }
-          });
-        } catch (e) {
-          console.log(e);
-        }
-      }
-    });
-    console.log("orders are ", customerOrders);
-  }, [status]);
+  }, [session]);
 
   return (
     <>
-      {status && (
+      {session && (
         <div>
           {status === String("loading") ? (
             <div className="flex h-screen w-full justify-center items-center mx-auto  text-text-primary">
@@ -195,3 +179,5 @@ export default function Profile(): JSX.Element {
     </>
   );
 }
+
+import { GetServerSideProps } from "next";

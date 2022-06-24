@@ -264,6 +264,10 @@ export default function checkout() {
                         <PickupToggle pickup={pickup} setPickup={setPickup} />
                         {pickup ? (
                           <>
+                            <div className="flex space-x-2">
+                              <span>Collect from:</span>
+                              <span>The Cheek Co Address</span>
+                            </div>
                             <CACForm
                               termsAccepted={termsAccepted}
                               setTermsAccepted={setTermsAccepted}
