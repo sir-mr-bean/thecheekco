@@ -310,19 +310,15 @@ export const squareRouter = createRouter()
           },
         });
         console.log(ordersQuery);
-        if (ordersQuery?.result?.orders) {
-          const orders = ordersQuery.result.orders;
-          const getOrders = await ordersApi.batchRetrieveOrders({
-            locationId: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string,
-            orderIds: orders.map((order: Order) => order.id) as string[],
-          });
-          const orderResult = getOrders?.result?.orders;
-          return orderResult;
-        } else {
-          return [];
-        }
+        const orders: Order[] = ordersQuery?.result?.orders as Order[];
+        const getOrders = await ordersApi.batchRetrieveOrders({
+          locationId: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string,
+          orderIds: orders?.map((order: Order) => order.id) as string[],
+        });
+        const orderResult = getOrders?.result?.orders;
+        return orderResult;
       } catch (error) {
-        console.log("Failed to fetch order!");
+        console.log("Failed to fetch orders!", error);
         return [];
       }
     },
