@@ -26,7 +26,11 @@ const { serverRuntimeConfig } = getConfig();
   return this.toString();
 };
 
-const { ordersApi, paymentsApi, customersApi, catalogApi } = new Client({
+const { paymentsApi, customersApi, catalogApi } = new Client({
+  accessToken: process.env.SQUARE_ACCESS_TOKEN,
+  environment: Environment.Production,
+});
+const { ordersApi } = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
   environment: Environment.Production,
 });
