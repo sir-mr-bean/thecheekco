@@ -280,6 +280,7 @@ export default function checkout() {
                                 setOrderProcessing={setOrderProcessing}
                                 total={total}
                                 userObj={userObj}
+                                pickup={pickup}
                               >
                                 <div className="w-full flex flex-col space-y-4 pt-3">
                                   <h2 className="text-lg font-medium py-3">
@@ -379,6 +380,7 @@ export default function checkout() {
                                   setOrderProcessing={setOrderProcessing}
                                   total={total}
                                   userObj={userObj}
+                                  pickup={pickup}
                                 >
                                   <div className="w-full flex flex-col space-y-4 pt-3">
                                     <h2 className="text-lg font-medium py-3">

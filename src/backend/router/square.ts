@@ -33,7 +33,7 @@ const { ordersApi, paymentsApi, customersApi, catalogApi } = new Client({
 
 export const squareRouter = createRouter()
   .transformer(superjson)
-  .mutation("createOrder", {
+  .mutation("create-delivery-order", {
     input: z.object({
       lineItems: z.array(
         z.object({
@@ -168,6 +168,83 @@ export const squareRouter = createRouter()
 
       const orderResult = order?.result?.order;
       return orderResult;
+    },
+  })
+  .mutation("create-pickup-order", {
+    input: z.object({
+      lineItems: z.array(
+        z.object({
+          catalogObjectId: z.string(),
+          quantity: z.number(),
+          modifiers: z.array(
+            z.object({
+              name: z.string(),
+              catalogObjectId: z.string(),
+            })
+          ),
+        })
+      ),
+      referenceId: z.string(),
+      pickupCustomer: z.object({
+        email: z.string(),
+        firstName: z.string(),
+        lastName: z.string(),
+        phoneNumber: z.string(),
+      }),
+    }),
+    async resolve({ input, ctx }) {
+      const { lineItems, referenceId, pickupCustomer } = input;
+      const customer = await customersApi.listCustomers();
+      let customerId: string | undefined;
+      const existingCustomer = customer?.result?.customers?.find(
+        (customer) => customer.emailAddress === pickupCustomer.email
+      );
+      if (!existingCustomer) {
+        const newCustomer = await customersApi.createCustomer({
+          givenName: pickupCustomer.firstName,
+          familyName: pickupCustomer.lastName,
+          emailAddress: pickupCustomer.email,
+          phoneNumber: pickupCustomer.phoneNumber,
+        });
+        customerId = newCustomer?.result?.customer?.id;
+        if (!customerId) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Failed to create customer",
+          });
+        }
+      } else {
+        customerId = existingCustomer?.id;
+        const order: ApiResponse<CreateOrderResponse> =
+          await ordersApi.createOrder({
+            idempotencyKey: randomUUID(),
+            order: {
+              locationId: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string,
+              referenceId: referenceId,
+              customerId: customerId,
+              lineItems: lineItems.map(({ catalogObjectId, quantity }) => ({
+                catalogObjectId,
+                quantity: quantity.toString(),
+              })),
+              fulfillments: [
+                {
+                  pickupDetails: {
+                    recipient: {
+                      customerId: customerId,
+                    },
+                    scheduleType: "ASAP",
+                    prepTimeDuration: "P2DT12H30M",
+                  },
+                  state: "PROPOSED",
+                  type: "PICKUP",
+                },
+              ],
+            },
+          });
+
+        const orderResult = order?.result?.order;
+        return orderResult;
+      }
     },
   })
   .mutation("createOrderPayment", {
