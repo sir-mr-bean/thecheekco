@@ -28,7 +28,5 @@ export default function handler(
       console.error(error);
     });
 
-  response
-    .status(200)
-    .json({ message: "Email sent!", request: request, response: response });
+  response.status(200).json({ message: "Email sent!" });
 }
