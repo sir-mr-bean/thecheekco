@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { SMTPClient } from "emailjs";
+import { MailService } from "@sendgrid/mail";
 
 const emailBody = `
     <h1>The Cheek Co</h1>
@@ -9,35 +9,26 @@ export default function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const client = new SMTPClient({
-    user: process.env.EMAILACCOUNT,
-    password: process.env.EMAIL_PASS,
-    host: "smtp.mail.us-east-1.awsapps.com",
-    ssl: true,
-    port: 465,
-  });
-  const { name } = request.query;
-  response.end(`Hello ${name}!`);
-  try {
-    client.send(
-      {
-        text: emailBody,
-        from: process.env.EMAILACCOUNT as string,
-        to: "danieldeveney@hotmail.com",
-        subject: "Your order has been updated!",
-        attachment: [
-          {
-            data: emailBody,
-            alternative: true,
-          },
-        ],
-      },
-      (err, message) => {
-        console.log(err || message);
-      }
-    );
-  } catch (e) {
-    console.log(e);
-    response?.status(400).end(JSON.stringify({ e }));
-  }
+  const sgMail = new MailService();
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
+  const msg = {
+    to: "danieldeveney@hotmail.com", // Change to your recipient
+    from: "contact@thecheekco.com", // Change to your verified sender
+    subject: "Sending with SendGrid is Fun",
+    text: "and easy to do anywhere, even with Node.js",
+    html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+  };
+  sgMail
+    .send(msg)
+    .then((response) => {
+      console.log(response[0].statusCode);
+      console.log(response[0].headers);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
+  response
+    .status(200)
+    .json({ message: "Email sent!", request: request, response: response });
 }
