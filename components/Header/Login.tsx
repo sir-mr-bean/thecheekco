@@ -117,21 +117,7 @@ export default function Login() {
                     </a>
                   )}
                 </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <a
-                      href="/profile/orders"
-                      className={classNames(
-                        active
-                          ? "bg-bg-tan text-text-primary"
-                          : "text-text-primary",
-                        "block px-4 py-2 text-sm"
-                      )}
-                    >
-                      My Orders
-                    </a>
-                  )}
-                </Menu.Item>
+
                 <Menu.Item>
                   {({ active }) => (
                     <button
