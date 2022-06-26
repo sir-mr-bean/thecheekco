@@ -131,7 +131,7 @@ export default function cart() {
                                   </h3>
                                 </div>
                                 <div className="mt-1 flex text-sm"></div>
-                                <p className="mt-1 text-sm font-medium text-gray-900">
+                                <p className="mt-1 text-sm font-medium text-text-primary">
                                   $
                                   {(
                                     parseInt(
@@ -220,30 +220,30 @@ export default function cart() {
                 >
                   <h2
                     id="summary-heading"
-                    className="text-lg font-medium text-gray-900"
+                    className="text-lg font-medium text-text-primary"
                   >
                     Order summary
                   </h2>
 
                   <dl className="mt-6 space-y-4">
                     <div className="flex items-center justify-between">
-                      <dt className="text-sm text-gray-600">
+                      <dt className="text-sm text-text-secondary">
                         Subtotal (ex GST)
                       </dt>
-                      <dd className="text-sm font-medium text-gray-900">
+                      <dd className="text-sm font-medium text-text-primary">
                         ${(total - parseFloat(tax)).toFixed(2)}
                       </dd>
                     </div>
 
                     <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
-                      <dt className="text-sm text-gray-900">GST</dt>
+                      <dt className="text-sm text-text-secondary">GST</dt>
 
-                      <dd className="text-sm font-medium text-gray-900">
+                      <dd className="text-sm font-medium text-text-primary">
                         ${tax}
                       </dd>
                     </div>
                     <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
-                      <dt className="flex items-center text-sm text-gray-600">
+                      <dt className="flex items-center text-sm text-text-secondary">
                         <span>Shipping estimate</span>
                         <a
                           href="#"
@@ -258,15 +258,15 @@ export default function cart() {
                           />
                         </a>
                       </dt>
-                      <dd className="text-sm font-medium text-gray-900">
+                      <dd className="text-sm font-medium text-text-primary">
                         $5.00
                       </dd>
                     </div>
                     <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
-                      <dt className="text-base font-medium text-gray-900">
+                      <dt className="text-base font-medium text-text-primary">
                         Order total
                       </dt>
-                      <dd className="text-base font-medium text-gray-900">
+                      <dd className="text-base font-medium text-text-primary">
                         ${total.toFixed(2)}
                       </dd>
                     </div>
@@ -283,10 +283,12 @@ export default function cart() {
               </form>
             ) : (
               <div className="py-4 flex flex-col space-y-4">
-                <span className="text-xl text-black">Nothing in here yet!</span>
+                <span className="text-xl text-text-primary">
+                  Nothing in here yet!
+                </span>
                 <a
                   href="/shop"
-                  className="text-xl text-black underline cursor-pointer hover:decoration-text-primary"
+                  className="text-xl text-text-primary underline cursor-pointer hover:decoration-text-primary"
                 >
                   Return to shop
                 </a>

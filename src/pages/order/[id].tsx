@@ -218,7 +218,7 @@ const UserDashboard = () => {
                   </div>
                 </dl>
 
-                <dl className="mt-16 grid grid-cols-2 gap-x-4 text-sm text-gray-600">
+                <dl className="mt-16 grid grid-cols-2 gap-x-4 text-sm text-text-secondary">
                   <div>
                     {order?.fulfillments?.[0].type === "SHIPMENT" ? (
                       <>

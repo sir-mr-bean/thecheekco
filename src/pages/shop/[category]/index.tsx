@@ -167,7 +167,7 @@ const CategoryPage = (
                         </Link>
                         <div className="relative mt-4 space-y-2">
                           <div className="flex w-full justify-between">
-                            <h3 className="text-sm font-medium text-gray-900">
+                            <h3 className="text-sm font-medium text-text-primary">
                               {product.itemData?.name}
                             </h3>
                             <FavouriteButton
@@ -188,7 +188,7 @@ const CategoryPage = (
                             <BsStar />
                             <BsStar />
                           </div>
-                          {/* <p className="relative text-lg font-bold text-black">
+                          {/* <p className="relative text-lg font-bold text-text-primary">
                           $
                           {(
                             product.price.itemVariationData?.priceMoney.amount /

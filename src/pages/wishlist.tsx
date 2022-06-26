@@ -94,6 +94,14 @@ export default function wishlist() {
                 <h2 id="cart-heading" className="sr-only">
                   Items in your wishlist
                 </h2>
+                <div className="w-full flex flex-col items-end justify-end pb-4 cursor-pointer group">
+                  <div className="relative">
+                    <AiOutlineShoppingCart className="text-text-primary h-8 w-8 group-hover:w-9 group-hover:h-9 absolute -top-7 right-0" />
+                    <span className="text-xs group-hover:text-sm text-text-primary">
+                      Add All Items To Cart
+                    </span>
+                  </div>
+                </div>
 
                 <ul
                   role="list"
@@ -137,7 +145,7 @@ export default function wishlist() {
                                 </h3>
                               </div>
                               <div className="mt-1 flex text-sm"></div>
-                              <p className="mt-1 text-sm font-medium text-gray-900">
+                              <p className="mt-1 text-sm font-medium text-text-primary">
                                 $
                                 {(
                                   parseInt(
@@ -191,10 +199,12 @@ export default function wishlist() {
             </form>
           ) : (
             <div className="py-4 flex flex-col space-y-4">
-              <span className="text-xl text-black">Nothing in here yet!</span>
+              <span className="text-xl text-text-primary">
+                Nothing in here yet!
+              </span>
               <a
                 href="/shop"
-                className="text-xl text-black underline cursor-pointer hover:decoration-text-primary"
+                className="text-xl text-text-primary underline cursor-pointer hover:decoration-text-primary"
               >
                 Find your next favourite goodie..
               </a>

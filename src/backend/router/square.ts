@@ -290,7 +290,8 @@ export const squareRouter = createRouter()
       // push order to prisma
       if (
         orderResult?.lineItems &&
-        orderResult?.fulfillments?.[0]?.shipmentDetails?.recipient
+        (orderResult?.fulfillments?.[0]?.shipmentDetails?.recipient ||
+          orderResult?.fulfillments?.[0].pickupDetails?.recipient)
       ) {
         const orderCreated = await prisma.order.create({
           data: {
@@ -309,6 +310,8 @@ export const squareRouter = createRouter()
               connect: {
                 email:
                   orderResult?.fulfillments?.[0]?.shipmentDetails?.recipient
+                    ?.emailAddress ||
+                  orderResult?.fulfillments?.[0].pickupDetails?.recipient
                     ?.emailAddress,
               },
             },

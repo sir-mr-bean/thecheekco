@@ -116,6 +116,15 @@ model Order {
   userId String 
   lineItems OrderItem[] @relation()
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orderSuccessEmailSent Boolean?
+  orderShippedEmailSent Boolean?
+  orderCancelledEmailSent Boolean?
+  readyForPickupEmailSent Boolean?
+  orderSuccessEmailSentDateTime DateTime?
+  orderShippedEmailSentDateTime DateTime?
+  orderCancelledEmailSentDateTime DateTime?
+  readyForPickupEmailSentDateTime DateTime?
+
 }
 
 model OrderItem {

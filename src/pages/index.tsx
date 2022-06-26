@@ -641,7 +641,7 @@ export default function Home(
                                       product.itemData?.name as string
                                     )}`}
                                   >
-                                    <h3 className="text-sm font-medium text-gray-900">
+                                    <h3 className="text-sm font-medium text-text-primary">
                                       {product?.itemData?.name}
                                     </h3>
                                   </Link>
@@ -652,7 +652,7 @@ export default function Home(
                                     <BsStar />
                                     <BsStar />
                                   </div>
-                                  <p className="relative text-lg font-bold text-black">
+                                  <p className="relative text-lg font-bold text-text-primary">
                                     $
                                     {(
                                       Number(

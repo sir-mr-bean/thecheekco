@@ -320,7 +320,7 @@ const Product = () => {
                       ref={quantity}
                       id="quantity"
                       name="quantity"
-                      className="mt-1 block w-full pl-3 pr-4 py-2 text-base border-gray-300 focus:outline-none focus:ring-text-primary focus:border-text-primary sm:text-sm rounded-md border text-black"
+                      className="mt-1 block w-full pl-3 pr-4 py-2 text-base border-gray-300 focus:outline-none focus:ring-text-primary focus:border-text-primary sm:text-sm rounded-md border text-text-primary"
                       defaultValue={1}
                     >
                       <option>1</option>
@@ -338,7 +338,7 @@ const Product = () => {
                 </div>
 
                 <div className="border-t border-gray-200 mt-5 pt-5 flex justify-evenly items-center w-full">
-                  <span className="text-black text-2xl">
+                  <span className="text-text-primary text-2xl">
                     $
                     {(
                       Number(
@@ -485,7 +485,7 @@ const Product = () => {
                   <dl>
                     {faqs.map((faq) => (
                       <Fragment key={faq.question}>
-                        <dt className="mt-5 font-medium text-gray-900">
+                        <dt className="mt-5 font-medium text-text-primary">
                           {faq.question}
                         </dt>
                         <dd className="mt-2 prose prose-sm max-w-none text-gray-500">

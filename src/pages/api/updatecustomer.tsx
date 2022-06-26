@@ -1,7 +1,16 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { MailService } from "@sendgrid/mail";
 import { trpc } from "@/utils/trpc";
-import { Client, Environment } from "square";
+import {
+  Client,
+  Environment,
+  OrderCreated,
+  OrderFulfillmentUpdatedUpdate,
+} from "square";
+import { prisma } from "@/backend/utils/prisma";
+import { Order } from "@prisma/client";
+import { SqEvent } from "@square/web-sdk";
+import { SquareEvent } from "@/types/SquareEvent";
 
 const { ordersApi } = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
@@ -16,15 +25,27 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  const event = request.body as SquareEvent;
+
+  console.log(request.body as SqEvent);
   const sgMail = new MailService();
   sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
-  //console.log(request);
-  const type = JSON.parse(JSON.stringify(request.body)).type;
-  const orderId = JSON.parse(JSON.stringify(request.body)).data.id;
-  console.log(orderId);
+  const type = event.type;
+  const orderId = event.data.id;
 
-  if (type === "order.created") {
+  if (event.type === "order.created") {
+    const dbOrder = await prisma.order.findUnique({
+      where: {
+        id: orderId,
+      },
+    });
+
     try {
+      if (dbOrder?.orderSuccessEmailSent) {
+        return response.status(200).json({
+          message: "Order email already sent 👍",
+        });
+      }
       const getOrder = await ordersApi.retrieveOrder(orderId);
       const orderResult = getOrder?.result?.order;
       console.log(orderResult);
@@ -50,31 +71,44 @@ export default async function handler(
           }),
         },
       };
-      console.log(templateData);
-      sgMail
-        .send({
-          templateId: "d-4738feab78164214b2d1c6a9229f670f",
-          to: "danieldeveney@hotmail.com", // Change to your recipient
-          from: "contact@thecheekco.com", // Change to your verified sender
-          subject: "Thanks for your order!",
-          dynamicTemplateData: templateData,
-        })
-        .then((result) => {
-          console.log(result);
-          return;
-        })
-        .catch((error) => {
-          console.log(error);
+      const result = await sgMail.send({
+        templateId: "d-4738feab78164214b2d1c6a9229f670f",
+        to: "danieldeveney@hotmail.com", // Change to your recipient
+        from: "contact@thecheekco.com", // Change to your verified sender
+        subject: "Thanks for your order!",
+        dynamicTemplateData: templateData,
+      });
+      console.log(result);
+      if (result[0].statusCode === 202) {
+        const updatedOrder = await prisma.order.update({
+          where: {
+            id: orderId,
+          },
+          data: {
+            orderSuccessEmailSent: true,
+            orderSuccessEmailSentDateTime: new Date(),
+          },
         });
+        if (updatedOrder) {
+          return response
+            .status(200)
+            .json({ message: "Email sent and DB updated!" });
+        }
+      } else {
+        return response
+          .status(500)
+          .json({ message: "Failed to send email :(" });
+      }
     } catch (error) {
       console.log(error);
+      return response.status(500).json({ message: "Error" });
     }
-  } else if (type === "order.updated") {
+  } else if (event.type === "order.updated") {
     console.log("order.updated");
-  } else if (type === "order.fulfillment.updated") {
+  } else if (event.type === "order.fulfillment.updated") {
     console.log("order.fulfillment.updated");
     const newState = JSON.parse(JSON.stringify(request.body)).data.object
-      .order_fulfillment_updated.state;
+      .order_fulfillment_updated.fulfillment_update.state;
     if (newState === "OPEN") {
       try {
         const getOrder = await ordersApi.retrieveOrder(orderId);
@@ -124,6 +158,4 @@ export default async function handler(
     }
     console.log(newState);
   }
-
-  response.status(200).json({ message: "Email sent!" });
 }
