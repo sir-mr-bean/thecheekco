@@ -20,6 +20,7 @@ import superjson from "superjson";
 import { CatalogObject } from "square";
 import { trpc } from "@/utils/trpc";
 import { Dispatch } from "react";
+import FavouriteButton from "@/components/FavouriteButton/FavouriteButton";
 
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
@@ -165,18 +166,16 @@ const CategoryPage = (
                           </div>
                         </Link>
                         <div className="relative mt-4 space-y-2">
-                          <Link
-                            href="/shop/[category]/[id]"
-                            as={`/shop/${
-                              query.category
-                            }/${product?.itemData?.name
-                              ?.replace(/ /g, "-")
-                              .toLowerCase()}`}
-                          >
+                          <div className="flex w-full justify-between">
                             <h3 className="text-sm font-medium text-gray-900">
                               {product.itemData?.name}
                             </h3>
-                          </Link>
+                            <FavouriteButton
+                              product={product}
+                              image={productImage?.imageData?.url}
+                            />
+                          </div>
+
                           <div className="flex text-header-brown">
                             <BsStarFill />
                             <BsStarFill />

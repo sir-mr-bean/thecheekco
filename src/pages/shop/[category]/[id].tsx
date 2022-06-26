@@ -1,5 +1,5 @@
 import { Dispatch, Fragment, useRef, useState } from "react";
-import { Tab } from "@headlessui/react";
+import { WishlistState } from "@/context/Wishlist/Context";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import Image from "next/image";
 import showdown from "showdown";
@@ -7,7 +7,6 @@ import ReactHtmlParser from "react-html-parser";
 import { CartState } from "../../../../context/Context";
 import toast from "react-hot-toast";
 import {
-  GetStaticPaths,
   GetStaticPathsContext,
   GetStaticProps,
   GetStaticPropsContext,
@@ -20,6 +19,8 @@ import superjson from "superjson";
 import { useRouter } from "next/router";
 import { CatalogObject } from "square";
 import { trpc } from "@/utils/trpc";
+import { WishlistObject } from "@/types/WishlistObject";
+import FavouriteButton from "@/components/FavouriteButton/FavouriteButton";
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -127,10 +128,9 @@ type CartObject = CatalogObject & {
   productImage?: string;
 };
 
-const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
+const Product = () => {
   const quantity = useRef<HTMLSelectElement>(null);
   const {
-    cart,
     dispatch,
   }: {
     cart: CartObject[];
@@ -141,6 +141,16 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
       productImage?: string;
     }>;
   } = CartState();
+  const {
+    wishlist,
+    dispatch: wishlistDispatch,
+  }: {
+    wishlist: WishlistObject[];
+    dispatch: Dispatch<{
+      type: string;
+      item?: WishlistObject;
+    }>;
+  } = WishlistState();
   const router = useRouter();
   const tabFromQuery = tabs.find((tab) => tab.name === router.query?.tab);
   const [openTab, setOpenTab] = useState(tabFromQuery?.index || 1);
@@ -150,6 +160,23 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   ]);
   const product = productQuery?.find((product) => product.type === "ITEM");
   const image = productQuery?.find((product) => product.type === "IMAGE");
+  console.log(wishlist);
+  const handleAddToWishlist = (product: CatalogObject, image: string) => {
+    const item: WishlistObject = {
+      product: product,
+      productImage: image,
+    };
+    console.log("add to wishlist", item);
+    //addToWishList(item);
+    wishlistDispatch({
+      type: "ADD_TO_WISHLIST",
+      item: {
+        product: product,
+        productImage: image,
+      },
+    });
+    console.log(wishlist);
+  };
 
   const handleAdd = (product: CatalogObject) => {
     const productImage = productQuery?.find(
@@ -234,9 +261,15 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
               {/* Product details */}
               <div className="max-w-xl sm:max-w-none border rounded-lg bg-white sm:px-10 flex flex-col justify-around w-full px-4">
                 <div className="flex flex-col space-y-2 items-center justify-center">
-                  <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl px-3 pt-4">
-                    {product?.itemData?.name}
-                  </h1>
+                  <div className="flex space-x-2 items-center">
+                    <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl px-3 pt-4">
+                      {product?.itemData?.name}
+                    </h1>
+                    <FavouriteButton
+                      product={product}
+                      image={image?.imageData?.url}
+                    />
+                  </div>
 
                   <h2 id="information-heading" className="sr-only">
                     Product information
@@ -266,10 +299,11 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   <button
                     onClick={() => handleAdd(product)}
                     type="button"
-                    className="mt-3 uppercase bg-button border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+                    className="mt-3 uppercase bg-button border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-text-primary"
                   >
                     Add to cart
                   </button>
+
                   <div>
                     <label
                       htmlFor="location"
@@ -506,9 +540,6 @@ export const getStaticProps: GetStaticProps = async (
     router: appRouter,
     ctx: context as inferRouterContext<typeof appRouter>,
     transformer: superjson,
-  });
-  const productsQuery = await ssg.fetchQuery("search-product", {
-    productName: context?.params?.id as string,
   });
 
   return {
