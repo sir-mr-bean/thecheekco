@@ -173,6 +173,11 @@ const CategoryPage = (
                             <FavouriteButton
                               product={product}
                               image={productImage?.imageData?.url}
+                              styles={{
+                                position: "absolute",
+                                top: "-40px",
+                                right: "-10px",
+                              }}
                             />
                           </div>
 

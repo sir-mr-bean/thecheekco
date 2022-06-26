@@ -268,6 +268,11 @@ const Product = () => {
                     <FavouriteButton
                       product={product}
                       image={image?.imageData?.url}
+                      styles={{
+                        position: "absolute",
+                        top: "-50px",
+                        right: "-150px",
+                      }}
                     />
                   </div>
 

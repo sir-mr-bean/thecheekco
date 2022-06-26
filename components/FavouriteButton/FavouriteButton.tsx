@@ -1,8 +1,10 @@
 import { WishlistState } from "@/context/Wishlist/Context";
 import { useEffect, useState } from "react";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import Heart from "@/components/react-animated-heart/src/components/index";
+import { css } from "goober";
 
-const FavouriteButton = ({ product, image }) => {
+const FavouriteButton = ({ product, image, styles }) => {
   const [isFavourite, setIsFavourite] = useState(false);
   const { wishlist, dispatch } = WishlistState();
 
@@ -31,8 +33,9 @@ const FavouriteButton = ({ product, image }) => {
   };
 
   return (
-    <div>
-      {isFavourite ? (
+    <div className="relative scale-75">
+      <Heart isClick={isFavourite} onClick={handleFavourite} styles={styles} />
+      {/* {isFavourite ? (
         <AiFillHeart
           size={30}
           className="text-red-500 cursor-pointer hover:scale-105"
@@ -44,7 +47,7 @@ const FavouriteButton = ({ product, image }) => {
           className="text-red-500 cursor-pointer hover:scale-105"
           onClick={handleFavourite}
         />
-      )}
+      )} */}
     </div>
   );
 };
