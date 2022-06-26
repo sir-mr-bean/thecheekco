@@ -1,16 +1,76 @@
-import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineClose, AiOutlineShoppingCart } from "react-icons/ai";
 import { WishlistState } from "@/context/Wishlist/Context";
+import { CartState } from "@/context/Context";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { CartObject } from "@/types/CartObject";
+import toast from "react-hot-toast";
 
 export default function wishlist() {
   const { wishlist, dispatch } = WishlistState();
+  const { cart, dispatch: dispatchCart } = CartState();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const handleAddToCart = (product: CartObject, image: string) => {
+    console.log(product);
+    dispatchCart({
+      type: "ADD_TO_CART",
+      item: product.product,
+      quantity: 1,
+      productImage: product.productImage,
+    });
+    dispatch({ type: "REMOVE_FROM_WISHLIST", item: product });
+    toast.custom(
+      (t) => {
+        return (
+          <div
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave after:opacity-0"
+            } max-w-md w-full bg-bg-tan shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 shadow-text-primary`}
+          >
+            <div className="flex-1 w-0 p-4">
+              <div className="flex items-start">
+                <div className="flex-shrink-0 pt-0.5">
+                  <Image
+                    className="w-24 h-24 rounded-full"
+                    height={50}
+                    width={50}
+                    objectFit="cover"
+                    src={
+                      image ||
+                      "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
+                    }
+                    alt={product.product.itemData?.name}
+                  />
+                </div>
+                <div className="ml-3 flex-1 my-auto">
+                  <p className="mt-1 text-sm text-text-primary font-gothic">
+                    {product.product.itemData?.name} added to cart.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="flex border-l border-text-primary border-opacity-10">
+              <button
+                onClick={() => toast.dismiss(t.id)}
+                className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:text-text-primary"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        );
+      },
+      {
+        duration: 3000,
+      }
+    );
+  };
 
   const handleClearWishList = () => {
     dispatch({ type: "CLEAR_WISHLIST" });
@@ -58,7 +118,7 @@ export default function wishlist() {
                         </div>
 
                         <div className="ml-4 flex-1 flex flex-col justify-between sm:ml-6">
-                          <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
+                          <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0 h-full">
                             <div>
                               <div className="flex justify-between">
                                 <h3 className="text-sm">
@@ -96,6 +156,24 @@ export default function wishlist() {
                               >
                                 <span className="sr-only">Remove</span>
                                 <AiOutlineClose
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              </button>
+                            </div>
+                            <div className="absolute bottom-0 right-0">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handleAddToCart(
+                                    product,
+                                    product?.productImage as string
+                                  )
+                                }
+                                className="-m-2 p-2 inline-flex text-green-600 hover:text-text-secondary"
+                              >
+                                <span className="sr-only">Remove</span>
+                                <AiOutlineShoppingCart
                                   className="h-5 w-5"
                                   aria-hidden="true"
                                 />
