@@ -461,6 +461,26 @@ export const squareRouter = createRouter()
       }
     },
   })
+  .query("search-products-by-ids", {
+    input: z.object({
+      productIds: z.array(z.string()).nullish(),
+    }),
+    async resolve({ input, ctx }) {
+      const productsQuery = await catalogApi.batchRetrieveCatalogObjects({
+        objectIds: input?.productIds as string[],
+        includeRelatedObjects: true,
+      });
+      const imagesQuery = await catalogApi.searchCatalogObjects({
+        objectTypes: ["IMAGE"],
+      });
+
+      const productResult = productsQuery.result;
+      const imagesResult = imagesQuery?.result?.objects;
+
+      return { products: productResult, images: imagesResult };
+    },
+  })
+
   .query("search-product", {
     input: z.object({
       productName: z.string(),
