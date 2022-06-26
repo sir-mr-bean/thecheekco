@@ -18,6 +18,9 @@ import PaymentWrapper from "@/components/Checkout/PaymentWrapper";
 import { CartObject } from "@/types/CartObject";
 import { Session } from "next-auth";
 import CACForm from "@/components/Checkout/CACForm";
+import SimpleMap from "@/components/Checkout/Map/GoogleMaps";
+import { Wrapper, Status } from "@googlemaps/react-wrapper";
+import Marker from "@/components/Checkout/Map/Marker";
 
 export type validationErrors = {
   name: boolean;
@@ -236,6 +239,10 @@ export default function checkout() {
     }
   }, [session]);
 
+  const render = (status: Status) => {
+    return <h1>{status}</h1>;
+  };
+
   return (
     <>
       <SuccessModal
@@ -249,10 +256,10 @@ export default function checkout() {
               <h1 className="sr-only">Checkout</h1>
               <div className="flex flex-col-reverse sm:flex-row md:space-x-6">
                 <div className="flex flex-col-reverse sm:flex-row sm:flex-1 lg:max-w-none w-full">
-                  <div className="w-full">
-                    <div className="flex flex-col justify-start items-start text-text-primary w-full">
+                  <div className="pl-16 w-full">
+                    <div className="flex flex-col justify-start items-start text-text-primary w-full flex-1 ">
                       <div className="flex flex-col justify-between w-full items-center p-1 sm:p-4">
-                        <span className="hidden sm:block whitespace-nowrap text-xl font-medium pt-3 sm:pt-0 my-3">
+                        <span className="hidden sm:block whitespace-nowrap text-3xl font-medium pt-3 sm:pt-0 my-3">
                           Checkout
                         </span>
                         {status != "loading" && !session?.user && (
@@ -264,9 +271,35 @@ export default function checkout() {
                         <PickupToggle pickup={pickup} setPickup={setPickup} />
                         {pickup ? (
                           <>
-                            <div className="flex space-x-2">
-                              <span>Collect from:</span>
-                              <span>The Cheek Co Address</span>
+                            <div className="flex items-center space-x-2 py-10 w-full h-full">
+                              <div className="flex flex-col whitespace-nowrap">
+                                <span className="text-sm">Collect from:</span>
+                                <span>The Cheek Co Shop</span>
+                                <span>9 Shields Street Cairns</span>
+                              </div>
+                              <Wrapper
+                                apiKey={
+                                  process.env
+                                    .NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string
+                                }
+                                render={render}
+                              >
+                                <SimpleMap>
+                                  <Marker
+                                    position={{
+                                      lat: -16.92196302222459,
+                                      lng: 145.7763141413842,
+                                    }}
+                                    icon={{
+                                      url: "https://thecheekco.vercel.app/images/logo.png",
+                                      scaledSize: new window.google.maps.Size(
+                                        75,
+                                        75
+                                      ),
+                                    }}
+                                  />
+                                </SimpleMap>
+                              </Wrapper>
                             </div>
                             <CACForm
                               termsAccepted={termsAccepted}
@@ -423,7 +456,7 @@ export default function checkout() {
                       </div>
                     </div>
                   </div>
-                  <div className="w-full h-min md:sticky md:top-44 scroll-smooth">
+                  <div className="px-16 w-2/3 h-min md:sticky md:top-44 scroll-smooth">
                     <div className="w-full h-min flex flex-col justify-center items-center p-3">
                       <h2 className="sr-only">Order summary</h2>
                       <table className="inline-flex flex-col rounded-lg border divide-y divide-gray-300 bg-button text-text-primary min-w-full">

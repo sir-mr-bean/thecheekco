@@ -76,9 +76,9 @@ export default function cart() {
   const products = cart;
   return (
     mounted && (
-      <div className="bg-white mt-16 mx-1 md:mx-16 font-gothic">
+      <div className="bg-white mt-16 mx-1 md:mx-16 font-gothic rounded-md">
         <div className="max-w-7xl mx-auto px-4 pt-4 pb-16 sm:px-6 sm:pt-8 sm:pb-24 lg:px-8 xl:px-2 xl:pt-14">
-          <div className="max-w-2xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+          <div className="max-w-2xl mx-auto sm:pt-16 pb-24 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
             <h1 className="text-3xl tracking-tight text-text-primary sm:text-4xl">
               Shopping Cart
             </h1>

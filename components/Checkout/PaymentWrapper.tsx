@@ -133,7 +133,7 @@ const PaymentWrapper = ({
                               dispatch({
                                 type: "CLEAR_CART",
                               });
-                              router.push("/profile?orders");
+                              router.push(`/order/${orderId}?success=true`);
                             },
                           }
                         );
