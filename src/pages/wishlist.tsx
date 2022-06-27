@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { CartObject } from "@/types/CartObject";
 import toast from "react-hot-toast";
+import { WishlistObject } from "@/types/WishlistObject";
 
 export default function wishlist() {
   const { wishlist, dispatch } = WishlistState();
@@ -16,7 +17,7 @@ export default function wishlist() {
     setMounted(true);
   }, []);
 
-  const handleAddToCart = (product: CartObject, image: string) => {
+  const handleAddToCart = (product: WishlistObject, image: string) => {
     console.log(product);
     dispatchCart({
       type: "ADD_TO_CART",

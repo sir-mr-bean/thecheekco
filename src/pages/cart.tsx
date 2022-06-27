@@ -11,11 +11,7 @@ import { Product } from "@/types/Product";
 import Image from "next/image";
 import { CatalogObject } from "square";
 import { bigint } from "square/dist/schema";
-
-type CartObject = CatalogObject & {
-  quantity: number;
-  productImage: string;
-};
+import { CartObject } from "@/types/CartObject";
 
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();

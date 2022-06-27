@@ -28,11 +28,7 @@ import { inferRouterContext } from "@trpc/server";
 
 import { trpc } from "@/utils/trpc";
 import { CatalogObject } from "square";
-
-type CartObject = CatalogObject & {
-  quantity: number;
-  productImage: string;
-};
+import { CartObject } from "@/types/CartObject";
 
 export default function Home(
   props: InferGetStaticPropsType<typeof getStaticProps>

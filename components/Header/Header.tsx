@@ -9,11 +9,7 @@ import { Product } from "@/types/Product";
 import { trpc } from "@/utils/trpc";
 import { squareRouter } from "@/backend/router/square";
 import { CatalogObject } from "square";
-
-type CartObject = CatalogObject & {
-  quantity: number;
-  productImage: string;
-};
+import { CartObject } from "@/types/CartObject";
 
 function useScrollDirection() {
   const [scrollDirection, setScrollDirection] = useState("");
@@ -48,7 +44,7 @@ export const Header = (): JSX.Element => {
     dispatch: Dispatch<{
       type: string;
       item?: CartObject;
-      quantity?: number;
+      quantity?: string;
       productImage?: string;
     }>;
   } = CartState();

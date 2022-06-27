@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { BsStarFill, BsStar } from "react-icons/bs";
 import { CartState } from "@/context/Cart/Context";
-import { addToCart } from "../../../../context/Reducer";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { useRouter } from "next/router";
