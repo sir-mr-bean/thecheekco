@@ -138,6 +138,7 @@ const CACForm = ({
                   setTermsAccepted((termsAccepted) => !termsAccepted)
                 }
                 ref={termsCheckboxRef}
+                checked={termsAccepted}
                 id="terms"
                 name="terms"
                 type="checkbox"

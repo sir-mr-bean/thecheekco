@@ -53,6 +53,7 @@ export default function checkout() {
   const tax = (parseInt(total.toFixed(2)) * 0.1).toFixed(2);
   const products = cart;
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [pickupTermsAccepted, setPickupTermsAccepted] = useState(false);
   const [sameAsCustomerInfo, setSameAsCustomerInfo] = useState(false);
   const [validationErrors, setValidationErrors] = useState<validationErrors>({
     name: false,
@@ -315,8 +316,8 @@ export default function checkout() {
                               </Wrapper>
                             </div>
                             <CACForm
-                              termsAccepted={termsAccepted}
-                              setTermsAccepted={setTermsAccepted}
+                              termsAccepted={pickupTermsAccepted}
+                              setTermsAccepted={setPickupTermsAccepted}
                               userObj={userObj}
                               setUserObj={setUserObj}
                               register={register}
@@ -326,7 +327,7 @@ export default function checkout() {
                               onClick={() =>
                                 handlePickupCustomerInfoComplete(userObj)
                               }
-                              disabled={!termsAccepted}
+                              disabled={pickupTermsAccepted === false}
                               className="w-full flex justify-center py-2 my-4 px-4 border border-transparent rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
                             >
                               Continue

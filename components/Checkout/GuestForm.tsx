@@ -472,6 +472,7 @@ const GuestForm = ({
             <input
               onChange={() => setTermsAccepted(!termsAccepted)}
               ref={termsCheckboxRef}
+              checked={termsAccepted}
               id="terms"
               name="terms"
               type="checkbox"
