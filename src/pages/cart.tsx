@@ -7,10 +7,7 @@ import {
 import { CartState } from "@/context/Cart/Context";
 import { useState, useEffect, Dispatch } from "react";
 import Link from "next/link";
-import { Product } from "@/types/Product";
 import Image from "next/image";
-import { CatalogObject } from "square";
-import { bigint } from "square/dist/schema";
 import { CartObject } from "@/types/CartObject";
 
 (BigInt.prototype as any).toJSON = function () {

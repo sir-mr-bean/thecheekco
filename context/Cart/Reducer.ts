@@ -54,10 +54,12 @@ export const cartReducer = (state: CartObject[], action: CartAction) => {
       return state.filter((item) => item.id !== action.item.id);
     case "SET_QUANTITY":
       // if quantity is 1 remove from cart, otherwise decrement quantity
-      const result = state.map((item) => item.name === action.item.name);
+      const result = state.map(
+        (item) => item.itemData?.name === action.item.itemData?.name
+      );
       return state.find((item) => item.id === action.item.id)
         ? state.map((item) =>
-            item.name === action.item.name
+            item.itemData?.name === action.item.itemData?.name
               ? {
                   ...item,
                   quantity: parseInt(action.quantity as string),

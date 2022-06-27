@@ -94,7 +94,7 @@ export const Header = (): JSX.Element => {
           <div className="bg-paper-bg bg-cover h-11 drop-shadow-[0_-7px_5px_rgba(0,0,0,0.31)] bg-opacity-10">
             <div className="flex justify-around items-center md:justify-between lg:mx-36">
               <Link href="/">
-                <div className="ml-2 sm:ml-10 text-[21px] text-header-brown font-gothic py-2 lg:py-0 lg:text-[34px] cursor-pointer flex whitespace-nowrap">
+                <div className="ml-2 sm:ml-10 text-[21px] text-header-brown font-gothic py-2 lg:py-0 lg:text-[34px] cursor-pointer flex whitespace-nowrap select-none">
                   the cheek co.
                 </div>
               </Link>
