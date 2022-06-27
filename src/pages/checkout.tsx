@@ -105,6 +105,7 @@ export default function checkout() {
     phoneNumber: "",
   });
   const [customerInfoSet, setCustomerInfoSet] = useState(false);
+  const [pickupInfoSet, setPickupInfoSet] = useState(false);
   const [shippingInfoSet, setShippingInfoSet] = useState(false);
   const [readyForPayment, setReadyForPayment] = useState(false);
 
@@ -126,7 +127,7 @@ export default function checkout() {
     if (termsAccepted) {
       if (userObject.email !== "" && userObject.phoneNumber !== "") {
         setUserObj(userObject);
-        setCustomerInfoSet(true);
+        setPickupInfoSet(true);
       } else {
         toast.error("Please enter a valid email and phone number");
       }
@@ -332,7 +333,7 @@ export default function checkout() {
                             >
                               Continue
                             </button>
-                            {customerInfoSet && (
+                            {pickupInfoSet && (
                               <div className="w-full relative">
                                 <PaymentWrapper
                                   setOrderProcessing={setOrderProcessing}
