@@ -24,7 +24,7 @@ const ShippingForm = ({
               id="sameAsCustomerInfo"
               name="sameAsCustomerInfo"
               type="checkbox"
-              className="h-5 w-5 border-gray-300 rounded checked:bg-text-secondary accent-text-secondary text-text-secondary focus:ring-text-secondary"
+              className="h-5 w-5 border-text-secondary rounded checked:bg-text-secondary accent-text-secondary text-text-secondary focus:ring-text-secondary"
             />
             <label
               htmlFor="sameAsCustomerInfo"
@@ -61,7 +61,7 @@ const ShippingForm = ({
                     firstName: e.target.value,
                   })
                 }
-                className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
               />
             </div>
           </div>
@@ -91,7 +91,7 @@ const ShippingForm = ({
                     lastName: e.target.value,
                   })
                 }
-                className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
               />
             </div>
           </div>
@@ -121,7 +121,7 @@ const ShippingForm = ({
                     email: e.target.value,
                   })
                 }
-                className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
               />
             </div>
           </div>
@@ -150,7 +150,7 @@ const ShippingForm = ({
                     company: e.target.value,
                   })
                 }
-                className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
               />
             </div>
           </div>
@@ -237,7 +237,7 @@ const ShippingForm = ({
                     streetAddress: (e.target as HTMLTextAreaElement).value,
                   });
                 }}
-                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 focus:ring"
+                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full border sm:text-sm border-text-primary rounded-md p-1 focus:ring"
               />
             </div>
           </div>
@@ -266,7 +266,7 @@ const ShippingForm = ({
                     apartmentOrUnit: e.target.value,
                   })
                 }
-                className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
               />
             </div>
           </div>
@@ -296,7 +296,7 @@ const ShippingForm = ({
                     city: e.target.value,
                   })
                 }
-                className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
               />
             </div>
           </div>
@@ -325,7 +325,7 @@ const ShippingForm = ({
                     country: e.target.value,
                   })
                 }
-                className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 py-1.5"
+                className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 py-1.5"
               >
                 <option>Australia</option>
               </select>
@@ -349,7 +349,7 @@ const ShippingForm = ({
                 })}
                 id="guest-region"
                 autoComplete="address-level1"
-                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full shadow-sm shadow-text-secondary sm:text-sm border-text-primary rounded-md p-1 py-1.5 focus:ring"
+                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full border sm:text-sm border-text-primary rounded-md p-1 py-1.5 focus:ring"
               >
                 <option>ACT</option>
                 <option>NSW</option>
@@ -388,7 +388,7 @@ const ShippingForm = ({
                     postalCode: e.target.value,
                   })
                 }
-                className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
               />
             </div>
           </div>
@@ -418,7 +418,7 @@ const ShippingForm = ({
                     phoneNumber: e.target.value,
                   })
                 }
-                className="block w-full border-gray-300 rounded-md shadow-sm shadow-text-secondary focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
               />
             </div>
           </div>

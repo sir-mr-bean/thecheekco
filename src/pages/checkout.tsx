@@ -277,7 +277,7 @@ export default function checkout() {
               <h1 className="sr-only">Checkout</h1>
               <div className="flex flex-col-reverse sm:flex-row md:space-x-6">
                 <div className="flex flex-col-reverse sm:flex-row sm:flex-1 lg:max-w-none w-full">
-                  <div className="pl-16 w-full">
+                  <div className="sm:pl-16 w-full">
                     <div className="flex flex-col justify-start items-start text-text-primary w-full flex-1 ">
                       <div className="flex flex-col justify-between w-full items-center p-1 sm:p-4">
                         <span className="hidden sm:block whitespace-nowrap text-3xl font-medium pt-3 sm:pt-0 my-3">
