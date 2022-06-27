@@ -19,11 +19,12 @@ export const cartInitializer = (initialValue = initialCart) => {
 
 // Cart Reducer
 
-enum CartActionKind {
+export enum CartActionKind {
   ADD_TO_CART = "ADD_TO_CART",
   REMOVE_FROM_CART = "REMOVE_FROM_CART",
   CLEAR_CART = "CLEAR_CART",
   SET_QUANTITY = "SET_QUANTITY",
+  null = "null",
 }
 
 interface CartAction {

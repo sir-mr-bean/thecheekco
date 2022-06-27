@@ -4,6 +4,7 @@ import { emailRouter } from "./email";
 import { squareRouter } from "./square";
 import { userRouter } from "./user";
 import superjson from "superjson";
+import { reviewsRouter } from "./reviews";
 
 /**
  * Create your application's root router
@@ -16,6 +17,7 @@ export const appRouter = createRouter()
   .merge(authRouter)
   .merge("user", userRouter)
   .merge(squareRouter)
-  .merge("email.", emailRouter);
+  .merge("email.", emailRouter)
+  .merge("review.", reviewsRouter);
 
 export type AppRouter = typeof appRouter;

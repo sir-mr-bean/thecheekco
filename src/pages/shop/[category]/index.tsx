@@ -20,6 +20,7 @@ import { CatalogObject } from "square";
 import { trpc } from "@/utils/trpc";
 import { Dispatch } from "react";
 import FavouriteButton from "@/components/FavouriteButton/FavouriteButton";
+import Stars from "@/components/Reviews/Stars";
 
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
@@ -55,6 +56,17 @@ const CategoryPage = (
       categoryIds: [currentCategoryID],
     },
   ]);
+
+  const { data: reviews, status: reviewQueryStatus } = trpc.useQuery([
+    "review.fetch-reviews",
+    {
+      productIds: products
+        ?.filter((product) => product.type === "ITEM")
+        .map((product) => product.id) as string[],
+    },
+  ]);
+
+  console.log(reviews);
 
   const handleAdd = (product: CartObject) => {
     const productImage = products?.find(
@@ -131,6 +143,12 @@ const CategoryPage = (
                       p.type === "IMAGE" &&
                       product.itemData?.imageIds?.includes(p.id)
                   );
+                  const review = reviews?.find(
+                    (r) => r.productId === product.id
+                  );
+                  const reviewCount = reviews?.filter(
+                    (r) => r.productId === product.id
+                  ).length;
                   return (
                     <div key={product.id}>
                       <div className="relative">
@@ -181,11 +199,16 @@ const CategoryPage = (
                           </div>
 
                           <div className="flex text-header-brown">
-                            <BsStarFill />
-                            <BsStarFill />
-                            <BsStarFill />
-                            <BsStar />
-                            <BsStar />
+                            <Stars review={review} />
+                            <span className="text-sm text-text-primary font-medium pl-4">
+                              ({reviewCount ? reviewCount : 0})
+                            </span>
+                            <span className="text-sm text-text-primary font-medium pl-1">
+                              {(reviewCount && reviewCount > 1) ||
+                              reviewCount === 0
+                                ? "reviews"
+                                : "review"}
+                            </span>
                           </div>
                           {/* <p className="relative text-lg font-bold text-text-primary">
                           $

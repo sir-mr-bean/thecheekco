@@ -29,10 +29,15 @@ const login = ({ csrfToken, providers }) => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passRef = useRef<HTMLInputElement>(null);
   const [loggingIn, setLoggingIn] = useState(false);
+  const returnUrl = router.query?.returnTo;
 
   useEffect(() => {
     if (status === String("authenticated")) {
-      router.push("/profile");
+      if (returnUrl) {
+        router.push(router.basePath + returnUrl);
+      } else {
+        router.push("/profile");
+      }
     }
   }, [status]);
 

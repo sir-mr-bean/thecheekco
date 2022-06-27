@@ -1,6 +1,5 @@
-import { Dispatch, Fragment, useRef, useState } from "react";
+import { Dispatch, Fragment, useEffect, useRef, useState } from "react";
 import { WishlistState } from "@/context/Wishlist/Context";
-import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import Image from "next/image";
 import showdown from "showdown";
 import ReactHtmlParser from "react-html-parser";
@@ -21,6 +20,10 @@ import { CatalogObject } from "square";
 import { trpc } from "@/utils/trpc";
 import { WishlistObject } from "@/types/WishlistObject";
 import FavouriteButton from "@/components/FavouriteButton/FavouriteButton";
+import Stars from "@/components/Reviews/Stars";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+import NewReview from "@/components/Reviews/NewReview";
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -40,36 +43,6 @@ const tabs = [
   },
 ];
 
-const reviews = {
-  average: 4,
-  featured: [
-    {
-      id: 1,
-      rating: 5,
-      content: `
-        <p>This icon pack is just what I need for my latest project. There's an icon for just about anything I could ever need. Love the playful look!</p>
-      `,
-      date: "July 16, 2021",
-      datetime: "2021-07-16",
-      author: "Emily Selman",
-      avatarSrc:
-        "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80",
-    },
-    {
-      id: 2,
-      rating: 5,
-      content: `
-        <p>Blown away by how polished this icon pack is. Everything looks so consistent and each SVG is optimized out of the box so I can use it directly with confidence. It would take me several hours to create a single icon this good, so it's a steal at this price.</p>
-      `,
-      date: "July 12, 2021",
-      datetime: "2021-07-12",
-      author: "Hector Gibbons",
-      avatarSrc:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80",
-    },
-    // More reviews...
-  ],
-};
 const faqs = [
   {
     question: "What format are these icons?",
@@ -152,31 +125,51 @@ const Product = () => {
     }>;
   } = WishlistState();
   const router = useRouter();
+  const { data: session, status } = useSession();
+  const [rating, setRating] = useState(0);
   const tabFromQuery = tabs.find((tab) => tab.name === router.query?.tab);
+  const currentPath = router.asPath;
   const [openTab, setOpenTab] = useState(tabFromQuery?.index || 1);
+  const [averageRating, setAverageRating] = useState(0);
   const { data: productQuery } = trpc.useQuery([
     "search-product",
     { productName: router.query?.id as string },
   ]);
   const product = productQuery?.find((product) => product.type === "ITEM");
   const image = productQuery?.find((product) => product.type === "IMAGE");
-  console.log(wishlist);
-  const handleAddToWishlist = (product: CatalogObject, image: string) => {
-    const item: WishlistObject = {
-      product: product,
-      productImage: image,
-    };
-    console.log("add to wishlist", item);
-    //addToWishList(item);
-    wishlistDispatch({
-      type: "ADD_TO_WISHLIST",
-      item: {
-        product: product,
-        productImage: image,
+
+  const { data: reviews, status: reviewQueryStatus } = trpc.useQuery([
+    "review.fetch-reviews",
+    {
+      productIds: [product?.id as string],
+    },
+  ]);
+  const { data: reviewers, status: reviewerQueryStatus } = trpc.useQuery(
+    [
+      "review.reviewed-by",
+      {
+        userIds: reviews && reviews.map((review) => review.userId as string),
       },
-    });
-    console.log(wishlist);
-  };
+    ],
+    {
+      enabled: !!reviews,
+    }
+  );
+
+  const review = reviews?.find((r) => r.productId === product?.id);
+  const reviewreview = reviews?.filter(
+    (r) => r.productId === product?.id
+  ).length;
+
+  useEffect(() => {
+    if (reviews) {
+      const ratings = reviews.map((r) => r.rating);
+      const average =
+        ratings.reduce((a, b) => a + parseFloat(b.toString()), 0) /
+        ratings.length;
+      setAverageRating(average);
+    }
+  }, [reviews]);
 
   const handleAdd = (product: CatalogObject) => {
     const productImage = productQuery?.find(
@@ -282,20 +275,8 @@ const Product = () => {
                   <div>
                     <h3 className="sr-only">Reviews</h3>
                     <div className="flex items-center">
-                      {[0, 1, 2, 3, 4].map((rating) => (
-                        <AiOutlineStar
-                          key={rating}
-                          className={classNames(
-                            reviews.average > rating
-                              ? "text-yellow-400"
-                              : "text-gray-300",
-                            "h-5 w-5 flex-shrink-0"
-                          )}
-                          aria-hidden="true"
-                        />
-                      ))}
+                      <Stars review={review} />
                     </div>
-                    <p className="sr-only">{reviews.average} out of 5 stars</p>
                   </div>
                 </div>
 
@@ -500,8 +481,156 @@ const Product = () => {
                 <div className="p-2">
                   <h3 className="sr-only">License</h3>
 
-                  <div className="max-w-none text-gray-500">
-                    {license.content}
+                  <div className="max-w-none text-text-primary">
+                    <div className="w-full mx-auto py-2 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:py-2 lg:px-8 lg:grid lg:grid-cols-12 lg:gap-x-8">
+                      <div className="lg:col-span-4">
+                        <h2 className="text-2xl font-extrabold tracking-tight text-text-primary">
+                          Customer Reviews
+                        </h2>
+
+                        <div className="mt-3 flex items-center">
+                          <div>
+                            <div className="flex items-center">
+                              <Stars rating={averageRating} />
+                            </div>
+                            <p className="sr-only">
+                              {averageRating} out of 5 stars
+                            </p>
+                          </div>
+                          <p className="ml-2 text-sm text-text-primary">
+                            Based on {reviews?.length} reviews
+                          </p>
+                        </div>
+
+                        <div className="mt-6">
+                          <h3 className="sr-only">Review data</h3>
+
+                          <dl className="space-y-3">
+                            {reviews
+                              ?.sort(
+                                (a, b) =>
+                                  parseFloat(b.rating.toString()) -
+                                  parseFloat(a.rating.toString())
+                              )
+                              .map((review) => (
+                                <div
+                                  key={review.id}
+                                  className="flex items-center text-sm"
+                                >
+                                  <dt className="flex-1 flex items-center">
+                                    <span className="w-3 font-medium text-text-primary">
+                                      {parseFloat(review.rating.toString())}
+                                    </span>
+                                    <span className="sr-only">
+                                      star reviews
+                                    </span>
+                                    <div
+                                      aria-hidden="true"
+                                      className="ml-1 flex-1 flex items-center"
+                                    >
+                                      <Stars review={review} />
+
+                                      <div className="ml-3 relative flex-1">
+                                        <div className="h-3 bg-gray-100 border border-gray-200 rounded-full" />
+                                        {parseFloat(review.rating.toString()) >
+                                        0 ? (
+                                          <div
+                                            className="absolute inset-y-0 bg-yellow-400 border border-yellow-400 rounded-full"
+                                            style={{
+                                              width: `calc(${review.rating} / ${reviews.length} * 100% / 5)`,
+                                            }}
+                                          />
+                                        ) : null}
+                                      </div>
+                                    </div>
+                                  </dt>
+                                  <dd className="ml-3 w-10 text-right tabular-nums text-sm text-text-primary">
+                                    {Math.round(
+                                      ((parseInt(
+                                        reviews
+                                          .filter(
+                                            (review) =>
+                                              review.rating === review.rating
+                                          )
+                                          .length.toString()
+                                      ) /
+                                        reviews.length) *
+                                        100) /
+                                        reviews.length
+                                    )}
+                                    %
+                                  </dd>
+                                </div>
+                              ))}
+                          </dl>
+                        </div>
+
+                        <div className="mt-10">
+                          <h3 className="text-lg font-medium text-text-primary">
+                            Share your thoughts
+                          </h3>
+                          <p className="mt-1 text-sm text-gray-600">
+                            If you’ve used this product, share your thoughts
+                            with other customers
+                          </p>
+                          {!session?.user ? (
+                            <div className="mt-6 inline-flex w-full bg-white border border-gray-300 rounded-md py-2 px-8 items-center justify-center text-sm font-medium text-text-primary hover:bg-gray-50 sm:w-auto lg:w-full">
+                              <Link href={`/login?returnTo=${currentPath}`}>
+                                <a>Login to write a review</a>
+                              </Link>
+                            </div>
+                          ) : (
+                            <div className="border flex flex-col items-center justify-start">
+                              <span>Leave a review</span>
+                              <NewReview
+                                rating={rating}
+                                setRating={setRating}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="mt-16 lg:mt-0 lg:col-start-6 lg:col-span-7">
+                        <h3 className="sr-only">Recent reviews</h3>
+
+                        <div className="flow-root">
+                          <div className="-my-12 divide-y divide-gray-200">
+                            {reviews?.map((review) => {
+                              const reviewer = reviewers?.find(
+                                (reviewer) => reviewer.id === review.userId
+                              );
+                              return (
+                                <div key={review.id} className="py-12">
+                                  <div className="flex items-center">
+                                    {/* <img src={review.avatarSrc} alt={`${review.author}.`} className="h-12 w-12 rounded-full" /> */}
+                                    <div className="ml-4">
+                                      <h4 className="text-sm font-bold text-text-primary">
+                                        {reviewer?.firstName}
+                                      </h4>
+                                      <div className="mt-1 flex items-center">
+                                        <Stars review={review} />
+                                      </div>
+                                      <p className="sr-only">
+                                        {parseFloat(review.rating.toString())}
+                                      </p>
+                                      <p>out of 5 stars</p>
+                                    </div>
+                                  </div>
+
+                                  <div
+                                    className="mt-4 space-y-6 text-base italic text-gray-600"
+                                    dangerouslySetInnerHTML={{
+                                      __html: review.comment,
+                                    }}
+                                  />
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
