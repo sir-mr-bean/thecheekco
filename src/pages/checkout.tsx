@@ -491,7 +491,7 @@ export default function checkout() {
                       </div>
                     </div>
                   </div>
-                  <div className="px-16 w-2/3 h-min md:sticky md:top-44 scroll-smooth">
+                  <div className="px-16 sm:w-2/3 h-min md:sticky md:top-44 scroll-smooth mx-auto sm:mx-0">
                     <div className="w-full h-min flex flex-col justify-center items-center p-3">
                       <h2 className="sr-only">Order summary</h2>
                       <table className="inline-flex flex-col rounded-lg border divide-y divide-gray-300 bg-button text-text-primary min-w-full">
