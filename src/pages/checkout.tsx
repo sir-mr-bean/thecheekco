@@ -128,7 +128,7 @@ export default function checkout() {
   }, [userObj]);
 
   const handlePickupCustomerInfoComplete = (userObject: typeof userObj) => {
-    if (termsAccepted) {
+    if (pickupTermsAccepted) {
       if (userObject.email !== "" && userObject.phoneNumber !== "") {
         setUserObj(userObject);
         setPickupInfoSet(true);
