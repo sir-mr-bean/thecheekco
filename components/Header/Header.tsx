@@ -2,7 +2,7 @@ import { IoIosHeart } from "react-icons/io";
 import { IoBasketSharp } from "react-icons/io5";
 import Link from "next/link";
 import Login from "./Login";
-import { CartState } from "../../context/Context";
+import { CartState } from "../../context/Cart/Context";
 import { Dispatch, useEffect, useState } from "react";
 import MobileMenu from "./MobileMenu";
 import { Product } from "@/types/Product";

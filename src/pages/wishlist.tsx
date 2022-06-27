@@ -1,6 +1,6 @@
 import { AiOutlineClose, AiOutlineShoppingCart } from "react-icons/ai";
 import { WishlistState } from "@/context/Wishlist/Context";
-import { CartState } from "@/context/Context";
+import { CartState } from "@/context/Cart/Context";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";

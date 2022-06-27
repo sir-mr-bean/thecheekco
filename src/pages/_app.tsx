@@ -5,7 +5,7 @@ import Header from "@/components/Header/Header";
 import * as gtag from "lib/gtag";
 import Head from "next/head";
 import { Toaster } from "react-hot-toast";
-import CartContext from "@/context/Context";
+import CartContext from "@/context/Cart/Context";
 import WishListContext from "@/context/Wishlist/Context";
 import { useEffect } from "react";
 import { withTRPC } from "@trpc/next";

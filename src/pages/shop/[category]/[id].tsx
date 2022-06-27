@@ -4,7 +4,7 @@ import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import Image from "next/image";
 import showdown from "showdown";
 import ReactHtmlParser from "react-html-parser";
-import { CartState } from "../../../../context/Context";
+import { CartState } from "@/context/Cart/Context";
 import toast from "react-hot-toast";
 import {
   GetStaticPathsContext,

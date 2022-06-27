@@ -1,5 +1,5 @@
 import { CreditCard, GooglePay } from "react-square-web-payments-sdk";
-import { CartState } from "../../context/Context";
+import { CartState } from "../../context/Cart/Context";
 import React, { useState, useEffect, useRef, Dispatch } from "react";
 import BeatLoader from "react-spinners/BeatLoader";
 import UserForm from "../../components/Checkout/UserForm";

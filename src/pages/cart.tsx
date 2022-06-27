@@ -4,7 +4,7 @@ import {
   AiOutlineQuestionCircle,
   AiOutlineClose,
 } from "react-icons/ai";
-import { CartState } from "@/context/Context";
+import { CartState } from "@/context/Cart/Context";
 import { useState, useEffect, Dispatch } from "react";
 import Link from "next/link";
 import { Product } from "@/types/Product";

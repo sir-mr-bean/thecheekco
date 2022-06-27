@@ -1,11 +1,20 @@
+import { CartObject } from "@/types/CartObject";
 import { createContext, useContext, useReducer, useEffect } from "react";
 import { cartReducer, cartInitializer } from "./Reducer";
 
-BigInt.prototype.toJSON = function () {
+(BigInt.prototype as any).toJSON = function () {
   return this.toString();
 };
 
-const Cart = createContext();
+interface CartContext {
+  cart: CartObject[];
+  dispatch: (action: any) => void;
+}
+
+const Cart = createContext<CartContext>({
+  cart: [],
+  dispatch: () => {},
+});
 
 const CartContext = ({ children }) => {
   const [cart, dispatch] = useReducer(cartReducer, [], cartInitializer);

@@ -1,5 +1,5 @@
 import { RoughNotation, RoughNotationGroup } from "react-rough-notation";
-import { CartState } from "../../context/Context";
+import { CartState } from "../../context/Cart/Context";
 import { Dispatch, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";

@@ -1,14 +1,16 @@
 // Shopping Cart Reducer
 
+import { CartObject } from "@/types/CartObject";
+
 // Initial Cart State
 
-const initialCart = [];
+const initialCart: CartObject[] = [];
 
 export const cartInitializer = (initialValue = initialCart) => {
   if (typeof window !== "undefined") {
     const localCart = localStorage.getItem("localCart");
     if (localCart) {
-      return JSON.parse(localStorage.getItem("localCart"));
+      return JSON.parse(localStorage.getItem("localCart") as string);
     } else {
       return initialValue;
     }
@@ -17,7 +19,21 @@ export const cartInitializer = (initialValue = initialCart) => {
 
 // Cart Reducer
 
-export const cartReducer = (state, action) => {
+enum CartActionKind {
+  ADD_TO_CART = "ADD_TO_CART",
+  REMOVE_FROM_CART = "REMOVE_FROM_CART",
+  CLEAR_CART = "CLEAR_CART",
+  SET_QUANTITY = "SET_QUANTITY",
+}
+
+interface CartAction {
+  type: CartActionKind;
+  item: CartObject;
+  quantity?: string;
+  productImage?: string;
+}
+
+export const cartReducer = (state: CartObject[], action: CartAction) => {
   switch (action.type) {
     case "ADD_TO_CART":
       return state.find((item) => item.id === action.item.id)
@@ -25,7 +41,7 @@ export const cartReducer = (state, action) => {
             item.id === action.item.id
               ? {
                   ...item,
-                  quantity: item.quantity + parseInt(action.quantity),
+                  quantity: item.quantity + parseInt(action.quantity as string),
                 }
               : { ...item, quantity: 1 }
           )
@@ -36,20 +52,6 @@ export const cartReducer = (state, action) => {
 
     case "REMOVE_FROM_CART":
       return state.filter((item) => item.id !== action.item.id);
-
-    case "DECREMENT_QUANTITY":
-      // if quantity is 1 remove from cart, otherwise decrement quantity
-      return state.find((item) => item.name === action.item.name)?.quantity ===
-        1
-        ? state.filter((item) => item.name !== action.item.name)
-        : state.map((item) =>
-            item.name === action.item.name
-              ? {
-                  ...item,
-                  quantity: item.quantity - 1,
-                }
-              : item
-          );
     case "SET_QUANTITY":
       // if quantity is 1 remove from cart, otherwise decrement quantity
       const result = state.map((item) => item.name === action.item.name);
@@ -58,11 +60,11 @@ export const cartReducer = (state, action) => {
             item.name === action.item.name
               ? {
                   ...item,
-                  quantity: parseInt(action.quantity),
+                  quantity: parseInt(action.quantity as string),
                 }
               : item
           )
-        : item;
+        : state;
 
     case "CLEAR_CART":
       return initialCart;
@@ -74,17 +76,17 @@ export const cartReducer = (state, action) => {
 
 // Reducer Functions
 
-export const addToCart = (item) => ({
+export const addToCart = (item: CartObject) => ({
   type: "ADD_TO_CART",
   item,
 });
 
-export const decrementItemQuantity = (item) => ({
+export const decrementItemQuantity = (item: CartObject) => ({
   type: "DECREMENT_QUANTITY",
   item,
 });
 
-export const removeFromCart = (item) => ({
+export const removeFromCart = (item: CartObject) => ({
   type: "REMOVE_FROM_CART",
   item,
 });

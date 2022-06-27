@@ -1,4 +1,4 @@
-import { CartState } from "@/context/Context";
+import { CartState } from "@/context/Cart/Context";
 import { CartObject } from "@/types/CartObject";
 import { trpc } from "@/utils/trpc";
 import { User } from "@prisma/client";
