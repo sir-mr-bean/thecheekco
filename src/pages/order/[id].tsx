@@ -75,8 +75,11 @@ const UserDashboard = () => {
                     aria-hidden="true"
                   />
                 </span>
-                <p className="ml-3 font-medium text-white truncate">
-                  <span className="md:hidden">We announced a new product!</span>
+                <p className="ml-3 font-medium text-white">
+                  <span className="md:hidden">
+                    Thanks for your order! You will soon receive an email with
+                    your order details.
+                  </span>
                   <span className="hidden md:inline">
                     Thanks for your order! You will soon receive an email with
                     your order details.
@@ -314,7 +317,7 @@ const UserDashboard = () => {
 
                 <div className="mt-16 border-t border-gray-200 py-6 text-right">
                   <a
-                    href="#"
+                    href="/"
                     className="text-sm font-medium text-text-secondary hover:text-text-primary"
                   >
                     Continue Shopping<span aria-hidden="true"> &rarr;</span>
