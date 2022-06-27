@@ -121,6 +121,19 @@ export default function checkout() {
     setTotal(total);
   }, [cart]);
 
+  const handlePickupCustomerInfoComplete = (userObject: typeof userObj) => {
+    if (termsAccepted) {
+      if (userObject.email !== "" && userObject.phoneNumber !== "") {
+        setUserObj(userObject);
+        setCustomerInfoSet(true);
+      } else {
+        toast.error("Please enter a valid email and phone number");
+      }
+    } else {
+      toast.error("Please accept the terms and conditions");
+    }
+  };
+
   const handleCustomerInfoComplete = (userObject: typeof userObj) => {
     console.log(userObject);
     if (termsAccepted) {
@@ -308,48 +321,60 @@ export default function checkout() {
                               setUserObj={setUserObj}
                               register={register}
                             />
-                            <div className="w-full">
-                              <PaymentWrapper
-                                setOrderProcessing={setOrderProcessing}
-                                total={total}
-                                userObj={userObj}
-                                pickup={pickup}
-                              >
-                                <div className="w-full flex flex-col space-y-4 pt-3">
-                                  <h2 className="text-lg font-medium py-3">
-                                    Payment Method
-                                  </h2>
-                                  <GooglePay buttonColor="white" />
-                                  <CreditCard
-                                    includeInputLabels
-                                    buttonProps={{
-                                      css: {
-                                        backgroundColor: "#a75e2f",
-                                        fontSize: "14px",
-                                        color: "#fff",
-                                        "&:hover": {
-                                          backgroundColor: "#E3BB9D",
+                            <button
+                              type="button"
+                              onClick={() =>
+                                handlePickupCustomerInfoComplete(userObj)
+                              }
+                              disabled={!termsAccepted}
+                              className="w-full flex justify-center py-2 my-4 px-4 border border-transparent rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
+                            >
+                              Continue
+                            </button>
+                            {customerInfoSet && (
+                              <div className="w-full relative">
+                                <PaymentWrapper
+                                  setOrderProcessing={setOrderProcessing}
+                                  total={total}
+                                  userObj={userObj}
+                                  pickup={pickup}
+                                >
+                                  <div className="w-full flex flex-col space-y-4 pt-3">
+                                    <h2 className="text-lg font-medium py-3">
+                                      Payment Method
+                                    </h2>
+                                    <GooglePay buttonColor="white" />
+                                    <CreditCard
+                                      includeInputLabels
+                                      buttonProps={{
+                                        css: {
+                                          backgroundColor: "#a75e2f",
+                                          fontSize: "14px",
+                                          color: "#fff",
+                                          "&:hover": {
+                                            backgroundColor: "#E3BB9D",
+                                          },
                                         },
-                                      },
-                                    }}
-                                  >
-                                    <div className="w-full h-full flex items-center justify-center">
-                                      {orderProcessing ? (
-                                        <div className="flex w-full items-center justify-center space-x-2">
-                                          <span>Processing Order</span>
-                                          <BeatLoader
-                                            size={8}
-                                            color="#602d0d"
-                                          />
-                                        </div>
-                                      ) : (
-                                        <span>Pay ${total.toFixed(2)}</span>
-                                      )}
-                                    </div>
-                                  </CreditCard>
-                                </div>
-                              </PaymentWrapper>
-                            </div>
+                                      }}
+                                    >
+                                      <div className="w-full h-full flex items-center justify-center">
+                                        {orderProcessing ? (
+                                          <div className="flex w-full items-center justify-center space-x-2">
+                                            <span>Processing Order</span>
+                                            <BeatLoader
+                                              size={8}
+                                              color="#602d0d"
+                                            />
+                                          </div>
+                                        ) : (
+                                          <span>Pay ${total.toFixed(2)}</span>
+                                        )}
+                                      </div>
+                                    </CreditCard>
+                                  </div>
+                                </PaymentWrapper>
+                              </div>
+                            )}
                           </>
                         ) : (
                           <>
