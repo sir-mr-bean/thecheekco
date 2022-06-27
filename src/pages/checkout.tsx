@@ -123,6 +123,10 @@ export default function checkout() {
     setTotal(total);
   }, [cart]);
 
+  useEffect(() => {
+    console.log(userObj.firstName);
+  }, [userObj]);
+
   const handlePickupCustomerInfoComplete = (userObject: typeof userObj) => {
     if (termsAccepted) {
       if (userObject.email !== "" && userObject.phoneNumber !== "") {
@@ -136,55 +140,57 @@ export default function checkout() {
     }
   };
 
-  const handleCustomerInfoComplete = (userObject: typeof userObj) => {
-    console.log(userObject);
+  const handleCustomerInfoComplete = () => {
+    console.log(userObj);
     if (termsAccepted) {
       if (
-        userObject.firstName &&
-        userObject.streetAddress &&
-        userObject.city &&
-        userObject.postalCode
+        userObj.firstName !== "" &&
+        userObj.streetAddress !== "" &&
+        userObj.city !== "" &&
+        userObj.postalCode !== "" &&
+        userObj.email !== "" &&
+        userObj.phoneNumber !== ""
       ) {
         setCustomerInfoSet(true);
       } else {
         toast.error("Please fill out all fields");
         console.log(validationErrors);
-        if (userObject.firstName === "") {
+        if (userObj.firstName === "") {
           console.log("first name is empty");
           setValidationErrors((validationErrors) => {
             console.log("setting name to true");
             return { ...validationErrors, name: true };
           });
         }
-        if (userObject.streetAddress === "") {
+        if (userObj.streetAddress === "") {
           console.log("street address is empty");
           setValidationErrors((validationErrors) => {
             console.log("setting street address to true");
             return { ...validationErrors, streetAddress: true };
           });
         }
-        if (userObject.city === "") {
+        if (userObj.city === "") {
           console.log("city is empty");
           setValidationErrors((validationErrors) => {
             console.log("setting city to true");
             return { ...validationErrors, city: true };
           });
         }
-        if (userObject.postalCode === "") {
+        if (userObj.postalCode === "") {
           console.log("postal code is empty");
           setValidationErrors((validationErrors) => {
             console.log("setting postal code to true");
             return { ...validationErrors, zip: true };
           });
         }
-        if (userObject.phoneNumber === "") {
+        if (userObj.phoneNumber === "") {
           console.log("phone number is empty");
           setValidationErrors((validationErrors) => {
             console.log("setting phone number to true");
             return { ...validationErrors, phone: true };
           });
         }
-        if (userObject.email === "") {
+        if (userObj.email === "") {
           console.log("email is empty");
           setValidationErrors((validationErrors) => {
             console.log("setting email to true");
@@ -387,6 +393,8 @@ export default function checkout() {
                                 userObj={userObj}
                                 setUserObj={setUserObj}
                                 register={register}
+                                validationErrors={validationErrors}
+                                setValidationErrors={setValidationErrors}
                               />
                             ) : (
                               <GuestForm
@@ -402,9 +410,7 @@ export default function checkout() {
                             {!customerInfoSet && (
                               <button
                                 type="button"
-                                onClick={() =>
-                                  handleCustomerInfoComplete(userObj)
-                                }
+                                onClick={() => handleCustomerInfoComplete()}
                                 disabled={!termsAccepted}
                                 className="w-full flex justify-center py-2 my-4 px-4 border border-transparent rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
                               >

@@ -3,6 +3,7 @@ import Autocomplete, {
 } from "react-google-autocomplete";
 import { useRef } from "react";
 import { User } from "@prisma/client";
+import { validationErrors } from "@/pages/checkout";
 
 const UserForm = ({
   userObj,
@@ -10,12 +11,16 @@ const UserForm = ({
   termsAccepted,
   setTermsAccepted,
   register,
+  validationErrors,
+  setValidationErrors,
 }: {
   userObj: User;
   setUserObj: Function;
   termsAccepted: boolean;
   setTermsAccepted: Function;
   register: Function;
+  validationErrors: validationErrors;
+  setValidationErrors: Function;
 }) => {
   const termsCheckboxRef = useRef<HTMLInputElement>(null);
   const streetAddressRef = useRef<HTMLInputElement>(null);
@@ -39,19 +44,27 @@ const UserForm = ({
                 >
                   First name
                 </label>
-                <div className="mt-1">
+                <div className="mt-1 relative">
+                  <div>
+                    {validationErrors.name && (
+                      <span className="text-red-500 text-xs sm:text-sm absolute -top-2 right-0 bg-white rounded-sm px-1 font-gothic">
+                        This field is required
+                      </span>
+                    )}
+                  </div>
                   <input
                     type="text"
                     id="first-name"
                     name="first-name"
                     autoComplete="given-name"
                     defaultValue={userObj?.firstName as string}
-                    onChange={(e) =>
+                    onChange={(e) => {
+                      setValidationErrors({ ...validationErrors, name: false });
                       setUserObj({
                         ...userObj,
                         firstName: e.target.value,
-                      })
-                    }
+                      });
+                    }}
                     className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
                   />
                 </div>
@@ -89,19 +102,30 @@ const UserForm = ({
                 >
                   Email Address
                 </label>
-                <div className="mt-1">
+                <div className="mt-1 relative">
+                  <div>
+                    {validationErrors.email && (
+                      <span className="text-red-500 text-xs sm:text-sm absolute -top-2 right-0 bg-white rounded-sm px-1 font-gothic">
+                        This field is required
+                      </span>
+                    )}
+                  </div>
                   <input
                     type="text"
                     name="email"
                     id="email"
                     autoComplete="email"
                     defaultValue={userObj?.email as string}
-                    onChange={(e) =>
+                    onChange={(e) => {
+                      setValidationErrors({
+                        ...validationErrors,
+                        email: false,
+                      });
                       setUserObj({
                         ...userObj,
                         email: e.target.value,
-                      })
-                    }
+                      });
+                    }}
                     className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
                   />
                 </div>
@@ -133,6 +157,13 @@ const UserForm = ({
               </div>
 
               <div className="col-span-1 sm:col-span-2">
+                <div className="relative">
+                  {validationErrors.streetAddress && (
+                    <span className="text-red-500 text-xs sm:text-sm absolute top-4 right-0 bg-white rounded-sm px-1 font-gothic">
+                      This field is required
+                    </span>
+                  )}
+                </div>
                 <label
                   htmlFor="street-address"
                   className="block text-sm font-medium text-text-primary"
@@ -195,6 +226,12 @@ const UserForm = ({
                   value={userObj?.streetAddress as string}
                   inputAutocompleteValue={userObj?.streetAddress as string}
                   onChange={(e) => {
+                    setValidationErrors(
+                      (validationErrors) => {
+                        return { ...validationErrors, streetAddress: false };
+                      },
+                      [validationErrors.streetAddress]
+                    );
                     setUserObj({
                       ...userObj,
                       streetAddress: (e.target as HTMLTextAreaElement).value,
@@ -254,19 +291,33 @@ const UserForm = ({
                 >
                   City
                 </label>
-                <div className="mt-1">
+                <div className="mt-1 relative">
+                  <div>
+                    {validationErrors.city && (
+                      <span className="text-red-500 text-xs sm:text-sm absolute -top-2 right-0 bg-white rounded-sm px-1 font-gothic">
+                        This field is required
+                      </span>
+                    )}
+                  </div>
                   <input
                     type="text"
-                    {...register("city")}
-                    id="city"
-                    autoComplete="address-level2"
-                    value={userObj?.city ? (userObj.city as string) : ""}
-                    onChange={(e) => {
-                      setUserObj({
-                        ...userObj,
-                        city: e.target.value,
-                      });
-                    }}
+                    {...(register("guest-city"),
+                    {
+                      required: true,
+                      value: userObj.city ? (userObj.city as string) : "",
+                      onChange: (e) => {
+                        setValidationErrors(
+                          (validationErrors) => {
+                            return { ...validationErrors, city: false };
+                          },
+                          [validationErrors.city]
+                        );
+                        setUserObj({
+                          ...userObj,
+                          city: e.target.value,
+                        });
+                      },
+                    })}
                     className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
                   />
                 </div>
@@ -336,7 +387,14 @@ const UserForm = ({
                 >
                   Post code
                 </label>
-                <div className="mt-1">
+                <div className="mt-1 relative">
+                  <div>
+                    {validationErrors.zip && (
+                      <span className="text-red-500 text-xs sm:text-sm absolute -top-2 right-0 bg-white rounded-sm px-1 font-gothic">
+                        This field is required
+                      </span>
+                    )}
+                  </div>
                   <input
                     type="text"
                     {...(register("postal-code"),
@@ -345,6 +403,11 @@ const UserForm = ({
                         ? (userObj.postalCode as string)
                         : "",
                       onChange: (e) => {
+                        setValidationErrors({
+                          ...validationErrors,
+                          zip: false,
+                        });
+
                         setUserObj({
                           ...userObj,
                           postalCode: e.target.value,
@@ -353,8 +416,6 @@ const UserForm = ({
                       maxLength: 4,
                       required: true,
                       pattern: "/^[0-9]{4}$/",
-                      validate: (value) =>
-                        value.length === 4 ? undefined : "Invalid post code",
                     })}
                     maxLength={4}
                     id="postal-code"
@@ -371,7 +432,14 @@ const UserForm = ({
                 >
                   Phone
                 </label>
-                <div className="mt-1">
+                <div className="mt-1 relative">
+                  <div>
+                    {validationErrors.phone && (
+                      <span className="text-red-500 text-xs sm:text-sm absolute -top-2 right-0 bg-white rounded-sm px-1 font-gothic">
+                        This field is required
+                      </span>
+                    )}
+                  </div>
                   <input
                     id="tel"
                     {...register("tel")}
@@ -379,6 +447,9 @@ const UserForm = ({
                     type={userObj.phoneNumber ? "text" : "tel"}
                     defaultValue={userObj.phoneNumber as string}
                     onChange={(e) => {
+                      setValidationErrors((validationErrors) => {
+                        return { ...validationErrors, phone: false };
+                      });
                       setUserObj({
                         ...userObj,
                         phoneNumber: e.target.value,
