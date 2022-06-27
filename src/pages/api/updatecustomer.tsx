@@ -32,14 +32,15 @@ export default async function handler(
   sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
   const type = event.type;
   const orderId = event.data.id;
-
+  const dbOrder = await prisma.order.findUnique({
+    where: {
+      id: orderId,
+    },
+  });
+  if (!dbOrder) {
+    return response.status(404).send("Order not found in database 😟");
+  }
   if (event.type === "order.created") {
-    const dbOrder = await prisma.order.findUnique({
-      where: {
-        id: orderId,
-      },
-    });
-
     try {
       if (dbOrder?.orderSuccessEmailSent) {
         return response.status(200).json({
@@ -49,16 +50,37 @@ export default async function handler(
       const getOrder = await ordersApi.retrieveOrder(orderId);
       const orderResult = getOrder?.result?.order;
       console.log(orderResult);
+      const subtotal = `$${(
+        (Number(orderResult?.totalMoney?.amount) -
+          Number(orderResult?.totalMoney?.amount) * 0.1) /
+        100
+      ).toFixed(2)}`;
+      const gst = `$${(
+        (Number(orderResult?.totalMoney?.amount) * 0.1) /
+        100
+      ).toFixed(2)}`;
+      const total = `$${(Number(orderResult?.totalMoney?.amount) / 100).toFixed(
+        2
+      )}`;
       const templateData = {
         order: {
           id: orderResult?.id,
+          subtotal: subtotal,
+          gst: gst,
+          total: total,
           customer: {
             name:
               orderResult?.fulfillments?.[0].shipmentDetails?.recipient
-                ?.displayName || "",
+                ?.displayName ||
+              orderResult?.fulfillments?.[0].pickupDetails?.recipient
+                ?.displayName ||
+              "",
             email:
               orderResult?.fulfillments?.[0].shipmentDetails?.recipient
-                ?.emailAddress || "",
+                ?.emailAddress ||
+              orderResult?.fulfillments?.[0].pickupDetails?.recipient
+                ?.emailAddress ||
+              "",
           },
           lineItems: orderResult?.lineItems?.map((item) => {
             return {
@@ -75,7 +97,7 @@ export default async function handler(
         templateId: "d-4738feab78164214b2d1c6a9229f670f",
         to: "danieldeveney@hotmail.com", // Change to your recipient
         from: "contact@thecheekco.com", // Change to your verified sender
-        subject: "Thanks for your order!",
+        subject: "Thanks! Your order has been receieved!",
         dynamicTemplateData: templateData,
       });
       console.log(result);
@@ -100,62 +122,109 @@ export default async function handler(
           .json({ message: "Failed to send email :(" });
       }
     } catch (error) {
-      console.log(error);
-      return response.status(500).json({ message: "Error" });
+      console.log(error.meta.cause);
+      return response.status(500).json({ message: `${error.meta.cause}` });
     }
   } else if (event.type === "order.updated") {
     console.log("order.updated");
   } else if (event.type === "order.fulfillment.updated") {
-    console.log("order.fulfillment.updated");
-    const newState = JSON.parse(JSON.stringify(request.body)).data.object
-      .order_fulfillment_updated.fulfillment_update.state;
-    if (newState === "OPEN") {
-      try {
-        const getOrder = await ordersApi.retrieveOrder(orderId);
-        const orderResult = getOrder?.result?.order;
-        console.log(orderResult);
-        const templateData = {
-          order: {
-            id: orderResult?.id,
-            customer: {
-              name:
-                orderResult?.fulfillments?.[0].shipmentDetails?.recipient
-                  ?.displayName || "",
-              email:
-                orderResult?.fulfillments?.[0].shipmentDetails?.recipient
-                  ?.emailAddress || "",
+    const oldState =
+      event.data.object.order_fulfillment_updated?.fulfillment_update?.[0]
+        .old_state;
+    const newState =
+      event.data.object.order_fulfillment_updated?.fulfillment_update?.[0]
+        .new_state;
+
+    //STATES = ["PROPOSED" - New, "RESERVED" - In progress, "FULFILLED" - Shipped, "CANCELLED" - Cancelled]
+    if (oldState === "PROPOSED" && newState === "RESERVED") {
+      return response
+        .status(200)
+        .json({ message: "No need to email for In Progress 😄" });
+    }
+    if (oldState === "RESERVED" && newState === "COMPLETED") {
+      if (dbOrder?.orderShippedEmailSent) {
+        return response.status(200).json({
+          message: "Shipment email already sent 👍",
+        });
+      } else {
+        try {
+          const getOrder = await ordersApi.retrieveOrder(orderId);
+          const orderResult = getOrder?.result?.order;
+          const subtotal = `$${(
+            (Number(orderResult?.totalMoney?.amount) -
+              Number(orderResult?.totalMoney?.amount) * 0.1) /
+            100
+          ).toFixed(2)}`;
+          const gst = `$${(
+            (Number(orderResult?.totalMoney?.amount) * 0.1) /
+            100
+          ).toFixed(2)}`;
+          const total = `$${(
+            Number(orderResult?.totalMoney?.amount) / 100
+          ).toFixed(2)}`;
+
+          const templateData = {
+            order: {
+              id: orderResult?.id,
+              carrier: orderResult?.fulfillments?.[0].shipmentDetails?.carrier,
+              trackingNumber:
+                orderResult?.fulfillments?.[0].shipmentDetails?.trackingNumber,
+              subtotal: subtotal,
+              gst: gst,
+              total: total,
+              customer: {
+                name:
+                  orderResult?.fulfillments?.[0].shipmentDetails?.recipient
+                    ?.displayName || "",
+                email:
+                  orderResult?.fulfillments?.[0].shipmentDetails?.recipient
+                    ?.emailAddress || "",
+              },
+              lineItems: orderResult?.lineItems?.map((item) => {
+                return {
+                  name: item?.name,
+                  quantity: item?.quantity,
+                  price: `$${(
+                    Number(item?.basePriceMoney?.amount) / 100
+                  ).toFixed(2)}`,
+                };
+              }),
             },
-            lineItems: orderResult?.lineItems?.map((item) => {
-              return {
-                name: item?.name,
-                quantity: item?.quantity,
-                price: `$${(Number(item?.basePriceMoney?.amount) / 100).toFixed(
-                  2
-                )}`,
-              };
-            }),
-          },
-        };
-        console.log(templateData);
-        sgMail
-          .send({
-            templateId: "d-4738feab78164214b2d1c6a9229f670f",
+          };
+          console.log(templateData);
+          const result = await sgMail.send({
+            templateId: "d-d245cf1d52aa4bc8abf18e2151da6ab4",
             to: "danieldeveney@hotmail.com", // Change to your recipient
             from: "contact@thecheekco.com", // Change to your verified sender
-            subject: "Great news! Your order has been updated!",
+            subject: "Great news! Your order has been shipped!",
             dynamicTemplateData: templateData,
-          })
-          .then((result) => {
-            console.log(result);
-            return;
-          })
-          .catch((error) => {
-            console.log(error);
           });
-      } catch (error) {
-        console.log(error);
+          if (result[0].statusCode === 202) {
+            const updatedOrder = await prisma.order.update({
+              where: {
+                id: orderId,
+              },
+              data: {
+                orderShippedEmailSent: true,
+                orderShippedEmailSentDateTime: new Date(),
+              },
+            });
+            if (updatedOrder) {
+              return response
+                .status(200)
+                .json({ message: "Email sent and DB updated!" });
+            }
+          } else {
+            return response
+              .status(500)
+              .json({ message: "Failed to send email :(" });
+          }
+        } catch (error) {
+          console.log(error.meta.cause);
+          return response.status(500).json({ message: `${error.meta.cause}` });
+        }
       }
+    } else if (oldState === "RESERVED" && newState === "COMPLETED") {
     }
-    console.log(newState);
   }
 }

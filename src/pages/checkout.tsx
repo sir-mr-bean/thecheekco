@@ -533,7 +533,7 @@ export default function checkout() {
                           </dd>
                         </div>
                         <div className="flex justify-between">
-                          <dt>Taxes</dt>
+                          <dt>GST</dt>
                           <dd className="text-text-primary">
                             ${(total * 0.1).toFixed(2)}
                           </dd>
