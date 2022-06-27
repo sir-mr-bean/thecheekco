@@ -355,6 +355,7 @@ export default function checkout() {
                                     <CreditCard
                                       includeInputLabels
                                       buttonProps={{
+                                        isLoading: orderProcessing,
                                         css: {
                                           backgroundColor: "#a75e2f",
                                           fontSize: "14px",
@@ -456,6 +457,7 @@ export default function checkout() {
                                     <CreditCard
                                       includeInputLabels
                                       buttonProps={{
+                                        isLoading: orderProcessing,
                                         css: {
                                           backgroundColor: "#a75e2f",
                                           fontSize: "14px",

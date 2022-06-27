@@ -407,7 +407,6 @@ const UserForm = ({
                           ...validationErrors,
                           zip: false,
                         });
-
                         setUserObj({
                           ...userObj,
                           postalCode: e.target.value,

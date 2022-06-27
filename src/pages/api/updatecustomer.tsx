@@ -8,8 +8,6 @@ import {
   OrderFulfillmentUpdatedUpdate,
 } from "square";
 import { prisma } from "@/backend/utils/prisma";
-import { Order } from "@prisma/client";
-import { SqEvent } from "@square/web-sdk";
 import { SquareEvent } from "@/types/SquareEvent";
 
 const { ordersApi } = new Client({
