@@ -103,7 +103,7 @@ export default function Profile(): JSX.Element {
                   }}
                   className={
                     openTab === 1
-                      ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full select-none no-underline:`
+                      ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full select-none`
                       : ` border-b-text-primary cursor-pointer w-full`
                   }
                 >
@@ -117,7 +117,7 @@ export default function Profile(): JSX.Element {
                   }}
                   className={
                     openTab === 2
-                      ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full select-none no-underline:`
+                      ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full select-none`
                       : ` border-b-text-primary cursor-pointer w-full`
                   }
                 >
@@ -131,7 +131,7 @@ export default function Profile(): JSX.Element {
                   }}
                   className={
                     openTab === 3
-                      ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full select-none no-underline:`
+                      ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full select-none`
                       : ` border-b-text-primary cursor-pointer w-full`
                   }
                 >
@@ -146,7 +146,7 @@ export default function Profile(): JSX.Element {
                   }}
                   className={
                     openTab === 4
-                      ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full select-none no-underline:`
+                      ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full select-none`
                       : ` border-b-text-primary cursor-pointer w-full`
                   }
                 >
