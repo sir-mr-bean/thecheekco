@@ -50,12 +50,7 @@ export const reviewsRouter = createRouter()
     async resolve({ input, ctx }) {
       const { productId, userId, rating, comment } = input;
       const { prisma } = ctx;
-      const product = await prisma.product.findUnique({
-        where: { id: productId },
-      });
-      if (!product) {
-        throw new Error("Product not found");
-      }
+
       const user = await prisma.user.findUnique({
         where: { id: userId },
       });

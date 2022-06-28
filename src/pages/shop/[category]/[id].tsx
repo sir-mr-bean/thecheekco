@@ -9,7 +9,6 @@ import {
   GetStaticPathsContext,
   GetStaticProps,
   GetStaticPropsContext,
-  InferGetStaticPropsType,
 } from "next";
 import { createSSGHelpers } from "@trpc/react/ssg";
 import { appRouter } from "@/backend/router/_app";
@@ -23,10 +22,8 @@ import FavouriteButton from "@/components/FavouriteButton/FavouriteButton";
 import Stars from "@/components/Reviews/Stars";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import NewReview from "@/components/Reviews/NewReview";
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+import NewReview from "@/components/Reviews/NewReview/NewReview";
+import moment from "moment";
 
 const tabs = [
   {
@@ -56,35 +53,6 @@ const faqs = [
   },
   // More FAQs...
 ];
-const license = {
-  href: "#",
-  summary:
-    "For personal and professional use. You cannot resell or redistribute these icons in their original or modified state.",
-  content: `
-    <h4>Overview</h4>
-    
-    <p>For personal and professional use. You cannot resell or redistribute these icons in their original or modified state.</p>
-    
-    <ul role="list">
-    <li>You\'re allowed to use the icons in unlimited projects.</li>
-    <li>Attribution is not required to use the icons.</li>
-    </ul>
-    
-    <h4>What you can do with it</h4>
-    
-    <ul role="list">
-    <li>Use them freely in your personal and professional work.</li>
-    <li>Make them your own. Change the colors to suit your project or brand.</li>
-    </ul>
-    
-    <h4>What you can\'t do with it</h4>
-    
-    <ul role="list">
-    <li>Don\'t be greedy. Selling or distributing these icons in their original or modified state is prohibited.</li>
-    <li>Don\'t be evil. These icons cannot be used on websites or applications that promote illegal or immoral beliefs or activities.</li>
-    </ul>
-  `,
-};
 
 const Markdown = (content) => {
   var converter = new showdown.Converter();
@@ -125,6 +93,7 @@ const Product = () => {
     }>;
   } = WishlistState();
   const router = useRouter();
+  const reviewInputRef = useRef<HTMLTextAreaElement>(null);
   const { data: session, status } = useSession();
   const [rating, setRating] = useState(0);
   const tabFromQuery = tabs.find((tab) => tab.name === router.query?.tab);
@@ -137,7 +106,12 @@ const Product = () => {
   ]);
   const product = productQuery?.find((product) => product.type === "ITEM");
   const image = productQuery?.find((product) => product.type === "IMAGE");
-
+  const utils = trpc.useContext();
+  const reviewMutation = trpc.useMutation(["review.create-review"], {
+    onSuccess(input) {
+      utils.invalidateQueries(["review.fetch-reviews"]);
+    },
+  });
   const { data: reviews, status: reviewQueryStatus } = trpc.useQuery([
     "review.fetch-reviews",
     {
@@ -155,11 +129,7 @@ const Product = () => {
       enabled: !!reviews,
     }
   );
-
   const review = reviews?.find((r) => r.productId === product?.id);
-  const reviewreview = reviews?.filter(
-    (r) => r.productId === product?.id
-  ).length;
 
   useEffect(() => {
     if (reviews) {
@@ -170,6 +140,21 @@ const Product = () => {
       setAverageRating(average);
     }
   }, [reviews]);
+
+  const handleNewReview = () => {
+    if (session) {
+      reviewMutation.mutate({
+        productId: product?.id as string,
+        userId: session.user.id,
+        rating: rating,
+        comment: reviewInputRef.current?.value as string,
+      });
+
+      toast.success("Review submitted for approval!");
+    } else {
+      toast.error("You must be logged in to submit a review");
+    }
+  };
 
   const handleAdd = (product: CatalogObject) => {
     const productImage = productQuery?.find(
@@ -505,7 +490,7 @@ const Product = () => {
                         <div className="mt-6">
                           <h3 className="sr-only">Review data</h3>
 
-                          <dl className="space-y-3">
+                          <dl className="space-y-2">
                             {reviews
                               ?.sort(
                                 (a, b) =>
@@ -518,7 +503,7 @@ const Product = () => {
                                   className="flex items-center text-sm"
                                 >
                                   <dt className="flex-1 flex items-center">
-                                    <span className="w-3 font-medium text-text-primary">
+                                    <span className="w-3 font-medium text-text-primary pr-5 pt-0.5">
                                       {parseFloat(review.rating.toString())}
                                     </span>
                                     <span className="sr-only">
@@ -529,7 +514,6 @@ const Product = () => {
                                       className="ml-1 flex-1 flex items-center"
                                     >
                                       <Stars review={review} />
-
                                       <div className="ml-3 relative flex-1">
                                         <div className="h-3 bg-gray-100 border border-gray-200 rounded-full" />
                                         {parseFloat(review.rating.toString()) >
@@ -565,11 +549,11 @@ const Product = () => {
                           </dl>
                         </div>
 
-                        <div className="mt-10">
+                        <div className="mt-10 border border-text-secondary rounded-md p-3">
                           <h3 className="text-lg font-medium text-text-primary">
                             Share your thoughts
                           </h3>
-                          <p className="mt-1 text-sm text-gray-600">
+                          <p className="mt-1 text-sm text-text-primary">
                             If you’ve used this product, share your thoughts
                             with other customers
                           </p>
@@ -580,18 +564,48 @@ const Product = () => {
                               </Link>
                             </div>
                           ) : (
-                            <div className="border flex flex-col items-center justify-start">
-                              <span>Leave a review</span>
-                              <NewReview
-                                rating={rating}
-                                setRating={setRating}
-                              />
+                            <div className="flex flex-col items-stretch justify-start w-full space-y-3 p-2">
+                              <div className="flex space-x-2 text-sm">
+                                <span>Reviewed by:</span>
+                                <span>{session.user.firstName}</span>
+                              </div>
+                              <div className="">
+                                <NewReview
+                                  rating={rating}
+                                  setRating={setRating}
+                                />
+                              </div>
+                              <div>
+                                <label
+                                  htmlFor="comment"
+                                  className="block text-sm font-medium text-text-primary w-full"
+                                ></label>
+                                <div className="mt-1">
+                                  <textarea
+                                    ref={reviewInputRef}
+                                    rows={4}
+                                    name="comment"
+                                    id="comment"
+                                    className="border focus:ring-text-primary focus:border-text-primary block w-full sm:text-sm border-text-secondary rounded-md p-2"
+                                    defaultValue={""}
+                                  />
+                                </div>
+                              </div>
+                              <div className="flex w-full items-center justify-end">
+                                <button
+                                  onClick={handleNewReview}
+                                  type="button"
+                                  className="w-fit inline-flex items-center px-2.5 py-1.5 border border-text-secondary shadow-sm text-xs font-medium rounded-md bg-button hover:border-black text-white"
+                                >
+                                  Submit
+                                </button>
+                              </div>
                             </div>
                           )}
                         </div>
                       </div>
 
-                      <div className="mt-16 lg:mt-0 lg:col-start-6 lg:col-span-7">
+                      <div className="sm:pt-12 pt-8 lg:mt-0 lg:col-start-6 lg:col-span-7">
                         <h3 className="sr-only">Recent reviews</h3>
 
                         <div className="flow-root">
@@ -603,23 +617,28 @@ const Product = () => {
                               return (
                                 <div key={review.id} className="py-12">
                                   <div className="flex items-center">
-                                    {/* <img src={review.avatarSrc} alt={`${review.author}.`} className="h-12 w-12 rounded-full" /> */}
                                     <div className="ml-4">
-                                      <h4 className="text-sm font-bold text-text-primary">
-                                        {reviewer?.firstName}
-                                      </h4>
+                                      <div className="flex space-x-2 items-center">
+                                        <h4 className="text-sm font-bold text-text-primary">
+                                          {reviewer?.firstName}
+                                        </h4>
+                                        <h5 className="text-xs">
+                                          {moment(
+                                            review.createdAt?.toString()
+                                          ).fromNow()}
+                                        </h5>
+                                      </div>
                                       <div className="mt-1 flex items-center">
                                         <Stars review={review} />
                                       </div>
                                       <p className="sr-only">
                                         {parseFloat(review.rating.toString())}
                                       </p>
-                                      <p>out of 5 stars</p>
                                     </div>
                                   </div>
 
                                   <div
-                                    className="mt-4 space-y-6 text-base italic text-gray-600"
+                                    className="mt-4 space-y-6 text-base italic text-text-primary"
                                     dangerouslySetInnerHTML={{
                                       __html: review.comment,
                                     }}

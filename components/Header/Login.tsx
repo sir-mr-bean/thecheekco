@@ -2,7 +2,6 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { BsChevronDown, BsPerson } from "react-icons/bs";
-import { auth } from "../../utils/firebaseConfig";
 import { useRouter } from "next/router";
 import { trpc } from "@/utils/trpc";
 import { signOut, useSession } from "next-auth/react";
@@ -17,7 +16,7 @@ export default function Login() {
   const currentUser = session?.data?.user;
 
   const handleSignOut = async () => {
-    await auth.signOut();
+    await signOut();
     router.reload();
   };
 

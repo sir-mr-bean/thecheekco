@@ -1,16 +1,9 @@
 import { useRef, useState, useEffect } from "react";
-import {
-  GoogleAuthProvider,
-  FacebookAuthProvider,
-  signInWithPopup,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { auth, db } from "../../utils/firebaseConfig";
+
 import Image from "next/image";
 import Logo from "../../public/images/logo.png";
 import { AiOutlineFacebook } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
-import { query, getDocs, collection, where, addDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import BeatLoader from "react-spinners/BeatLoader";
 import {
@@ -57,23 +50,14 @@ const login = ({ csrfToken, providers }) => {
   };
 
   const handleFacebookLogin = async () => {
-    const facebookProvider = new FacebookAuthProvider();
     try {
-      const res = await signInWithPopup(auth, facebookProvider);
-      const user = res?.user;
-
-      const q = query(collection(db, "users"), where("uid", "==", user.uid));
-
-      const docs = await getDocs(q);
-      if (docs.docs.length === 0) {
-        await addDoc(collection(db, "users"), {
-          uid: user.uid,
-          name: user.displayName,
-          authProvider: "facebook",
-          email: user.email,
-        });
+      await signIn("facebook", {
+        redirect: false,
+      });
+      if (session?.user) {
+        console.log("found user!");
+        router.push("/profile");
       }
-      router.push("/profile");
     } catch (err) {
       console.error(err);
       alert(err.message);
@@ -92,33 +76,7 @@ const login = ({ csrfToken, providers }) => {
     } catch (error) {}
   };
 
-  const logInWithEmailAndPassword = async (email, password) => {
-    try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-      const user = result?.user;
-
-      const q = query(collection(db, "users"), where("uid", "==", user.uid));
-      const docs = await getDocs(q);
-      if (docs.docs.length === 0) {
-        await addDoc(collection(db, "users"), {
-          uid: user.uid,
-          name: user.displayName,
-          authProvider: "local",
-          email: user.email,
-        });
-      }
-      return result;
-    } catch (err) {
-      if (err.message.includes("invalid-email")) {
-        setIncorrectCreds(true);
-        setLoggingIn(false);
-      }
-      if (err.message.includes("wrong-password")) {
-        setIncorrectCreds(true);
-        setLoggingIn(false);
-      }
-    }
-  };
+  const logInWithEmailAndPassword = async (email, password) => {};
 
   return (
     <div className="min-h-full flex text-text-primary">

@@ -1,14 +1,5 @@
-import { auth, db } from "@/utils/firebaseConfig";
 import { Disclosure } from "@headlessui/react";
-import {
-  FacebookAuthProvider,
-  GoogleAuthProvider,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  UserCredential,
-} from "firebase/auth";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import { AiOutlineFacebook } from "react-icons/ai";
@@ -16,6 +7,7 @@ import { FcGoogle } from "react-icons/fc";
 import { BeatLoader } from "react-spinners";
 
 const SignInHeader = () => {
+  const { data: session } = useSession();
   const router = useRouter();
   const emailRef = useRef<HTMLInputElement>(null);
   const passRef = useRef<HTMLInputElement>(null);
@@ -32,63 +24,53 @@ const SignInHeader = () => {
   };
 
   const handleFacebookLogin = async () => {
-    const facebookProvider = new FacebookAuthProvider();
     try {
-      const res = await signInWithPopup(auth, facebookProvider);
-      const user = res.user;
-
-      const q = query(collection(db, "users"), where("uid", "==", user.uid));
-
-      const docs = await getDocs(q);
-      if (docs.docs.length === 0) {
-        await addDoc(collection(db, "users"), {
-          uid: user.uid,
-          name: user.displayName,
-          authProvider: "facebook",
-          email: user.email,
-        });
+      await signIn("facebook", {
+        redirect: false,
+      });
+      if (session?.user) {
+        console.log("found user!");
+        router.push("/profile");
       }
-      router.push("/profile");
-    } catch (e) {
-      const result = (e as Error).message;
-      console.error(result);
-      alert(result);
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
     }
   };
 
-  const handleAccountLogin = async () => {
-    if (!emailRef.current || !passRef.current) return;
-    setLoggingIn(true);
-    try {
-      const result = await logInWithEmailAndPassword(
-        emailRef.current.value,
-        passRef.current.value
-      );
+  // const handleAccountLogin = async () => {
+  //   if (!emailRef.current || !passRef.current) return;
+  //   setLoggingIn(true);
+  //   try {
+  //     const result = await logInWithEmailAndPassword(
+  //       emailRef.current.value,
+  //       passRef.current.value
+  //     );
 
-      setLoggingIn(false);
-    } catch (error) {}
-  };
+  //     setLoggingIn(false);
+  //   } catch (error) {}
+  // };
 
-  const logInWithEmailAndPassword = async (
-    email: string,
-    password: string
-  ): Promise<UserCredential> => {
-    let result;
-    try {
-      result = await signInWithEmailAndPassword(auth, email, password);
-    } catch (e) {
-      const result = (e as Error).message;
-      if (result.includes("invalid-email")) {
-        setIncorrectCreds(true);
-        setLoggingIn(false);
-      }
-      if (result.includes("wrong-password")) {
-        setIncorrectCreds(true);
-        setLoggingIn(false);
-      }
-    }
-    return result as UserCredential;
-  };
+  // const logInWithEmailAndPassword = async (
+  // //   email: string,
+  // //   password: string
+  // // ): Promise<> => {
+  // //   let result;
+  // //   try {
+  // //     result = await signInWithEmailAndPassword(auth, email, password);
+  // //   } catch (e) {
+  // //     const result = (e as Error).message;
+  // //     if (result.includes("invalid-email")) {
+  // //       setIncorrectCreds(true);
+  // //       setLoggingIn(false);
+  // //     }
+  // //     if (result.includes("wrong-password")) {
+  // //       setIncorrectCreds(true);
+  // //       setLoggingIn(false);
+  // //     }
+  // //   }
+  // //   return result as UserCredential;
+  // )
 
   return (
     <>
@@ -233,7 +215,7 @@ const SignInHeader = () => {
 
                         <div>
                           <button
-                            onClick={handleAccountLogin}
+                            //onClick={handleAccountLogin}
                             type="button"
                             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary       "
                           >

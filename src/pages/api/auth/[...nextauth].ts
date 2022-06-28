@@ -1,5 +1,6 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import FacebookProvider from "next-auth/providers/facebook";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient, User } from "@prisma/client";
 import * as jose from "jose";
@@ -21,6 +22,10 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.GOOGLE_NEXT_AUTH_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_NEXT_AUTH_CLIENT_SECRET as string,
       checks: "pkce",
+    }),
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_CLIENT_ID as string,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
     }),
   ],
 

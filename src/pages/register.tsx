@@ -1,30 +1,11 @@
-import { useState, useRef, useEffect } from "react";
-import PlacesAutocomplete from "react-places-autocomplete";
-import { hash, compare } from "bcryptjs";
-import {
-  BsJustifyLeft,
-  BsJustifyRight,
-  BsPersonCheck,
-  BsLock,
-  BsLockFill,
-  BsEnvelope,
-} from "react-icons/bs";
+import { useState, useRef } from "react";
+import { BsPersonCheck, BsLock, BsLockFill, BsEnvelope } from "react-icons/bs";
 import { AiOutlineFacebook } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import Image from "next/image";
-import {
-  createUserWithEmailAndPassword,
-  sendPasswordResetEmail,
-  GoogleAuthProvider,
-  signInWithPopup,
-  FacebookAuthProvider,
-} from "firebase/auth";
-
-import { auth, db } from "../../utils/firebaseConfig";
-import { query, getDocs, collection, where, addDoc } from "firebase/firestore";
 import BeatLoader from "react-spinners/BeatLoader";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 const register = () => {
   const { data: session, status } = useSession();
@@ -112,48 +93,38 @@ const register = () => {
   };
 
   const registerWithEmailAndPassword = async (name, email, password) => {
-    setLoading(true);
-    try {
-      const res = await createUserWithEmailAndPassword(auth, email, password);
-      const user = res.user;
-      await addDoc(collection(db, "users"), {
-        uid: user.uid,
-        name,
-        authProvider: "local",
-        email,
-      });
-      return user;
-    } catch (err) {
-      console.error(err);
-      if (err.message.includes("email-already-in-use")) {
-        setAlreadyRegistered(true);
-      }
-      if (err.message.includes("weak-password")) {
-        setPasswordTooShort(true);
-      }
-    }
-    setLoading(false);
+    // setLoading(true);
+    // try {
+    //   const res = await createUserWithEmailAndPassword(auth, email, password);
+    //   const user = res.user;
+    //   await addDoc(collection(db, "users"), {
+    //     uid: user.uid,
+    //     name,
+    //     authProvider: "local",
+    //     email,
+    //   });
+    //   return user;
+    // } catch (err) {
+    //   console.error(err);
+    //   if (err.message.includes("email-already-in-use")) {
+    //     setAlreadyRegistered(true);
+    //   }
+    //   if (err.message.includes("weak-password")) {
+    //     setPasswordTooShort(true);
+    //   }
+    // }
+    // setLoading(false);
   };
 
   const handleGoogleLogin = async () => {
-    const googleProvider = new GoogleAuthProvider();
-
     try {
-      const res = await signInWithPopup(auth, googleProvider);
-      const user = res.user;
-      console.log(user);
-      const q = query(collection(db, "users"), where("uid", "==", user.uid));
-      console.log(q);
-      const docs = await getDocs(q);
-      if (docs.docs.length === 0) {
-        await addDoc(collection(db, "users"), {
-          uid: user.uid,
-          name: user.displayName,
-          authProvider: "google",
-          email: user.email,
-        });
+      await signIn("google", {
+        redirect: false,
+      });
+      if (session?.user) {
+        console.log("found user!");
+        router.push("/profile");
       }
-      router.push("/profile");
     } catch (err) {
       console.error(err);
       alert(err.message);
@@ -161,23 +132,14 @@ const register = () => {
   };
 
   const handleFacebookLogin = async () => {
-    const facebookProvider = new FacebookAuthProvider();
     try {
-      const res = await signInWithPopup(auth, facebookProvider);
-      const user = res.user;
-      console.log(user);
-      const q = query(collection(db, "users"), where("uid", "==", user.uid));
-      console.log(q);
-      const docs = await getDocs(q);
-      if (docs.docs.length === 0) {
-        await addDoc(collection(db, "users"), {
-          uid: user.uid,
-          name: user.displayName,
-          authProvider: "facebook",
-          email: user.email,
-        });
+      await signIn("facebook", {
+        redirect: false,
+      });
+      if (session?.user) {
+        console.log("found user!");
+        router.push("/profile");
       }
-      router.push("/profile");
     } catch (err) {
       console.error(err);
       alert(err.message);

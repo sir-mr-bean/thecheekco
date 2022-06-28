@@ -12,7 +12,7 @@ const Stars = ({
 }) => {
   const stars: ReactElement[] = [];
   if (review?.rating) {
-    for (let i = 0; i < parseFloat(review.rating.toString()); i++) {
+    for (let i = 0; i < parseInt(review.rating.toString()); i++) {
       stars.push(<BsStarFill key={i} />);
     }
     if (parseFloat(review.rating.toString()) % 1 !== 0) {
@@ -38,7 +38,7 @@ const Stars = ({
     stars.push(<BsStar key={3} />);
     stars.push(<BsStar key={4} />);
   }
-  return <div className="flex">{stars}</div>;
+  return <div className="flex items-center justify-center">{stars}</div>;
 };
 
 export default Stars;
