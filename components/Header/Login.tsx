@@ -79,22 +79,7 @@ export default function Login() {
                         "block px-4 py-2 text-sm"
                       )}
                     >
-                      My Account
-                    </a>
-                  )}
-                </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <a
-                      href="/register"
-                      className={classNames(
-                        active
-                          ? "bg-bg-tan text-text-primary rounded-b-md"
-                          : "text-text-primary",
-                        "block px-4 py-2 text-sm"
-                      )}
-                    >
-                      Join
+                      Sign In
                     </a>
                   )}
                 </Menu.Item>
