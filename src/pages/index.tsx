@@ -1,4 +1,4 @@
-import { RoughNotation, RoughNotationGroup } from "react-rough-notation";
+import { RoughNotation } from "react-rough-notation";
 import { CartState } from "../../context/Cart/Context";
 import { Dispatch, useRef } from "react";
 import Image from "next/image";
@@ -7,7 +7,6 @@ import {
   GetStaticProps,
   GetStaticPropsContext,
   InferGetStaticPropsType,
-  NextPageContext,
 } from "next";
 import {
   BsStarFill,
@@ -25,10 +24,16 @@ import { useInViewport } from "react-in-viewport";
 import { createSSGHelpers } from "@trpc/react/ssg";
 import { appRouter } from "@/backend/router/_app";
 import { inferRouterContext } from "@trpc/server";
-
 import { trpc } from "@/utils/trpc";
 import { CatalogObject } from "square";
 import { CartObject } from "@/types/CartObject";
+
+import accessories from "../../public/images/Homepage/accessories.png";
+import bath from "../../public/images/Homepage/bath.png";
+import gift_sets from "../../public/images/Homepage/gift_sets.png";
+import home_decor from "../../public/images/Homepage/home_decor.png";
+import shower from "../../public/images/Homepage/shower.png";
+import skin_care from "../../public/images/Homepage/skin_care.png";
 
 export default function Home(
   props: InferGetStaticPropsType<typeof getStaticProps>
@@ -239,60 +244,86 @@ export default function Home(
           </div>
         </nav>
 
-        <div className="relative z-0 pt-4 sm:pt-16">
-          <div className="relative flex justify-center items-center text-eco w-fit mx-auto pt-24 sm:pt-20">
-            <div className="absolute -top-56 -left-64 sm:-top-[500px] sm:-left-[750px] lg:-top-[550px]  lg:-left-[750px] overflow-x-hidden opacity-80 z-0">
-              <Image
-                src="/images/ecojuneimage.svg"
-                height={1037}
-                width={1236}
-                objectPosition="bottom"
-                objectFit="contain"
-                className="-rotate-[30deg] scale-[0.35] sm:scale-[0.45] lg:scale-[0.6] z-0"
-              />
-            </div>
-            <div className="absolute -bottom-96 -right-[300px] sm:-bottom-[550px] sm:-right-[570px] lg:-bottom-[550px] lg:-right-[800px] opacity-80 ">
-              <Image
-                src="/images/ecoleaf.svg"
-                height={1083}
-                width={1093}
-                objectPosition="bottom"
-                objectFit="contain"
-                className="-rotate-[90deg] scale-[0.20] sm:scale-[0.25] lg:scale-[0.45] z-0 overflow-x-hidden"
-              />
-            </div>
-            <span className="text-5xl sm:text-6xl lg:text-9xl uppercase font-roboto z-20">
-              The Cheek Co.
-            </span>
-            <div className="absolute top-10 right-0 sm:top-7 lg:-top-2 lg:-right-2 rotate-6 flex">
-              <span className="text-4xl sm:text-5xl lg:text-8xl font-shadows">
-                eco june at
-              </span>
-            </div>
-          </div>
-        </div>
+        <div className="relative z-0 pt-4 font-gothic font-normal text-white">
+          <div className="flex flex-col border mx-4 sm:mx-32 lg:mx-72 min-h-screen space-y-2 sm:space-y-6">
+            <div className="flex items-start justify-center w-full  space-x-2 sm:space-x-6">
+              <div className="flex flex-col items-center justify-start w-full space-y-2 sm:space-y-6 flex-1">
+                <div className="bg-button rounded-lg flex flex-col items-center justify-around p-2 w-full  min-h-full">
+                  <span className="text-2xl font-extralight sm:text-3xl lg:text-6xl text-center lg:px-48">
+                    More Cheek than your bathroom can handle!
+                  </span>
+                  <span className="text-base sm:text-lg lg:text-2xl text-center font-thin pt-1 sm:pt-6 px-0 sm:px-16 lg:px-48 xl:px-56">
+                    Handmade in our shop in Cairns, all our bath & body products
+                    are created by us and tested on us.
+                  </span>
+                </div>
 
-        <div className="flex w-full items-center justify-center space-x-4 py-8 px-4 ">
-          <div className="flex flex-col space-y-4 sm:space-y-8 items-center justify-center w-full">
-            <span className="text-text-primary text-xs sm:text-xl lg:text-2xl">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-              pariatur delectus enim quia, rem repudiandae minima sunt
-              aspernatur non natus corrupti ipsa, dolorum voluptatum, ab
-              molestias totam odio corporis alias!
-            </span>
-            <span className="text-text-primary text-xs sm:text-xl lg:text-2xl">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-              pariatur delectus enim quia
-            </span>
-          </div>
-          <div className="w-full relative sm:p-3 lg:px-32">
-            <Image
-              src={"/images/ADPost.png"}
-              width={200}
-              height={200}
-              layout="responsive"
-              className="absolute top-0 left-0 "
-            />
+                <div className="flex flex-col justify-center items-center border border-text-primary rounded-lg w-full h-40 relative">
+                  <Image
+                    src={skin_care}
+                    alt="Shop Skin Care"
+                    objectFit="cover"
+                    objectPosition="center"
+                    layout="fill"
+                    className="rounded-lg"
+                  />
+                </div>
+                <div className="w-full flex items-center justify-center h-full">
+                  <div className="w-full border border-text-primary rounded-lg h-32 sm:h-48 mr-2 sm:mr-6 relative">
+                    <Image
+                      src={accessories}
+                      alt="Accessories"
+                      objectFit="cover"
+                      objectPosition="center"
+                      layout="fill"
+                      className="rounded-lg"
+                    />
+                  </div>
+                  <div className="w-full border border-text-primary rounded-lg h-32 sm:h-48 relative">
+                    <Image
+                      src={gift_sets}
+                      alt="Shop Gift Sets"
+                      objectFit="cover"
+                      objectPosition="center"
+                      layout="fill"
+                      className="rounded-lg"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="w-1/3 space-y-2 sm:space-y-6 h-full">
+                <div className="flex flex-col justify-center items-center border border-text-primary rounded-lg h-64 sm:h-80 relative">
+                  <Image
+                    src={bath}
+                    alt="Shop Bath"
+                    objectFit="cover"
+                    objectPosition="center"
+                    layout="fill"
+                    className="rounded-lg"
+                  />
+                </div>
+                <div className="flex flex-col justify-center items-center border border-text-primary rounded-lg h-[251px] sm:h-[310px] lg:h-[262px] xl:h-[275px] relative">
+                  <Image
+                    src={shower}
+                    alt="Shop Shower"
+                    objectFit="cover"
+                    objectPosition="center"
+                    layout="fill"
+                    className="rounded-lg h-full w-full"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="w-full border-text-primary border rounded-lg h-36 sm:h-48 lg:h-72 relative">
+              <Image
+                src={home_decor}
+                alt="Shop Home Decor"
+                objectFit="cover"
+                objectPosition="center"
+                layout="fill"
+                className="rounded-lg "
+              />
+            </div>
           </div>
         </div>
 
