@@ -34,12 +34,13 @@ import gift_sets from "../../public/images/Homepage/gift_sets.png";
 import home_decor from "../../public/images/Homepage/home_decor.png";
 import shower from "../../public/images/Homepage/shower.png";
 import skin_care from "../../public/images/Homepage/skin_care.png";
+import bumlogo from "../../public/images/Homepage/bumlogo.png";
 
 export default function Home(
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) {
   const notationRef = useRef(null);
-  const { inViewport, enterCount, leaveCount } = useInViewport(notationRef);
+  const { inViewport } = useInViewport(notationRef);
   const { data: categoriesData } = trpc.useQuery(["all-categories"], {
     context: {
       skipBatch: true,
@@ -58,14 +59,13 @@ export default function Home(
       productImage?: string;
     }>;
   } = CartState();
-  console.log(productsData);
+
   const allNaturalProducts = productsData?.filter(
     (p) =>
       p.itemData?.variations?.[0]?.customAttributeValues?.[
         "Square:a1089928-7880-407e-93f3-08dfe506ac14"
       ]?.booleanValue === true
   );
-  console.log(allNaturalProducts);
 
   //create a typesafe function to return an icon from the react-icons library based on the icon name
   const Icon = (iconName: string) => {
@@ -244,72 +244,88 @@ export default function Home(
           </div>
         </nav>
 
-        <div className="relative z-0 pt-4 font-gothic font-normal text-white">
-          <div className="flex flex-col border mx-4 sm:mx-32 lg:mx-72 min-h-screen space-y-2 sm:space-y-6">
-            <div className="flex items-start justify-center w-full  space-x-2 sm:space-x-6">
+        <div className="relative z-0 pt-4 font-gothic font-normal text-white sm:mx-32 lg:mx-72">
+          <div className="flex flex-col mx-4 h-fit space-y-2 sm:space-y-6">
+            <div className="flex items-start justify-center w-full space-x-2 sm:space-x-6">
               <div className="flex flex-col items-center justify-start w-full space-y-2 sm:space-y-6 flex-1">
-                <div className="bg-button rounded-lg flex flex-col items-center justify-around p-2 w-full  min-h-full">
-                  <span className="text-2xl font-extralight sm:text-3xl lg:text-6xl text-center lg:px-48">
-                    More Cheek than your bathroom can handle!
+                <div className="bg-button rounded-lg flex flex-col items-center justify-center p-2 w-full border-text-primary border">
+                  <div className="flex flex-row items-center justify-center h-14 sm:h-16 py-1">
+                    <span className="text-2xl font-extralight sm:text-3xl lg:text-6xl text-center h-fit">
+                      More
+                    </span>
+                    <div className="block w-20 sm:w-24  lg:w-32">
+                      <Image
+                        src={bumlogo}
+                        width={75}
+                        height={75}
+                        layout="responsive"
+                      />
+                    </div>
+                    <span className="text-2xl font-extralight sm:text-3xl lg:text-6xl text-left h-fit whitespace-nowrap">
+                      than
+                    </span>
+                  </div>
+                  <span className="text-2xl font-extralight sm:text-3xl lg:text-6xl h-fit text-center lg:px-48">
+                    your bathroom can handle!
                   </span>
-                  <span className="text-base sm:text-lg lg:text-2xl text-center font-thin pt-1 sm:pt-6 px-0 sm:px-16 lg:px-48 xl:px-56">
+                  <span className="text-base sm:text-lg lg:text-2xl text-center font-thin pt-1 sm:pt-6 px-0 sm:px-14 lg:px-48 xl:px-56">
                     Handmade in our shop in Cairns, all our bath & body products
                     are created by us and tested on us.
                   </span>
                 </div>
 
-                <div className="flex flex-col justify-center items-center border border-text-primary rounded-lg w-full h-40 relative">
+                <div className="flex flex-col justify-center items-center border border-text-primary rounded-lg w-full h-40 lg:h-64 relative">
                   <Image
                     src={skin_care}
                     alt="Shop Skin Care"
                     objectFit="cover"
                     objectPosition="center"
                     layout="fill"
-                    className="rounded-lg"
+                    className="rounded-md"
                   />
                 </div>
                 <div className="w-full flex items-center justify-center h-full">
-                  <div className="w-full border border-text-primary rounded-lg h-32 sm:h-48 mr-2 sm:mr-6 relative">
+                  <div className="w-full border border-text-primary rounded-lg h-28 sm:h-32 lg:h-64 mr-2 sm:mr-6 relative">
                     <Image
                       src={accessories}
                       alt="Accessories"
                       objectFit="cover"
                       objectPosition="center"
                       layout="fill"
-                      className="rounded-lg"
+                      className="rounded-md"
                     />
                   </div>
-                  <div className="w-full border border-text-primary rounded-lg h-32 sm:h-48 relative">
+                  <div className="w-full border border-text-primary rounded-lg h-28 sm:h-32 lg:h-64 relative">
                     <Image
                       src={gift_sets}
                       alt="Shop Gift Sets"
                       objectFit="cover"
                       objectPosition="center"
                       layout="fill"
-                      className="rounded-lg"
+                      className="rounded-md"
                     />
                   </div>
                 </div>
               </div>
-              <div className="w-1/3 space-y-2 sm:space-y-6 h-full">
-                <div className="flex flex-col justify-center items-center border border-text-primary rounded-lg h-64 sm:h-80 relative">
+              <div className="w-1/3 lg:w-2/5 space-y-2 sm:space-y-6 box-content">
+                <div className="flex flex-col justify-center items-center border border-text-primary rounded-lg h-64 sm:h-80 lg:h-[450px] relative box-content">
                   <Image
                     src={bath}
                     alt="Shop Bath"
                     objectFit="cover"
                     objectPosition="center"
                     layout="fill"
-                    className="rounded-lg"
+                    className="rounded-md"
                   />
                 </div>
-                <div className="flex flex-col justify-center items-center border border-text-primary rounded-lg h-[251px] sm:h-[310px] lg:h-[262px] xl:h-[275px] relative">
+                <div className="flex flex-col justify-center items-center border border-text-primary rounded-lg h-64 sm:h-80 lg:h-[400px] relative box-content">
                   <Image
                     src={shower}
                     alt="Shop Shower"
                     objectFit="cover"
                     objectPosition="center"
                     layout="fill"
-                    className="rounded-lg h-full w-full"
+                    className="rounded-md h-full w-full"
                   />
                 </div>
               </div>
@@ -321,41 +337,13 @@ export default function Home(
                 objectFit="cover"
                 objectPosition="center"
                 layout="fill"
-                className="rounded-lg "
+                className="rounded-md "
               />
             </div>
           </div>
         </div>
 
         <div className="flex flex-col divide-y divide-text-primary px-6 space-y-3">
-          <div className="grid grid-cols-3 content-center gap-40 w-full pb-10 px-20 max-w-7xl mx-auto">
-            {productsData?.slice(0, 3).map((product: CatalogObject) => {
-              const productImage = productsData?.find(
-                (p) =>
-                  p.type === "IMAGE" &&
-                  product.itemData?.imageIds?.includes(p.id)
-              );
-              return (
-                <div
-                  key={product?.id}
-                  className="flex flex-col justify-center items-center text-text-primary "
-                >
-                  <div className="relative w-full h-full">
-                    <Image
-                      src={
-                        productImage?.imageData?.url ||
-                        "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
-                      }
-                      width={200}
-                      height={200}
-                      layout="responsive"
-                      className="mx-auto rounded-md"
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
           <div>
             <div className="flex justify-evenly items-center max-w-3xl mx-auto">
               <div className="relative w-full h-full">

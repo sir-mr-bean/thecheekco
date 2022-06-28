@@ -51,13 +51,17 @@ const UserInfo = ({ session }) => {
       isAdmin: userObj.isAdmin,
     };
 
-    const userUpdate = updateUser.mutate({
-      email: userObj.email,
-      user: updatedUserObj,
-    });
-    if (updateUser?.data?.result === "success") {
-      toast.success("Profile updated successfully");
-    }
+    const userUpdate = updateUser.mutate(
+      {
+        email: userObj.email,
+        user: updatedUserObj,
+      },
+      {
+        onSuccess: (data) => {
+          toast.success("Profile updated successfully");
+        },
+      }
+    );
   };
   //mutation.mutate({ email: d.email, user: d });
 
