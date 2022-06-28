@@ -3,18 +3,13 @@ import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient, User } from "@prisma/client";
-import * as jose from "jose";
 import { setCookie } from "nookies";
+import { prisma } from "@/backend/utils/prisma";
 
-const prisma = new PrismaClient();
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
-  pages: {
-    signIn: "/login",
-    signOut: "/",
-  },
-
+  debug: true,
   providers: [
     GoogleProvider({
       id: "google",
@@ -24,20 +19,21 @@ export const authOptions: NextAuthOptions = {
       checks: "pkce",
     }),
     FacebookProvider({
+      id: "facebook",
+      name: "facebook",
       clientId: process.env.FACEBOOK_CLIENT_ID as string,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
     }),
   ],
-
   session: {
     strategy: "database",
     maxAge: 30 * 24 * 60 * 60, // 30 days
     updateAge: 24 * 60 * 60, // 24 hours
   },
   secret: process.env.NEXTAUTH_SECRET,
-
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
+      console.log("signIn", user, account, profile, email, credentials);
       return true;
     },
 
