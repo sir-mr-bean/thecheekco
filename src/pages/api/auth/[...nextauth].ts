@@ -1,6 +1,7 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
+import EmailProvider from "next-auth/providers/email";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient, User } from "@prisma/client";
 import { setCookie } from "nookies";
@@ -10,6 +11,12 @@ export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
   debug: true,
+  pages: {
+    signIn: "/login",
+    signOut: "/",
+    newUser: "/profile",
+    verifyRequest: "/verify-email",
+  },
   providers: [
     GoogleProvider({
       id: "google",
@@ -24,6 +31,17 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.FACEBOOK_CLIENT_ID as string,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
     }),
+    EmailProvider({
+      server: {
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
+        auth: {
+          user: process.env.DO_NOT_REPLY_EMAIL,
+          pass: process.env.DO_NOT_REPLY_EMAIL_PASS,
+        },
+      },
+      from: process.env.DO_NOT_REPLY_EMAIL,
+    }),
   ],
   session: {
     strategy: "database",
@@ -37,8 +55,9 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
 
-    async session({ session, user }) {
+    async session({ session, user, token }) {
       session.user = user as User;
+      session.token = token;
       return session;
     },
   },

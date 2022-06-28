@@ -29,7 +29,7 @@ export const emailRouter = createRouter().mutation("sendEmail", {
     const client = new SMTPClient({
       user: process.env.EMAILACCOUNT,
       password: process.env.EMAIL_PASS,
-      host: "smtp.mail.us-east-1.awsapps.com",
+      host: process.env.EMAIL_HOST,
       ssl: true,
       port: 465,
     });

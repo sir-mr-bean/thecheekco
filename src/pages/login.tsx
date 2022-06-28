@@ -4,6 +4,7 @@ import Image from "next/image";
 import Logo from "../../public/images/logo.png";
 import { AiOutlineFacebook } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
+
 import { useRouter } from "next/router";
 import BeatLoader from "react-spinners/BeatLoader";
 import {
@@ -66,14 +67,8 @@ const login = ({ csrfToken, providers }) => {
 
   const handleAccountLogin = async () => {
     setLoggingIn(true);
-    try {
-      const result = await logInWithEmailAndPassword(
-        emailRef?.current?.value,
-        passRef?.current?.value
-      );
-
-      setLoggingIn(false);
-    } catch (error) {}
+    await signIn("email", { email: emailRef.current?.value as string });
+    setLoggingIn(false);
   };
 
   const logInWithEmailAndPassword = async (email, password) => {};
@@ -104,7 +99,7 @@ const login = ({ csrfToken, providers }) => {
                   <div className="mt-1 grid grid-cols-2 gap-3">
                     <div>
                       <button
-                        onClick={() => signIn("facebook")}
+                        onClick={() => handleFacebookLogin()}
                         className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium  hover:bg-gray-50 cursor-pointer"
                       >
                         <span className="sr-only">Sign in with Facebook</span>
@@ -157,52 +152,6 @@ const login = ({ csrfToken, providers }) => {
                   </div>
                 </div>
 
-                <div className="space-y-1">
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium "
-                  >
-                    Password
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      ref={passRef}
-                      id="password"
-                      name="password"
-                      type="password"
-                      autoComplete="current-password"
-                      required
-                      className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-text-primary        focus:border-text-primary       sm:text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <input
-                      id="remember-me"
-                      name="remember-me"
-                      type="checkbox"
-                      className="h-4 w-4 text-text-primary focus:ring-text-primary border-gray-300 rounded"
-                    />
-                    <label
-                      htmlFor="remember-me"
-                      className="ml-2 block text-sm "
-                    >
-                      Remember me
-                    </label>
-                  </div>
-
-                  <div className="text-sm">
-                    <a
-                      href="#"
-                      className="font-medium text-text-primary hover:text-text-secondary"
-                    >
-                      Forgot your password?
-                    </a>
-                  </div>
-                </div>
-
                 <div>
                   <button
                     onClick={handleAccountLogin}
@@ -216,7 +165,7 @@ const login = ({ csrfToken, providers }) => {
                         size={8}
                       />
                     ) : (
-                      <>Sign In</>
+                      <>Continue</>
                     )}
                   </button>
                 </div>
