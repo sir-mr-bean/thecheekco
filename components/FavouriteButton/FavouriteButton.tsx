@@ -30,7 +30,7 @@ const FavouriteButton = ({ product, image, styles }) => {
   };
 
   return (
-    <div className="relative scale-75">
+    <div className="relative scale-75 h-10 w-10">
       <Heart isClick={isFavourite} onClick={handleFavourite} styles={styles} />
     </div>
   );

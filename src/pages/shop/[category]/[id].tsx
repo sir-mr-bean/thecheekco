@@ -255,19 +255,21 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
               {/* Product details */}
               <div className="max-w-xl sm:max-w-none border rounded-lg bg-white sm:px-10 flex flex-col justify-around w-full px-4">
                 <div className="flex flex-col space-y-2 items-center justify-center">
-                  <div className="flex space-x-2 items-center">
+                  <div className="flex space-x-2 items-center w-full justify-center">
                     <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl px-3 pt-4">
                       {product?.itemData?.name}
                     </h1>
-                    <FavouriteButton
-                      product={product}
-                      image={image?.imageData?.url}
-                      styles={{
-                        position: "absolute",
-                        top: "-50px",
-                        right: "-150px",
-                      }}
-                    />
+                    <div className="translate-x-20">
+                      <FavouriteButton
+                        product={product}
+                        image={image?.imageData?.url}
+                        styles={{
+                          position: "absolute",
+                          top: "-30px",
+                          right: "-30px",
+                        }}
+                      />
+                    </div>
                   </div>
 
                   <h2 id="information-heading" className="sr-only">
