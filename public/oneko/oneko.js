@@ -57,11 +57,11 @@
   };
   function create() {
     nekoEl.id = "oneko";
-    nekoEl.style.width = "32px";
-    nekoEl.style.height = "32px";
+    nekoEl.style.width = "63px";
+    nekoEl.style.height = "63px";
     nekoEl.style.position = "fixed";
-    nekoEl.style.backgroundImage = "url('../oneko/oneko.gif')";
-    nekoEl.style.imageRendering = "crisp-edges";
+    nekoEl.style.backgroundImage = "url('../oneko/onekolg.gif')";
+    nekoEl.style.imageRendering = "auto";
     nekoEl.style.left = "16px";
     nekoEl.style.top = "16px";
     nekoEl.style.zIndex = "100";
@@ -78,7 +78,7 @@
 
   function setSprite(name, frame) {
     const sprite = spriteSets[name][frame % spriteSets[name].length];
-    nekoEl.style.backgroundPosition = `${sprite[0] * 32}px ${sprite[1] * 32}px`;
+    nekoEl.style.backgroundPosition = `${sprite[0] * 64}px ${sprite[1] * 64}px`;
   }
 
   function resetIdleAnimation() {
