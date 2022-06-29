@@ -1,18 +1,11 @@
-import { useEffect, useState, useContext, forwardRef, Fragment } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import UserInfo from "../../../components/Profile/UserInfo";
 import UserOrders from "../../../components/Profile/UserOrders";
 import UserDashboard from "../../../components/Profile/UserDashboard";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import BeatLoader from "react-spinners/BeatLoader";
-import { GetServerSidePropsContext, NextPage } from "next";
 import { trpc } from "@/utils/trpc";
-import { Customer, Order } from "square";
-import { Session } from "next-auth";
-import { createSSGHelpers } from "@trpc/react/ssg";
-import { appRouter } from "@/backend/router/_app";
-import superjson from "superjson";
-import { inferRouterContext } from "@trpc/server";
 import Head from "next/head";
 
 const tabs = [
@@ -36,12 +29,11 @@ const tabs = [
 
 export default function Profile(): JSX.Element {
   const { data: session, status } = useSession();
-  const user = session?.user;
   const router = useRouter();
   const tabFromQuery = tabs.find((tab) => tab.name === router.query?.tab);
   const [openTab, setOpenTab] = useState(tabFromQuery?.index || 1);
   const customerQuery = trpc.useQuery(
-    ["searchCustomer", { email: session?.user.email as string }],
+    ["search-customer", { email: session?.user.email as string }],
     {
       enabled: !!session,
     }
@@ -69,7 +61,6 @@ export default function Profile(): JSX.Element {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <div className=" min-h-screen">
         <div>
           {status === String("loading") ? (

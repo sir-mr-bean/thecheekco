@@ -46,7 +46,9 @@ export default function Home(
       skipBatch: true,
     },
   });
-  const { data: productsData } = trpc.useQuery(["all-products"]);
+  const { data: productsData } = trpc.useQuery([
+    "square-products.all-products",
+  ]);
   const {
     cart,
     dispatch,
@@ -846,7 +848,7 @@ export const getStaticProps: GetStaticProps = async (
   });
 
   await ssg.fetchQuery("all-categories");
-  await ssg.fetchQuery("all-products");
+  await ssg.fetchQuery("square-products.all-products");
 
   return {
     props: {

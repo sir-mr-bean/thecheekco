@@ -24,7 +24,7 @@ export default function shop(
 ) {
   const categoriesQuery = trpc.useQuery(["all-categories"]);
   const { data: categories } = categoriesQuery;
-  const { data: products } = trpc.useQuery(["all-products"]);
+  const { data: products } = trpc.useQuery(["square-products.all-products"]);
 
   return (
     <>
@@ -161,7 +161,7 @@ export const getStaticProps: GetStaticProps = async (
   });
 
   await ssg.fetchQuery("all-categories");
-  await ssg.fetchQuery("all-products");
+  await ssg.fetchQuery("square-products.all-products");
 
   return {
     props: {

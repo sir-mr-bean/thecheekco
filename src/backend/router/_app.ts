@@ -5,6 +5,9 @@ import { squareRouter } from "./square";
 import { userRouter } from "./user";
 import superjson from "superjson";
 import { reviewsRouter } from "./reviews";
+import { squareOrderRouter } from "./square/square-order";
+import { squarePaymentRouter } from "./square/square-payment";
+import { squareProductRouter } from "./square/square-products";
 
 /**
  * Create your application's root router
@@ -17,6 +20,11 @@ export const appRouter = createRouter()
   .merge(authRouter)
   .merge("user", userRouter)
   .merge(squareRouter)
+  .merge("square-customer.", squareRouter)
+  .merge("square-order.", squareOrderRouter)
+  .merge("square-payment.", squarePaymentRouter)
+  .merge("square-products.", squareProductRouter)
+  .merge("square-categories.", squareRouter)
   .merge("email.", emailRouter)
   .merge("review.", reviewsRouter);
 

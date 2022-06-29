@@ -20,11 +20,19 @@ const PaymentWrapper = ({
   pickup: boolean;
 }) => {
   const router = useRouter();
-  const deliveryOrderMutation = trpc.useMutation(["create-delivery-order"]);
-  const pickupOrderMutation = trpc.useMutation(["create-pickup-order"]);
-  const paymentMutation = trpc.useMutation(["createOrderPayment"]);
-  const completeOrderMutation = trpc.useMutation(["completeOrderPayment"]);
-  const updateOrderMutation = trpc.useMutation(["updateOrder"]);
+  const deliveryOrderMutation = trpc.useMutation([
+    "square-order.create-delivery-order",
+  ]);
+  const pickupOrderMutation = trpc.useMutation([
+    "square-order.create-pickup-order",
+  ]);
+  const paymentMutation = trpc.useMutation([
+    "square-payment.create-order-payment",
+  ]);
+  const completeOrderMutation = trpc.useMutation([
+    "square-payment.complete-order-payment",
+  ]);
+  const updateOrderMutation = trpc.useMutation(["square-order.update-order"]);
   const {
     cart,
     dispatch,

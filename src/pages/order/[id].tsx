@@ -31,7 +31,7 @@ const UserDashboard = () => {
   }, [success]);
 
   const { data: order, status } = trpc.useQuery([
-    "getOrder",
+    "get-order",
     { orderId: id as string },
   ]);
 

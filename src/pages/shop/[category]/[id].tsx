@@ -102,7 +102,7 @@ const Product = () => {
   const [openTab, setOpenTab] = useState(tabFromQuery?.index || 1);
   const [averageRating, setAverageRating] = useState(0);
   const { data: productQuery } = trpc.useQuery([
-    "search-product",
+    "square-products.search-product",
     { productName: router.query?.id as string },
   ]);
   const product = productQuery?.find((product) => product.type === "ITEM");
@@ -676,7 +676,7 @@ export const getStaticPaths = async (context: GetStaticPathsContext) => {
     ctx: context as inferRouterContext<typeof appRouter>,
     transformer: superjson,
   });
-  const productsQuery = await ssg.fetchQuery("all-products");
+  const productsQuery = await ssg.fetchQuery("square-products.all-products");
   return {
     paths: productsQuery
       .filter((i) => i.categoryData?.name)
