@@ -81,7 +81,7 @@ const Admin = () => {
                   />
                 </Disclosure.Button>
                 <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-text-primary border-x border-text-secondary border-b">
-                  {unapprovedReviews && unapprovedReviews.length > 0 && (
+                  {unapprovedReviews && unapprovedReviews.length > 0 ? (
                     <div className="flex flex-col space-y-2 w-full">
                       {unapprovedReviews
                         .filter((review) => review.comment !== "")
@@ -130,6 +130,14 @@ const Admin = () => {
                             </div>
                           );
                         })}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col space-y-2 w-full">
+                      <div className="flex flex-col w-full space-y-4">
+                        <div className="flex space-x-2 items-center justify-center text-lg">
+                          <span>No Unapproved Reviews</span>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </Disclosure.Panel>
