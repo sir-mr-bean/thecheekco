@@ -720,7 +720,6 @@ export const getStaticProps: GetStaticProps = async (
       trpcState: ssg.dehydrate(),
       productQuery: JSON.parse(JSON.stringify(productsQuery)),
     },
-    revalidate: 900,
   };
 };
 
