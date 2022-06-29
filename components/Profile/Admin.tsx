@@ -105,7 +105,8 @@ const Admin = () => {
                                 </div>
                                 <div className="flex space-x-2 items-center justify-center text-sm">
                                   <span>Rating Given:</span>
-                                  <span>{review.rating} stars</span>
+                                  <span>{review.rating.toString()}</span>
+                                  <span className="pl-2">stars</span>
                                 </div>
                               </div>
                               <div className="flex items-center justify-center space-x-2">
