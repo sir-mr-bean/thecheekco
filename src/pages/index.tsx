@@ -248,7 +248,7 @@ export default function Home(
           <div className="flex flex-col mx-4 h-fit space-y-2 sm:space-y-6">
             <div className="flex items-start justify-center w-full space-x-2 sm:space-x-6">
               <div className="flex flex-col items-center justify-start w-full space-y-2 sm:space-y-6 flex-1">
-                <div className="bg-button rounded-lg flex flex-col items-center justify-center p-2 w-full border-text-primary border">
+                <div className="bg-button rounded-lg flex flex-col items-center justify-center p-2 sm:py-6 lg:py-1.5 w-full shadow-slate-500 shadow-sm">
                   <div className="flex flex-row items-center justify-center h-14 sm:h-16 py-1">
                     <span className="text-2xl font-extralight sm:text-3xl lg:text-6xl text-center h-fit">
                       More
@@ -268,13 +268,24 @@ export default function Home(
                   <span className="text-2xl font-extralight sm:text-3xl lg:text-6xl h-fit text-center lg:px-48">
                     your bathroom can handle!
                   </span>
-                  <span className="text-base sm:text-lg lg:text-2xl text-center font-thin pt-1 sm:pt-6 px-0 sm:px-14 lg:px-48 xl:px-56">
+                  <span className="text-base lg:text-2xl text-center font-thin pt-1 sm:pt-6 px-0 sm:px-16 lg:px-48 xl:px-56">
                     Handmade in our shop in Cairns, all our bath & body products
                     are created by us and tested on us.
                   </span>
                 </div>
 
                 <div className="flex flex-col justify-center items-center border border-text-primary rounded-lg w-full h-40 lg:h-64 relative">
+                  <div className="absolute w-full sm:w-1/3 sm:inset-x-1/3 bottom-2 z-10 flex flex-col justify-center items-center">
+                    <div className="py-1 bg-button border border-transparent rounded-md whitespace-nowrap shadow-sm shadow-text-primary">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1 px-2 sm:px-4">
+                          <h3 className="text-xs sm:text-sm lg:text-lg font-medium text-white uppercase">
+                            Skin Care
+                          </h3>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <Image
                     src={skin_care}
                     alt="Shop Skin Care"
@@ -286,6 +297,17 @@ export default function Home(
                 </div>
                 <div className="w-full flex items-center justify-center h-full">
                   <div className="w-full border border-text-primary rounded-lg h-28 sm:h-32 lg:h-64 mr-2 sm:mr-6 relative">
+                    <div className="absolute w-full sm:w-1/3 sm:inset-x-1/3 bottom-2 z-10 flex flex-col justify-center items-center">
+                      <div className="py-1 bg-white bg-opacity-80 border border-transparent rounded-md whitespace-nowrap shadow-sm">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1 px-2 sm:px-4">
+                            <h3 className="text-xs sm:text-sm lg:text-lg font-medium text-text-primary">
+                              Accessories
+                            </h3>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     <Image
                       src={accessories}
                       alt="Accessories"
@@ -296,6 +318,17 @@ export default function Home(
                     />
                   </div>
                   <div className="w-full border border-text-primary rounded-lg h-28 sm:h-32 lg:h-64 relative">
+                    <div className="absolute w-full sm:w-1/3 sm:inset-x-1/3 bottom-2 z-10 flex flex-col justify-center items-center">
+                      <div className="py-1 bg-white bg-opacity-80 border border-transparent rounded-md whitespace-nowrap shadow-sm">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1 px-2 sm:px-4">
+                            <h3 className="text-xs sm:text-sm lg:text-lg font-medium text-text-primary">
+                              Gift Sets
+                            </h3>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     <Image
                       src={gift_sets}
                       alt="Shop Gift Sets"
@@ -309,6 +342,17 @@ export default function Home(
               </div>
               <div className="w-1/3 lg:w-2/5 space-y-2 sm:space-y-6 box-content">
                 <div className="flex flex-col justify-center items-center border border-text-primary rounded-lg h-64 sm:h-80 lg:h-[450px] relative box-content">
+                  <div className="absolute w-full sm:w-1/3 sm:inset-x-1/3 bottom-2 z-10 flex flex-col justify-center items-center">
+                    <div className="py-1 bg-white bg-opacity-80 border border-transparent rounded-md whitespace-nowrap shadow-sm">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1 px-2 sm:px-4">
+                          <h3 className="text-xs sm:text-sm lg:text-lg font-medium text-text-primary">
+                            Bath
+                          </h3>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <Image
                     src={bath}
                     alt="Shop Bath"
@@ -319,6 +363,17 @@ export default function Home(
                   />
                 </div>
                 <div className="flex flex-col justify-center items-center border border-text-primary rounded-lg h-64 sm:h-80 lg:h-[400px] relative box-content">
+                  <div className="absolute w-full sm:w-1/3 sm:inset-x-1/3 bottom-2 z-10 flex flex-col justify-center items-center">
+                    <div className="py-1 bg-white bg-opacity-80 border border-transparent rounded-md whitespace-nowrap shadow-sm">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1 px-2 sm:px-4">
+                          <h3 className="text-xs sm:text-sm lg:text-lg font-medium text-text-primary">
+                            Shower
+                          </h3>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <Image
                     src={shower}
                     alt="Shop Shower"
@@ -331,6 +386,17 @@ export default function Home(
               </div>
             </div>
             <div className="w-full border-text-primary border rounded-lg h-36 sm:h-48 lg:h-72 relative">
+              <div className="absolute w-full sm:w-1/3 sm:inset-x-1/3 bottom-2 z-10 flex flex-col justify-center items-center">
+                <div className="py-1 bg-white bg-opacity-80 border border-transparent rounded-md whitespace-nowrap shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 px-2 sm:px-4">
+                      <h3 className="text-xs sm:text-sm lg:text-lg font-medium text-text-primary">
+                        Home Decor
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <Image
                 src={home_decor}
                 alt="Shop Home Decor"
@@ -459,7 +525,7 @@ export default function Home(
                               />
 
                               <div className="absolute w-full sm:w-1/3 sm:inset-x-1/3 bottom-2 z-10 flex flex-col justify-center items-center">
-                                <div className="sm:px-2 py-2 bg-white bg-opacity-80 border border-transparent rounded-md whitespace-nowrap shadow-sm">
+                                <div className="py-1 bg-white bg-opacity-80 border border-transparent rounded-md whitespace-nowrap shadow-sm">
                                   <div className="flex items-center justify-between">
                                     <div className="flex-1 px-2 sm:px-4">
                                       <h3 className="text-sm sm:text-lg font-medium text-text-primary">

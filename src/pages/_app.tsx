@@ -78,6 +78,7 @@ const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
           `,
             }}
           />
+          <Script src="/oneko/oneko.js" strategy="afterInteractive" />
           <div className="max-w-screen bg-bg-tan bg-cover">
             <Header />
             {Component.auth ? (
