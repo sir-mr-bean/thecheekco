@@ -39,7 +39,10 @@ export default function Profile(): JSX.Element {
     }
   );
   const { data: customerOrders, status: orderQueryStatus } = trpc.useQuery(
-    ["get-order-ids", { customerId: customerQuery?.data?.id as string }],
+    [
+      "square-order.get-order-ids",
+      { customerId: customerQuery?.data?.id as string },
+    ],
     {
       enabled: !!customerQuery.data,
     }
