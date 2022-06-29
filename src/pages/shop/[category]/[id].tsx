@@ -706,7 +706,7 @@ export const getStaticPaths = async (context: GetStaticPathsContext) => {
       },
     }));
   return {
-    paths: paths || [],
+    paths: paths,
     fallback: false,
   };
 };
