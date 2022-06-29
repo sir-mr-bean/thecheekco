@@ -95,7 +95,27 @@ export const reviewsRouter = createRouter()
         where: { id: reviewId },
         data: {
           approved: true,
+          approvedByUserId: ctx.session?.user.email,
         },
+      });
+      return result;
+    },
+  })
+  .mutation("delete-review", {
+    input: z.object({
+      reviewId: z.string(),
+    }),
+    async resolve({ input, ctx }) {
+      const { reviewId } = input;
+      const { prisma } = ctx;
+      const review = await prisma.productReview.findUnique({
+        where: { id: reviewId },
+      });
+      if (!review) {
+        throw new Error("Review not found");
+      }
+      const result = await prisma.productReview.delete({
+        where: { id: reviewId },
       });
       return result;
     },
