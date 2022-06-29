@@ -1,4 +1,11 @@
+import { trpc } from "@/utils/trpc";
+
 const Admin = () => {
+  const { data: unapprovedReviews, status } = trpc.useQuery([
+    "review.fetch-unapproved-reviews",
+  ]);
+  const approveReviewMutation = trpc.useMutation(["review.approve-review"]);
+
   return (
     <div className="flex flex-col space-y-2">
       <div className="bg-white sm:p-3 m-2 sm:m-6 font-gothic sm:w-3/4 sm:mx-auto rounded-md sm:rounded-lg shadow">

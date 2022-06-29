@@ -10,10 +10,20 @@ export const reviewsRouter = createRouter()
       const { productIds } = input;
       const { prisma } = ctx;
       const reviews = await prisma.productReview.findMany({});
-      const productReviews = reviews.filter((review) =>
-        productIds.includes(review.productId)
+      const productReviews = reviews.filter(
+        (review) =>
+          productIds.includes(review.productId) && review.approved === true
       );
       return productReviews;
+    },
+  })
+  .query("fetch-unapproved-reviews", {
+    async resolve({ ctx }) {
+      const { prisma } = ctx;
+      const reviews = await prisma.productReview.findMany({
+        where: { approved: false },
+      });
+      return reviews;
     },
   })
   .query("reviewed-by", {
@@ -63,6 +73,28 @@ export const reviewsRouter = createRouter()
           userId: userId as string,
           rating: rating as number,
           comment: comment as string,
+        },
+      });
+      return result;
+    },
+  })
+  .mutation("approve-review", {
+    input: z.object({
+      reviewId: z.string(),
+    }),
+    async resolve({ input, ctx }) {
+      const { reviewId } = input;
+      const { prisma } = ctx;
+      const review = await prisma.productReview.findUnique({
+        where: { id: reviewId },
+      });
+      if (!review) {
+        throw new Error("Review not found");
+      }
+      const result = await prisma.productReview.update({
+        where: { id: reviewId },
+        data: {
+          approved: true,
         },
       });
       return result;

@@ -4,6 +4,7 @@ import UserInfo from "@/components/Profile/UserInfo";
 import UserOrders from "@/components/Profile/UserOrders";
 import UserDashboard from "@/components/Profile/UserDashboard";
 import Admin from "@/components/Profile/Admin";
+import PaymentMethods from "@/components/Profile/PaymentMethods";
 import { useSession } from "next-auth/react";
 import BeatLoader from "react-spinners/BeatLoader";
 import { trpc } from "@/utils/trpc";
@@ -193,7 +194,7 @@ export default function Profile(): JSX.Element {
                 )}
                 {openTab === 4 && (
                   <>
-                    <UserInfo session={session} />
+                    <PaymentMethods />
                   </>
                 )}
                 {openTab === 5 && (
