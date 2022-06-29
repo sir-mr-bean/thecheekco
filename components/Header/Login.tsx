@@ -74,7 +74,7 @@ export default function Login() {
                       href="/login"
                       className={classNames(
                         active
-                          ? "bg-bg-tan text-text-primary rounded-t-md"
+                          ? "bg-bg-tan text-text-primary rounded-md"
                           : "text-text-primary",
                         "block px-4 py-2 text-sm"
                       )}
