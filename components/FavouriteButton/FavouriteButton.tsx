@@ -26,25 +26,12 @@ const FavouriteButton = ({ product, image, styles }) => {
         item: { product: product, productImage: image },
       });
     }
-    setIsFavourite(!isFavourite);
+    setIsFavourite((isFavourite) => !isFavourite);
   };
 
   return (
     <div className="relative scale-75">
       <Heart isClick={isFavourite} onClick={handleFavourite} styles={styles} />
-      {/* {isFavourite ? (
-        <AiFillHeart
-          size={30}
-          className="text-red-500 cursor-pointer hover:scale-105"
-          onClick={handleFavourite}
-        />
-      ) : (
-        <AiOutlineHeart
-          size={30}
-          className="text-red-500 cursor-pointer hover:scale-105"
-          onClick={handleFavourite}
-        />
-      )} */}
     </div>
   );
 };

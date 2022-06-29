@@ -9,6 +9,7 @@ import {
   GetStaticPathsContext,
   GetStaticProps,
   GetStaticPropsContext,
+  InferGetStaticPropsType,
 } from "next";
 import { createSSGHelpers } from "@trpc/react/ssg";
 import { appRouter } from "@/backend/router/_app";
@@ -25,6 +26,10 @@ import { useSession } from "next-auth/react";
 import NewReview from "@/components/Reviews/NewReview/NewReview";
 import moment from "moment";
 import Head from "next/head";
+
+(BigInt.prototype as any).toJSON = function () {
+  return this.toString();
+};
 
 const tabs = [
   {
@@ -70,7 +75,7 @@ type CartObject = CatalogObject & {
   productImage?: string;
 };
 
-const Product = () => {
+const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const quantity = useRef<HTMLSelectElement>(null);
   const {
     dispatch,
@@ -101,10 +106,12 @@ const Product = () => {
   const currentPath = router.asPath;
   const [openTab, setOpenTab] = useState(tabFromQuery?.index || 1);
   const [averageRating, setAverageRating] = useState(0);
-  const { data: productQuery } = trpc.useQuery([
-    "square-products.search-product",
-    { productName: router.query?.id as string },
-  ]);
+  // const { data: productQuery } = trpc.useQuery([
+  //   "square-products.search-product",
+  //   { productName: router.query?.id as string },
+  // ]);
+  const productQuery = props.productQuery as CatalogObject[];
+
   const product = productQuery?.find((product) => product.type === "ITEM");
   const image = productQuery?.find((product) => product.type === "IMAGE");
   const utils = trpc.useContext();
@@ -696,7 +703,7 @@ export const getStaticPaths = async (context: GetStaticPathsContext) => {
 };
 
 export const getStaticProps: GetStaticProps = async (
-  context: GetStaticPropsContext<{ id: string }>
+  context: GetStaticPropsContext<{ id: string; category: string }>
 ) => {
   const ssg = createSSGHelpers({
     router: appRouter,
@@ -704,8 +711,15 @@ export const getStaticProps: GetStaticProps = async (
     transformer: superjson,
   });
 
+  const productsQuery = await ssg.fetchQuery("square-products.search-product", {
+    productName: context?.params?.id as string,
+  });
+
   return {
-    props: ssg.dehydrate(),
+    props: {
+      trpcState: ssg.dehydrate(),
+      productQuery: JSON.parse(JSON.stringify(productsQuery)),
+    },
     revalidate: 900,
   };
 };

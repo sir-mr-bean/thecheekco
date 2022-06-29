@@ -7,12 +7,15 @@
 A simple Twitter-like animated button. <small>desperately needed it for one of my projects.</small>
 
 ![script preview](img/ss.gif)
-## Installation
-```npm install react-animated-heart```
 
-```yarn add react-animated-heart```
+## Installation
+
+`npm install react-animated-heart`
+
+`yarn add react-animated-heart`
 
 ## Usage
+
 ```javascript
 import React, { useState } from "react";
 import Heart from "react-animated-heart";
@@ -21,11 +24,12 @@ export default function App() {
   const [isClick, setClick] = useState(false);
   return (
     <div className="App">
-      <Heart isClick={isClick} onClick={() => setClick(!isClick)} />
+      <Heart isclick={isClick} onClick={() => setClick(!isClick)} />
     </div>
   );
 }
 ```
 
 ## License
+
 MIT

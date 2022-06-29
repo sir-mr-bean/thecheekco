@@ -3,7 +3,7 @@ import { setup, styled } from "goober";
 
 setup(React.createElement);
 
-const HeartUI = styled("div")(({ isClick, styles }) => [
+const HeartUI = styled("div")(({ isclick, styles }) => [
   {
     width: "100px",
     height: "100px",
@@ -12,7 +12,7 @@ const HeartUI = styled("div")(({ isClick, styles }) => [
     cursor: "pointer",
     display: "inline-block",
   },
-  isClick && {
+  isclick === "true" && {
     backgroundPosition: "-2800px 0px",
     transition: "background 1s steps(28)",
   },
@@ -20,5 +20,11 @@ const HeartUI = styled("div")(({ isClick, styles }) => [
 ]);
 
 export default function Heart({ isClick, onClick, styles }) {
-  return <HeartUI isClick={isClick} onClick={onClick} styles={styles} />;
+  return (
+    <HeartUI
+      isclick={isClick === false ? "false" : "true"}
+      onClick={onClick}
+      styles={styles}
+    />
+  );
 }
