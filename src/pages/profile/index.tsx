@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import UserInfo from "../../../components/Profile/UserInfo";
-import UserOrders from "../../../components/Profile/UserOrders";
-import UserDashboard from "../../../components/Profile/UserDashboard";
+import UserInfo from "@/components/Profile/UserInfo";
+import UserOrders from "@/components/Profile/UserOrders";
+import UserDashboard from "@/components/Profile/UserDashboard";
+import Admin from "@/components/Profile/Admin";
 import { useSession } from "next-auth/react";
 import BeatLoader from "react-spinners/BeatLoader";
 import { trpc } from "@/utils/trpc";
@@ -24,6 +25,10 @@ const tabs = [
   {
     index: 4,
     name: "payment",
+  },
+  {
+    index: 5,
+    name: "admin",
   },
 ];
 
@@ -77,7 +82,13 @@ export default function Profile(): JSX.Element {
           ) : (
             status === String("authenticated") && (
               <div>
-                <div className="max-h-max grid grid-cols-4 items-end border-b border-b-text-secondary text-text-primary font-gothic text-sm sm:text-lg mx-2 sm:mx-8 mt-5 mb-2 justify-between text-center h-11 md:h-16 md:w-2/3 md:mx-auto lg:whitespace-nowrap gap-1 md:gap-3">
+                <div
+                  className={
+                    session?.user?.isAdmin
+                      ? `max-h-max grid grid-cols-5 items-end border-b border-b-text-secondary text-text-primary font-gothic text-sm sm:text-lg mx-2 sm:mx-8 mt-5 mb-2 justify-between text-center h-11 md:h-16 md:w-2/3 md:mx-auto lg:whitespace-nowrap gap-1 md:gap-3`
+                      : `max-h-max grid grid-cols-4 items-end border-b border-b-text-secondary text-text-primary font-gothic text-sm sm:text-lg mx-2 sm:mx-8 mt-5 mb-2 justify-between text-center h-11 md:h-16 md:w-2/3 md:mx-auto lg:whitespace-nowrap gap-1 md:gap-3`
+                  }
+                >
                   <div
                     onClick={() => {
                       setOpenTab(1);
@@ -143,6 +154,24 @@ export default function Profile(): JSX.Element {
                       Payment Methods
                     </span>
                   </div>
+                  {session?.user?.isAdmin && (
+                    <div
+                      onClick={() => {
+                        setOpenTab(5);
+                      }}
+                      className={
+                        openTab === 5
+                          ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full select-none`
+                          : ` border-b-text-primary cursor-pointer w-full`
+                      }
+                    >
+                      <span
+                        className={openTab === 4 ? `font-bold` : `font-normal`}
+                      >
+                        Admin
+                      </span>
+                    </div>
+                  )}
                 </div>
                 {openTab === 1 && (
                   <>
@@ -165,6 +194,11 @@ export default function Profile(): JSX.Element {
                 {openTab === 4 && (
                   <>
                     <UserInfo session={session} />
+                  </>
+                )}
+                {openTab === 5 && (
+                  <>
+                    <Admin />
                   </>
                 )}
               </div>
