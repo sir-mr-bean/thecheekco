@@ -98,7 +98,7 @@ export default function wishlist() {
           <h1 className="text-3xl tracking-tight text-text-primary sm:text-4xl">
             My Wishlist
           </h1>
-          {wishlist.length ? (
+          {wishlist && wishlist.length ? (
             <form className="mt-12 lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16">
               <section aria-labelledby="cart-heading" className="lg:col-span-7">
                 <h2 id="cart-heading" className="sr-only">
