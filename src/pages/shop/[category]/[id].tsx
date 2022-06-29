@@ -688,7 +688,7 @@ export const getStaticPaths = async (context: GetStaticPathsContext) => {
     .filter((i) => i.categoryData?.name)
     .map((product) => ({
       params: {
-        id: product.itemData?.name?.toLowerCase().replace(/\s/g, "-"),
+        id: product.itemData?.name?.replace(/ /g, "-").toLowerCase(),
       },
     }));
   return {
