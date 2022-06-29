@@ -85,7 +85,7 @@ export default function cart() {
             <h1 className="text-3xl tracking-tight text-text-primary sm:text-4xl">
               Shopping Cart
             </h1>
-            {products.length ? (
+            {products && products.length ? (
               <form className="mt-12 lg:flex w-full justify-center items-center lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16">
                 <section aria-labelledby="cart-heading" className="w-full">
                   <h2 id="cart-heading" className="sr-only">
