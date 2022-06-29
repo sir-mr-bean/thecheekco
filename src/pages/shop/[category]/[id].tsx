@@ -684,11 +684,25 @@ export const getStaticPaths = async (context: GetStaticPathsContext) => {
     transformer: superjson,
   });
   const productsQuery = await ssg.fetchQuery("square-products.all-products");
+  const categoryQuery = await ssg.fetchQuery("all-categories");
   const paths = productsQuery
-    .filter((i) => i.categoryData?.name)
+    .filter((product) => product.type === "ITEM")
+    .filter(
+      (product) =>
+        product.itemData?.categoryId &&
+        product.itemData.categoryId !== "" &&
+        product.itemData.categoryId !== undefined &&
+        product.itemData.categoryId !== null &&
+        product.itemData?.name?.replace(/ /g, "-").toLowerCase() !==
+          "venue-hire"
+    )
     .map((product) => ({
       params: {
         id: product.itemData?.name?.replace(/ /g, "-").toLowerCase(),
+        category: categoryQuery
+          ?.find((category) => category.id === product.itemData?.categoryId)
+          ?.categoryData?.name?.replace(/ /g, "-")
+          .toLowerCase(),
       },
     }));
   return {
