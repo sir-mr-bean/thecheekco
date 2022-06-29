@@ -684,26 +684,21 @@ export const getStaticPaths = async (context: GetStaticPathsContext) => {
     transformer: superjson,
   });
   const productsQuery = await ssg.fetchQuery("square-products.all-products");
+  const paths = productsQuery
+    .filter((i) => i.categoryData?.name)
+    .map((product) => ({
+      params: {
+        id: product.itemData?.name?.toLowerCase().replace(/\s/g, "-"),
+      },
+    }));
   return {
-    paths: productsQuery
-      .filter((i) => i.categoryData?.name)
-      .map((item) => ({
-        params: {
-          id: item?.itemData?.name
-            ?.toLowerCase()
-            .replaceAll(" ", "-")
-            .toString(),
-          category:
-            item?.categoryData?.name?.toLowerCase().replaceAll(" ", "-") ||
-            null,
-        },
-      })),
-    fallback: "blocking",
+    paths: paths || [],
+    fallback: false,
   };
 };
 
 export const getStaticProps: GetStaticProps = async (
-  context: GetStaticPropsContext<{ id: string; category: string }>
+  context: GetStaticPropsContext
 ) => {
   const ssg = createSSGHelpers({
     router: appRouter,
@@ -720,6 +715,7 @@ export const getStaticProps: GetStaticProps = async (
       trpcState: ssg.dehydrate(),
       productQuery: JSON.parse(JSON.stringify(productsQuery)),
     },
+    revalidate: 900,
   };
 };
 
