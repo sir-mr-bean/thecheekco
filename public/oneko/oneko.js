@@ -61,7 +61,7 @@
     nekoEl.style.height = "63px";
     nekoEl.style.position = "fixed";
     nekoEl.style.backgroundImage = "url('../oneko/onekolg.gif')";
-    nekoEl.style.imageRendering = "auto";
+    nekoEl.style.imageRendering = "crisp-edges";
     nekoEl.style.left = "16px";
     nekoEl.style.top = "16px";
     nekoEl.style.zIndex = "100";

@@ -20,6 +20,7 @@ specifiers:
   '@types/jsonwebtoken': ^8.5.8
   '@types/node': ^18.0.0
   '@types/react': ^18.0.14
+  '@types/react-lottie': ^1.2.6
   autoprefixer: ^10.4.7
   babel-eslint: ^10.1.0
   bcryptjs: ^2.4.3
@@ -31,6 +32,7 @@ specifiers:
   google-map-react: ^2.1.10
   jose: ^4.8.1
   jsonwebtoken: ^8.5.1
+  lottie-web: ^5.9.5
   moment: ^2.29.3
   next: 12.1.6
   next-auth: ^4.5.0
@@ -49,6 +51,7 @@ specifiers:
   react-html-parser: ^2.0.2
   react-icons: ^4.4.0
   react-in-viewport: ^1.0.0-alpha.28
+  react-lottie: ^1.2.3
   react-places-autocomplete: ^7.3.0
   react-query: ^3.39.1
   react-rough-notation: ^1.0.2
@@ -87,6 +90,7 @@ dependencies:
   google-map-react: 2.1.10_ef5jwxihqo6n7gxfmzogljlgcm
   jose: 4.8.1
   jsonwebtoken: 8.5.1
+  lottie-web: 5.9.5
   moment: 2.29.3
   next: 12.1.6_5ovelu635kdjiiodz74uabvzfu
   next-auth: 4.5.0_5ygs74o5bgk2vdqrahrydzhqe4
@@ -104,6 +108,7 @@ dependencies:
   react-html-parser: 2.0.2_react@18.1.0
   react-icons: 4.4.0_react@18.1.0
   react-in-viewport: 1.0.0-alpha.28_ef5jwxihqo6n7gxfmzogljlgcm
+  react-lottie: 1.2.3_react@18.1.0
   react-places-autocomplete: 7.3.0_react@18.1.0
   react-query: 3.39.1_ef5jwxihqo6n7gxfmzogljlgcm
   react-rough-notation: 1.0.2_ef5jwxihqo6n7gxfmzogljlgcm
@@ -124,6 +129,7 @@ devDependencies:
   '@types/jsonwebtoken': 8.5.8
   '@types/node': 18.0.0
   '@types/react': 18.0.14
+  '@types/react-lottie': 1.2.6
   autoprefixer: 10.4.7_postcss@8.4.14
   babel-eslint: 10.1.0_eslint@8.18.0
   depcheck: 1.4.3
@@ -3376,6 +3382,12 @@ packages:
     resolution: {integrity: sha512-L28j2FcJfSZOnL1WBjDYp2vUHCeIFlyYI/53EwD/rKUBQ7MtUUfbQWiyKJGpcnv4/WgrhWsFKrcPstcAt/J0tQ==}
     dev: false
 
+  /@types/react-lottie/1.2.6:
+    resolution: {integrity: sha512-fvGJHD7SeUdVESHo7f7erRnXkTWaa/6Mo5TB+R0/ieSftKoFspA4sMlF2qMH6BljXI7ehFJbBtrD5bzDxPCkGg==}
+    dependencies:
+      '@types/react': 18.0.14
+    dev: true
+
   /@types/react/18.0.14:
     resolution: {integrity: sha512-x4gGuASSiWmo0xjDLpm5mPb52syZHJx02VKbqUKdLmKtAwIh63XClGsiTI1K6DO5q7ox4xAsQrU+Gl3+gGXF9Q==}
     dependencies:
@@ -5467,12 +5479,13 @@ packages:
 
   /core-js/2.6.12:
     resolution: {integrity: sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==}
-    deprecated: core-js@<3.4 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Please, upgrade your dependencies to the actual version of core-js.
+    deprecated: core-js@<3.23.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Some versions have web compatibility issues. Please, upgrade your dependencies to the actual version of core-js.
     requiresBuild: true
     dev: false
 
   /core-js/3.6.5:
     resolution: {integrity: sha512-vZVEEwZoIsI+vPEuoF9Iqf5H7/M3eeQqWlQnYa8FSKKePuYTf5MWnxb5SDAzCa60b3JBRS5g9b+Dq7b1y/RCrA==}
+    deprecated: core-js@<3.23.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Some versions have web compatibility issues. Please, upgrade your dependencies to the actual version of core-js.
     requiresBuild: true
     dev: false
 
@@ -9655,6 +9668,10 @@ packages:
     dependencies:
       js-tokens: 4.0.0
 
+  /lottie-web/5.9.5:
+    resolution: {integrity: sha512-4GI1jC2+YV9DyTXEz4HnAuaoOMT6yBs9KxG50rsmM7eRjUhyBpbETSVuzHAkamfP+nyNuQ84jhQxDnfjBrJdQg==}
+    dev: false
+
   /lower-case/2.0.2:
     resolution: {integrity: sha512-7fm3l3NAF9WfN6W3JOmf5drwpVqX78JtoGJ3A6W0a6ZnldM41w2fV5D490psKFTpMds8TJse/eHLFFsNHHjHgg==}
     dependencies:
@@ -12045,6 +12062,17 @@ packages:
 
   /react-is/17.0.2:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
+    dev: false
+
+  /react-lottie/1.2.3_react@18.1.0:
+    resolution: {integrity: sha512-qLCERxUr8M+4mm1LU0Ruxw5Y5Fn/OmYkGfnA+JDM/dZb3oKwVAJCjwnjkj9TMHtzR2U6sMEUD3ZZ1RaHagM7kA==}
+    engines: {npm: ^3.0.0}
+    peerDependencies:
+      react: ^0.14.7 || ^15.0.0 || ^16.0.0
+    dependencies:
+      babel-runtime: 6.26.0
+      lottie-web: 5.9.5
+      react: 18.1.0
     dev: false
 
   /react-onclickoutside/6.12.2_ef5jwxihqo6n7gxfmzogljlgcm:

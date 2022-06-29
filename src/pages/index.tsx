@@ -1,6 +1,6 @@
 import { RoughNotation } from "react-rough-notation";
 import { CartState } from "../../context/Cart/Context";
-import { Dispatch, useRef } from "react";
+import { Dispatch, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -27,7 +27,8 @@ import { inferRouterContext } from "@trpc/server";
 import { trpc } from "@/utils/trpc";
 import { CatalogObject } from "square";
 import { CartObject } from "@/types/CartObject";
-
+import lottie from "lottie-web";
+import * as animationData from "../../public/images/stray-cat.json";
 import accessories from "../../public/images/Homepage/accessories.png";
 import bath from "../../public/images/Homepage/bath.png";
 import gift_sets from "../../public/images/Homepage/gift_sets.png";
@@ -40,6 +41,7 @@ export default function Home(
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) {
   const notationRef = useRef(null);
+  const strayCatRef = useRef() as React.MutableRefObject<HTMLInputElement>;
   const { inViewport } = useInViewport(notationRef);
   const { data: categoriesData } = trpc.useQuery(["all-categories"], {
     context: {
@@ -68,6 +70,8 @@ export default function Home(
         "Square:a1089928-7880-407e-93f3-08dfe506ac14"
       ]?.booleanValue === true
   );
+
+  console.log(strayCatRef);
 
   //create a typesafe function to return an icon from the react-icons library based on the icon name
   const Icon = (iconName: string) => {
@@ -107,6 +111,15 @@ export default function Home(
       .replace(/-+$/, "");
   };
 
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+
   const offers = [
     {
       name: "Free Shipping on orders over $100",
@@ -128,38 +141,21 @@ export default function Home(
     },
   ];
 
-  const collections = [
-    {
-      name: "Handcrafted Collection",
-      href: "#",
-      imageSrc:
-        "https://tailwindui.com/img/ecommerce-images/home-page-01-collection-01.jpg",
-      imageAlt:
-        "Brown leather key ring with brass metal loops and rivets on wood table.",
-      description:
-        "Keep your phone, keys, and wallet together, so you can lose everything at once.",
-    },
-    {
-      name: "Organized Desk Collection",
-      href: "#",
-      imageSrc:
-        "https://tailwindui.com/img/ecommerce-images/home-page-01-collection-02.jpg",
-      imageAlt:
-        "Natural leather mouse pad on white desk next to porcelain mug and keyboard.",
-      description:
-        "The rest of the house will still be a mess, but your desk will look great.",
-    },
-    {
-      name: "Focus Collection",
-      href: "#",
-      imageSrc:
-        "https://tailwindui.com/img/ecommerce-images/home-page-01-collection-03.jpg",
-      imageAlt:
-        "Person placing task list card into walnut card holder next to felt carrying case on leather desk pad.",
-      description:
-        "Be more productive than enterprise project managers with a single piece of paper.",
-    },
-  ];
+  useEffect(() => {
+    if (strayCatRef.current) {
+      lottie.loadAnimation({
+        container: strayCatRef.current,
+        renderer: "svg",
+        loop: true,
+        autoplay: false,
+        animationData: require("../../public/images/stray-cat.json"),
+      });
+    }
+
+    return () => {
+      lottie.destroy();
+    };
+  }, []);
 
   const handleAdd = (product: CatalogObject) => {
     const productImage = productsData?.find(
@@ -246,31 +242,32 @@ export default function Home(
           </div>
         </nav>
 
-        <div className="relative z-0 pt-4 font-gothic font-normal text-white sm:mx-32 lg:mx-72">
-          <div className="flex flex-col mx-4 h-fit space-y-2 sm:space-y-6">
+        <div className="relative z-0 pt-4 font-gothic font-normal text-white sm:mx-32 xl:mx-72 ">
+          <div className="flex flex-col mx-4 h-fit space-y-2 sm:space-y-6 w-fit">
             <div className="flex items-start justify-center w-full space-x-2 sm:space-x-6">
-              <div className="flex flex-col items-center justify-start w-full space-y-2 sm:space-y-6 flex-1">
-                <div className="bg-button rounded-lg flex flex-col items-center justify-center p-2 sm:py-6 lg:py-1.5 w-full shadow-slate-500 shadow-sm">
+              <div className="flex flex-col items-center justify-start w-full space-y-2 sm:space-y-6 ">
+                <div className="bg-button rounded-lg flex flex-col items-center justify-center p-2 sm:py-6 lg:py-1.5 w-fit shadow-slate-500 shadow-sm">
                   <div className="flex flex-row items-center justify-center h-14 sm:h-16 py-1">
                     <span className="text-2xl font-extralight sm:text-3xl lg:text-6xl text-center h-fit">
                       More
                     </span>
-                    <div className="block w-20 sm:w-24  lg:w-32">
+                    <div className="block w-16 sm:w-24 lg:w-32">
                       <Image
                         src={bumlogo}
                         width={75}
                         height={75}
                         layout="responsive"
+                        priority
                       />
                     </div>
                     <span className="text-2xl font-extralight sm:text-3xl lg:text-6xl text-left h-fit whitespace-nowrap">
                       than
                     </span>
                   </div>
-                  <span className="text-2xl font-extralight sm:text-3xl lg:text-6xl h-fit text-center lg:px-48">
+                  <span className="text-2xl font-extralight sm:text-3xl lg:text-6xl h-fit text-center xl:px-48">
                     your bathroom can handle!
                   </span>
-                  <span className="text-base lg:text-2xl text-center font-thin pt-1 sm:pt-6 px-0 sm:px-16 lg:px-48 xl:px-56">
+                  <span className="text-base lg:text-2xl text-center font-thin pt-1 sm:pt-6 px-0 sm:px-16 xl:px-12">
                     Handmade in our shop in Cairns, all our bath & body products
                     are created by us and tested on us.
                   </span>
@@ -295,15 +292,16 @@ export default function Home(
                     objectPosition="center"
                     layout="fill"
                     className="rounded-md"
+                    priority
                   />
                 </div>
                 <div className="w-full flex items-center justify-center h-full">
-                  <div className="w-full border border-text-primary rounded-lg h-28 sm:h-32 lg:h-64 mr-2 sm:mr-6 relative">
+                  <div className="w-full border border-text-primary rounded-lg h-32 lg:h-72 mr-2 sm:mr-6 relative">
                     <div className="absolute w-full sm:w-1/3 sm:inset-x-1/3 bottom-2 z-10 flex flex-col justify-center items-center">
-                      <div className="py-1 bg-white bg-opacity-80 border border-transparent rounded-md whitespace-nowrap shadow-sm">
+                      <div className="py-1 bg-button shadow-text-primary border border-transparent rounded-md whitespace-nowrap shadow-sm">
                         <div className="flex items-center justify-between">
                           <div className="flex-1 px-2 sm:px-4">
-                            <h3 className="text-xs sm:text-sm lg:text-lg font-medium text-text-primary">
+                            <h3 className="text-xs sm:text-sm lg:text-lg font-medium text-white">
                               Accessories
                             </h3>
                           </div>
@@ -317,14 +315,15 @@ export default function Home(
                       objectPosition="center"
                       layout="fill"
                       className="rounded-md"
+                      priority
                     />
                   </div>
-                  <div className="w-full border border-text-primary rounded-lg h-28 sm:h-32 lg:h-64 relative">
+                  <div className="w-full border border-text-primary rounded-lg h-32 lg:h-72 relative">
                     <div className="absolute w-full sm:w-1/3 sm:inset-x-1/3 bottom-2 z-10 flex flex-col justify-center items-center">
-                      <div className="py-1 bg-white bg-opacity-80 border border-transparent rounded-md whitespace-nowrap shadow-sm">
+                      <div className="py-1 bg-button shadow-text-primary border border-transparent rounded-md whitespace-nowrap shadow-sm">
                         <div className="flex items-center justify-between">
                           <div className="flex-1 px-2 sm:px-4">
-                            <h3 className="text-xs sm:text-sm lg:text-lg font-medium text-text-primary">
+                            <h3 className="text-xs sm:text-sm lg:text-lg font-medium text-white">
                               Gift Sets
                             </h3>
                           </div>
@@ -338,17 +337,18 @@ export default function Home(
                       objectPosition="center"
                       layout="fill"
                       className="rounded-md"
+                      priority
                     />
                   </div>
                 </div>
               </div>
-              <div className="w-1/3 lg:w-2/5 space-y-2 sm:space-y-6 box-content">
-                <div className="flex flex-col justify-center items-center border border-text-primary rounded-lg h-64 sm:h-80 lg:h-[450px] relative box-content">
+              <div className="w-1/3 space-y-2 sm:space-y-6 box-content">
+                <div className="flex flex-col justify-center items-center border border-text-primary rounded-lg lg:min-w-[250px] h-[260px] sm:h-80 lg:h-[450px] relative box-content">
                   <div className="absolute w-full sm:w-1/3 sm:inset-x-1/3 bottom-2 z-10 flex flex-col justify-center items-center">
-                    <div className="py-1 bg-white bg-opacity-80 border border-transparent rounded-md whitespace-nowrap shadow-sm">
+                    <div className="py-1 bg-button shadow-text-primary border border-transparent rounded-md whitespace-nowrap shadow-sm">
                       <div className="flex items-center justify-between">
                         <div className="flex-1 px-2 sm:px-4">
-                          <h3 className="text-xs sm:text-sm lg:text-lg font-medium text-text-primary">
+                          <h3 className="text-xs sm:text-sm lg:text-lg font-medium text-white">
                             Bath
                           </h3>
                         </div>
@@ -362,14 +362,15 @@ export default function Home(
                     objectPosition="center"
                     layout="fill"
                     className="rounded-md"
+                    priority
                   />
                 </div>
-                <div className="flex flex-col justify-center items-center border border-text-primary rounded-lg h-64 sm:h-80 lg:h-[400px] relative box-content">
+                <div className="flex flex-col justify-center items-center border border-text-primary rounded-lg lg:min-w-[250px] h-[265px] sm:h-80 lg:h-[400px] relative box-content">
                   <div className="absolute w-full sm:w-1/3 sm:inset-x-1/3 bottom-2 z-10 flex flex-col justify-center items-center">
-                    <div className="py-1 bg-white bg-opacity-80 border border-transparent rounded-md whitespace-nowrap shadow-sm">
+                    <div className="py-1 bg-button shadow-text-primary border border-transparent rounded-md whitespace-nowrap shadow-sm">
                       <div className="flex items-center justify-between">
                         <div className="flex-1 px-2 sm:px-4">
-                          <h3 className="text-xs sm:text-sm lg:text-lg font-medium text-text-primary">
+                          <h3 className="text-xs sm:text-sm lg:text-lg font-medium text-white">
                             Shower
                           </h3>
                         </div>
@@ -383,16 +384,17 @@ export default function Home(
                     objectPosition="center"
                     layout="fill"
                     className="rounded-md h-full w-full"
+                    priority
                   />
                 </div>
               </div>
             </div>
             <div className="w-full border-text-primary border rounded-lg h-36 sm:h-48 lg:h-72 relative">
               <div className="absolute w-full sm:w-1/3 sm:inset-x-1/3 bottom-2 z-10 flex flex-col justify-center items-center">
-                <div className="py-1 bg-white bg-opacity-80 border border-transparent rounded-md whitespace-nowrap shadow-sm">
+                <div className="py-1 bg-button shadow-text-primary border border-transparent rounded-md whitespace-nowrap shadow-sm">
                   <div className="flex items-center justify-between">
                     <div className="flex-1 px-2 sm:px-4">
-                      <h3 className="text-xs sm:text-sm lg:text-lg font-medium text-text-primary">
+                      <h3 className="text-xs sm:text-sm lg:text-lg font-medium text-white">
                         Home Decor
                       </h3>
                     </div>
@@ -406,155 +408,68 @@ export default function Home(
                 objectPosition="center"
                 layout="fill"
                 className="rounded-md "
+                priority
               />
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col divide-y divide-text-primary px-6 space-y-3">
-          <div>
-            <div className="flex justify-evenly items-center max-w-3xl mx-auto">
-              <div className="relative w-full h-full">
-                <Image
-                  src={"/images/ECO1.png"}
-                  width={450}
-                  height={415}
-                  layout="responsive"
-                  objectFit="contain"
-                  className="mx-auto"
-                />
-              </div>
-              <div className="relative w-full">
-                <Image
-                  src={"/images/ECO2.png"}
-                  width={450}
-                  height={415}
-                  layout="responsive"
-                  className="mx-auto "
-                />
-              </div>
-              <div className="relative w-full h-full">
-                <Image
-                  src={"/images/ECO3.png"}
-                  width={450}
-                  height={415}
-                  layout="responsive"
-                  className="mx-auto"
-                />
-              </div>
-              <div className="relative w-full h-full">
-                <Image
-                  src={"/images/ECO4.png"}
-                  width={450}
-                  height={415}
-                  layout="responsive"
-                  className="mx-auto"
-                />
-              </div>
-              <div className="relative w-full h-full">
-                <Image
-                  src={"/images/ECO5.png"}
-                  width={450}
-                  height={415}
-                  layout="responsive"
-                  className="mx-auto"
-                />
+        <div className="bg-paper-bg bg-cover flex flex-col justify-center items-center w-full flex-1 shadow-3xl shadow-slate-600 my-10 font-gothic">
+          <div className="flex flex-col items-center justify-center text-text-primary">
+            <span className="text-2xl sm:text-4xl mt-4 ">introducing</span>
+            <span className="text-4xl sm:text-6xl font-semibold mt-4">
+              the cheeky box.
+            </span>
+            <div className="flex flex-col-reverse sm:flex-row w-full items-start justify-center mt-4 space-x-10">
+              <div
+                className="w-4/5 sm:w-1/3 mx-auto"
+                ref={strayCatRef ? strayCatRef : ""}
+                onMouseEnter={() => lottie.play()}
+                onMouseLeave={() => lottie.pause()}
+              />
+              <div className="flex flex-col items-start justify-center sm:w-2/3 text-xl w-3/4">
+                <span className="sm:w-4/5 pt-10">
+                  A limited run monthly mystery subscription box designed to
+                  keep you & your bathroom plastic free and fabulous without any
+                  stress. Each month will contain an assortment of bathroom
+                  goodies to keep your regulars needs satisfied with a generous
+                  splash of delicous seasonal goodness.
+                </span>
+                <span className="pt-12 pb-2">
+                  each month will contain (but of course will not be limited
+                  to):
+                </span>
+                <ul className="pl-5 text-lg sm:text-xl">
+                  <li className="text-text-secondary  list-disc">
+                    shampoo & conditioner bar{" "}
+                  </li>
+                  <li className="text-text-secondary list-disc">
+                    limited edition soap bar
+                  </li>
+                  <li className="text-text-secondary list-disc">
+                    skin care product
+                  </li>
+                  <li className="text-text-secondary list-disc">
+                    bathroom / beauty accessory
+                  </li>
+                  <li className="text-text-secondary list-disc">
+                    bath soak or shower steamer
+                  </li>
+                </ul>
+                <span></span>
+                <div className="py-6 flex items-center justify-center mx-auto sm:mx-0">
+                  <button className="bg-button shadow-sm shadow-text-secondary py-1 px-4 rounded-md border border-transparent hover:border-black ">
+                    <span className="uppercase text-white text-sm">
+                      Secure your cheeky box today
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         <main>
-          {/* Category section */}
-          <section
-            aria-labelledby="category-heading"
-            className="bg-paper-bg bg-cover flex flex-col justify-center items-center w-full flex-1"
-          >
-            <div className="bg-white bg-opacity-30 bg-cover relative w-full h-full ">
-              <div className="px-4 sm:px-6 sm:flex sm:items-center sm:justify-between lg:px-8 xl:px-0 w-full pt-6 sm:my-7">
-                <h2
-                  id="category-heading"
-                  className="text-xl font-extrabold tracking-tight text-text-primary sm:text-3xl lg:text-4xl"
-                >
-                  Shop by Category
-                </h2>
-                <a
-                  href="/shop"
-                  className="hidden text-sm sm:text-lg font-semibold text-text-primary hover:text-text-secondary sm:block"
-                >
-                  Browse all categories<span aria-hidden="true"> &rarr;</span>
-                </a>
-              </div>
-              <div className="flex flex-wrap px-4 sm:mx-auto items-center justify-center w-full">
-                {categoriesData &&
-                  productsData &&
-                  categoriesData
-                    .filter(
-                      (item: CatalogObject) =>
-                        item.itemData?.name?.charAt(0) != "_"
-                    )
-                    .map((category) => {
-                      const randomProduct = productsData.find((product) => {
-                        return product.itemData?.categoryId === category.id;
-                      });
-                      const productImage = productsData?.find(
-                        (p) =>
-                          p.type === "IMAGE" &&
-                          randomProduct?.itemData?.imageIds?.includes(p.id)
-                      );
-                      return (
-                        <Link
-                          key={category?.categoryData?.name}
-                          href={`/shop/${category.itemData?.name}`}
-                          as={`/shop/${slugify(
-                            category?.categoryData?.name as string
-                          )}`}
-                          className="relative overflow-hidden"
-                        >
-                          <div className="flex flex-wrap justify-center items-center m-4 md:m-8  cursor-pointer">
-                            <div className="relative h-32 w-32 sm:h-64 sm:w-64">
-                              <Image
-                                priority={true}
-                                src={
-                                  productImage?.imageData?.url ||
-                                  "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
-                                }
-                                width={100}
-                                height={100}
-                                objectFit="cover"
-                                layout="responsive"
-                                className="rounded-md"
-                              />
-
-                              <div className="absolute w-full sm:w-1/3 sm:inset-x-1/3 bottom-2 z-10 flex flex-col justify-center items-center">
-                                <div className="py-1 bg-white bg-opacity-80 border border-transparent rounded-md whitespace-nowrap shadow-sm">
-                                  <div className="flex items-center justify-between">
-                                    <div className="flex-1 px-2 sm:px-4">
-                                      <h3 className="text-sm sm:text-lg font-medium text-text-primary">
-                                        {category?.categoryData?.name}
-                                      </h3>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </Link>
-                      );
-                    })}
-              </div>
-
-              <div className="px-4 sm:hidden">
-                <a
-                  href="/shop"
-                  className="flex w-full items-center justify-end my-2 text-sm font-semibold text-text-primary hover:text-text-secondary"
-                >
-                  Browse all categories<span aria-hidden="true"> &rarr;</span>
-                </a>
-              </div>
-            </div>
-          </section>
-
           <section>
             <div className="flex flex-col w-full sm:p-6 items-center justify-center pt-32">
               <div className="flex items-center justify-center pt-8">
@@ -632,7 +547,7 @@ export default function Home(
             className="mt-16 sm:mt-24 bg-paper-bg bg-cover bg-center"
           >
             <div className="relative overflow-hidden">
-              <div className="relative bg-white bg-opacity-30 py-16 sm:py-20 ">
+              <div className="relative bg-button shadow-text-primary bg-opacity-30 py-16 sm:py-20 ">
                 <div className="relative sm:space-x-5 flex flex-col sm:flex-row items-center justify-between sm:justify-center text-center sm:mx-10">
                   <h2
                     id="social-impact-heading"
@@ -824,7 +739,7 @@ export default function Home(
                   </p>
                   <a
                     href="#"
-                    className="mt-8 w-full block bg-white border border-transparent rounded-md py-3 px-8 text-base font-medium text-text-secondary hover:bg-gray-100 sm:w-auto"
+                    className="mt-8 w-full block bg-button shadow-text-primary border border-transparent rounded-md py-3 px-8 text-base font-medium text-text-secondary hover:bg-gray-100 sm:w-auto"
                   >
                     Shop Focus
                   </a>

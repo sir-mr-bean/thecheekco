@@ -86,8 +86,8 @@ export default function Profile(): JSX.Element {
                 <div
                   className={
                     session?.user?.isAdmin
-                      ? `max-h-max grid grid-cols-5 items-end border-b border-b-text-secondary text-text-primary font-gothic text-xs sm:text-lg mx-2 sm:mx-8 mt-5 mb-2 justify-between text-center h-16 md:w-2/3 md:mx-auto lg:whitespace-nowrap gap-1 md:gap-3`
-                      : `max-h-max grid grid-cols-4 items-end border-b border-b-text-secondary text-text-primary font-gothic text-sm sm:text-lg mx-2 sm:mx-8 mt-5 mb-2 justify-between text-center h-16 md:w-2/3 md:mx-auto lg:whitespace-nowrap gap-1 md:gap-3`
+                      ? `select-none max-h-max grid grid-cols-5 items-end border-b border-b-text-secondary text-text-primary font-gothic text-xs sm:text-lg mx-2 sm:mx-8 mt-5 mb-2 justify-between text-center h-16 md:w-2/3 md:mx-auto lg:whitespace-nowrap gap-1 md:gap-3`
+                      : `select-none max-h-max grid grid-cols-4 items-end border-b border-b-text-secondary text-text-primary font-gothic text-sm sm:text-lg mx-2 sm:mx-8 mt-5 mb-2 justify-between text-center h-16 md:w-2/3 md:mx-auto lg:whitespace-nowrap gap-1 md:gap-3`
                   }
                 >
                   <div
