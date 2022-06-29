@@ -31,13 +31,13 @@ const UserDashboard = () => {
   }, [success]);
 
   const { data: order, status } = trpc.useQuery([
-    "get-order",
+    "square-order.get-order",
     { orderId: id as string },
   ]);
 
   const { data: productsQuery } = trpc.useQuery(
     [
-      "search-products-by-ids",
+      "square-products.search-products-by-ids",
       {
         productIds: order?.lineItems?.map((i) => i.catalogObjectId as string),
       },
