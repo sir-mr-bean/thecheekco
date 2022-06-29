@@ -21,6 +21,7 @@ import CACForm from "@/components/Checkout/CACForm";
 import SimpleMap from "@/components/Checkout/Map/GoogleMaps";
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
 import Marker from "@/components/Checkout/Map/Marker";
+import Head from "next/head";
 
 export type validationErrors = {
   name: boolean;
@@ -123,10 +124,6 @@ export default function checkout() {
     setTotal(total);
   }, [cart]);
 
-  useEffect(() => {
-    console.log(userObj.firstName);
-  }, [userObj]);
-
   const handlePickupCustomerInfoComplete = (userObject: typeof userObj) => {
     if (pickupTermsAccepted) {
       if (userObject.email !== "" && userObject.phoneNumber !== "") {
@@ -141,7 +138,6 @@ export default function checkout() {
   };
 
   const handleCustomerInfoComplete = () => {
-    console.log(userObj);
     if (termsAccepted) {
       if (
         userObj.firstName !== "" &&
@@ -154,51 +150,36 @@ export default function checkout() {
         setCustomerInfoSet(true);
       } else {
         toast.error("Please fill out all fields");
-        console.log(validationErrors);
         if (userObj.firstName === "") {
-          console.log("first name is empty");
           setValidationErrors((validationErrors) => {
-            console.log("setting name to true");
             return { ...validationErrors, name: true };
           });
         }
         if (userObj.streetAddress === "") {
-          console.log("street address is empty");
           setValidationErrors((validationErrors) => {
-            console.log("setting street address to true");
             return { ...validationErrors, streetAddress: true };
           });
         }
         if (userObj.city === "") {
-          console.log("city is empty");
           setValidationErrors((validationErrors) => {
-            console.log("setting city to true");
             return { ...validationErrors, city: true };
           });
         }
         if (userObj.postalCode === "") {
-          console.log("postal code is empty");
           setValidationErrors((validationErrors) => {
-            console.log("setting postal code to true");
             return { ...validationErrors, zip: true };
           });
         }
         if (userObj.phoneNumber === "") {
-          console.log("phone number is empty");
           setValidationErrors((validationErrors) => {
-            console.log("setting phone number to true");
             return { ...validationErrors, phone: true };
           });
         }
         if (userObj.email === "") {
-          console.log("email is empty");
           setValidationErrors((validationErrors) => {
-            console.log("setting email to true");
             return { ...validationErrors, email: true };
           });
         }
-
-        console.log(validationErrors);
       }
     } else {
       toast.error("You must accept the terms and conditions to continue.");
@@ -209,9 +190,7 @@ export default function checkout() {
   };
 
   const handleShippingInfoComplete = () => {
-    console.log("1");
     if (sameAsCustomerInfo) {
-      console.log("2");
       if (termsAccepted) {
         if (
           userObj.firstName &&
@@ -222,7 +201,6 @@ export default function checkout() {
           userObj.phoneNumber &&
           userObj.email
         ) {
-          console.log("3");
           setShippingInfoSet(true);
         } else {
           toast.error("Please fill out all fields");
@@ -266,6 +244,14 @@ export default function checkout() {
 
   return (
     <>
+      <Head>
+        <title>The Cheek Co. - Checkout</title>
+        <meta
+          name="description"
+          content="More than just amazing bath and skin care products. Ethically sourced handmade in Australia, cruelty free, vegan."
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <SuccessModal
         orderComplete={orderComplete}
         setOrderComplete={setOrderComplete}

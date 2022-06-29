@@ -24,6 +24,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import NewReview from "@/components/Reviews/NewReview/NewReview";
 import moment from "moment";
+import Head from "next/head";
 
 const tabs = [
   {
@@ -213,6 +214,14 @@ const Product = () => {
 
   return (
     <>
+      <Head>
+        <title>The Cheek Co. - {product?.itemData?.name}</title>
+        <meta
+          name="description"
+          content="More than just amazing bath and skin care products. Ethically sourced handmade in Australia, cruelty free, vegan."
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       {product && (
         <div className="font-gothic text-text-primary">
           <div className="mx-auto pt-10 pb-16 px-4 sm:pb-12 sm:px-6 lg:max-w-5xl lg:px-8 space-y-6 ">

@@ -25,10 +25,6 @@ export default function Document() {
           rel="stylesheet"
         />
         <link
-          href="https://embed.prod.simpletix.com/assets/widget/widget.min.css"
-          rel="stylesheet"
-        />
-        <link
           href="https://fonts.googleapis.com/css2?family=Beth+Ellen&display=swap"
           rel="stylesheet"
         />
@@ -44,7 +40,6 @@ export default function Document() {
           href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap"
           rel="stylesheet"
         />
-        <script src="https://embed.prod.simpletix.com/assets/widget/widget.min.js" />
       </Head>
       <body>
         <Main />

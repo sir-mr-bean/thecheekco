@@ -11,7 +11,6 @@ const { ordersApi, paymentsApi } = new Client({
 });
 
 export default async function handler(req, res) {
-  console.log(req.body);
   if (req.method === "POST") {
     const { result } = await paymentsApi.createPayment({
       idempotencyKey: randomUUID(),

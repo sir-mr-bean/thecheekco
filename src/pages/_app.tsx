@@ -9,12 +9,7 @@ import CartContext from "@/context/Cart/Context";
 import WishListContext from "@/context/Wishlist/Context";
 import { useEffect } from "react";
 import { withTRPC } from "@trpc/next";
-import {
-  getCsrfToken,
-  getSession,
-  SessionProvider,
-  useSession,
-} from "next-auth/react";
+import { getSession, SessionProvider, useSession } from "next-auth/react";
 import { AppRouter } from "@/backend/router/_app";
 import superjson from "superjson";
 import Footer from "@/components/Footer/Footer";
@@ -23,7 +18,6 @@ import { httpLink } from "@trpc/client/links/httpLink";
 import { splitLink } from "@trpc/client/links/splitLink";
 import { useRouter } from "next/router";
 import Script from "next/script";
-import { AppProps } from "next/app";
 
 const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
   const router = useRouter();
@@ -52,7 +46,7 @@ const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
       <CartContext>
         <WishListContext>
           <Head>
-            <title>The Cheek Co. - Bath and Body </title>
+            <title>The Cheek Co. - Homemade Bath and Body</title>
             <meta
               name="description"
               content="More than just amazing bath and skin care products. Ethically sourced handmade in Australia, cruelty free, vegan."

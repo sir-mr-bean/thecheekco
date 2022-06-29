@@ -11,7 +11,6 @@ const { ordersApi } = new Client({
 });
 
 export default async function handler(req, res) {
-  console.log(req.body.order.locationId);
   if (req.method === "POST") {
     const { result } = await ordersApi.createOrder({
       idempotencyKey: randomUUID(),

@@ -7,6 +7,7 @@ import Image from "next/image";
 import { CartObject } from "@/types/CartObject";
 import toast from "react-hot-toast";
 import { WishlistObject } from "@/types/WishlistObject";
+import Head from "next/head";
 
 export default function wishlist() {
   const { wishlist, dispatch } = WishlistState();
@@ -18,7 +19,6 @@ export default function wishlist() {
   }, []);
 
   const handleAddToCart = (product: WishlistObject, image: string) => {
-    console.log(product);
     dispatchCart({
       type: "ADD_TO_CART",
       item: product.product,
@@ -83,7 +83,16 @@ export default function wishlist() {
 
   const products = wishlist;
   return (
-    mounted && (
+    <>
+      <Head>
+        <title>The Cheek Co. - My Wishlist</title>
+        <meta
+          name="description"
+          content="More than just amazing bath and skin care products. Ethically sourced handmade in Australia, cruelty free, vegan."
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      mounted && (
       <div className="bg-white">
         <div className="max-w-2xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
           <h1 className="text-3xl tracking-tight text-text-primary sm:text-4xl">
@@ -213,6 +222,7 @@ export default function wishlist() {
           )}
         </div>
       </div>
-    )
+      )
+    </>
   );
 }

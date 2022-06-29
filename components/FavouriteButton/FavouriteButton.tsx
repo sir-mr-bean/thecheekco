@@ -19,10 +19,8 @@ const FavouriteButton = ({ product, image, styles }) => {
 
   const handleFavourite = () => {
     if (isFavourite) {
-      console.log("removing to wishlist");
       dispatch({ type: "REMOVE_FROM_WISHLIST", item: { product: product } });
     } else {
-      console.log("adding to wishlist");
       dispatch({
         type: "ADD_TO_WISHLIST",
         item: { product: product, productImage: image },

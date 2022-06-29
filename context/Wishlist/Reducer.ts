@@ -35,7 +35,6 @@ export const wishListReducer = (
   state: CountState[] = wishListInitializer(),
   action: WishlistAction
 ) => {
-  console.log("WishlistReducer: ", action);
   switch (action.type) {
     case WishlistActionKind.ADD_TO_WISHLIST:
       if (state.find((item) => item?.product?.id === action.item.product.id)) {
@@ -43,8 +42,6 @@ export const wishListReducer = (
       }
       return [...state, action.item];
     case WishlistActionKind.REMOVE_FROM_WISHLIST:
-      console.log("WishlistReducerAction: ", action);
-      console.log("WishlistReducerState: ", state);
       return state.filter((item) => {
         return item?.product?.id != action.item.product.id;
       });

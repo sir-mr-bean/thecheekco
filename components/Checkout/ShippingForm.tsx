@@ -171,7 +171,6 @@ const ShippingForm = ({
               >
                 apiKey={`${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
                 onPlaceSelected={(place) => {
-                  console.log(place);
                   const apartmentOrUnit = place?.address_components?.find(
                     (component) => component.types.includes("subpremise")
                   );

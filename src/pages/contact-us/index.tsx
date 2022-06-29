@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import validator from "validator";
 import { useForm } from "react-hook-form";
 import { trpc } from "@/utils/trpc";
+import Head from "next/head";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -24,7 +25,6 @@ const contactus = () => {
   const emailMutation = trpc.useMutation(["email.sendEmail"]);
 
   const handleFormSubmit = async (d) => {
-    console.log(d);
     const { firstName, lastName, company, email, phoneNumber, message } = d;
 
     emailMutation.mutate(
@@ -38,7 +38,6 @@ const contactus = () => {
       },
       {
         onSuccess: (data) => {
-          console.log(data);
           setEmailSent(true);
           setTimeout(() => {
             router.push("/");
@@ -49,6 +48,14 @@ const contactus = () => {
   };
   return (
     <>
+      <Head>
+        <title>The Cheek Co. - Contact Us</title>
+        <meta
+          name="description"
+          content="More than just amazing bath and skin care products. Ethically sourced handmade in Australia, cruelty free, vegan."
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       {!emailSent ? (
         <div className="bg-white mt-16 mx-1 md:mx-16 rounded-md shadow-sm shadow-text-primary font-gothic text-text-primary">
           <div className="mx-auto px-3 pt-4 pb-16 sm:px-6 sm:pt-8 sm:pb-24 lg:px-8 xl:px-2 xl:pt-14">

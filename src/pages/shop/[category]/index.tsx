@@ -21,6 +21,7 @@ import { trpc } from "@/utils/trpc";
 import { Dispatch } from "react";
 import FavouriteButton from "@/components/FavouriteButton/FavouriteButton";
 import Stars from "@/components/Reviews/Stars";
+import Head from "next/head";
 
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
@@ -65,8 +66,6 @@ const CategoryPage = (
         .map((product) => product.id) as string[],
     },
   ]);
-
-  console.log(reviews);
 
   const handleAdd = (product: CartObject) => {
     const productImage = products?.find(
@@ -128,6 +127,14 @@ const CategoryPage = (
 
   return (
     <>
+      <Head>
+        <title>The Cheek Co. - Shop {currentCategoryName}</title>
+        <meta
+          name="description"
+          content="More than just amazing bath and skin care products. Ethically sourced handmade in Australia, cruelty free, vegan."
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <div className="max-w-screen min-h-screen border-2 flex justify-center">
         <div className="py-4 px-4 sm:py-10 sm:px-6 lg:px-8 bg-bg-lighttan mt-24 shadow-[0_0px_7px_1px_rgba(0,0,0,0.51)] w-full h-full mx-6 md:mx-16 sm:mx-20">
           <h2 className="text-4xl text-text-primary font-gothic font-extralight capitalize">

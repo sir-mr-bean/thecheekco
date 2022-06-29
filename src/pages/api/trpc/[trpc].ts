@@ -23,7 +23,6 @@ export default trpcNext.createNextApiHandler({
     // checking we're doing a query request
     const isQuery = type === "query";
     if (ctx?.res && allPublic && allOk && isQuery) {
-      console.log("setting cache-control");
       // cache request for 1 day + revalidate once every hour
       const ONE_DAY_IN_SECONDS = 60 * 60 * 24;
       const ONE_HOUR_IN_SECONDS = 60 * 60;

@@ -5,6 +5,7 @@ import moment from "moment";
 import { BeatLoader } from "react-spinners";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 import { useEffect, useState } from "react";
+import Head from "next/head";
 
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
@@ -21,7 +22,6 @@ function truncateMiddle(str: string, length: number) {
 const UserDashboard = () => {
   const router = useRouter();
   const { id, success } = router.query;
-  console.log(success);
   const [bannerOpen, setBannerOpen] = useState(false);
 
   useEffect(() => {
@@ -34,7 +34,6 @@ const UserDashboard = () => {
     "getOrder",
     { orderId: id as string },
   ]);
-  console.log(order);
 
   const { data: productsQuery } = trpc.useQuery(
     [
@@ -49,7 +48,6 @@ const UserDashboard = () => {
   );
   const products = productsQuery?.products.relatedObjects;
   const images = productsQuery?.images;
-  console.log(products);
   if (status === "loading") {
     return (
       <div className="flex h-screen w-full justify-center items-center mx-auto  text-text-primary">
@@ -64,6 +62,14 @@ const UserDashboard = () => {
 
   return (
     <>
+      <Head>
+        <title>The Cheek Co. - Order {order?.id}</title>
+        <meta
+          name="description"
+          content="More than just amazing bath and skin care products. Ethically sourced handmade in Australia, cruelty free, vegan."
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       {bannerOpen && (
         <div className="bg-text-secondary rounded-xl m-2">
           <div className="max-w-7xl mx-auto py-3 px-3 sm:px-6 lg:px-8">

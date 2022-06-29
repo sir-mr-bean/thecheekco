@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { trpc } from "@/utils/trpc";
+import Head from "next/head";
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -25,14 +26,10 @@ const SpecialOrderRequest = () => {
   const [missingLastNameError, setMissingLastNameError] = useState(false);
   const emailMutation = trpc.useMutation(["email.sendEmail"]);
   const [requiredDate, setRequiredDate] = useState(new Date());
-  console.log(errors);
 
   const handleFormSubmit = async (d) => {
-    console.log("handling request");
-    console.log(d);
     const { firstName, lastName, company, email, phoneNumber, type, message } =
       d;
-    console.log(requiredDate);
     if (agreed) {
       emailMutation.mutate(
         {
@@ -47,7 +44,6 @@ const SpecialOrderRequest = () => {
         },
         {
           onSuccess: (data) => {
-            console.log(data);
             setEmailSent(true);
             setTimeout(() => {
               router.push("/");
@@ -61,6 +57,14 @@ const SpecialOrderRequest = () => {
   };
   return (
     <>
+      <Head>
+        <title>The Cheek Co. - Special Order Request</title>
+        <meta
+          name="description"
+          content="More than just amazing bath and skin care products. Ethically sourced handmade in Australia, cruelty free, vegan."
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       {!emailSent ? (
         <div className="bg-white mt-16 mx-1 md:mx-16 rounded-md shadow-sm shadow-text-primary font-gothic text-text-primary">
           <div className="mx-auto px-3 pt-4 pb-16 sm:px-6 sm:pt-8 sm:pb-24 lg:px-8 xl:px-2 xl:pt-14">

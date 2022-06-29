@@ -29,7 +29,6 @@ const SignInHeader = () => {
         redirect: false,
       });
       if (session?.user) {
-        console.log("found user!");
         router.push("/profile");
       }
     } catch (err) {

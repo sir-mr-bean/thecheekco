@@ -387,7 +387,6 @@ export const squareRouter = createRouter()
     }),
     async resolve({ input, ctx }) {
       const { orderIds } = input;
-      console.log(orderIds);
       const getOrders = await ordersApi.batchRetrieveOrders({
         locationId: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string,
         orderIds: orderIds.map((order) => order),

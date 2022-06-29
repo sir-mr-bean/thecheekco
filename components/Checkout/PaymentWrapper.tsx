@@ -105,12 +105,10 @@ const PaymentWrapper = ({
             },
             {
               onSuccess(data, variables, context) {
-                console.log(data);
                 const orderId = data?.id as string;
                 const totalMoney =
                   data?.totalMoney?.amount?.toString() as string;
-                console.log("orderId is ", orderId);
-                console.log("totalMoney is ", totalMoney);
+
                 paymentMutation.mutate(
                   {
                     orderId: orderId,
@@ -119,7 +117,6 @@ const PaymentWrapper = ({
                   },
                   {
                     onSuccess(data, variables, context) {
-                      console.log(data);
                       if (data?.status === "APPROVED") {
                         completeOrderMutation.mutate(
                           {
@@ -128,7 +125,6 @@ const PaymentWrapper = ({
                           },
                           {
                             onSuccess(data, variables, context) {
-                              console.log(data);
                               setOrderProcessing(false);
                               dispatch({
                                 type: "CLEAR_CART",
@@ -196,12 +192,10 @@ const PaymentWrapper = ({
             },
             {
               onSuccess(data, variables, context) {
-                console.log(data);
                 const orderId = data?.id as string;
                 const totalMoney =
                   data?.totalMoney?.amount?.toString() as string;
-                console.log("orderId is ", orderId);
-                console.log("totalMoney is ", totalMoney);
+
                 paymentMutation.mutate(
                   {
                     orderId: orderId,
@@ -210,7 +204,6 @@ const PaymentWrapper = ({
                   },
                   {
                     onSuccess(data, variables, context) {
-                      console.log(data);
                       if (data?.status === "APPROVED") {
                         completeOrderMutation.mutate(
                           {
@@ -219,7 +212,6 @@ const PaymentWrapper = ({
                           },
                           {
                             onSuccess(data, variables, context) {
-                              console.log(data);
                               setOrderProcessing(false);
                               dispatch({
                                 type: "CLEAR_CART",
