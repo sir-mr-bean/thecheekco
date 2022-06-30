@@ -32,6 +32,9 @@ const AllNatural = ({
     );
     if (allNaturalProducts) {
       const randomProducts = allNaturalProducts
+        .filter(
+          (product) => product.itemData?.name !== "The Tea Tree Eucalyptus Mini"
+        )
         .sort(() => 0.5 - Math.random())
         .slice(0, 6);
       setRandomAllNatural(randomProducts);
@@ -65,7 +68,7 @@ const AllNatural = ({
           </RoughNotation>
           <span>picks.</span>
         </div>
-        <div className="flex flex-wrap w-full h-fit items-center justify-center pt-10">
+        <div className="flex flex-wrap w-full items-center justify-center pt-10 flex-auto">
           {randomAllNatural &&
             randomAllNatural.map((product) => {
               const productImage = productsData?.find(
@@ -80,7 +83,7 @@ const AllNatural = ({
                 (review) => review.productId === product?.id
               );
               return (
-                <div className="flex flex-col items-center justify-center w-fit">
+                <div className="flex flex-col items-end justify-end w-fit">
                   <Link
                     key={product.id}
                     href={`/shop/${productCategory?.categoryData?.name}/${product.itemData?.name}`}
@@ -89,8 +92,8 @@ const AllNatural = ({
                     )}/${slugify(product.itemData?.name as string)}`}
                     className="relative overflow-hidden"
                   >
-                    <div className="flex flex-col justify-center items-center h-32 w-32 m-4 md:m-4 cursor-pointer hover:scale-105">
-                      <div className="relative h-full w-full">
+                    <div className="flex flex-col justify-center items-center h-32 w-32 m-4 md:m-4 cursor-pointer hover:scale-105 space-y-3">
+                      <div className="relative w-full border border-text-secondary rounded-lg">
                         <Image
                           priority={true}
                           src={
@@ -104,7 +107,7 @@ const AllNatural = ({
                           className="rounded-md"
                         />
                       </div>
-                      <span className="text-xs sm:text-sm  text-text-primary w-full text-left py-2">
+                      <span className="text-xs sm:text-sm text-text-primary w-full text-left my-2 pb-4 whitespace-nowrap">
                         {product?.itemData?.name}
                       </span>
                     </div>

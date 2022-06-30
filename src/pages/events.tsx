@@ -9,9 +9,9 @@ const events = () => {
           className="rounded-xl"
           style={{
             width: "100%",
-            "text-align": "left",
+            textAlign: "left",
             color: "green",
-            "border-radius": "12px",
+            borderRadius: "12px",
           }}
         >
           <div id="simpletixEmbed" className="rounded-xl">
@@ -24,12 +24,12 @@ const events = () => {
           <div
             className="rounded-xl"
             style={{
-              "font-family": "Helvetica, Arial",
-              "font-size": "12px",
+              fontFamily: "Helvetica, Arial",
+              fontSize: "12px",
               padding: "30px 0 5px",
               margin: "2px",
               width: "100%",
-              "text-align": "left",
+              textAlign: "left",
               color: "green",
             }}
           ></div>
