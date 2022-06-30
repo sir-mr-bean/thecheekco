@@ -7,7 +7,7 @@ function oneko() {
   let mousePosY = 0;
   let frameCount = 0;
   let idleTime = 0;
-  let idleAnimation = null;
+  let idleAnimation = "";
   let idleAnimationFrame = 0;
   const nekoSpeed = 15;
   const spriteSets = {
@@ -75,16 +75,16 @@ function oneko() {
       mousePosY = event.clientY;
     };
 
-    window.onekoInterval = setInterval(frame, 100);
+    (window as any).onekoInterval = setInterval(frame, 100);
   }
 
-  function setSprite(name, frame) {
+  function setSprite(name: string, frame: number) {
     const sprite = spriteSets[name][frame % spriteSets[name].length];
     nekoEl.style.backgroundPosition = `${sprite[0] * 64}px ${sprite[1] * 64}px`;
   }
 
   function resetIdleAnimation() {
-    idleAnimation = null;
+    idleAnimation = "";
     idleAnimationFrame = 0;
   }
 
@@ -135,7 +135,7 @@ function oneko() {
       return;
     }
 
-    idleAnimation = null;
+    idleAnimation = "";
     idleAnimationFrame = 0;
 
     if (idleTime > 1) {
@@ -170,5 +170,5 @@ export function destroyOneko() {
     console.log(oneko);
     oneko.remove();
   }
-  clearInterval(window.onekoInterval);
+  clearInterval((window as any).onekoInterval);
 }
