@@ -1,17 +1,12 @@
-import { RoughNotation } from "react-rough-notation";
 import { CartState } from "../../context/Cart/Context";
-import { Dispatch, useEffect, useRef, useState } from "react";
+import { Dispatch } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import {
   GetStaticProps,
   GetStaticPropsContext,
   InferGetStaticPropsType,
 } from "next";
 import {
-  BsStarFill,
-  BsStarHalf,
-  BsStar,
   BsHeartFill,
   BsEmojiHeartEyesFill,
   BsFillCalendarCheckFill,
@@ -20,15 +15,12 @@ import { FaKissWinkHeart, FaShippingFast } from "react-icons/fa";
 import { HiCursorClick } from "react-icons/hi";
 import toast from "react-hot-toast";
 import superjson from "superjson";
-import { useInViewport } from "react-in-viewport";
 import { createSSGHelpers } from "@trpc/react/ssg";
 import { appRouter } from "@/backend/router/_app";
 import { inferRouterContext } from "@trpc/server";
 import { trpc } from "@/utils/trpc";
 import { CatalogObject } from "square";
 import { CartObject } from "@/types/CartObject";
-import lottie from "lottie-web";
-import * as animationData from "../../public/images/stray-cat.json";
 import accessories from "../../public/images/Homepage/accessories.png";
 import bath from "../../public/images/Homepage/bath.png";
 import gift_sets from "../../public/images/Homepage/gift_sets.png";
@@ -36,15 +28,15 @@ import home_decor from "../../public/images/Homepage/home_decor.png";
 import shower from "../../public/images/Homepage/shower.png";
 import skin_care from "../../public/images/Homepage/skin_care.png";
 import bumlogo from "../../public/images/Homepage/bumlogo.png";
-import Stars from "@/components/Reviews/Stars";
+import AllNatural from "@/components/Homepage/AllNatural";
+import { ProductReview } from "@prisma/client";
+import CheekyBox from "@/components/Homepage/CheekyBox";
+import HowItBegan from "@/components/Homepage/HowItBegan";
+import Videos from "@/components/Homepage/Videos";
 
 export default function Home(
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) {
-  const notationRef = useRef(null);
-  const [randomAllNatural, setRandomAllNatural] = useState<CatalogObject[]>([]);
-  const strayCatRef = useRef() as React.MutableRefObject<HTMLInputElement>;
-  const { inViewport } = useInViewport(notationRef);
   const { data: categoriesData } = trpc.useQuery(["all-categories"], {
     context: {
       skipBatch: true,
@@ -78,22 +70,6 @@ export default function Home(
       enabled: !!productsData,
     }
   );
-  console.log(productReviewsData);
-
-  useEffect(() => {
-    const allNaturalProducts = productsData?.filter(
-      (p) =>
-        p.itemData?.variations?.[0]?.customAttributeValues?.[
-          "Square:a1089928-7880-407e-93f3-08dfe506ac14"
-        ]?.booleanValue === true
-    );
-    if (allNaturalProducts) {
-      const randomProducts = allNaturalProducts
-        .sort(() => 0.5 - Math.random())
-        .slice(0, 6);
-      setRandomAllNatural(randomProducts);
-    }
-  }, [productsData]);
 
   const Icon = (iconName: string) => {
     switch (iconName) {
@@ -103,12 +79,6 @@ export default function Home(
         return <FaShippingFast size={25} />;
       case "HiCursorClick":
         return <HiCursorClick size={25} />;
-      case "BsStar":
-        return <BsStar size={25} />;
-      case "BsStarHalf":
-        return <BsStarHalf size={25} />;
-      case "BsStarFill":
-        return <BsStarFill size={25} />;
       case "BsHeartFill":
         return <BsHeartFill size={25} />;
       case "BsEmojiHeartEyesFill":
@@ -118,27 +88,6 @@ export default function Home(
       default:
         return <div>{iconName}</div>;
     }
-  };
-
-  // create a function to replace all spaces in a string with "-"
-  const slugify = (string: string) => {
-    return string
-      .toString()
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^\w-]+/g, "")
-      .replace(/--+/g, "-")
-      .replace(/^-+/, "")
-      .replace(/-+$/, "");
-  };
-
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
   };
 
   const offers = [
@@ -161,22 +110,6 @@ export default function Home(
       href: "/click-and-collect",
     },
   ];
-
-  useEffect(() => {
-    if (strayCatRef.current) {
-      lottie.loadAnimation({
-        container: strayCatRef.current,
-        renderer: "svg",
-        loop: true,
-        autoplay: false,
-        animationData: require("../../public/images/stray-cat.json"),
-      });
-    }
-
-    return () => {
-      lottie.destroy();
-    };
-  }, []);
 
   const handleAdd = (product: CatalogObject) => {
     const productImage = productsData?.find(
@@ -435,371 +368,21 @@ export default function Home(
           </div>
         </div>
 
-        <div className="bg-paper-bg bg-cover flex flex-col justify-center items-center w-full flex-1 shadow-3xl shadow-slate-600 my-10 font-gothic">
-          <div className="flex flex-col items-center justify-center text-text-primary">
-            <span className="text-2xl sm:text-4xl mt-4 ">introducing</span>
-            <span className="text-4xl sm:text-6xl font-semibold mt-4">
-              the cheeky box.
-            </span>
-            <div className="flex flex-col-reverse sm:flex-row w-full items-start justify-center mt-4 space-x-10">
-              <div
-                className="w-4/5 sm:w-1/3 mx-auto"
-                ref={strayCatRef ? strayCatRef : ""}
-                onMouseEnter={() => lottie.play()}
-                onMouseLeave={() => lottie.pause()}
-              />
-              <div className="flex flex-col items-start justify-center sm:w-2/3 text-xl w-3/4">
-                <span className="sm:w-4/5 pt-10">
-                  A limited run monthly mystery subscription box designed to
-                  keep you & your bathroom plastic free and fabulous without any
-                  stress. Each month will contain an assortment of bathroom
-                  goodies to keep your regulars needs satisfied with a generous
-                  splash of delicous seasonal goodness.
-                </span>
-                <span className="pt-12 pb-2">
-                  each month will contain (but of course will not be limited
-                  to):
-                </span>
-                <ul className="pl-5 text-lg sm:text-xl">
-                  <li className="text-text-secondary  list-disc">
-                    shampoo & conditioner bar{" "}
-                  </li>
-                  <li className="text-text-secondary list-disc">
-                    limited edition soap bar
-                  </li>
-                  <li className="text-text-secondary list-disc">
-                    skin care product
-                  </li>
-                  <li className="text-text-secondary list-disc">
-                    bathroom / beauty accessory
-                  </li>
-                  <li className="text-text-secondary list-disc">
-                    bath soak or shower steamer
-                  </li>
-                </ul>
-                <span></span>
-                <div className="py-6 flex items-center justify-center mx-auto sm:mx-0">
-                  <button className="bg-button shadow-sm shadow-text-secondary py-1 px-4 rounded-md border border-transparent hover:border-black ">
-                    <span className="uppercase text-white text-sm">
-                      Secure your cheeky box today
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <main>
-          <section>
-            <div className="flex flex-col w-full sm:p-6 items-center justify-center pt-32">
-              <div className="flex items-center justify-center pt-8">
-                <span className="text-2xl sm:text-5xl text-text-primary font-gothic text-center">
-                  Check out our fav
-                </span>
-              </div>
-              <div
-                ref={notationRef}
-                className="flex items-center justify-center w-full text-3xl sm:text-6xl lg:text-7xl text-text-secondary font-gothic text-center py-3 space-x-2 sm:space-x-3"
-              >
-                <span className="w-fit mr-3">all</span>
-                <RoughNotation
-                  type="circle"
-                  color="#E3BB9D"
-                  show={inViewport}
-                  animate
-                  animationDelay={500}
-                  animationDuration={1000}
-                  strokeWidth={4}
-                  padding={[12, 8]}
-                >
-                  <span className="">natural</span>
-                </RoughNotation>
-                <span>picks.</span>
-              </div>
-              <div className="flex flex-wrap w-full h-fit items-center justify-center pt-10">
-                {randomAllNatural &&
-                  randomAllNatural.map((product) => {
-                    const productImage = productsData?.find(
-                      (p) =>
-                        p.type === "IMAGE" &&
-                        product?.itemData?.imageIds?.includes(p.id)
-                    );
-                    const productCategory = categoriesData?.find(
-                      (category) =>
-                        category.id === product?.itemData?.categoryId
-                    );
-                    const productReview = productReviewsData?.find(
-                      (review) => review.productId === product?.id
-                    );
-                    return (
-                      <div className="flex flex-col items-center justify-center w-fit">
-                        <Link
-                          key={product.id}
-                          href={`/shop/${productCategory?.categoryData?.name}/${product.itemData?.name}`}
-                          as={`/shop/${slugify(
-                            productCategory?.categoryData?.name as string
-                          )}/${slugify(product.itemData?.name as string)}`}
-                          className="relative overflow-hidden"
-                        >
-                          <div className="flex flex-col justify-center items-center h-32 w-32 m-4 md:m-4 cursor-pointer hover:scale-105">
-                            <div className="relative h-full w-full">
-                              <Image
-                                priority={true}
-                                src={
-                                  productImage?.imageData?.url ||
-                                  "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
-                                }
-                                width={150}
-                                height={150}
-                                objectFit="cover"
-                                layout="responsive"
-                                className="rounded-md"
-                              />
-                            </div>
-                            <span className="text-xs sm:text-sm  text-text-primary w-full text-left py-2">
-                              {product?.itemData?.name}
-                            </span>
-                          </div>
-                        </Link>
-                        <div className="w-full flex items-center justify-start pl-3 pt-2">
-                          <Stars review={productReview} />
-                        </div>
-                        <div className="w-full flex items-center justify-start pl-3 pt-2">
-                          <span className="text-text-primary text-xs sm:text-sm">
-                            $
-                            {(
-                              Number(
-                                product.itemData?.variations?.[0]
-                                  .itemVariationData?.priceMoney?.amount
-                              ) / 100
-                            ).toFixed(2)}
-                          </span>
-                        </div>
-                        <div className="mt-2">
-                          <button
-                            onClick={() => handleAdd(product)}
-                            className="relative flex w-fit mx-auto bg-button rounded-2xl py-2 px-8 items-center justify-center text-sm font-medium text-white border border-invisible hover:border-black uppercase cursor-pointer"
-                          >
-                            Add to cart
-                            <span className="sr-only">
-                              {product.itemData?.name}
-                            </span>
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-            </div>
-          </section>
-
+          <CheekyBox />
+          <AllNatural
+            categoriesData={categoriesData as CatalogObject[]}
+            productsData={productsData as CatalogObject[]}
+            handleAdd={handleAdd}
+            productReviewsData={productReviewsData as ProductReview[]}
+          />
           {/* Featured section */}
-          <section
-            aria-labelledby="social-impact-heading"
-            className="mt-16 sm:mt-24 bg-paper-bg bg-cover bg-center"
-          >
-            <div className="relative overflow-hidden">
-              <div className="relative bg-button shadow-text-primary bg-opacity-30 py-16 sm:py-20 ">
-                <div className="relative sm:space-x-5 flex flex-col sm:flex-row items-center justify-between sm:justify-center text-center sm:mx-10">
-                  <h2
-                    id="social-impact-heading"
-                    className="font-extrabold tracking-tight text-text-secondary max-w-xl font-gothic text-center sm:text-left mx-1"
-                  >
-                    <span className="text-4xl lg:text-6xl font-semibold">
-                      The Cheeky{" "}
-                    </span>
-                    <span className="text-4xl lg:text-6xl font-semibold">
-                      Gua Sha
-                    </span>
-                    <div className="mt-3 font-light text-xl text-text-primary space-y-3 sm:pr-16 text-center sm:text-left">
-                      <p>
-                        A traditional rose quartz stone tool, used to relieve
-                        muscle tension, aid lymphatic drainage, increase
-                        elasticity, blood circulation.{" "}
-                      </p>
-                      <p>
-                        Firmly guide the stone along the skin in upward motions,
-                        slowly increasing pressure.
-                      </p>
-                    </div>
-                  </h2>
-                  <div className="relative w-fit flex flex-col text-text-primary text-xl">
-                    <Image
-                      src="https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/istockphoto_1320900406_612x612_removebg_preview_19c4bb41fa.png"
-                      height={612}
-                      width={612}
-                      layout="responsive"
-                    />
-                    <div className="flex flex-col space-y-2 pb-3 my-2 items-center justify-center text-lg">
-                      <div className="flex items-center space-x-2">
-                        <BsHeartFill className="w-6 h-6" />
-                        <span>lifts and firms</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <BsEmojiHeartEyesFill className="w-6 h-6" />
-                        <span>helping to aid allergy relief</span>
-                      </div>
-                      <div className="flex items-center justify-center space-x-2 lg:whitespace-nowrap">
-                        <FaKissWinkHeart className="w-6 h-6" />
-                        <span>reduces puffiness & inflimation</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="w-fit">
-                    {productsData &&
-                      productsData
-                        .filter((item) => item.itemData?.name === "The Gua Sha")
-                        .map((product) => {
-                          const productImage = productsData?.find(
-                            (p) =>
-                              p.type === "IMAGE" &&
-                              product?.itemData?.imageIds?.includes(p.id)
-                          );
-                          const productCategory = categoriesData?.find(
-                            (category) =>
-                              category.id === product?.itemData?.categoryId
-                          );
-
-                          return (
-                            <div key={product.id}>
-                              <div className="relative">
-                                <Link
-                                  href="/shop/[category]/[id]"
-                                  as={`/shop/${
-                                    productCategory?.categoryData?.name
-                                  }/${slugify(
-                                    product.itemData?.name as string
-                                  )}`}
-                                >
-                                  <div className="relative  mx-4 w-60 h-60 rounded-lg overflow-hidden cursor-pointer border-2 border-[#DBA37D]">
-                                    {productImage?.imageData?.url && (
-                                      <Image
-                                        layout="fill"
-                                        src={productImage?.imageData?.url}
-                                        alt={product.itemData?.name}
-                                        className="object-center object-cover"
-                                      />
-                                    )}
-                                  </div>
-                                </Link>
-                                <div className="relative mt-4 space-y-2">
-                                  <Link
-                                    href="/shop/[category]/[id]"
-                                    as={`/shop/${
-                                      productCategory?.categoryData?.name
-                                    }/${slugify(
-                                      product.itemData?.name as string
-                                    )}`}
-                                  >
-                                    <h3 className="text-sm font-medium text-text-primary">
-                                      {product?.itemData?.name}
-                                    </h3>
-                                  </Link>
-                                  <div className="flex text-header-brown justify-center">
-                                    <BsStarFill />
-                                    <BsStarFill />
-                                    <BsStarFill />
-                                    <BsStar />
-                                    <BsStar />
-                                  </div>
-                                  <p className="relative text-lg font-bold text-text-primary">
-                                    $
-                                    {(
-                                      Number(
-                                        product.itemData?.variations?.[0]
-                                          ?.itemVariationData?.priceMoney
-                                          ?.amount
-                                      ) / 100
-                                    ).toFixed(2)}
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="mt-6">
-                                <button
-                                  onClick={() => handleAdd(product)}
-                                  className="relative flex w-fit mx-auto bg-button rounded-2xl py-2 px-8 items-center justify-center text-sm font-medium text-white border border-invisible hover:border-black uppercase cursor-pointer"
-                                >
-                                  Add to cart
-                                  <span className="sr-only">
-                                    {product.itemData?.name}
-                                  </span>
-                                </button>
-                              </div>
-                            </div>
-                          );
-                        })}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+          <HowItBegan />
+          <Videos />
 
           {/* Collection section */}
-          <section
-            aria-labelledby="collection-heading"
-            className="w-full relative"
-          >
-            <div className="flex font-gothic text-text-primary">
-              <div className="flex flex-col w-1/2 items-center justify-center">
-                {/* Title + Desc */}
-                <span className="text-6xl font-semibold font-gothic">
-                  Meet The Minis
-                </span>
-                <span className="text-xl px-20">
-                  Unsure on a formulation or just wanting to grab some handbag
-                  goodies, these Mini’s are for you! Travel, gift, just don’t
-                  get caught without these essentials.
-                </span>
-                <div className="flex space-x-2">
-                  <div className="bg-button rounded-full p-10 w-10 h-10"></div>
-                  <div className="bg-button rounded-full p-10 w-10 h-10"></div>
-                </div>
-                <div></div>
-              </div>
-              <div className="flex flex-wrap">{/* Products */}</div>
-            </div>
-          </section>
 
           {/* Featured section */}
-          <section
-            aria-labelledby="comfort-heading"
-            className="max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8"
-          >
-            <div className="relative rounded-lg overflow-hidden">
-              <div className="absolute inset-0">
-                <Image
-                  layout="fill"
-                  src="https://tailwindui.com/img/ecommerce-images/home-page-01-feature-section-02.jpg"
-                  alt=""
-                  className="w-full h-full object-center object-cover"
-                />
-              </div>
-              <div className="relative bg-gray-900 bg-opacity-75 py-32 px-6 sm:py-40 sm:px-12 lg:px-16">
-                <div className="relative max-w-3xl mx-auto flex flex-col items-center text-center">
-                  <h2
-                    id="comfort-heading"
-                    className="text-3xl font-extrabold tracking-tight text-text-primary sm:text-4xl"
-                  >
-                    Simple productivity
-                  </h2>
-                  <p className="mt-3 text-xl text-text-primary">
-                    Endless tasks, limited hours, a single piece of paper. Not
-                    really a haiku, but we're doing our best here. No kanban
-                    boards, burndown charts, or tangled flowcharts with our
-                    Focus system. Just the undeniable urge to fill empty
-                    circles.
-                  </p>
-                  <a
-                    href="#"
-                    className="mt-8 w-full block bg-button shadow-text-primary border border-transparent rounded-md py-3 px-8 text-base font-medium text-text-secondary hover:bg-gray-100 sm:w-auto"
-                  >
-                    Shop Focus
-                  </a>
-                </div>
-              </div>
-            </div>
-          </section>
         </main>
       </div>
     </div>

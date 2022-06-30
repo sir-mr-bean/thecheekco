@@ -3,8 +3,23 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <div className=" w-full h-[250px] sm:h-[400px] mt-20">
-      <div className="flex flex-col w-full bg-footer-backdrop bg-cover bg-center h-full justify-end items-stretch bg-blend-lighten bg-white bg-opacity-20">
+    <div className=" w-full h-[250px] sm:h-[400px] mt-20 ">
+      <div className="flex flex-col w-full bg-footer-backdrop bg-cover bg-center h-full justify-between items-stretch bg-blend-lighten bg-white bg-opacity-20">
+        <div className="lg:w-1/2 sm:w-2/3 items-center justify-center  text-text-primary space-y-3 font-gothic font-semibold text-center p-4 sm:pt-20 text-xs sm:text-sm lg:text-lg bg-bg-tan/80 sm:bg-transparent rounded-lg px-3 sm:mx-auto">
+          <p>
+            Clean, quality bath and body products shouldn't cost the earth or
+            your back pocket. So we at The Cheek Co. have taken on the task. Our
+            gorgeous range is clean, sustainable, eco conscious & handmade
+            locally in Cairns QLD.
+          </p>
+          <p>
+            We create it in small batches so you can consume it without waste.
+          </p>
+          <p>
+            Finished your goodies? Not to worry, our packaging is always one of
+            the following: compostable, reusable or recyclable.
+          </p>
+        </div>
         <div className="flex justify-between items-center">
           <div className="flex justify-center items-center text-white space-x-3 text-xs sm:text-lg px-4 pb-6">
             <Link href="/contact-us">
