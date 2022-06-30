@@ -43,7 +43,7 @@ const AddPaymentMethodForm = ({
     status,
     refetch,
   } = trpc.useQuery([
-    "search-customer",
+    "square-customer.search-customer",
     {
       email: userObj.email,
     },
@@ -488,7 +488,9 @@ const AddPaymentMethodForm = ({
                 },
                 {
                   onSuccess: (data) => {
-                    utils.invalidateQueries(["search-customer"]);
+                    utils.invalidateQueries([
+                      "square-customer.search-customer",
+                    ]);
                     console.log(data);
                     console.log(customer);
                   },
