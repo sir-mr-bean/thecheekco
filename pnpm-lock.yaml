@@ -29,6 +29,7 @@ specifiers:
   eslint: ^8.18.0
   eslint-config-next: ^12.1.6
   firebase: ^9.8.3
+  goober: ^2.1.10
   google-map-react: ^2.1.10
   jose: ^4.8.1
   jsonwebtoken: ^8.5.1
@@ -36,6 +37,7 @@ specifiers:
   moment: ^2.29.3
   next: 12.1.6
   next-auth: ^4.5.0
+  next-sitemap: ^3.1.7
   next-transpile-modules: ^9.0.0
   nodemailer: ^6.7.5
   nookies: ^2.5.2
@@ -87,6 +89,7 @@ dependencies:
   bcryptjs: 2.4.3
   emailjs: 4.0.0_typescript@4.7.4
   firebase: 9.8.3
+  goober: 2.1.10_csstype@3.1.0
   google-map-react: 2.1.10_ef5jwxihqo6n7gxfmzogljlgcm
   jose: 4.8.1
   jsonwebtoken: 8.5.1
@@ -94,6 +97,7 @@ dependencies:
   moment: 2.29.3
   next: 12.1.6_5ovelu635kdjiiodz74uabvzfu
   next-auth: 4.5.0_5ygs74o5bgk2vdqrahrydzhqe4
+  next-sitemap: 3.1.7_nlwwphh5s5ggdfer3ji4ymvzrq
   next-transpile-modules: 9.0.0
   nodemailer: 6.7.5
   nookies: 2.5.2
@@ -1689,6 +1693,10 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@corex/deepmerge/4.0.29:
+    resolution: {integrity: sha512-q/yVUnqckA8Do+EvAfpy7RLdumnBy9ZsducMUtZTvpdbJC7azEf1hGtnYYxm0QfphYxjwggv6XtH64prvS1W+A==}
+    dev: false
 
   /@csstools/convert-colors/1.4.0:
     resolution: {integrity: sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==}
@@ -7813,8 +7821,8 @@ packages:
       pinkie-promise: 2.0.1
     dev: false
 
-  /goober/2.1.9_csstype@3.1.0:
-    resolution: {integrity: sha512-PAtnJbrWtHbfpJUIveG5PJIB6Mc9Kd0gimu9wZwPyA+wQUSeOeA4x4Ug16lyaaUUKZ/G6QEH1xunKOuXP1F4Vw==}
+  /goober/2.1.10_csstype@3.1.0:
+    resolution: {integrity: sha512-7PpuQMH10jaTWm33sQgBQvz45pHR8N4l3Cu3WMGEWmHShAcTuuP7I+5/DwKo39fwti5A80WAjvqgz6SSlgWmGA==}
     peerDependencies:
       csstype: ^3.0.10
     dependencies:
@@ -10152,6 +10160,20 @@ packages:
       uuid: 8.3.2
     dev: false
 
+  /next-sitemap/3.1.7_nlwwphh5s5ggdfer3ji4ymvzrq:
+    resolution: {integrity: sha512-8o+rUftEtZ7d3s2BedBLeN0HZHPAtcvliA/YesP/2o7Llb5svvM/pqVBde17MgTEuGMZpHz6nqruHKGCt53G3Q==}
+    engines: {node: '>=14.18'}
+    hasBin: true
+    peerDependencies:
+      '@next/env': '*'
+      next: '*'
+    dependencies:
+      '@corex/deepmerge': 4.0.29
+      '@next/env': 12.1.6
+      minimist: 1.2.6
+      next: 12.1.6_5ovelu635kdjiiodz74uabvzfu
+    dev: false
+
   /next-tick/1.1.0:
     resolution: {integrity: sha512-CXdUiJembsNjuToQvxayPZF9Vqht7hewsvy2sOWafLvi2awflj9mOC6bHIg50orX8IJvWKY9wYQ/zB2kogPslQ==}
     dev: false
@@ -11864,7 +11886,7 @@ packages:
   /react-animated-heart/0.0.7_tmhfl2wvcgkkudasuzbb6f3ova:
     resolution: {integrity: sha512-hta+pDn8qIR5drlV0cfNONIGTNEulZKsN6aZFo6MOglci+T4TMXIOMSVAF6zNivwHrPBYf1siLdUffJ6R9iFJA==}
     dependencies:
-      goober: 2.1.9_csstype@3.1.0
+      goober: 2.1.10_csstype@3.1.0
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       react-scripts: 4.0.3_s7dhm7uhgnhsqh75wuilf3r4wi
@@ -12022,7 +12044,7 @@ packages:
       react: '>=16'
       react-dom: '>=16'
     dependencies:
-      goober: 2.1.9_csstype@3.1.0
+      goober: 2.1.10_csstype@3.1.0
       react: 18.1.0
       react-dom: 18.1.0_react@18.1.0
     transitivePeerDependencies:

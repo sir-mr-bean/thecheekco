@@ -102,9 +102,8 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const reviewInputRef = useRef<HTMLTextAreaElement>(null);
   const { data: session, status } = useSession();
   const [rating, setRating] = useState(0);
-  const tabFromQuery = tabs.find((tab) => tab.name === router.query?.tab);
   const currentPath = router.asPath;
-  const [openTab, setOpenTab] = useState(tabFromQuery?.index || 1);
+  const [openTab, setOpenTab] = useState(1);
   const [averageRating, setAverageRating] = useState(0);
   // const { data: productQuery } = trpc.useQuery([
   //   "square-products.search-product",

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint",
     "type-coverage": "type-coverage",
@@ -28,6 +29,7 @@
     "bcryptjs": "^2.4.3",
     "emailjs": "^4.0.0",
     "firebase": "^9.8.3",
+    "goober": "^2.1.10",
     "google-map-react": "^2.1.10",
     "jose": "^4.8.1",
     "jsonwebtoken": "^8.5.1",
@@ -35,6 +37,7 @@
     "moment": "^2.29.3",
     "next": "12.1.6",
     "next-auth": "^4.5.0",
+    "next-sitemap": "^3.1.7",
     "next-transpile-modules": "^9.0.0",
     "nodemailer": "^6.7.5",
     "nookies": "^2.5.2",
