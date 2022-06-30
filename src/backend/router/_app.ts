@@ -1,13 +1,14 @@
 import { createRouter } from "../createRouter";
 import { authRouter } from "./auth";
 import { emailRouter } from "./email";
-import { squareRouter } from "./square";
 import { userRouter } from "./user";
 import superjson from "superjson";
 import { reviewsRouter } from "./reviews";
 import { squareOrderRouter } from "./square/square-order";
 import { squarePaymentRouter } from "./square/square-payment";
 import { squareProductRouter } from "./square/square-products";
+import { squareCategoriesRouter } from "./square/square-categories";
+import { squareCustomerRouter } from "./square/square-customer";
 
 /**
  * Create your application's root router
@@ -19,12 +20,11 @@ export const appRouter = createRouter()
   .transformer(superjson)
   .merge(authRouter)
   .merge("user", userRouter)
-  .merge(squareRouter)
-  .merge("square-customer.", squareRouter)
+  .merge("square-customer.", squareCustomerRouter)
   .merge("square-order.", squareOrderRouter)
   .merge("square-payment.", squarePaymentRouter)
   .merge("square-products.", squareProductRouter)
-  .merge("square-categories.", squareRouter)
+  .merge("square-categories.", squareCategoriesRouter)
   .merge("email.", emailRouter)
   .merge("review.", reviewsRouter);
 

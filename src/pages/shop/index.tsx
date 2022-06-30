@@ -22,7 +22,7 @@ import Head from "next/head";
 export default function shop(
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) {
-  const categoriesQuery = trpc.useQuery(["all-categories"]);
+  const categoriesQuery = trpc.useQuery(["square-categories.all-categories"]);
   const { data: categories } = categoriesQuery;
   const { data: products } = trpc.useQuery(["square-products.all-products"]);
 
@@ -160,7 +160,7 @@ export const getStaticProps: GetStaticProps = async (
     transformer: superjson,
   });
 
-  await ssg.fetchQuery("all-categories");
+  await ssg.fetchQuery("square-categories.all-categories");
   await ssg.fetchQuery("square-products.all-products");
 
   return {

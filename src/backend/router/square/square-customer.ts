@@ -1,43 +1,18 @@
-import { TRPCError } from "@trpc/server";
-import { createRouter } from "../createRouter";
-import {
-  ApiResponse,
-  CatalogObject,
-  Client,
-  CreateOrderResponse,
-  Environment,
-} from "square";
-import { randomUUID } from "crypto";
-import { z } from "zod";
-import getConfig from "next/config";
+import { createRouter } from "@/backend/createRouter";
 import superjson from "superjson";
-const { serverRuntimeConfig } = getConfig();
 
-(BigInt.prototype as any).toJSON = function () {
-  return this.toString();
-};
+import { ApiResponse, Client, CreateOrderResponse, Environment } from "square";
+import { randomUUID } from "crypto";
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
-const { customersApi, catalogApi } = new Client({
+const { ordersApi, customersApi } = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
   environment: Environment.Production,
 });
 
-export const squareRouter = createRouter()
+export const squareCustomerRouter = createRouter()
   .transformer(superjson)
-
-  .query("all-categories", {
-    async resolve({ input, ctx }) {
-      const categoryQuery = await catalogApi.searchCatalogObjects({
-        objectTypes: ["CATEGORY"],
-      });
-      const categories = categoryQuery.result.objects;
-      const categoriesResult = categories?.filter(
-        (category) => !category?.categoryData?.name?.startsWith("_")
-      );
-      return categoriesResult;
-    },
-  })
-
   .query("search-customer", {
     input: z.object({
       email: z.string(),

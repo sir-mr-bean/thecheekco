@@ -518,14 +518,14 @@ const UserInfo = ({ session }) => {
                 <div className="flex justify-end sm:m-6 m-2">
                   <button
                     type="button"
-                    className="bg-white py-2 px-4 border border-text-secondary rounded-md border shadow-text-secondary text-sm font-medium text-text-primary hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary "
+                    className="bg-white py-2 px-4 border border-text-secondary rounded-md shadow-text-secondary text-sm font-medium text-text-primary hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary "
                   >
                     Cancel
                   </button>
                   <button
                     type="button"
                     onClick={handleSubmit(handleFormSubmit)}
-                    className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent border shadow-text-secondary text-sm font-medium rounded-md  bg-button hover:bg-button/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary text-text-primary"
+                    className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-text-secondary text-sm font-medium rounded-md  bg-button hover:bg-button/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary text-text-primary"
                   >
                     Save
                   </button>

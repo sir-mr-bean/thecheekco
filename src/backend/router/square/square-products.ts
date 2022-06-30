@@ -1,14 +1,6 @@
 import { createRouter } from "@/backend/createRouter";
 import superjson from "superjson";
-
-import {
-  ApiResponse,
-  CatalogObject,
-  Client,
-  CreateOrderResponse,
-  Environment,
-} from "square";
-import { randomUUID } from "crypto";
+import { CatalogObject, Client, Environment } from "square";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 

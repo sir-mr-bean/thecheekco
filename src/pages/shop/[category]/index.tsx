@@ -260,7 +260,9 @@ export const getStaticPaths: GetStaticPaths = async (
     ctx: context as inferRouterContext<typeof appRouter>,
     transformer: superjson,
   });
-  const categoryQuery = await ssg.fetchQuery("all-categories");
+  const categoryQuery = await ssg.fetchQuery(
+    "square-categories.all-categories"
+  );
   const categoryNames = categoryQuery?.filter(
     (category) => category.categoryData?.name as string
   );
@@ -285,7 +287,9 @@ export const getStaticProps: GetStaticProps = async (
     ctx: context as inferRouterContext<typeof appRouter>,
     transformer: superjson,
   });
-  const categoryQuery = await ssg.fetchQuery("all-categories");
+  const categoryQuery = await ssg.fetchQuery(
+    "square-categories.all-categories"
+  );
   const categoryObject = categoryQuery?.find(
     (category) =>
       category?.categoryData?.name?.replace(/ /g, "-").toLowerCase() === params

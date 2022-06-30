@@ -9,7 +9,7 @@ const PaymentMethods = ({ userObj }) => {
   const [addCard, setAddCard] = useState(false);
 
   const { data: customer, status: CustomerStatus } = trpc.useQuery([
-    "search-customer",
+    "square-customer.search-customer",
     {
       email: userObj.email,
     },

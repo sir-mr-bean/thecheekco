@@ -7,7 +7,6 @@ import { Dispatch, useEffect, useState } from "react";
 import MobileMenu from "./MobileMenu";
 import { Product } from "@/types/Product";
 import { trpc } from "@/utils/trpc";
-import { squareRouter } from "@/backend/router/square";
 import { CatalogObject } from "square";
 import { CartObject } from "@/types/CartObject";
 
@@ -48,7 +47,7 @@ export const Header = (): JSX.Element => {
       productImage?: string;
     }>;
   } = CartState();
-  const categoryQuery = trpc.useQuery(["all-categories"], {
+  const categoryQuery = trpc.useQuery(["square-categories.all-categories"], {
     context: {
       skipBatch: true,
     },

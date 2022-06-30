@@ -41,7 +41,10 @@ export default function Profile(): JSX.Element {
   const tabFromQuery = tabs.find((tab) => tab.name === router.query?.tab);
   const [openTab, setOpenTab] = useState(tabFromQuery?.index || 1);
   const customerQuery = trpc.useQuery(
-    ["search-customer", { email: session?.user.email as string }],
+    [
+      "square-customer.search-customer",
+      { email: session?.user.email as string },
+    ],
     {
       enabled: !!session,
     }

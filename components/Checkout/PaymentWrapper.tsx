@@ -2,8 +2,10 @@ import { CartState } from "@/context/Cart/Context";
 import { CartObject } from "@/types/CartObject";
 import { trpc } from "@/utils/trpc";
 import { User } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { useRouter } from "next/router";
 import { Dispatch, useState } from "react";
+import toast from "react-hot-toast";
 import { PaymentForm } from "react-square-web-payments-sdk";
 import { Card } from "square";
 
@@ -26,7 +28,7 @@ const PaymentWrapper = ({
 }) => {
   const router = useRouter();
   const { data: customer, status } = trpc.useQuery([
-    "search-customer",
+    "square-customer.search-customer",
     {
       email: userObj.email,
     },
@@ -124,7 +126,7 @@ const PaymentWrapper = ({
               },
               {
                 onSuccess: (data) => {
-                  utils.invalidateQueries(["search-customer"]);
+                  utils.invalidateQueries(["square-customer.search-customer"]);
                   console.log(data);
                   console.log(customer);
                 },
@@ -157,157 +159,162 @@ const PaymentWrapper = ({
             }
           );
         }
-        console.log("done");
-        // if (pickup) {
-        //   pickupOrderMutation.mutate(
-        //     {
-        //       pickupCustomer: {
-        //         firstName: userObj.firstName as string,
-        //         lastName: userObj.lastName as string,
-        //         email: userObj.email as string,
-        //         phoneNumber: userObj.phoneNumber as string,
-        //       },
 
-        //       referenceId: token.token as string,
-        //       lineItems: cart.map((product) => {
-        //         return {
-        //           catalogObjectId: product.itemData?.variations?.[0]
-        //             .id as string,
-        //           quantity: product.quantity,
-        //           modifiers: [
-        //             {
-        //               name: product.itemData?.name as string,
-        //               catalogObjectId: product.id,
-        //             },
-        //           ],
-        //         };
-        //       }),
-        //     },
-        //     {
-        //       onSuccess(data, variables, context) {
-        //         const orderId = data?.id as string;
-        //         const totalMoney =
-        //           data?.totalMoney?.amount?.toString() as string;
+        if (pickup) {
+          pickupOrderMutation.mutate(
+            {
+              pickupCustomer: {
+                firstName: userObj.firstName as string,
+                lastName: userObj.lastName as string,
+                email: userObj.email as string,
+                phoneNumber: userObj.phoneNumber as string,
+              },
 
-        //         paymentMutation.mutate(
-        //           {
-        //             orderId: orderId,
-        //             totalMoney: totalMoney,
-        //             token: token.token as string,
-        //           },
-        //           {
-        //             onSuccess(data, variables, context) {
-        //               if (data?.status === "APPROVED") {
-        //                 completeOrderMutation.mutate(
-        //                   {
-        //                     orderId: orderId,
-        //                     paymentId: data?.id as string,
-        //                   },
-        //                   {
-        //                     onSuccess(data, variables, context) {
-        //                       setOrderProcessing(false);
-        //                       dispatch({
-        //                         type: "CLEAR_CART",
-        //                       });
-        //                       router.push(`/order/${orderId}?success=true`);
-        //                     },
-        //                   }
-        //                 );
-        //               }
-        //             },
-        //           }
-        //         );
-        //       },
-        //     }
-        //   );
-        // } else {
-        //   deliveryOrderMutation.mutate(
-        //     {
-        //       lineItems: cart.map((product) => {
-        //         return {
-        //           catalogObjectId: product.itemData?.variations?.[0]
-        //             .id as string,
-        //           quantity: product.quantity,
-        //           modifiers: [
-        //             {
-        //               name: product.itemData?.name as string,
-        //               catalogObjectId: product.id,
-        //             },
-        //           ],
-        //         };
-        //       }),
-        //       referenceId: token.token as string,
-        //       billingAddress: {
-        //         email: userObj.email,
-        //         firstName: userObj.firstName || "",
-        //         lastName: userObj.lastName || "",
-        //         displayName: `${userObj?.firstName} ${userObj.lastName}`,
-        //         companyName: userObj.company as string,
-        //         phoneNumber: userObj.phoneNumber as string,
-        //         addressLine1: userObj.apartmentOrUnit
-        //           ? `${userObj.apartmentOrUnit} / ${userObj.streetAddress}`
-        //           : `${userObj.streetAddress}`,
+              referenceId: token.token as string,
+              lineItems: cart.map((product) => {
+                return {
+                  catalogObjectId: product.itemData?.variations?.[0]
+                    .id as string,
+                  quantity: product.quantity,
+                  modifiers: [
+                    {
+                      name: product.itemData?.name as string,
+                      catalogObjectId: product.id,
+                    },
+                  ],
+                };
+              }),
+            },
+            {
+              onSuccess(data, variables, context) {
+                const orderId = data?.id as string;
+                const totalMoney =
+                  data?.totalMoney?.amount?.toString() as string;
 
-        //         locality: userObj.city as string,
-        //         region: userObj.state as string,
-        //         postalCode: userObj.postalCode as string,
-        //         country: "AU",
-        //       },
-        //       shippingAddress: {
-        //         email: userObj.email,
-        //         firstName: userObj.firstName as string,
-        //         lastName: userObj.lastName as string,
-        //         displayName: `${userObj?.firstName} ${userObj.lastName}`,
-        //         companyName: userObj.company as string,
-        //         phoneNumber: userObj.phoneNumber as string,
-        //         addressLine1: userObj.apartmentOrUnit
-        //           ? `${userObj.apartmentOrUnit} / ${userObj.streetAddress}`
-        //           : `${userObj.streetAddress}`,
+                paymentMutation.mutate(
+                  {
+                    orderId: orderId,
+                    totalMoney: totalMoney,
+                    token: token.token as string,
+                  },
+                  {
+                    onSuccess(data, variables, context) {
+                      if (data?.status === "APPROVED") {
+                        completeOrderMutation.mutate(
+                          {
+                            orderId: orderId,
+                            paymentId: data?.id as string,
+                          },
+                          {
+                            onSuccess(data, variables, context) {
+                              setOrderProcessing(false);
+                              dispatch({
+                                type: "CLEAR_CART",
+                              });
+                              router.push(`/order/${orderId}?success=true`);
+                            },
+                          }
+                        );
+                      }
+                    },
+                  }
+                );
+              },
+            }
+          );
+        } else {
+          deliveryOrderMutation.mutate(
+            {
+              lineItems: cart.map((product) => {
+                return {
+                  catalogObjectId: product.itemData?.variations?.[0]
+                    .id as string,
+                  quantity: product.quantity,
+                  modifiers: [
+                    {
+                      name: product.itemData?.name as string,
+                      catalogObjectId: product.id,
+                    },
+                  ],
+                };
+              }),
+              referenceId: token.token as string,
+              billingAddress: {
+                email: userObj.email,
+                firstName: userObj.firstName || "",
+                lastName: userObj.lastName || "",
+                displayName: `${userObj?.firstName} ${userObj.lastName}`,
+                companyName: userObj.company as string,
+                phoneNumber: userObj.phoneNumber as string,
+                addressLine1: userObj.apartmentOrUnit
+                  ? `${userObj.apartmentOrUnit} / ${userObj.streetAddress}`
+                  : `${userObj.streetAddress}`,
 
-        //         locality: userObj.city as string,
-        //         region: userObj.state as string,
-        //         postalCode: userObj.postalCode as string,
-        //         country: "AU",
-        //       },
-        //     },
-        //     {
-        //       onSuccess(data, variables, context) {
-        //         const orderId = data?.id as string;
-        //         const totalMoney =
-        //           data?.totalMoney?.amount?.toString() as string;
+                locality: userObj.city as string,
+                region: userObj.state as string,
+                postalCode: userObj.postalCode as string,
+                country: "AU",
+              },
+              shippingAddress: {
+                email: userObj.email,
+                firstName: userObj.firstName as string,
+                lastName: userObj.lastName as string,
+                displayName: `${userObj?.firstName} ${userObj.lastName}`,
+                companyName: userObj.company as string,
+                phoneNumber: userObj.phoneNumber as string,
+                addressLine1: userObj.apartmentOrUnit
+                  ? `${userObj.apartmentOrUnit} / ${userObj.streetAddress}`
+                  : `${userObj.streetAddress}`,
 
-        //         paymentMutation.mutate(
-        //           {
-        //             orderId: orderId,
-        //             totalMoney: totalMoney,
-        //             token: token.token as string,
-        //           },
-        //           {
-        //             onSuccess(data, variables, context) {
-        //               if (data?.status === "APPROVED") {
-        //                 completeOrderMutation.mutate(
-        //                   {
-        //                     orderId: orderId,
-        //                     paymentId: data?.id as string,
-        //                   },
-        //                   {
-        //                     onSuccess(data, variables, context) {
-        //                       setOrderProcessing(false);
-        //                       dispatch({
-        //                         type: "CLEAR_CART",
-        //                       });
-        //                       router.push(`/order/${orderId}?success=true`);
-        //                     },
-        //                   }
-        //                 );
-        //               }
-        //             },
-        //           }
-        //         );
-        //       },
-        //     }
-        //   );
-        // }
+                locality: userObj.city as string,
+                region: userObj.state as string,
+                postalCode: userObj.postalCode as string,
+                country: "AU",
+              },
+            },
+            {
+              onSuccess(data, variables, context) {
+                const orderId = data?.id as string;
+                const totalMoney =
+                  data?.totalMoney?.amount?.toString() as string;
+
+                paymentMutation.mutate(
+                  {
+                    orderId: orderId,
+                    totalMoney: totalMoney,
+                    token: token.token as string,
+                  },
+                  {
+                    onSuccess(data, variables, context) {
+                      if (data?.status === "APPROVED") {
+                        completeOrderMutation.mutate(
+                          {
+                            orderId: orderId,
+                            paymentId: data?.id as string,
+                          },
+                          {
+                            onSuccess(data, variables, context) {
+                              setOrderProcessing(false);
+                              dispatch({
+                                type: "CLEAR_CART",
+                              });
+                              router.push(`/order/${orderId}?success=true`);
+                            },
+                          }
+                        );
+                      }
+                    },
+                    onError(error, variables, context) {
+                      console.log(error);
+                      toast.error("Payment unsuccessful. Please try again.");
+                      setOrderProcessing(false);
+                    },
+                  }
+                );
+              },
+            }
+          );
+        }
       }}
     >
       {children}

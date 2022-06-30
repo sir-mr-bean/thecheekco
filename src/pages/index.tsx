@@ -37,11 +37,14 @@ import Videos from "@/components/Homepage/Videos";
 export default function Home(
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) {
-  const { data: categoriesData } = trpc.useQuery(["all-categories"], {
-    context: {
-      skipBatch: true,
-    },
-  });
+  const { data: categoriesData } = trpc.useQuery(
+    ["square-categories.all-categories"],
+    {
+      context: {
+        skipBatch: true,
+      },
+    }
+  );
   const { data: productsData } = trpc.useQuery([
     "square-products.all-products",
   ]);
@@ -398,7 +401,7 @@ export const getStaticProps: GetStaticProps = async (
     transformer: superjson,
   });
 
-  await ssg.fetchQuery("all-categories");
+  await ssg.fetchQuery("square-categories.all-categories");
   await ssg.fetchQuery("square-products.all-products");
 
   return {

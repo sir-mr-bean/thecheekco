@@ -686,7 +686,9 @@ export const getStaticPaths = async (context: GetStaticPathsContext) => {
     transformer: superjson,
   });
   const productsQuery = await ssg.fetchQuery("square-products.all-products");
-  const categoryQuery = await ssg.fetchQuery("all-categories");
+  const categoryQuery = await ssg.fetchQuery(
+    "square-categories.all-categories"
+  );
   const paths = productsQuery
     .filter((product) => product.type === "ITEM")
     .filter(
