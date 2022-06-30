@@ -9,7 +9,7 @@ function classNames(...classes) {
 const PickupToggle = ({ pickup, setPickup }) => {
   return (
     <div className="w-full relative my-5">
-      <div className="flex items-center justify-between w-full mx-auto sm:pl-8">
+      <div className="flex items-center justify-between w-full mx-auto ">
         <span
           className={pickup === true ? `lg:text-lg` : `font-bold lg:text-lg`}
         >
@@ -60,7 +60,11 @@ const PickupToggle = ({ pickup, setPickup }) => {
           </Switch>
         </div>
         <span
-          className={pickup === true ? `font-bold lg:text-lg` : `lg:text-lg`}
+          className={
+            pickup === true
+              ? `font-bold lg:text-lg text-center`
+              : `lg:text-lg text-center`
+          }
         >
           Click and Collect
         </span>

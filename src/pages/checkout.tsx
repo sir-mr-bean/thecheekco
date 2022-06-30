@@ -22,6 +22,8 @@ import SimpleMap from "@/components/Checkout/Map/GoogleMaps";
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
 import Marker from "@/components/Checkout/Map/Marker";
 import Head from "next/head";
+import { trpc } from "@/utils/trpc";
+import ExistingPaymentMethod from "@/components/Checkout/PaymentMethods/ExistingPaymentMethod";
 
 export type validationErrors = {
   name: boolean;
@@ -109,6 +111,30 @@ export default function checkout() {
   const [pickupInfoSet, setPickupInfoSet] = useState(false);
   const [shippingInfoSet, setShippingInfoSet] = useState(false);
   const [readyForPayment, setReadyForPayment] = useState(false);
+  const [saveCardDetails, setSaveCardDetails] = useState(false);
+  const [newCard, setNewCard] = useState(true);
+  const { data: customer, status: CustomerStatus } = trpc.useQuery([
+    "search-customer",
+    {
+      email: userObj.email,
+    },
+  ]);
+  const {
+    data: paymentMethods,
+    status: PaymentMethodStatus,
+    refetch: refetchPaymentMethods,
+    dataUpdatedAt,
+  } = trpc.useQuery(
+    [
+      "square-payment.get-customer-payment-methods",
+      {
+        customerId: customer?.id as string,
+      },
+    ],
+    {
+      enabled: CustomerStatus === "success",
+    }
+  );
 
   useEffect(() => {
     const total = cart.reduce((acc: number, cur: CartObject) => {
@@ -258,337 +284,427 @@ export default function checkout() {
       />
       <div className="bg-white mt-16 mx-1 md:mx-16 rounded-md shadow-sm shadow-text-primary font-gothic min-h-screen">
         <div className="max-w-7xl mx-auto px-4 pt-4 pb-16 sm:px-6 sm:pt-8 sm:pb-24 lg:px-8 xl:px-2 xl:pt-14">
-          {cart?.length > 0 ? (
+          {total ? (
             <>
-              {total && (
-                <>
-                  <h1 className="sr-only">Checkout</h1>
-                  <div className="flex flex-col-reverse sm:flex-row md:space-x-6">
-                    <div className="flex flex-col-reverse sm:flex-row sm:flex-1 lg:max-w-none w-full">
-                      <div className="sm:pl-16 w-full">
-                        <div className="flex flex-col justify-start items-start text-text-primary w-full flex-1 ">
-                          <div className="flex flex-col justify-between w-full items-center p-1 sm:p-4">
-                            <span className="hidden sm:block whitespace-nowrap text-3xl font-medium pt-3 sm:pt-0 my-3">
-                              Checkout
-                            </span>
-                            {status != "loading" && !session?.user && (
-                              <div className="my-3 w-full flex flex-col items-center justify-center">
-                                <SignInHeader />
+              <h1 className="sr-only">Checkout</h1>
+              <div className="flex flex-col-reverse sm:flex-row md:space-x-6">
+                <div className="flex flex-col-reverse sm:flex-row sm:flex-1 lg:max-w-none w-full">
+                  <div className="sm:pl-16 w-full">
+                    <div className="flex flex-col justify-start items-start text-text-primary w-full flex-1 ">
+                      <div className="flex flex-col justify-between w-full items-center p-1 sm:p-4">
+                        <span className="hidden sm:block whitespace-nowrap text-3xl font-medium pt-3 sm:pt-0 my-3">
+                          Checkout
+                        </span>
+                        {status != "loading" && !session?.user && (
+                          <div className="my-3 w-full flex flex-col items-center justify-center">
+                            <SignInHeader />
+                          </div>
+                        )}
+
+                        <PickupToggle pickup={pickup} setPickup={setPickup} />
+                        {pickup ? (
+                          <>
+                            <div className="flex items-center space-x-2 py-10 w-full h-full">
+                              <div className="flex flex-col whitespace-nowrap">
+                                <span className="text-sm">Collect from:</span>
+                                <span>The Cheek Co Shop</span>
+                                <span>9 Shields Street Cairns</span>
+                              </div>
+                              <Wrapper
+                                apiKey={
+                                  process.env
+                                    .NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string
+                                }
+                                render={render}
+                              >
+                                <SimpleMap>
+                                  <Marker
+                                    position={{
+                                      lat: -16.92196302222459,
+                                      lng: 145.7763141413842,
+                                    }}
+                                    icon={{
+                                      url: "https://thecheekco.vercel.app/images/logo.png",
+                                      scaledSize: new window.google.maps.Size(
+                                        75,
+                                        75
+                                      ),
+                                    }}
+                                  />
+                                </SimpleMap>
+                              </Wrapper>
+                            </div>
+                            <CACForm
+                              termsAccepted={pickupTermsAccepted}
+                              setTermsAccepted={setPickupTermsAccepted}
+                              userObj={userObj}
+                              setUserObj={setUserObj}
+                              register={register}
+                            />
+                            <button
+                              type="button"
+                              onClick={() =>
+                                handlePickupCustomerInfoComplete(userObj)
+                              }
+                              disabled={pickupTermsAccepted === false}
+                              className="w-full flex justify-center py-2 my-4 px-4 border border-transparent rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
+                            >
+                              Continue
+                            </button>
+                            {pickupInfoSet && (
+                              <div className="w-full relative">
+                                <PaymentWrapper
+                                  setOrderProcessing={setOrderProcessing}
+                                  total={total}
+                                  userObj={userObj}
+                                  pickup={pickup}
+                                  saveCardDetails={saveCardDetails}
+                                >
+                                  <div className="w-full flex flex-col space-y-4 pt-3">
+                                    <h2 className="text-lg font-medium py-3">
+                                      Payment Method
+                                    </h2>
+                                    <GooglePay buttonColor="white" />
+                                    <CreditCard
+                                      includeInputLabels
+                                      buttonProps={{
+                                        isLoading: orderProcessing,
+                                        css: {
+                                          backgroundColor: "#a75e2f",
+                                          fontSize: "14px",
+                                          color: "#fff",
+                                          "&:hover": {
+                                            backgroundColor: "#E3BB9D",
+                                          },
+                                        },
+                                      }}
+                                    >
+                                      <div className="w-full h-full flex items-center justify-center">
+                                        {orderProcessing ? (
+                                          <div className="flex w-full items-center justify-center space-x-2">
+                                            <span>Processing Order</span>
+                                            <BeatLoader
+                                              size={8}
+                                              color="#602d0d"
+                                            />
+                                          </div>
+                                        ) : (
+                                          <span>Pay ${total.toFixed(2)}</span>
+                                        )}
+                                      </div>
+                                    </CreditCard>
+                                  </div>
+                                </PaymentWrapper>
                               </div>
                             )}
-
-                            <PickupToggle
-                              pickup={pickup}
-                              setPickup={setPickup}
-                            />
-                            {pickup ? (
+                          </>
+                        ) : (
+                          <>
+                            {session?.user ? (
+                              <UserForm
+                                termsAccepted={termsAccepted}
+                                setTermsAccepted={setTermsAccepted}
+                                userObj={userObj}
+                                setUserObj={setUserObj}
+                                register={register}
+                                validationErrors={validationErrors}
+                                setValidationErrors={setValidationErrors}
+                              />
+                            ) : (
+                              <GuestForm
+                                userObj={userObj}
+                                setUserObj={setUserObj}
+                                register={register}
+                                termsAccepted={termsAccepted}
+                                setTermsAccepted={setTermsAccepted}
+                                validationErrors={validationErrors}
+                                setValidationErrors={setValidationErrors}
+                              />
+                            )}
+                            {!customerInfoSet && (
+                              <button
+                                type="button"
+                                onClick={() => handleCustomerInfoComplete()}
+                                disabled={!termsAccepted}
+                                className="w-full flex justify-center py-2 my-4 px-4 border border-transparent rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
+                              >
+                                Continue
+                              </button>
+                            )}
+                            {customerInfoSet && (
                               <>
-                                <div className="flex items-center space-x-2 py-10 w-full h-full">
-                                  <div className="flex flex-col whitespace-nowrap">
-                                    <span className="text-sm">
-                                      Collect from:
-                                    </span>
-                                    <span>The Cheek Co Shop</span>
-                                    <span>9 Shields Street Cairns</span>
-                                  </div>
-                                  <Wrapper
-                                    apiKey={
-                                      process.env
-                                        .NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string
-                                    }
-                                    render={render}
-                                  >
-                                    <SimpleMap>
-                                      <Marker
-                                        position={{
-                                          lat: -16.92196302222459,
-                                          lng: 145.7763141413842,
-                                        }}
-                                        icon={{
-                                          url: "https://thecheekco.vercel.app/images/logo.png",
-                                          scaledSize:
-                                            new window.google.maps.Size(75, 75),
-                                        }}
-                                      />
-                                    </SimpleMap>
-                                  </Wrapper>
-                                </div>
-                                <CACForm
-                                  termsAccepted={pickupTermsAccepted}
-                                  setTermsAccepted={setPickupTermsAccepted}
+                                <ShippingForm
                                   userObj={userObj}
                                   setUserObj={setUserObj}
+                                  userShippingObj={userShippingObj}
+                                  setUserShippingObj={setUserShippingObj}
+                                  shippingInfoCheckboxRef={
+                                    shippingInfoCheckboxRef
+                                  }
+                                  setSameAsCustomerInfo={setSameAsCustomerInfo}
+                                  sameAsCustomerInfo={sameAsCustomerInfo}
                                   register={register}
                                 />
                                 <button
                                   type="button"
-                                  onClick={() =>
-                                    handlePickupCustomerInfoComplete(userObj)
-                                  }
-                                  disabled={pickupTermsAccepted === false}
+                                  onClick={handleShippingInfoComplete}
                                   className="w-full flex justify-center py-2 my-4 px-4 border border-transparent rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
                                 >
                                   Continue
                                 </button>
-                                {pickupInfoSet && (
-                                  <div className="w-full relative">
-                                    <PaymentWrapper
-                                      setOrderProcessing={setOrderProcessing}
-                                      total={total}
-                                      userObj={userObj}
-                                      pickup={pickup}
-                                    >
-                                      <div className="w-full flex flex-col space-y-4 pt-3">
-                                        <h2 className="text-lg font-medium py-3">
-                                          Payment Method
-                                        </h2>
-                                        <GooglePay buttonColor="white" />
-                                        <CreditCard
-                                          includeInputLabels
-                                          buttonProps={{
-                                            isLoading: orderProcessing,
-                                            css: {
-                                              backgroundColor: "#a75e2f",
-                                              fontSize: "14px",
-                                              color: "#fff",
-                                              "&:hover": {
-                                                backgroundColor: "#E3BB9D",
-                                              },
-                                            },
-                                          }}
-                                        >
-                                          <div className="w-full h-full flex items-center justify-center">
-                                            {orderProcessing ? (
-                                              <div className="flex w-full items-center justify-center space-x-2">
-                                                <span>Processing Order</span>
-                                                <BeatLoader
-                                                  size={8}
-                                                  color="#602d0d"
-                                                />
-                                              </div>
-                                            ) : (
-                                              <span>
-                                                Pay ${total.toFixed(2)}
-                                              </span>
-                                            )}
-                                          </div>
-                                        </CreditCard>
-                                      </div>
-                                    </PaymentWrapper>
-                                  </div>
-                                )}
-                              </>
-                            ) : (
-                              <>
-                                {session?.user ? (
-                                  <UserForm
-                                    termsAccepted={termsAccepted}
-                                    setTermsAccepted={setTermsAccepted}
-                                    userObj={userObj}
-                                    setUserObj={setUserObj}
-                                    register={register}
-                                    validationErrors={validationErrors}
-                                    setValidationErrors={setValidationErrors}
-                                  />
-                                ) : (
-                                  <GuestForm
-                                    userObj={userObj}
-                                    setUserObj={setUserObj}
-                                    register={register}
-                                    termsAccepted={termsAccepted}
-                                    setTermsAccepted={setTermsAccepted}
-                                    validationErrors={validationErrors}
-                                    setValidationErrors={setValidationErrors}
-                                  />
-                                )}
-                                {!customerInfoSet && (
-                                  <button
-                                    type="button"
-                                    onClick={() => handleCustomerInfoComplete()}
-                                    disabled={!termsAccepted}
-                                    className="w-full flex justify-center py-2 my-4 px-4 border border-transparent rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
-                                  >
-                                    Continue
-                                  </button>
-                                )}
-                                {customerInfoSet && (
-                                  <>
-                                    <ShippingForm
-                                      userObj={userObj}
-                                      setUserObj={setUserObj}
-                                      userShippingObj={userShippingObj}
-                                      setUserShippingObj={setUserShippingObj}
-                                      shippingInfoCheckboxRef={
-                                        shippingInfoCheckboxRef
-                                      }
-                                      setSameAsCustomerInfo={
-                                        setSameAsCustomerInfo
-                                      }
-                                      sameAsCustomerInfo={sameAsCustomerInfo}
-                                      register={register}
-                                    />
-                                    <button
-                                      type="button"
-                                      onClick={handleShippingInfoComplete}
-                                      className="w-full flex justify-center py-2 my-4 px-4 border border-transparent rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
-                                    >
-                                      Continue
-                                    </button>
-                                  </>
-                                )}
-                                {shippingInfoSet && (
-                                  <div className="w-full">
-                                    <PaymentWrapper
-                                      setOrderProcessing={setOrderProcessing}
-                                      total={total}
-                                      userObj={userObj}
-                                      pickup={pickup}
-                                    >
-                                      <div className="w-full flex flex-col space-y-4 pt-3">
-                                        <h2 className="text-lg font-medium py-3">
-                                          Payment Method
-                                        </h2>
-                                        <GooglePay buttonColor="white" />
-                                        <CreditCard
-                                          includeInputLabels
-                                          buttonProps={{
-                                            isLoading: orderProcessing,
-                                            css: {
-                                              backgroundColor: "#a75e2f",
-                                              fontSize: "14px",
-                                              color: "#fff",
-                                              "&:hover": {
-                                                backgroundColor: "#E3BB9D",
-                                              },
-                                            },
-                                          }}
-                                        >
-                                          <div className="w-full h-full flex items-center justify-center">
-                                            {orderProcessing ? (
-                                              <div className="flex w-full items-center justify-center space-x-2">
-                                                <span>Processing Order</span>
-                                                <BeatLoader
-                                                  size={8}
-                                                  color="#602d0d"
-                                                />
-                                              </div>
-                                            ) : (
-                                              <span>
-                                                Pay ${total.toFixed(2)}
-                                              </span>
-                                            )}
-                                          </div>
-                                        </CreditCard>
-                                      </div>
-                                    </PaymentWrapper>
-                                  </div>
-                                )}
                               </>
                             )}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="sm:px-16 sm:w-2/3 h-min md:sticky md:top-44 scroll-smooth mx-auto sm:mx-0">
-                        <div className="w-full h-min flex flex-col justify-center items-center p-3">
-                          <h2 className="sr-only">Order summary</h2>
-                          <table className="inline-flex flex-col rounded-lg border divide-y divide-gray-300 bg-button text-text-primary min-w-full">
-                            <thead className="w-full min-w-full ">
-                              <tr className="flex items-center justify-between min-w-full">
-                                <th
-                                  scope="col"
-                                  className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold  sm:pl-6"
+                            {shippingInfoSet && (
+                              <div className="w-full">
+                                <PaymentWrapper
+                                  setOrderProcessing={setOrderProcessing}
+                                  total={total}
+                                  userObj={userObj}
+                                  pickup={pickup}
+                                  saveCardDetails={saveCardDetails}
                                 >
-                                  Product
-                                </th>
-                                <th
-                                  scope="col"
-                                  className="px-3 py-3.5 text-left text-sm font-semibold "
-                                ></th>
-                                <th
-                                  scope="col"
-                                  className="px-3 py-3.5 text-left text-sm font-semibold "
-                                >
-                                  Subtotal
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-200 bg-white rounded-b-lg min-w-full">
-                              {products &&
-                                products.map((product) => (
-                                  <tr
-                                    key={product.id}
-                                    className="grid grid-cols-3 content-center items-center justify-center min-w-full"
-                                  >
-                                    <td className="py-4 pl-4 text-sm font-medium text-text-primary sm:pl-6 flex flex-nowrap items-center">
-                                      <div className="relative h-20 w-20">
-                                        <Image
-                                          src={
-                                            product.productImage ||
-                                            "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
+                                  <div className="w-full flex flex-col space-y-4 pt-3">
+                                    <h2 className="text-lg font-medium py-3">
+                                      Payment Method
+                                    </h2>
+                                    <div className="mt-6 flex space-x-2 space-y-2 flex-col ">
+                                      {paymentMethods && (
+                                        <div
+                                          className={
+                                            !newCard
+                                              ? `bg-button border rounded-lg p-2 border-text-secondary`
+                                              : `border rounded-lg p-2 border-text-secondary`
                                           }
-                                          alt={product.itemData?.name}
-                                          width={75}
-                                          height={75}
-                                          layout="fixed"
-                                          priority={true}
-                                          className="flex-none w-16 h-16 object-center object-cover bg-gray-100 rounded-md"
-                                        />
+                                        >
+                                          <div>
+                                            <h3 className="text-lg font-medium py-3">
+                                              Existing Payment Method:
+                                            </h3>
+                                            {paymentMethods.map(
+                                              (paymentMethod) => {
+                                                return (
+                                                  <ExistingPaymentMethod
+                                                    setNewCard={setNewCard}
+                                                    newCard={newCard}
+                                                    paymentMethod={
+                                                      paymentMethod
+                                                    }
+                                                  />
+                                                );
+                                              }
+                                            )}
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                    <div
+                                      className={
+                                        newCard
+                                          ? `border rounded-lg p-2 bg-button border-text-secondary`
+                                          : `border rounded-lg p-2 border-text-secondary`
+                                      }
+                                    >
+                                      <div className="flex flex-col items-start justify-start space-x-2 space-y-4 pt-4 ">
+                                        <div className="ml-3 flex items-center h-5 space-x-4">
+                                          <input
+                                            id="new-card"
+                                            onClick={() => {
+                                              setNewCard(true);
+                                            }}
+                                            aria-describedby={`new-card-description`}
+                                            name="new-card"
+                                            type="radio"
+                                            checked={newCard}
+                                            className="focus:text-text-primary h-4 w-4 text-text-primary border-gray-300 c accent-text-primary"
+                                          />
+                                          <label
+                                            className="text-lg font-medium py-3"
+                                            htmlFor="new-card"
+                                          >
+                                            New Card
+                                          </label>
+                                        </div>
+                                        <div className="ml-3 flex items-center h-5 space-x-4 py-8 justify-center">
+                                          <input
+                                            onChange={() =>
+                                              setSaveCardDetails(
+                                                (saveCardDetails: boolean) =>
+                                                  !saveCardDetails
+                                              )
+                                            }
+                                            checked={saveCardDetails}
+                                            id="save-card-details"
+                                            name="save-card-details"
+                                            type="checkbox"
+                                            className="h-6 w-6 border-text-secondary rounded text-text-secondary focus:ring-text-secondary accent-text-secondary"
+                                          />
+                                          <label
+                                            htmlFor="save-card-details"
+                                            className="text-sm text-text-primary select-none"
+                                          >
+                                            Save card details for faster online
+                                            checkout.
+                                          </label>
+                                        </div>
+                                      </div>
+                                      <CreditCard
+                                        includeInputLabels
+                                        buttonProps={{
+                                          isLoading: orderProcessing,
+                                          css: {
+                                            backgroundColor: "#a75e2f",
+                                            fontSize: "14px",
+                                            color: "#fff",
+                                            "&:hover": {
+                                              backgroundColor: "#E3BB9D",
+                                            },
+                                          },
+                                        }}
+                                      >
+                                        <div className="w-full h-full flex items-center justify-center">
+                                          {orderProcessing ? (
+                                            <div className="flex w-full items-center justify-center space-x-2">
+                                              <span>Processing Order</span>
+                                              <BeatLoader
+                                                size={8}
+                                                color="#602d0d"
+                                              />
+                                            </div>
+                                          ) : (
+                                            <span>Pay ${total.toFixed(2)}</span>
+                                          )}
+                                        </div>
+                                      </CreditCard>
+                                      <div className="mt-6 relative">
+                                        <div
+                                          className="absolute inset-0 flex items-center"
+                                          aria-hidden="true"
+                                        >
+                                          <div className="w-full border-t border-text-secondary" />
+                                        </div>
+                                        <div className="relative flex justify-center text-sm">
+                                          <span
+                                            className={
+                                              newCard
+                                                ? `px-2 bg-button`
+                                                : `px-2 bg-white`
+                                            }
+                                          >
+                                            Or continue with
+                                          </span>
+                                        </div>
                                       </div>
 
-                                      <h3 className="text-text-primary pl-2  py-4 text-xs lg:whitespace-nowrap">
-                                        <a href={"#"}>
-                                          {product.itemData?.name}
-                                        </a>
-                                      </h3>
-                                    </td>
-                                    <td className="whitespace-nowrap translate-x-3 justify-self-end px-3 py-4 text-sm">
-                                      {product.quantity}
-                                    </td>
-                                    <td className="whitespace-nowrap px-3 py-4 text-sm justify-self-end">
-                                      $
-                                      {(
-                                        parseInt(
-                                          parseInt(
-                                            product.itemData?.variations?.[0].itemVariationData?.priceMoney?.amount?.toString() as string
-                                          ).toFixed(2)
-                                        ) / 100
-                                      ).toFixed(2)}
-                                    </td>
-                                  </tr>
-                                ))}
-                            </tbody>
-                          </table>
-
-                          <dl className="text-sm font-medium text-text-primary mt-10 space-y-6 w-full">
-                            <div className="flex justify-between">
-                              <dt>Subtotal</dt>
-                              <dd className="text-text-primary">
-                                ${(total - total * 0.1).toFixed(2)}
-                              </dd>
-                            </div>
-                            <div className="flex justify-between">
-                              <dt>GST</dt>
-                              <dd className="text-text-primary">
-                                ${(total * 0.1).toFixed(2)}
-                              </dd>
-                            </div>
-                            {!pickup && (
-                              <div className="flex justify-between">
-                                <dt>Shipping</dt>
-                                <dd className="text-text-primary">$14.00</dd>
+                                      <div className="py-4">
+                                        <GooglePay buttonColor="white" />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </PaymentWrapper>
                               </div>
                             )}
-                            <div className="flex justify-between border-t border-text-primary text-text-primary pt-6">
-                              <dt className="text-base">Total</dt>
-                              <dd className="text-base">${total.toFixed(2)}</dd>
-                            </div>
-                          </dl>
-                        </div>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
-                </>
-              )}
+                  <div className="sm:px-16 sm:w-2/3 h-min md:sticky md:top-44 scroll-smooth mx-auto sm:mx-0">
+                    <div className="w-full h-min flex flex-col justify-center items-center p-3">
+                      <h2 className="sr-only">Order summary</h2>
+                      <table className="inline-flex flex-col rounded-lg border divide-y divide-gray-300 bg-button text-text-primary min-w-full">
+                        <thead className="w-full min-w-full ">
+                          <tr className="flex items-center justify-between min-w-full">
+                            <th
+                              scope="col"
+                              className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold  sm:pl-6"
+                            >
+                              Product
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-3 py-3.5 text-left text-sm font-semibold "
+                            ></th>
+                            <th
+                              scope="col"
+                              className="px-3 py-3.5 text-left text-sm font-semibold "
+                            >
+                              Subtotal
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200 bg-white rounded-b-lg min-w-full">
+                          {products &&
+                            products.map((product) => (
+                              <tr
+                                key={product.id}
+                                className="grid grid-cols-3 content-center items-center justify-center min-w-full"
+                              >
+                                <td className="py-4 pl-4 text-sm font-medium text-text-primary sm:pl-6 flex flex-nowrap items-center">
+                                  <div className="relative h-20 w-20">
+                                    <Image
+                                      src={
+                                        product.productImage ||
+                                        "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
+                                      }
+                                      alt={product.itemData?.name}
+                                      width={75}
+                                      height={75}
+                                      layout="fixed"
+                                      priority={true}
+                                      className="flex-none w-16 h-16 object-center object-cover bg-gray-100 rounded-md"
+                                    />
+                                  </div>
+
+                                  <h3 className="text-text-primary pl-2  py-4 text-xs lg:whitespace-nowrap">
+                                    <a href={"#"}>{product.itemData?.name}</a>
+                                  </h3>
+                                </td>
+                                <td className="whitespace-nowrap translate-x-3 justify-self-end px-3 py-4 text-sm">
+                                  {product.quantity}
+                                </td>
+                                <td className="whitespace-nowrap px-3 py-4 text-sm justify-self-end">
+                                  $
+                                  {(
+                                    parseInt(
+                                      parseInt(
+                                        product.itemData?.variations?.[0].itemVariationData?.priceMoney?.amount?.toString() as string
+                                      ).toFixed(2)
+                                    ) / 100
+                                  ).toFixed(2)}
+                                </td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
+
+                      <dl className="text-sm font-medium text-text-primary mt-10 space-y-6 w-full">
+                        <div className="flex justify-between">
+                          <dt>Subtotal</dt>
+                          <dd className="text-text-primary">
+                            ${(total - total * 0.1).toFixed(2)}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between">
+                          <dt>GST</dt>
+                          <dd className="text-text-primary">
+                            ${(total * 0.1).toFixed(2)}
+                          </dd>
+                        </div>
+                        {!pickup && (
+                          <div className="flex justify-between">
+                            <dt>Shipping</dt>
+                            <dd className="text-text-primary">$14.00</dd>
+                          </div>
+                        )}
+                        <div className="flex justify-between border-t border-text-secondary text-text-primary pt-6">
+                          <dt className="text-base">Total</dt>
+                          <dd className="text-base">${total.toFixed(2)}</dd>
+                        </div>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </>
           ) : (
             <div className="py-4 flex flex-col space-y-4 items-center">

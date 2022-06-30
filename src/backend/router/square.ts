@@ -17,7 +17,7 @@ const { serverRuntimeConfig } = getConfig();
   return this.toString();
 };
 
-const { ordersApi, paymentsApi, customersApi, catalogApi } = new Client({
+const { customersApi, catalogApi } = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
   environment: Environment.Production,
 });
@@ -74,7 +74,6 @@ export const squareRouter = createRouter()
       address: z
         .object({
           addressLine1: z.string(),
-          addressLine2: z.string(),
           locality: z.string(),
           region: z.string(),
           postalCode: z.string(),
@@ -91,7 +90,6 @@ export const squareRouter = createRouter()
         phoneNumber: phoneNumber,
         address: {
           addressLine1: address?.addressLine1,
-          addressLine2: address?.addressLine2,
           administrativeDistrictLevel1: address?.region,
           locality: address?.locality,
           country: address?.country,

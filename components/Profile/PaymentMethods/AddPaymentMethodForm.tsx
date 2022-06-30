@@ -1,29 +1,57 @@
+import { validationErrors } from "@/pages/checkout";
+import { trpc } from "@/utils/trpc";
+import { User } from "@prisma/client";
+import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { CreditCard, PaymentForm } from "react-square-web-payments-sdk";
 import Autocomplete, {
   ReactGoogleAutocompleteInputProps,
 } from "react-google-autocomplete";
-import { useRef } from "react";
-import { User } from "@prisma/client";
-import { validationErrors } from "@/pages/checkout";
+import toast from "react-hot-toast";
+import { BeatLoader } from "react-spinners";
 
-const UserForm = ({
-  userObj,
-  setUserObj,
-  termsAccepted,
-  setTermsAccepted,
-  register,
-  validationErrors,
-  setValidationErrors,
+const AddPaymentMethodForm = ({
+  userObject,
+  setAddCard,
+  refetchPaymentMethods,
 }: {
-  userObj: User;
-  setUserObj: Function;
-  termsAccepted: boolean;
-  setTermsAccepted: Function;
-  register: Function;
-  validationErrors: validationErrors;
-  setValidationErrors: Function;
+  userObject: User;
+  setAddCard: Function;
+  refetchPaymentMethods: Function;
 }) => {
-  const termsCheckboxRef = useRef<HTMLInputElement>(null);
   const streetAddressRef = useRef<HTMLInputElement>(null);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+  const [validationErrors, setValidationErrors] = useState<validationErrors>({
+    name: false,
+    email: false,
+    phone: false,
+    streetAddress: false,
+    city: false,
+    state: false,
+    zip: false,
+  });
+  const [userObj, setUserObj] = useState(userObject);
+  const [processing, setProcessing] = useState(false);
+  const utils = trpc.useContext();
+  const {
+    data: customer,
+    status,
+    refetch,
+  } = trpc.useQuery([
+    "search-customer",
+    {
+      email: userObj.email,
+    },
+  ]);
+  const createCustomer = trpc.useMutation(["square-customer.create-customer"]);
+  const saveCardMutation = trpc.useMutation([
+    "square-payment.create-customer-payment-method",
+  ]);
 
   return (
     <>
@@ -44,27 +72,19 @@ const UserForm = ({
                 >
                   First name
                 </label>
-                <div className="mt-1 relative">
-                  <div>
-                    {validationErrors.name && (
-                      <span className="text-red-500 text-xs sm:text-sm absolute -top-2 right-0 bg-white rounded-sm px-1 font-gothic">
-                        This field is required
-                      </span>
-                    )}
-                  </div>
+                <div className="mt-1">
                   <input
                     type="text"
                     id="first-name"
                     name="first-name"
                     autoComplete="given-name"
                     defaultValue={userObj?.firstName as string}
-                    onChange={(e) => {
-                      setValidationErrors({ ...validationErrors, name: false });
+                    onChange={(e) =>
                       setUserObj({
                         ...userObj,
                         firstName: e.target.value,
-                      });
-                    }}
+                      })
+                    }
                     className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
                   />
                 </div>
@@ -102,53 +122,17 @@ const UserForm = ({
                 >
                   Email Address
                 </label>
-                <div className="mt-1 relative">
-                  <div>
-                    {validationErrors.email && (
-                      <span className="text-red-500 text-xs sm:text-sm absolute -top-2 right-0 bg-white rounded-sm px-1 font-gothic">
-                        This field is required
-                      </span>
-                    )}
-                  </div>
+                <div className="mt-1">
                   <input
                     type="text"
                     name="email"
                     id="email"
                     autoComplete="email"
                     defaultValue={userObj?.email as string}
-                    onChange={(e) => {
-                      setValidationErrors({
-                        ...validationErrors,
-                        email: false,
-                      });
-                      setUserObj({
-                        ...userObj,
-                        email: e.target.value,
-                      });
-                    }}
-                    className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
-                  />
-                </div>
-              </div>
-
-              <div className="sm:col-span-2">
-                <label
-                  htmlFor="company"
-                  className="block text-sm font-medium text-text-primary"
-                >
-                  Company
-                </label>
-                <div className="mt-1">
-                  <input
-                    type="text"
-                    name="company"
-                    id="company"
-                    autoComplete="organization"
-                    defaultValue={userObj?.company as string}
                     onChange={(e) =>
                       setUserObj({
                         ...userObj,
-                        company: e.target.value,
+                        email: e.target.value,
                       })
                     }
                     className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
@@ -226,12 +210,9 @@ const UserForm = ({
                   value={userObj?.streetAddress as string}
                   inputAutocompleteValue={userObj?.streetAddress as string}
                   onChange={(e) => {
-                    setValidationErrors(
-                      (validationErrors) => {
-                        return { ...validationErrors, streetAddress: false };
-                      },
-                      [validationErrors.streetAddress]
-                    );
+                    setValidationErrors((validationErrors) => {
+                      return { ...validationErrors, streetAddress: false };
+                    });
                     setUserObj({
                       ...userObj,
                       streetAddress: (e.target as HTMLTextAreaElement).value,
@@ -306,12 +287,9 @@ const UserForm = ({
                       required: true,
                       value: userObj.city ? (userObj.city as string) : "",
                       onChange: (e) => {
-                        setValidationErrors(
-                          (validationErrors) => {
-                            return { ...validationErrors, city: false };
-                          },
-                          [validationErrors.city]
-                        );
+                        setValidationErrors((validationErrors) => {
+                          return { ...validationErrors, city: false };
+                        });
                         setUserObj({
                           ...userObj,
                           city: e.target.value,
@@ -431,24 +409,14 @@ const UserForm = ({
                 >
                   Phone
                 </label>
-                <div className="mt-1 relative">
-                  <div>
-                    {validationErrors.phone && (
-                      <span className="text-red-500 text-xs sm:text-sm absolute -top-2 right-0 bg-white rounded-sm px-1 font-gothic">
-                        This field is required
-                      </span>
-                    )}
-                  </div>
+                <div className="mt-1">
                   <input
                     id="tel"
-                    {...register("tel")}
+                    name="phone"
                     autoComplete="tel"
                     type={userObj.phoneNumber ? "text" : "tel"}
                     defaultValue={userObj.phoneNumber as string}
                     onChange={(e) => {
-                      setValidationErrors((validationErrors) => {
-                        return { ...validationErrors, phone: false };
-                      });
                       setUserObj({
                         ...userObj,
                         phoneNumber: e.target.value,
@@ -460,32 +428,143 @@ const UserForm = ({
               </div>
             </div>
           </div>
-
-          <div className="mt-6 flex space-x-2 space-y-2 flex-col">
-            <div className="flex items-center space-x-2 ">
-              <input
-                onChange={() =>
-                  setTermsAccepted((termsAccepted: boolean) => !termsAccepted)
-                }
-                ref={termsCheckboxRef}
-                checked={termsAccepted}
-                id="terms"
-                name="terms"
-                type="checkbox"
-                className="h-6 w-6 border-text-secondary rounded text-text-secondary focus:ring-text-secondary accent-text-secondary"
-              />
-              <label
-                htmlFor="terms"
-                className="text-sm text-text-primary select-none"
-              >
-                I have read the terms and conditions and privacy policy.
-              </label>
-            </div>
-          </div>
         </form>
       )}
+      <div className="md:w-2/3 md:mx-auto pt-16">
+        <PaymentForm
+          applicationId={
+            process.env.NEXT_PUBLIC_SQUARE_APP_ID
+              ? process.env.NEXT_PUBLIC_SQUARE_APP_ID
+              : ""
+          }
+          locationId={
+            process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID
+              ? process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID
+              : ""
+          }
+          // createPaymentRequest={() => ({
+          //   countryCode: "AU",
+          //   currencyCode: "AUD",
+          //   displayItems: [
+          //     {
+          //       amount: "22.15",
+          //       label: "Item to be purchased",
+          //       id: "SKU-12345",
+          //       imageUrl: "https://url-cdn.com/123ABC",
+          //       pending: true,
+          //       productUrl: "https://my-company.com/product-123ABC",
+          //     },
+          //   ],
+          //   taxLineItems: [
+          //     {
+          //       label: "State Tax",
+          //       amount: "8.95",
+          //       pending: true,
+          //     },
+          //   ],
+          //   requestBillingContact: false,
+          //   requestShippingContact: false,
+          //   total: {
+          //     amount: "22.15",
+          //     label: "Total",
+          //   },
+          // })}
+          cardTokenizeResponseReceived={async (token, buyer) => {
+            setProcessing(true);
+            if (!customer?.id) {
+              createCustomer.mutate(
+                {
+                  email: userObj.email,
+                  firstName: userObj.firstName as string,
+                  lastName: userObj.lastName as string,
+                  phoneNumber: userObj.phoneNumber as string,
+                  address: {
+                    addressLine1: userObj.streetAddress as string,
+                    postalCode: userObj.postalCode as string,
+                    region: userObj.state as string,
+                    locality: userObj.state as string,
+                    country: "Australia",
+                  },
+                },
+                {
+                  onSuccess: (data) => {
+                    utils.invalidateQueries(["search-customer"]);
+                    console.log(data);
+                    console.log(customer);
+                  },
+                }
+              );
+            }
+            saveCardMutation.mutate(
+              {
+                customerId: customer?.id ? customer.id : "",
+                token: {
+                  cardDetails: {
+                    billingAddress: {
+                      postalCode: userObj?.postalCode as string,
+                      country: "AU",
+                      addressLine1: userObj.streetAddress as string,
+                      addressLine2: userObj.city as string,
+                      locality: userObj.state as string,
+                    },
+                    expMonth: token.details?.card?.expMonth as number,
+                    expYear: token.details?.card?.expYear as number,
+                    holderName: userObj.name as string,
+                  },
+                  cardNonce: token.token as string,
+                },
+              },
+              {
+                onSuccess: (data) => {
+                  refetchPaymentMethods();
+                  utils
+                    .refetchQueries([
+                      "square-payment.get-customer-payment-methods",
+                    ])
+                    .then(() => {
+                      setAddCard((addCard: boolean) => !addCard);
+                      setProcessing(false);
+                      toast.success("Card added successfully");
+                    });
+                },
+
+                onError: (error) => {
+                  setProcessing(false);
+                  toast.error(
+                    "Failed to add card. Please check the details and try again"
+                  );
+                },
+              }
+            );
+          }}
+        >
+          <CreditCard
+            includeInputLabels
+            buttonProps={{
+              isLoading: processing,
+              css: {
+                backgroundColor: "#a75e2f",
+                fontSize: "14px",
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#E3BB9D",
+                },
+              },
+            }}
+          >
+            {processing ? (
+              <div className="flex w-full items-center justify-center space-x-2">
+                <span>Adding Card...</span>
+                <BeatLoader size={8} color="#602d0d" />
+              </div>
+            ) : (
+              <span>Add Card</span>
+            )}
+          </CreditCard>
+        </PaymentForm>
+      </div>
     </>
   );
 };
 
-export default UserForm;
+export default AddPaymentMethodForm;

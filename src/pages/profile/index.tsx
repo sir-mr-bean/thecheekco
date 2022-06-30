@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import BeatLoader from "react-spinners/BeatLoader";
 import { trpc } from "@/utils/trpc";
 import Head from "next/head";
+import Script from "next/script";
 
 const tabs = [
   {
@@ -32,6 +33,8 @@ const tabs = [
     name: "admin",
   },
 ];
+
+Profile.Oneko = true;
 
 export default function Profile(): JSX.Element {
   const { data: session, status } = useSession();
@@ -69,6 +72,10 @@ export default function Profile(): JSX.Element {
           content="More than just amazing bath and skin care products. Ethically sourced handmade in Australia, cruelty free, vegan."
         />
         <link rel="icon" href="/favicon.ico" />
+        <Script
+          src="../../../public/oneko/oneko.js"
+          strategy="afterInteractive"
+        />
       </Head>
       <div className=" min-h-screen">
         <div>
@@ -194,7 +201,7 @@ export default function Profile(): JSX.Element {
                 )}
                 {openTab === 4 && (
                   <>
-                    <PaymentMethods />
+                    <PaymentMethods userObj={session?.user} />
                   </>
                 )}
                 {openTab === 5 && (

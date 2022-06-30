@@ -12,7 +12,7 @@ import { randomUUID } from "crypto";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-const { ordersApi, paymentsApi } = new Client({
+const { ordersApi, paymentsApi, cardsApi } = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
   environment: Environment.Production,
 });
@@ -92,5 +92,78 @@ export const squarePaymentRouter = createRouter()
 
         return { orderResult, orderCreated };
       }
+    },
+  })
+  .query("get-customer-payment-methods", {
+    input: z.object({
+      customerId: z.string(),
+    }),
+    async resolve({ input, ctx }) {
+      const { customerId } = input;
+      const getCustomerPaymentMethods = await cardsApi.listCards(
+        undefined,
+        customerId
+      );
+      const customerPaymentMethods = getCustomerPaymentMethods?.result?.cards;
+      return customerPaymentMethods;
+    },
+  })
+  .mutation("create-customer-payment-method", {
+    input: z.object({
+      customerId: z.string(),
+      token: z.object({
+        cardNonce: z.string(),
+        cardDetails: z.object({
+          billingAddress: z.object({
+            addressLine1: z.string(),
+            addressLine2: z.string(),
+            locality: z.string(),
+            postalCode: z.string(),
+            country: z.string(),
+          }),
+          expMonth: z.number(),
+          expYear: z.number(),
+          holderName: z.string(),
+        }),
+      }),
+    }),
+    async resolve({ input, ctx }) {
+      const { customerId, token } = input;
+      console.log("saving card", token);
+      const createCustomerPaymentMethod = await cardsApi.createCard({
+        idempotencyKey: randomUUID(),
+        sourceId: token.cardNonce,
+        card: {
+          billingAddress: {
+            addressLine1: token.cardDetails.billingAddress.addressLine1,
+            addressLine2: token.cardDetails.billingAddress.addressLine2,
+            locality: token.cardDetails.billingAddress.locality,
+            postalCode: token.cardDetails.billingAddress.postalCode,
+            country: token.cardDetails.billingAddress.country,
+          },
+          cardholderName: token.cardDetails.holderName,
+          expMonth: BigInt(token.cardDetails.expMonth),
+          expYear: BigInt(token.cardDetails.expYear),
+          customerId: customerId,
+        },
+      });
+      console.log(createCustomerPaymentMethod.result);
+      console.log("saved card", createCustomerPaymentMethod);
+      const customerPaymentMethod = createCustomerPaymentMethod?.result?.card;
+      return customerPaymentMethod;
+    },
+  })
+  .mutation("delete-customer-payment-method", {
+    input: z.object({
+      customerId: z.string(),
+      paymentMethodId: z.string(),
+    }),
+    async resolve({ input, ctx }) {
+      const { customerId, paymentMethodId } = input;
+      const deleteCustomerPaymentMethod = await cardsApi.disableCard(
+        paymentMethodId
+      );
+      const customerPaymentMethod = deleteCustomerPaymentMethod?.result?.card;
+      return customerPaymentMethod;
     },
   });

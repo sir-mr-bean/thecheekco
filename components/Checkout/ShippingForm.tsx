@@ -347,8 +347,9 @@ const ShippingForm = ({
                     setUserObj({ ...userObj, state: e.target.value }),
                 })}
                 id="guest-region"
+                disabled={sameAsCustomerInfo}
                 autoComplete="address-level1"
-                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full border sm:text-sm border-text-primary rounded-md p-1 py-1.5 focus:ring"
+                className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 py-1.5"
               >
                 <option>ACT</option>
                 <option>NSW</option>

@@ -135,7 +135,7 @@ const Admin = () => {
                     <div className="flex flex-col space-y-2 w-full">
                       <div className="flex flex-col w-full space-y-4">
                         <div className="flex space-x-2 items-center justify-center text-lg">
-                          <span>No Unapproved Reviews</span>
+                          <span>🦦 No Unapproved Reviews 🦦</span>
                         </div>
                       </div>
                     </div>

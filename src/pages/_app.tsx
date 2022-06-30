@@ -40,7 +40,7 @@ const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
       });
     }
   }, [pageProps.session]);
-
+  console.log(Component);
   return (
     <SessionProvider session={pageProps.session}>
       <CartContext>
@@ -72,13 +72,18 @@ const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
           `,
             }}
           />
-          <Script src="/oneko/oneko.js" strategy="afterInteractive" />
+
           <div className="max-w-screen bg-bg-tan bg-cover">
             <Header />
             {Component.auth ? (
               <Auth>
                 <Component {...pageProps} />
               </Auth>
+            ) : Component.Oneko ? (
+              <>
+                <Script src="/oneko/oneko.js" strategy="afterInteractive" />
+                <Component {...pageProps} />
+              </>
             ) : (
               <Component {...pageProps} />
             )}
