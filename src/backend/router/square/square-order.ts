@@ -115,7 +115,7 @@ export const squareOrderRouter = createRouter()
           idempotencyKey: randomUUID(),
           order: {
             locationId: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string,
-            referenceId: referenceId,
+            referenceId: referenceId.substring(0, 39),
             customerId: customerId,
             lineItems: lineItems.map(({ catalogObjectId, quantity }) => ({
               catalogObjectId,
@@ -200,7 +200,7 @@ export const squareOrderRouter = createRouter()
             idempotencyKey: randomUUID(),
             order: {
               locationId: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string,
-              referenceId: referenceId,
+              referenceId: referenceId.substring(0, 39),
               customerId: customerId,
               lineItems: lineItems.map(({ catalogObjectId, quantity }) => ({
                 catalogObjectId,

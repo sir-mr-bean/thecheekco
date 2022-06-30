@@ -5,6 +5,7 @@ import { User } from "@prisma/client";
 import { useRouter } from "next/router";
 import { Dispatch, useState } from "react";
 import { PaymentForm } from "react-square-web-payments-sdk";
+import { Card } from "square";
 
 const PaymentWrapper = ({
   children,
@@ -13,6 +14,7 @@ const PaymentWrapper = ({
   userObj,
   pickup,
   saveCardDetails,
+  selectedPaymentMethod,
 }: {
   children: React.ReactNode;
   setOrderProcessing: Dispatch<boolean>;
@@ -20,6 +22,7 @@ const PaymentWrapper = ({
   userObj: User;
   pickup: boolean;
   saveCardDetails: boolean;
+  selectedPaymentMethod: Card | null;
 }) => {
   const router = useRouter();
   const { data: customer, status } = trpc.useQuery([

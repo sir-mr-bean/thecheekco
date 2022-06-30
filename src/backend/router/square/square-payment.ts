@@ -24,12 +24,15 @@ export const squarePaymentRouter = createRouter()
       orderId: z.string(),
       totalMoney: z.string(),
       token: z.string(),
+      customerId: z.string().nullish(),
     }),
     async resolve({ input, ctx }) {
       const { orderId, totalMoney, token } = input;
       const totalPayment = BigInt(totalMoney);
+      console.log(input);
       const payment = await paymentsApi.createPayment({
         idempotencyKey: randomUUID(),
+        customerId: input.customerId ? (input.customerId as string) : undefined,
         sourceId: token,
         amountMoney: {
           currency: "AUD",
@@ -39,7 +42,6 @@ export const squarePaymentRouter = createRouter()
         locationId: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string,
         autocomplete: false,
       });
-
       const paymentResult = payment?.result?.payment;
       return paymentResult;
     },

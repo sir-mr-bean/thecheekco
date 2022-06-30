@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 import SignInHeader from "@/components/Checkout/SignInHeader";
 import SuccessModal from "@/components/Checkout/SuccessModal";
 import Image from "next/image";
-import { CatalogObject } from "square";
+import { Card, CatalogObject } from "square";
 import PickupToggle from "@/components/Checkout/PickupToggle";
 import ShippingForm from "@/components/Checkout/ShippingForm";
 import PaymentWrapper from "@/components/Checkout/PaymentWrapper";
@@ -24,6 +24,7 @@ import Marker from "@/components/Checkout/Map/Marker";
 import Head from "next/head";
 import { trpc } from "@/utils/trpc";
 import ExistingPaymentMethod from "@/components/Checkout/PaymentMethods/ExistingPaymentMethod";
+import { useRouter } from "next/router";
 
 export type validationErrors = {
   name: boolean;
@@ -41,16 +42,26 @@ export default function checkout() {
     watch,
     formState: { errors },
   } = useForm();
+  const router = useRouter();
   const [pickup, setPickup] = useState(false);
   const [firstLoad, setFirstLoad] = useState(true);
   const [orderProcessing, setOrderProcessing] = useState(false);
+  const [savedCardOrderProcessing, setSavedCardOrderProcessing] =
+    useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
   const termsCheckboxRef = useRef<HTMLInputElement>(null);
   const shippingInfoCheckboxRef = useRef<HTMLInputElement>(null);
   const {
     cart,
+    dispatch,
   }: {
     cart: CartObject[];
+    dispatch: Dispatch<{
+      type: string;
+      item?: CartObject;
+      quantity?: number;
+      productImage?: string;
+    }>;
   } = CartState();
   const [total, setTotal] = useState(0);
   const tax = (parseInt(total.toFixed(2)) * 0.1).toFixed(2);
@@ -113,6 +124,8 @@ export default function checkout() {
   const [readyForPayment, setReadyForPayment] = useState(false);
   const [saveCardDetails, setSaveCardDetails] = useState(false);
   const [newCard, setNewCard] = useState(true);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] =
+    useState<Card | null>(null);
   const { data: customer, status: CustomerStatus } = trpc.useQuery([
     "search-customer",
     {
@@ -135,6 +148,23 @@ export default function checkout() {
       enabled: CustomerStatus === "success",
     }
   );
+  const utils = trpc.useContext();
+  const deliveryOrderMutation = trpc.useMutation([
+    "square-order.create-delivery-order",
+  ]);
+  const pickupOrderMutation = trpc.useMutation([
+    "square-order.create-pickup-order",
+  ]);
+  const paymentMutation = trpc.useMutation([
+    "square-payment.create-order-payment",
+  ]);
+  const completeOrderMutation = trpc.useMutation([
+    "square-payment.complete-order-payment",
+  ]);
+  const updateOrderMutation = trpc.useMutation(["square-order.update-order"]);
+  const saveCardMutation = trpc.useMutation([
+    "square-payment.create-customer-payment-method",
+  ]);
 
   useEffect(() => {
     const total = cart.reduce((acc: number, cur: CartObject) => {
@@ -212,6 +242,160 @@ export default function checkout() {
       if (termsCheckboxRef.current) {
         termsCheckboxRef.current.focus();
       }
+    }
+  };
+
+  const handleExistingCardPayment = (paymentMethod: Card) => {
+    console.log(customer);
+    setSavedCardOrderProcessing(true);
+    if (pickup) {
+      pickupOrderMutation.mutate(
+        {
+          pickupCustomer: {
+            firstName: userObj.firstName as string,
+            lastName: userObj.lastName as string,
+            email: userObj.email as string,
+            phoneNumber: userObj.phoneNumber as string,
+          },
+
+          referenceId: `${userObj.lastName} ${new Date()}` as string,
+          lineItems: cart.map((product) => {
+            return {
+              catalogObjectId: product.itemData?.variations?.[0].id as string,
+              quantity: product.quantity,
+              modifiers: [
+                {
+                  name: product.itemData?.name as string,
+                  catalogObjectId: product.id,
+                },
+              ],
+            };
+          }),
+        },
+        {
+          onSuccess(data, variables, context) {
+            const orderId = data?.id as string;
+            const totalMoney = data?.totalMoney?.amount?.toString() as string;
+            const customerId = data?.customerId as string;
+            console.log(customerId);
+            paymentMutation.mutate(
+              {
+                orderId: orderId,
+                totalMoney: totalMoney,
+                token: paymentMethod.id as string,
+                customerId: data?.customerId as string,
+              },
+              {
+                onSuccess(data, variables, context) {
+                  if (data?.status === "APPROVED") {
+                    completeOrderMutation.mutate(
+                      {
+                        orderId: orderId,
+                        paymentId: data?.id as string,
+                      },
+                      {
+                        onSuccess(data, variables, context) {
+                          setSavedCardOrderProcessing(false);
+                          dispatch({
+                            type: "CLEAR_CART",
+                          });
+                          router.push(`/order/${orderId}?success=true`);
+                        },
+                      }
+                    );
+                  }
+                },
+              }
+            );
+          },
+        }
+      );
+    } else {
+      deliveryOrderMutation.mutate(
+        {
+          lineItems: cart.map((product) => {
+            return {
+              catalogObjectId: product.itemData?.variations?.[0].id as string,
+              quantity: product.quantity,
+              modifiers: [
+                {
+                  name: product.itemData?.name as string,
+                  catalogObjectId: product.id,
+                },
+              ],
+            };
+          }),
+          referenceId: paymentMethod.id as string,
+          billingAddress: {
+            email: userObj.email,
+            firstName: userObj.firstName || "",
+            lastName: userObj.lastName || "",
+            displayName: `${userObj?.firstName} ${userObj.lastName}`,
+            companyName: userObj.company as string,
+            phoneNumber: userObj.phoneNumber as string,
+            addressLine1: userObj.apartmentOrUnit
+              ? `${userObj.apartmentOrUnit} / ${userObj.streetAddress}`
+              : `${userObj.streetAddress}`,
+
+            locality: userObj.city as string,
+            region: userObj.state as string,
+            postalCode: userObj.postalCode as string,
+            country: "AU",
+          },
+          shippingAddress: {
+            email: userObj.email,
+            firstName: userObj.firstName as string,
+            lastName: userObj.lastName as string,
+            displayName: `${userObj?.firstName} ${userObj.lastName}`,
+            companyName: userObj.company as string,
+            phoneNumber: userObj.phoneNumber as string,
+            addressLine1: userObj.apartmentOrUnit
+              ? `${userObj.apartmentOrUnit} / ${userObj.streetAddress}`
+              : `${userObj.streetAddress}`,
+
+            locality: userObj.city as string,
+            region: userObj.state as string,
+            postalCode: userObj.postalCode as string,
+            country: "AU",
+          },
+        },
+        {
+          onSuccess(data, variables, context) {
+            const orderId = data?.id as string;
+            const totalMoney = data?.totalMoney?.amount?.toString() as string;
+
+            paymentMutation.mutate(
+              {
+                orderId: orderId,
+                totalMoney: totalMoney,
+                token: paymentMethod.id as string,
+                customerId: data?.customerId as string,
+              },
+              {
+                onSuccess(data, variables, context) {
+                  if (data?.status === "APPROVED") {
+                    completeOrderMutation.mutate(
+                      {
+                        orderId: orderId,
+                        paymentId: data?.id as string,
+                      },
+                      {
+                        onSuccess(data, variables, context) {
+                          setSavedCardOrderProcessing(false);
+                          dispatch({
+                            type: "CLEAR_CART",
+                          });
+                          router.push(`/order/${orderId}?success=true`);
+                        },
+                      }
+                    );
+                  }
+                },
+              }
+            );
+          },
+        }
+      );
     }
   };
 
@@ -359,40 +543,157 @@ export default function checkout() {
                                   userObj={userObj}
                                   pickup={pickup}
                                   saveCardDetails={saveCardDetails}
+                                  selectedPaymentMethod={selectedPaymentMethod}
                                 >
                                   <div className="w-full flex flex-col space-y-4 pt-3">
                                     <h2 className="text-lg font-medium py-3">
                                       Payment Method
                                     </h2>
-                                    <GooglePay buttonColor="white" />
-                                    <CreditCard
-                                      includeInputLabels
-                                      buttonProps={{
-                                        isLoading: orderProcessing,
-                                        css: {
-                                          backgroundColor: "#a75e2f",
-                                          fontSize: "14px",
-                                          color: "#fff",
-                                          "&:hover": {
-                                            backgroundColor: "#E3BB9D",
-                                          },
-                                        },
-                                      }}
-                                    >
-                                      <div className="w-full h-full flex items-center justify-center">
-                                        {orderProcessing ? (
-                                          <div className="flex w-full items-center justify-center space-x-2">
-                                            <span>Processing Order</span>
-                                            <BeatLoader
-                                              size={8}
-                                              color="#602d0d"
-                                            />
+                                    <div className="mt-6 flex space-x-2 space-y-2 flex-col">
+                                      {paymentMethods && (
+                                        <div
+                                          className={
+                                            !newCard
+                                              ? `bg-button border rounded-lg p-2 border-text-secondary`
+                                              : `border rounded-lg p-2 border-text-secondary`
+                                          }
+                                        >
+                                          <div>
+                                            <h3 className="text-lg font-medium py-3">
+                                              Existing Payment Method:
+                                            </h3>
+                                            {paymentMethods.map(
+                                              (paymentMethod) => {
+                                                return (
+                                                  <ExistingPaymentMethod
+                                                    setNewCard={setNewCard}
+                                                    newCard={newCard}
+                                                    paymentMethod={
+                                                      paymentMethod
+                                                    }
+                                                    setSelectedPaymentMethod={
+                                                      setSelectedPaymentMethod
+                                                    }
+                                                  />
+                                                );
+                                              }
+                                            )}
+
+                                            <button
+                                              onClick={() => {
+                                                selectedPaymentMethod
+                                                  ? handleExistingCardPayment(
+                                                      selectedPaymentMethod
+                                                    )
+                                                  : setNewCard(true);
+                                              }}
+                                              disabled={newCard}
+                                              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-text-secondary hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
+                                            >
+                                              {savedCardOrderProcessing ? (
+                                                <div className="flex w-full items-center justify-center space-x-2">
+                                                  <span>Processing Order</span>
+                                                  <BeatLoader
+                                                    size={8}
+                                                    color="#602d0d"
+                                                  />
+                                                </div>
+                                              ) : (
+                                                <span>
+                                                  Pay ${total.toFixed(2)}
+                                                </span>
+                                              )}
+                                            </button>
                                           </div>
-                                        ) : (
-                                          <span>Pay ${total.toFixed(2)}</span>
-                                        )}
+                                        </div>
+                                      )}
+                                    </div>
+
+                                    <div
+                                      className={
+                                        newCard
+                                          ? `border rounded-lg p-2 bg-button border-text-secondary`
+                                          : `border rounded-lg p-2 border-text-secondary`
+                                      }
+                                    >
+                                      <div className="flex flex-col items-start justify-start space-x-2 space-y-4 pt-4 ">
+                                        <div className="ml-3 flex items-center h-5 space-x-4">
+                                          <input
+                                            id="new-card"
+                                            onClick={() => {
+                                              setNewCard(true);
+                                              setSelectedPaymentMethod(null);
+                                            }}
+                                            aria-describedby={`new-card-description`}
+                                            name="new-card"
+                                            type="radio"
+                                            checked={newCard}
+                                            className="focus:text-text-primary h-4 w-4 text-text-primary border-gray-300 c accent-text-primary"
+                                          />
+
+                                          <label
+                                            className="text-lg font-medium py-3"
+                                            htmlFor="new-card"
+                                          >
+                                            New Card
+                                          </label>
+                                        </div>
+                                        <div className="ml-3 flex items-center h-5 space-x-4 py-8 justify-center">
+                                          <input
+                                            onChange={() =>
+                                              setSaveCardDetails(
+                                                (saveCardDetails: boolean) =>
+                                                  !saveCardDetails
+                                              )
+                                            }
+                                            checked={saveCardDetails}
+                                            id="save-card-details"
+                                            name="save-card-details"
+                                            type="checkbox"
+                                            className="h-6 w-6 border-text-secondary rounded text-text-secondary focus:ring-text-secondary accent-text-secondary"
+                                          />
+                                          <label
+                                            htmlFor="save-card-details"
+                                            className="text-sm text-text-primary select-none"
+                                          >
+                                            Save card details for faster online
+                                            checkout.
+                                          </label>
+                                        </div>
                                       </div>
-                                    </CreditCard>
+
+                                      <CreditCard
+                                        includeInputLabels
+                                        buttonProps={{
+                                          isLoading: orderProcessing,
+                                          css: {
+                                            backgroundColor: "#a75e2f",
+                                            fontSize: "14px",
+                                            color: "#fff",
+                                            "&:hover": {
+                                              backgroundColor: "#E3BB9D",
+                                            },
+                                          },
+                                        }}
+                                      >
+                                        <div className="w-full h-full flex items-center justify-center">
+                                          {orderProcessing ? (
+                                            <div className="flex w-full items-center justify-center space-x-2">
+                                              <span>Processing Order</span>
+                                              <BeatLoader
+                                                size={8}
+                                                color="#602d0d"
+                                              />
+                                            </div>
+                                          ) : (
+                                            <span>Pay ${total.toFixed(2)}</span>
+                                          )}
+                                        </div>
+                                      </CreditCard>
+                                      <div className="py-4">
+                                        <GooglePay buttonColor="white" />
+                                      </div>
+                                    </div>
                                   </div>
                                 </PaymentWrapper>
                               </div>
@@ -462,6 +763,7 @@ export default function checkout() {
                                   userObj={userObj}
                                   pickup={pickup}
                                   saveCardDetails={saveCardDetails}
+                                  selectedPaymentMethod={selectedPaymentMethod}
                                 >
                                   <div className="w-full flex flex-col space-y-4 pt-3">
                                     <h2 className="text-lg font-medium py-3">
@@ -489,10 +791,39 @@ export default function checkout() {
                                                     paymentMethod={
                                                       paymentMethod
                                                     }
+                                                    setSelectedPaymentMethod={
+                                                      setSelectedPaymentMethod
+                                                    }
                                                   />
                                                 );
                                               }
                                             )}
+
+                                            <button
+                                              onClick={() => {
+                                                selectedPaymentMethod
+                                                  ? handleExistingCardPayment(
+                                                      selectedPaymentMethod
+                                                    )
+                                                  : setNewCard(true);
+                                              }}
+                                              disabled={newCard}
+                                              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-text-secondary hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
+                                            >
+                                              {savedCardOrderProcessing ? (
+                                                <div className="flex w-full items-center justify-center space-x-2">
+                                                  <span>Processing Order</span>
+                                                  <BeatLoader
+                                                    size={8}
+                                                    color="#602d0d"
+                                                  />
+                                                </div>
+                                              ) : (
+                                                <span>
+                                                  Pay ${total.toFixed(2)}
+                                                </span>
+                                              )}
+                                            </button>
                                           </div>
                                         </div>
                                       )}
@@ -510,6 +841,7 @@ export default function checkout() {
                                             id="new-card"
                                             onClick={() => {
                                               setNewCard(true);
+                                              setSelectedPaymentMethod(null);
                                             }}
                                             aria-describedby={`new-card-description`}
                                             name="new-card"
@@ -517,6 +849,7 @@ export default function checkout() {
                                             checked={newCard}
                                             className="focus:text-text-primary h-4 w-4 text-text-primary border-gray-300 c accent-text-primary"
                                           />
+
                                           <label
                                             className="text-lg font-medium py-3"
                                             htmlFor="new-card"
@@ -550,13 +883,15 @@ export default function checkout() {
                                       <CreditCard
                                         includeInputLabels
                                         buttonProps={{
-                                          isLoading: orderProcessing,
+                                          isLoading:
+                                            orderProcessing || !newCard,
                                           css: {
                                             backgroundColor: "#a75e2f",
                                             fontSize: "14px",
                                             color: "#fff",
-                                            "&:hover": {
-                                              backgroundColor: "#E3BB9D",
+                                            border: "1px solid transparent",
+                                            "&:hover&:not(:disabled)": {
+                                              border: "1px solid black",
                                             },
                                           },
                                         }}

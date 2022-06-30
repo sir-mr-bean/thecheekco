@@ -1,20 +1,25 @@
+import { CreditCard } from "react-square-web-payments-sdk";
 import { Card } from "square";
 
 export default function ExistingPaymentMethod({
   paymentMethod,
   setNewCard,
   newCard,
+  setSelectedPaymentMethod,
 }: {
   paymentMethod: Card;
   setNewCard: (newCard: boolean) => void;
   newCard: boolean;
+  setSelectedPaymentMethod: (paymentMethod: Card) => void;
 }) {
+  console.log(paymentMethod);
   return (
     <div className="flex items-center justify-start w-full space-x-3 py-4">
       <div className="ml-3 flex items-center h-5">
         <input
           onClick={() => {
             setNewCard(false);
+            setSelectedPaymentMethod(paymentMethod);
           }}
           id={`account-${paymentMethod.id}`}
           aria-describedby={`account-${paymentMethod.id}-description`}
