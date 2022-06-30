@@ -1,5 +1,6 @@
-(function oneko() {
+function oneko() {
   const nekoEl = document.createElement("div");
+  nekoEl.id = "nekoEl";
   let nekoPosX = 32;
   let nekoPosY = 32;
   let mousePosX = 0;
@@ -65,6 +66,7 @@
     nekoEl.style.left = "16px";
     nekoEl.style.top = "16px";
     nekoEl.style.zIndex = "100";
+    nekoEl.className = "neko";
 
     document.body.appendChild(nekoEl);
 
@@ -144,7 +146,7 @@
       return;
     }
 
-    direction = diffY / distance > 0.5 ? "N" : "";
+    let direction = diffY / distance > 0.5 ? "N" : "";
     direction += diffY / distance < -0.5 ? "S" : "";
     direction += diffX / distance > 0.5 ? "W" : "";
     direction += diffX / distance < -0.5 ? "E" : "";
@@ -158,4 +160,15 @@
   }
 
   create();
-})();
+}
+
+export default oneko;
+
+export function destroyOneko() {
+  const oneko = document.body.getElementsByClassName("neko")[0];
+  if (oneko) {
+    console.log(oneko);
+    oneko.remove();
+  }
+  clearInterval(window.onekoInterval);
+}
