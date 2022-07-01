@@ -18,76 +18,77 @@ import { httpLink } from "@trpc/client/links/httpLink";
 import { splitLink } from "@trpc/client/links/splitLink";
 import { useRouter } from "next/router";
 import Script from "next/script";
+import React from "react";
 
 const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
-  // const router = useRouter();
-  // useEffect(() => {
-  //   const handleRouteChange = (url: string) => {
-  //     gtag.pageview(url);
-  //   };
-  //   router.events.on("routeChangeComplete", handleRouteChange);
-  //   router.events.on("hashChangeComplete", handleRouteChange);
-  //   return () => {
-  //     router.events.off("routeChangeComplete", handleRouteChange);
-  //     router.events.off("hashChangeComplete", handleRouteChange);
-  //   };
-  // }, [router.events]);
+  const router = useRouter();
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      gtag.pageview(url);
+    };
+    router.events.on("routeChangeComplete", handleRouteChange);
+    router.events.on("hashChangeComplete", handleRouteChange);
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+      router.events.off("hashChangeComplete", handleRouteChange);
+    };
+  }, [router.events]);
 
-  // useEffect(() => {
-  //   if (pageProps.session?.data?.user) {
-  //     gtag.setUser({
-  //       userId: pageProps.session.data.user.email,
-  //     });
-  //   }
-  // }, [pageProps?.session]);
+  useEffect(() => {
+    if (pageProps.session?.data?.user) {
+      gtag.setUser({
+        userId: pageProps.session.data.user.email,
+      });
+    }
+  }, [pageProps.session]);
 
   return (
-    // <SessionProvider session={pageProps?.session}>
-    //   <CartContext>
-    //     <WishListContext>
-    //       <Head>
-    //         <title>The Cheek Co. - Homemade Bath and Body</title>
-    //         <meta
-    //           name="description"
-    //           content="More than just amazing bath and skin care products. Ethically sourced handmade in Australia, cruelty free, vegan."
-    //         />
-    //         <link rel="icon" href="/favicon.ico" />
-    //       </Head>
-    //       <Script
-    //         strategy="afterInteractive"
-    //         src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
-    //       />
-    //       <Script
-    //         id="gtag-init"
-    //         strategy="afterInteractive"
-    //         dangerouslySetInnerHTML={{
-    //           __html: `
-    //         window.dataLayer = window.dataLayer || [];
-    //         function gtag(){dataLayer.push(arguments);}
-    //         gtag('js', new Date());
-    //         gtag('config', '${gtag.GA_TRACKING_ID}', {
-    //           page_path: window.location.pathname,
-    //         });
-
-    //       `,
-    //         }}
-    //       />
-    //       <div className="max-w-screen bg-bg-tan bg-cover">
-    //         <Header />
-    //         {Component?.Oneko ? (
-    //           <>
-    //             <Script src="/oneko/oneko.js" strategy="afterInteractive" />
-    //             <Component {...pageProps} />
-    //           </>
-    //         ) : (
-    <Component {...pageProps} />
-    //         )}
-    //         <Footer />
-    //         <Toaster position="top-right" reverseOrder={false} gutter={-40} />
-    //       </div>
-    //     </WishListContext>
-    //   </CartContext>
-    // </SessionProvider>
+    <SessionProvider session={pageProps.session}>
+      <CartContext>
+        <WishListContext>
+          <Head>
+            <title>The Cheek Co. - Homemade Bath and Body</title>
+            <meta
+              name="description"
+              content="More than just amazing bath and skin care products. Ethically sourced handmade in Australia, cruelty free, vegan."
+            />
+            <link rel="icon" href="/favicon.ico" />
+          </Head>
+          <Script
+            strategy="afterInteractive"
+            src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
+          />
+          <Script
+            id="gtag-init"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${gtag.GA_TRACKING_ID}', {
+              page_path: window.location.pathname,
+            });
+            
+          `,
+            }}
+          />
+          <div className="max-w-screen bg-bg-tan bg-cover">
+            <Header />
+            {Component.Oneko ? (
+              <>
+                <Script src="/oneko/oneko.js" strategy="afterInteractive" />
+                <Component {...pageProps} />
+              </>
+            ) : (
+              <Component {...pageProps} />
+            )}
+            <Footer />
+            <Toaster position="top-right" reverseOrder={false} gutter={-40} />
+          </div>
+        </WishListContext>
+      </CartContext>
+    </SessionProvider>
   );
 };
 
@@ -136,19 +137,19 @@ export default withTRPC<AppRouter>({
   ssr: false,
 })(MyApp);
 
-// MyApp.getInitialProps = async ({ ctx }) => {
-//   const session = await getSession(ctx);
-//   if (session) {
-//     return {
-//       pageProps: {
-//         session: await getSession(ctx),
-//       },
-//     };
-//   } else {
-//     return {
-//       pageProps: {
-//         session: null,
-//       },
-//     };
-//   }
-// };
+MyApp.getInitialProps = async ({ ctx }) => {
+  const session = await getSession(ctx);
+  if (session) {
+    return {
+      pageProps: {
+        session: await getSession(ctx),
+      },
+    };
+  } else {
+    return {
+      pageProps: {
+        session: null,
+      },
+    };
+  }
+};
