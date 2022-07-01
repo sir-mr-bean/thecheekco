@@ -8,6 +8,7 @@ import PageFive from "./Pages/PageFive";
 import PageSix from "./Pages/PageSix";
 import PageThree from "./Pages/PageThree";
 import FinalPage from "./Pages/FinalPage";
+import Head from "next/head";
 
 const CheekyBoxWrapper = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -83,6 +84,16 @@ const CheekyBoxWrapper = () => {
 
   return (
     <>
+      <Head>
+        <title>The Cheek Co. - Cheeky Box</title>
+        <meta
+          name="description"
+          content="Designed to expand your bathing experience and top up on
+          bathroom necessities, from shampoo bars & liquid soap to accessories
+          and skin care."
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <div className="bg-white mt-10 sm:mt-16 mx-1 md:mx-16 rounded-md shadow-sm shadow-black font-gothic text-text-primary overflow-visible ">
         <div className="flex-1 flex flex-col justify-between items-center py-12 px-4 sm:px-6 h-[75vh]">
           <h1 className="text-3xl sm:text-5xl font-light">

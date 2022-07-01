@@ -5,7 +5,7 @@ const CheekyBoxIntro = () => {
         <span>
           The Cheeky Box is a decadent collection of limited edition & store
           favs. Designed to expand your bathing experience and top up on
-          bathroom ncessiries. From shampoo bars & liquid soap to accessories
+          bathroom necessities. From shampoo bars & liquid soap to accessories
           and skin care.
         </span>
         <span>
