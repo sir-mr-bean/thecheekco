@@ -1,7 +1,7 @@
 import { WishlistState } from "@/context/Wishlist/Context";
 import { useEffect, useState } from "react";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-//import Heart from "@/components/react-animated-heart/src/components/index";
+import Heart from "@/components/react-animated-heart/src/components/index";
 
 const FavouriteButton = ({ product, image, styles }) => {
   const [isFavourite, setIsFavourite] = useState(false);
@@ -31,7 +31,7 @@ const FavouriteButton = ({ product, image, styles }) => {
 
   return (
     <div className="relative scale-75 h-10 w-10">
-      {/* <Heart isClick={isFavourite} onClick={handleFavourite} styles={styles} /> */}
+      <Heart isClick={isFavourite} onClick={handleFavourite} styles={styles} />
     </div>
   );
 };

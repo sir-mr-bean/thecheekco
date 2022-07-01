@@ -162,7 +162,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
       toast.error("You must be logged in to submit a review");
     }
   };
-
+  console.log(product);
   const handleAdd = (product: CatalogObject) => {
     const productImage = productQuery?.find(
       (p) => p.type === "IMAGE" && product.itemData?.imageIds?.includes(p.id)
@@ -258,7 +258,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                     <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl px-3 pt-4">
                       {product?.itemData?.name}
                     </h1>
-                    <div className="translate-x-20">
+                    <div className=" sm:translate-x-20 translate-x-10 pt-3">
                       <FavouriteButton
                         product={product}
                         image={image?.imageData?.url}
@@ -282,7 +282,13 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   </div>
                 </div>
 
-                <p className="text-text-primary mt-6 p-3"></p>
+                <p className="text-text-primary mt-6 p-3">
+                  {
+                    product.itemData?.variations?.[0]?.customAttributeValues?.[
+                      "Square:3b3f304f-3773-471a-a12d-48e58776375b"
+                    ]?.stringValue
+                  }
+                </p>
                 <div className="flex justify-between items-center space-x-10">
                   <button
                     onClick={() => handleAdd(product)}
