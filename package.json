@@ -59,6 +59,7 @@
     "react-rough-notation": "^1.0.2",
     "react-spinners": "^0.12.0",
     "react-square-web-payments-sdk": "^3.2.1",
+    "react-view-slider": "^4.5.0",
     "shippo": "^1.7.1",
     "showdown": "^2.1.0",
     "square": "^19.1.0",
