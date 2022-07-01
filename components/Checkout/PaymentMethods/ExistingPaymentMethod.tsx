@@ -12,7 +12,6 @@ export default function ExistingPaymentMethod({
   newCard: boolean;
   setSelectedPaymentMethod: (paymentMethod: Card) => void;
 }) {
-  console.log(paymentMethod);
   return (
     <div className="flex items-center justify-start w-full space-x-3 py-4">
       <div className="ml-3 flex items-center h-5">

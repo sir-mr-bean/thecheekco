@@ -246,7 +246,6 @@ export default function checkout() {
   };
 
   const handleExistingCardPayment = (paymentMethod: Card) => {
-    console.log(customer);
     setSavedCardOrderProcessing(true);
     if (pickup) {
       pickupOrderMutation.mutate(
@@ -277,7 +276,6 @@ export default function checkout() {
             const orderId = data?.id as string;
             const totalMoney = data?.totalMoney?.amount?.toString() as string;
             const customerId = data?.customerId as string;
-            console.log(customerId);
             paymentMutation.mutate(
               {
                 orderId: orderId,

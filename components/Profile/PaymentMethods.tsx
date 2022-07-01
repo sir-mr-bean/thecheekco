@@ -30,7 +30,6 @@ const PaymentMethods = ({ userObj }) => {
       enabled: CustomerStatus === "success",
     }
   );
-  console.log(dataUpdatedAt, status);
   return (
     <div className="flex flex-col space-y-2">
       <div className="bg-white sm:p-3 m-2 sm:m-6 font-gothic sm:w-3/4 sm:mx-auto rounded-md sm:rounded-lg shadow">

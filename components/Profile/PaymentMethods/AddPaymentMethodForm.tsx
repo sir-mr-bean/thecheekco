@@ -491,8 +491,6 @@ const AddPaymentMethodForm = ({
                     utils.invalidateQueries([
                       "square-customer.search-customer",
                     ]);
-                    console.log(data);
-                    console.log(customer);
                   },
                 }
               );

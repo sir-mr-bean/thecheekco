@@ -167,7 +167,6 @@ export default oneko;
 export function destroyOneko() {
   const oneko = document.body.getElementsByClassName("neko")[0];
   if (oneko) {
-    console.log(oneko);
     oneko.remove();
   }
   clearInterval((window as any).onekoInterval);

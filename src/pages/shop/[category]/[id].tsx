@@ -162,7 +162,6 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
       toast.error("You must be logged in to submit a review");
     }
   };
-  console.log(product);
   const handleAdd = (product: CatalogObject) => {
     const productImage = productQuery?.find(
       (p) => p.type === "IMAGE" && product.itemData?.imageIds?.includes(p.id)

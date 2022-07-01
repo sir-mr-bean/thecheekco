@@ -105,9 +105,6 @@ const PaymentWrapper = ({
       })}
       cardTokenizeResponseReceived={async (token, buyer) => {
         setOrderProcessing(true);
-        console.log(token, buyer);
-        console.log(saveCardDetails);
-        console.log("customer", customer);
         if (saveCardDetails) {
           if (!customer?.id) {
             createCustomer.mutate(
@@ -127,8 +124,6 @@ const PaymentWrapper = ({
               {
                 onSuccess: (data) => {
                   utils.invalidateQueries(["square-customer.search-customer"]);
-                  console.log(data);
-                  console.log(customer);
                 },
               }
             );
@@ -154,7 +149,9 @@ const PaymentWrapper = ({
             },
             {
               onSuccess: (data) => {
-                console.log(data);
+                utils.invalidateQueries([
+                  "square-payment.get-customer-payment-methods",
+                ]);
               },
             }
           );
