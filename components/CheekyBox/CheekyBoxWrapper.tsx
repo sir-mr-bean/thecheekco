@@ -1,12 +1,13 @@
 import { Transition } from "@headlessui/react";
 import { useEffect, useRef, useState } from "react";
-import PageOne from "./PageOne";
-import PageTwo from "./PageTwo";
-import PageFour from "./PageFour";
-import PageFive from "./PageFive";
-import PageSix from "./PageSix";
-import PageThree from "./PageThree";
-import FinalPage from "./FinalPage";
+import CheekyBoxIntro from "./CheekyBoxIntro";
+import PageOne from "./Pages/PageOne";
+import PageTwo from "./Pages/PageTwo";
+import PageFour from "./Pages/PageFour";
+import PageFive from "./Pages/PageFive";
+import PageSix from "./Pages/PageSix";
+import PageThree from "./Pages/PageThree";
+import FinalPage from "./Pages/FinalPage";
 
 const CheekyBoxWrapper = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -20,7 +21,14 @@ const CheekyBoxWrapper = () => {
     { name: "Step 5", href: "#", status: "upcoming" },
     { name: "Step 6", href: "#", status: "upcoming" },
     { name: "Step 7", href: "#", status: "upcoming" },
+    { name: "Step 8", href: "#", status: "upcoming" },
   ]);
+
+  const [pageOneOptions, setPageOneOptions] = useState({
+    bathProducts: false,
+    showerProducts: false,
+    both: false,
+  });
 
   const prevStep = () => {
     setMoving("left");
@@ -75,9 +83,11 @@ const CheekyBoxWrapper = () => {
 
   return (
     <>
-      <div className="bg-white mt-6 sm:mt-16 mx-1 md:mx-16 rounded-md shadow-sm shadow-black font-gothic text-text-primary overflow-visible ">
-        <div className="flex-1 flex flex-col justify-between py-12 px-4 sm:px-6 h-[75vh]">
-          <h1 className="text-5xl font-light">Build your Cheeky Box!</h1>
+      <div className="bg-white mt-10 sm:mt-16 mx-1 md:mx-16 rounded-md shadow-sm shadow-black font-gothic text-text-primary overflow-visible ">
+        <div className="flex-1 flex flex-col justify-between items-center py-12 px-4 sm:px-6 h-[75vh]">
+          <h1 className="text-3xl sm:text-5xl font-light">
+            Build your Cheeky Box!
+          </h1>
           <div
             className="flex items-start overflow-hidden w-80 sm:w-full"
             ref={wrapper}
@@ -87,14 +97,14 @@ const CheekyBoxWrapper = () => {
                 appear={false}
                 unmount={false}
                 show={currentStep === 0}
-                enter="transform transition ease-in duration-500"
+                enter="transform transition ease-in-out duration-700"
                 enterFrom={
                   moving === "right"
                     ? `translate-x-80 opacity-0`
                     : `-translate-x-80 opacity-0`
                 }
                 enterTo={`translate-x-0 opacity-100`}
-                leave="transform transition ease-in duration-500 "
+                leave="transform transition ease-in-out duration-500 "
                 leaveFrom={`translate-x-0 opacity-100`}
                 leaveTo={
                   moving === "right"
@@ -105,7 +115,7 @@ const CheekyBoxWrapper = () => {
                 as="div"
               >
                 <div style={{ width: `${wrapperWidth}px`, height: "100%" }}>
-                  <PageOne />
+                  <CheekyBoxIntro />
                 </div>
               </Transition>
 
@@ -113,14 +123,42 @@ const CheekyBoxWrapper = () => {
                 appear={false}
                 unmount={false}
                 show={currentStep === 1}
-                enter="transform transition ease-in duration-500"
+                enter="transform transition ease-in-out duration-700"
                 enterFrom={
                   moving === "right"
                     ? `translate-x-80 opacity-0`
                     : `-translate-x-80 opacity-0`
                 }
                 enterTo={`translate-x-0 opacity-100`}
-                leave="transform transition ease-in duration-500 "
+                leave="transform transition ease-in-out duration-500 "
+                leaveFrom={`translate-x-0 opacity-100`}
+                leaveTo={
+                  moving === "right"
+                    ? `-translate-x-80 opacity-0`
+                    : `translate-x-80 opacity-0`
+                }
+                className="w-0 overflow-visible"
+                as="div"
+              >
+                <div style={{ width: `${wrapperWidth}px`, height: "100%" }}>
+                  <PageOne
+                    pageOneOptions={pageOneOptions}
+                    setPageOneOptions={setPageOneOptions}
+                  />
+                </div>
+              </Transition>
+              <Transition
+                appear={false}
+                unmount={false}
+                show={currentStep === 2}
+                enter="transform transition ease-in-out duration-700"
+                enterFrom={
+                  moving === "right"
+                    ? `translate-x-80 opacity-0`
+                    : `-translate-x-80 opacity-0`
+                }
+                enterTo={`translate-x-0 opacity-100`}
+                leave="transform transition ease-in-out duration-500 "
                 leaveFrom={`translate-x-0 opacity-100`}
                 leaveTo={
                   moving === "right"
@@ -138,15 +176,15 @@ const CheekyBoxWrapper = () => {
               <Transition
                 appear={false}
                 unmount={false}
-                show={currentStep === 2}
-                enter="transform transition ease-in duration-500"
+                show={currentStep === 3}
+                enter="transform transition ease-in-out duration-700"
                 enterFrom={
                   moving === "right"
                     ? `translate-x-80 opacity-0`
                     : `-translate-x-80 opacity-0`
                 }
                 enterTo={`translate-x-0 opacity-100`}
-                leave="transform transition ease-in duration-500 "
+                leave="transform transition ease-in-out duration-500 "
                 leaveFrom={`translate-x-0 opacity-100`}
                 leaveTo={
                   moving === "right"
@@ -164,15 +202,15 @@ const CheekyBoxWrapper = () => {
               <Transition
                 appear={false}
                 unmount={false}
-                show={currentStep === 3}
-                enter="transform transition ease-in duration-500"
+                show={currentStep === 4}
+                enter="transform transition ease-in-out duration-700"
                 enterFrom={
                   moving === "right"
                     ? `translate-x-80 opacity-0`
                     : `-translate-x-80 opacity-0`
                 }
                 enterTo={`translate-x-0 opacity-100`}
-                leave="transform transition ease-in duration-500 "
+                leave="transform transition ease-in-out duration-500 "
                 leaveFrom={`translate-x-0 opacity-100`}
                 leaveTo={
                   moving === "right"
@@ -192,15 +230,15 @@ const CheekyBoxWrapper = () => {
               <Transition
                 appear={false}
                 unmount={false}
-                show={currentStep === 4}
-                enter="transform transition ease-in duration-500"
+                show={currentStep === 5}
+                enter="transform transition ease-in-out duration-700"
                 enterFrom={
                   moving === "right"
                     ? `translate-x-80 opacity-0`
                     : `-translate-x-80 opacity-0`
                 }
                 enterTo={`translate-x-0 opacity-100`}
-                leave="transform transition ease-in duration-500 "
+                leave="transform transition ease-in-out duration-500 "
                 leaveFrom={`translate-x-0 opacity-100`}
                 leaveTo={
                   moving === "right"
@@ -217,15 +255,15 @@ const CheekyBoxWrapper = () => {
               <Transition
                 appear={false}
                 unmount={false}
-                show={currentStep === 5}
-                enter="transform transition ease-in duration-500"
+                show={currentStep === 6}
+                enter="transform transition ease-in-out duration-700"
                 enterFrom={
                   moving === "right"
                     ? `translate-x-80 opacity-0`
                     : `-translate-x-80 opacity-0`
                 }
                 enterTo={`translate-x-0 opacity-100`}
-                leave="transform transition ease-in duration-500 "
+                leave="transform transition ease-in-out duration-500 "
                 leaveFrom={`translate-x-0 opacity-100`}
                 leaveTo={
                   moving === "right"
@@ -242,15 +280,15 @@ const CheekyBoxWrapper = () => {
               <Transition
                 appear={false}
                 unmount={false}
-                show={currentStep === 6}
-                enter="transform transition ease-in duration-500"
+                show={currentStep === 7}
+                enter="transform transition ease-in-out duration-700"
                 enterFrom={
                   moving === "right"
                     ? `translate-x-80 opacity-0`
                     : `-translate-x-80 opacity-0`
                 }
                 enterTo={`translate-x-0 opacity-100`}
-                leave="transform transition ease-in duration-500 "
+                leave="transform transition ease-in-out duration-500 "
                 leaveFrom={`translate-x-0 opacity-100`}
                 leaveTo={
                   moving === "right"
@@ -283,7 +321,7 @@ const CheekyBoxWrapper = () => {
               >
                 Prev
               </button>
-              <ol className="mx-4 sm:mx-8 flex items-center space-x-3 sm:space-x-5">
+              <ol className="mx-1 sm:mx-8 flex items-center space-x-2 sm:space-x-5">
                 {steps.map((step, i) => (
                   <li key={`step_${i}`}>
                     {step.status === "complete" ? (
@@ -324,10 +362,10 @@ const CheekyBoxWrapper = () => {
               </ol>
               <button
                 type="button"
-                disabled={currentStep === 6}
+                disabled={currentStep === 7}
                 onClick={() => nextStep()}
                 className={
-                  currentStep === 6
+                  currentStep === 7
                     ? `uppercase bg-button border border-transparent rounded-md py-2 px-8 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5 cursor-not-allowed`
                     : `uppercase bg-button border border-transparent rounded-md py-2 px-8 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5`
                 }
