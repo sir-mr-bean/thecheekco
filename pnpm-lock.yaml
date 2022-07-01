@@ -45,6 +45,7 @@ specifiers:
   prisma: ^3.15.2
   react: 18.1.0
   react-animated-heart: ^0.0.7
+  react-corner-ribbon: ^0.0.5
   react-datepicker: ^4.8.0
   react-dom: 18.1.0
   react-google-autocomplete: ^2.7.0
@@ -104,6 +105,7 @@ dependencies:
   prisma: 3.15.2
   react: 18.1.0
   react-animated-heart: 0.0.7_tmhfl2wvcgkkudasuzbb6f3ova
+  react-corner-ribbon: 0.0.5_fbbixigdshhwz6qslju44ayfr4
   react-datepicker: 4.8.0_ef5jwxihqo6n7gxfmzogljlgcm
   react-dom: 18.1.0_react@18.1.0
   react-google-autocomplete: 2.7.0_react@18.1.0
@@ -11924,6 +11926,18 @@ packages:
       raf: 3.4.1
       regenerator-runtime: 0.13.9
       whatwg-fetch: 3.6.2
+    dev: false
+
+  /react-corner-ribbon/0.0.5_fbbixigdshhwz6qslju44ayfr4:
+    resolution: {integrity: sha512-L7kqpzWm/kY+/6cS9RpTdTVy0N1qajmOvJInkDEKipNE8Lm7C6VeNKgBrO74UMxCYCYpzvWQdgFzoWRYlr8+zw==}
+    peerDependencies:
+      prop-types: ^15.6.0
+      react: ^16.0.0
+      react-dom: ^16.0.0
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.1.0
+      react-dom: 18.1.0_react@18.1.0
     dev: false
 
   /react-datepicker/4.8.0_ef5jwxihqo6n7gxfmzogljlgcm:

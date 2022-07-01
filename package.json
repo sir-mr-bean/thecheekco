@@ -44,6 +44,7 @@
     "prisma": "^3.15.2",
     "react": "18.1.0",
     "react-animated-heart": "^0.0.7",
+    "react-corner-ribbon": "^0.0.5",
     "react-datepicker": "^4.8.0",
     "react-dom": "18.1.0",
     "react-google-autocomplete": "^2.7.0",

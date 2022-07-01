@@ -22,6 +22,7 @@ import { Dispatch } from "react";
 import FavouriteButton from "@/components/FavouriteButton/FavouriteButton";
 import Stars from "@/components/Reviews/Stars";
 import Head from "next/head";
+import CornerRibbon from "react-corner-ribbon";
 
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
@@ -166,6 +167,21 @@ const CategoryPage = (
                             .toLowerCase()}`}
                         >
                           <div className="relative w-full h-72 rounded-lg overflow-hidden cursor-pointer border border-text-secondary">
+                            {productImage &&
+                              product.itemData?.variations?.[0]
+                                ?.itemVariationData?.locationOverrides?.[0]
+                                ?.soldOut === true && (
+                                <CornerRibbon
+                                  position="top-right" // OPTIONAL, default as "top-right"
+                                  fontColor="#f0f0f0" // OPTIONAL, default as "#f0f0f0"
+                                  backgroundColor="#a75e2f" // OPTIONAL, default as "#2c7"
+                                  containerStyle={{}} // OPTIONAL, style of the ribbon
+                                  style={{}} // OPTIONAL, style of ribbon content
+                                  className="font-gothic" // OPTIONAL, css class of ribbon
+                                >
+                                  Out of Stock
+                                </CornerRibbon>
+                              )}
                             {productImage && (
                               <Image
                                 layout="fill"
