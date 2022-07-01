@@ -28,8 +28,8 @@ const PageOne = ({ pageOneOptions, setPageOneOptions }) => {
             <span
               className={
                 pageOneOptions.bathProducts
-                  ? `absolute inset-x-2 sm:inset-x-[58px]  bottom-8 rounded-lg bg-bg-tan border border-text-secondary w-fit px-2 py-1 sm:px-4 sm:pt-2 text-text-primary font-semibold`
-                  : `absolute inset-x-2 sm:inset-x-[58px]  bottom-8 rounded-lg bg-button border border-text-secondary w-fit px-2 py-1 sm:px-4 sm:pt-2 text-white font-semibold`
+                  ? `absolute inset-x-[22px] sm:inset-x-[58px]  bottom-8 rounded-lg bg-bg-tan border border-text-secondary w-fit px-2 py-1 sm:px-4 sm:pt-2 text-text-primary font-semibold`
+                  : `absolute inset-x-[22px] sm:inset-x-[58px]  bottom-8 rounded-lg bg-button border border-text-secondary w-fit px-2 py-1 sm:px-4 sm:pt-2 text-white font-semibold`
               }
             >
               Bath
@@ -52,8 +52,8 @@ const PageOne = ({ pageOneOptions, setPageOneOptions }) => {
             <span
               className={
                 pageOneOptions.showerProducts
-                  ? `absolute inset-x-2 sm:inset-x-[58px]  bottom-8 rounded-lg bg-bg-tan border border-text-secondary w-fit px-2 py-1 sm:px-4 sm:pt-2 text-text-primary font-semibold`
-                  : `absolute inset-x-2 sm:inset-x-[58px]  bottom-8 rounded-lg bg-button border border-text-secondary w-fit px-2 py-1 sm:px-4 sm:pt-2 text-white font-semibold`
+                  ? `absolute inset-x-3 sm:inset-x-[58px]  bottom-8 rounded-lg bg-bg-tan border border-text-secondary w-fit px-2 py-1 sm:px-4 sm:pt-2 text-text-primary font-semibold`
+                  : `absolute inset-x-3 sm:inset-x-[58px]  bottom-8 rounded-lg bg-button border border-text-secondary w-fit px-2 py-1 sm:px-4 sm:pt-2 text-white font-semibold`
               }
             >
               Shower
@@ -76,8 +76,8 @@ const PageOne = ({ pageOneOptions, setPageOneOptions }) => {
             <span
               className={
                 pageOneOptions.both
-                  ? `absolute inset-x-2 sm:inset-x-[58px]  bottom-8 rounded-lg bg-bg-tan border border-text-secondary w-fit px-2 py-1 sm:px-4 sm:pt-2 text-text-primary font-semibold`
-                  : `absolute inset-x-2 sm:inset-x-[58px]  bottom-8 rounded-lg bg-button border border-text-secondary w-fit px-2 py-1 sm:px-4 sm:pt-2 text-white font-semibold`
+                  ? `absolute inset-x-5 sm:inset-x-[58px]  bottom-8 rounded-lg bg-bg-tan border border-text-secondary w-fit px-2 py-1 sm:px-4 sm:pt-2 text-text-primary font-semibold`
+                  : `absolute inset-x-5 sm:inset-x-[58px]  bottom-8 rounded-lg bg-button border border-text-secondary w-fit px-2 py-1 sm:px-4 sm:pt-2 text-white font-semibold`
               }
             >
               Both
