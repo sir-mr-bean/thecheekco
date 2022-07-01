@@ -1,4 +1,12 @@
-const PageOne = ({ pageOneOptions, setPageOneOptions }) => {
+import type { PageOneOptions } from "@/types/PageOptions";
+
+const PageOne = ({
+  pageOneOptions,
+  setPageOneOptions,
+}: {
+  pageOneOptions: PageOneOptions;
+  setPageOneOptions: (pageOneOptions: PageOneOptions) => void;
+}) => {
   return (
     <>
       <div className="flex flex-col items-start w-full h-full justify-center">

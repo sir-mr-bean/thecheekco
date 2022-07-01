@@ -31,6 +31,17 @@ const CheekyBoxWrapper = () => {
     both: false,
   });
 
+  const [pageTwoOptions, setPageTwoOptions] = useState({
+    shampooBar: false,
+    conditioner: false,
+    bodyWash: false,
+    bodyButter: false,
+    soapBar: false,
+    bathSoak: false,
+    bubbleBath: false,
+    showerSteamer: false,
+  });
+
   const prevStep = () => {
     setMoving("left");
     setSteps((old) =>
@@ -180,7 +191,10 @@ const CheekyBoxWrapper = () => {
                 as="div"
               >
                 <div style={{ width: `${wrapperWidth}px`, height: "100%" }}>
-                  <PageTwo />
+                  <PageTwo
+                    pageTwoOptions={pageTwoOptions}
+                    setPageTwoOptions={setPageTwoOptions}
+                  />
                 </div>
               </Transition>
 
