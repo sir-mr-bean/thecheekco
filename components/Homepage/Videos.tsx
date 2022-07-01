@@ -11,6 +11,7 @@ const Videos = () => {
           src="../images/Homepage/video1.mp4"
           height="300"
           width="300"
+          className="rounded-xl"
         />
       </div>
       <div className="pt-16">
@@ -23,6 +24,7 @@ const Videos = () => {
           src="../images/Homepage/video2.mp4"
           height="300"
           width="300"
+          className="rounded-xl"
         />
       </div>
       <div className="pt-16">
@@ -35,6 +37,7 @@ const Videos = () => {
           src="../images/Homepage/video3.mp4"
           height="300"
           width="300"
+          className="rounded-xl"
         />
       </div>
     </div>
