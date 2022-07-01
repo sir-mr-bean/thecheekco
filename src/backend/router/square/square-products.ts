@@ -43,7 +43,7 @@ export const squareProductRouter = createRouter()
         (product) =>
           !product.itemData?.variations?.[0]?.customAttributeValues?.[
             "Square:bc63391b-f09f-4399-846a-6721f81e4a4d"
-          ].booleanValue === true
+          ]?.booleanValue === true
       );
       return productsResponse;
     },

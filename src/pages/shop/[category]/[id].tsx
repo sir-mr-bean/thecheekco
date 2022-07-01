@@ -64,7 +64,7 @@ const Markdown = (content) => {
   var converter = new showdown.Converter();
   var html = converter.makeHtml(content.content);
   return (
-    <div className="bg-transparent text-text-primary font-gothic prose prose-stone py-1">
+    <div className="bg-transparent text-text-primary font-gothic py-1">
       {ReactHtmlParser(html)}
     </div>
   );
@@ -282,7 +282,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   </div>
                 </div>
 
-                <p className="text-text-primary mt-6 p-3 text-center">
+                <p className="text-text-secondary mt-6 p-3 text-center">
                   {
                     product.itemData?.variations?.[0]?.customAttributeValues?.[
                       "Square:3b3f304f-3773-471a-a12d-48e58776375b"
@@ -301,7 +301,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   <div>
                     <label
                       htmlFor="location"
-                      className="block text-sm font-medium text-gray-700"
+                      className="block text-sm font-medium text-text-secondary"
                     >
                       Quantity
                     </label>
@@ -468,7 +468,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 </div>
               )}
               {openTab === 2 && (
-                <div className="text-sm text-gray-500 p-2">
+                <div className="text-sm text-text-primary p-2">
                   <h3 className="sr-only">Frequently Asked Questions</h3>
 
                   <dl>
@@ -477,7 +477,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                         <dt className="mt-5 font-medium text-text-primary">
                           {faq.question}
                         </dt>
-                        <dd className="mt-2 prose prose-sm max-w-none text-gray-500">
+                        <dd className="mt-2 prose prose-sm max-w-none text-text-primary">
                           <p>{faq.answer}</p>
                         </dd>
                       </Fragment>
