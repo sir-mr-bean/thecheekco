@@ -36,8 +36,14 @@ export const squareProductRouter = createRouter()
         console.log(e);
         throw new TRPCError(e.message);
       }
-      const productsResponse = productsArray.filter(
+      const filterUnderScoreProducts = productsArray.filter(
         (product) => !product.itemData?.name?.startsWith("_")
+      );
+      const productsResponse = filterUnderScoreProducts.filter(
+        (product) =>
+          !product.itemData?.variations?.[0]?.customAttributeValues?.[
+            "Square:bc63391b-f09f-4399-846a-6721f81e4a4d"
+          ].booleanValue === true
       );
       return productsResponse;
     },
@@ -54,13 +60,21 @@ export const squareProductRouter = createRouter()
       if (input?.categoryIds) {
         if (productsQuery?.result?.objects) {
           const products = productsQuery.result.objects;
-          const productsResult = products.filter(
+          const filterByCategory = products.filter(
             (product) =>
               input?.categoryIds?.includes(
                 product.itemData?.categoryId as string
               ) || product.type === "IMAGE"
           );
-          return productsResult;
+
+          const productsResponse = filterByCategory.filter(
+            (product) =>
+              !product.itemData?.variations?.[0]?.customAttributeValues?.[
+                "Square:bc63391b-f09f-4399-846a-6721f81e4a4d"
+              ]?.booleanValue === true
+          );
+
+          return productsResponse;
         }
       } else {
         return productsQuery?.result?.objects;
