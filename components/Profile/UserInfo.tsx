@@ -19,7 +19,7 @@ const UserInfo = ({ session }) => {
     watch,
     formState: { errors },
   } = useForm();
-  const [userObj, setUserObj] = useState<User>(session.user as User);
+  const [userObj, setUserObj] = useState<User>(session?.user as User);
   const updateUser = trpc.useMutation(["userupdateUser"]);
 
   const dateSchema = z.preprocess((arg) => {

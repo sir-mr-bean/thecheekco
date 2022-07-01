@@ -1,8 +1,19 @@
-/** @type {import('next-sitemap').IConfig} */
-const config = {
-  siteUrl: process.env.NEXTAUTH_URL || "https://thecheekco.vercel.app",
-  generateRobotsTxt: true, // (optional)
-  // ...other options
+const siteUrl = process.env.API_URL;
+module.exports = {
+  siteUrl,
+  exclude: ["/404"],
+  generateRobotsTxt: true,
+  robotsTxtOptions: {
+    policies: [
+      {
+        userAgent: "*",
+        disallow: ["/404"],
+      },
+      { userAgent: "*", allow: "/" },
+    ],
+    additionalSitemaps: [
+      `${siteUrl}sitemap.xml`,
+      `${siteUrl}server-sitemap.xml`,
+    ],
+  },
 };
-
-module.exports = config;

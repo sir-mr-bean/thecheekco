@@ -219,7 +219,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   };
 
   return (
-    <>
+    <div className="max-w-screen">
       <Head>
         <title>The Cheek Co. - {product?.itemData?.name}</title>
         <meta
@@ -674,7 +674,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
@@ -709,8 +709,8 @@ export const getStaticPaths = async (context: GetStaticPathsContext) => {
       },
     }));
   return {
-    paths: paths,
-    fallback: false,
+    paths: paths || null,
+    fallback: "blocking",
   };
 };
 

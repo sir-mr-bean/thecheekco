@@ -48,7 +48,7 @@ export default function MobileMenu({ navigation }): JSX.Element {
                         (item: CatalogObject) =>
                           item?.categoryData?.name?.charAt(0) != "_"
                       )
-                      .map((nav: CatalogObject, i: number) => {
+                      ?.map((nav: CatalogObject, i: number) => {
                         return (
                           <li key={i}>
                             <Menu.Item as="div">

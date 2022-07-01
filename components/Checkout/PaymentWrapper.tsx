@@ -171,7 +171,7 @@ const PaymentWrapper = ({
               },
 
               referenceId: token.token as string,
-              lineItems: cart.map((product) => {
+              lineItems: cart?.map((product) => {
                 return {
                   catalogObjectId: product.itemData?.variations?.[0]
                     .id as string,
@@ -225,7 +225,7 @@ const PaymentWrapper = ({
         } else {
           deliveryOrderMutation.mutate(
             {
-              lineItems: cart.map((product) => {
+              lineItems: cart?.map((product) => {
                 return {
                   catalogObjectId: product.itemData?.variations?.[0]
                     .id as string,

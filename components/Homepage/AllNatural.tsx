@@ -70,7 +70,7 @@ const AllNatural = ({
         </div>
         <div className="flex flex-wrap w-full items-center justify-center pt-10 flex-auto">
           {randomAllNatural &&
-            randomAllNatural.map((product) => {
+            randomAllNatural?.map((product) => {
               const productImage = productsData?.find(
                 (p) =>
                   p.type === "IMAGE" &&

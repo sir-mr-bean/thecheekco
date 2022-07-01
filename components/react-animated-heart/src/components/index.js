@@ -1,7 +1,7 @@
-import React from "react";
 import { setup, styled } from "goober";
+import { createElement } from "react";
 
-setup(React.createElement);
+setup(createElement);
 
 const HeartUI = styled("div")(({ isclick, styles }) => [
   {

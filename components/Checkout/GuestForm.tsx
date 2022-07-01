@@ -1,8 +1,7 @@
 import Autocomplete, {
   ReactGoogleAutocompleteInputProps,
 } from "react-google-autocomplete";
-import { useState, useEffect, useRef } from "react";
-import { useForm } from "react-hook-form";
+import { useRef } from "react";
 import { User } from "@prisma/client";
 import type { validationErrors } from "@/pages/checkout";
 import { BsChevronDown } from "react-icons/bs";

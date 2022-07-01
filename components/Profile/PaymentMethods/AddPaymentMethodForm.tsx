@@ -35,7 +35,7 @@ const AddPaymentMethodForm = ({
     state: false,
     zip: false,
   });
-  const [userObj, setUserObj] = useState(userObject);
+  const [userObj, setUserObj] = useState(userObject || {});
   const [processing, setProcessing] = useState(false);
   const utils = trpc.useContext();
   const {

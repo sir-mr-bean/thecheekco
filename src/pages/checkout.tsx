@@ -125,7 +125,7 @@ export default function checkout() {
   const [saveCardDetails, setSaveCardDetails] = useState(false);
   const [newCard, setNewCard] = useState(true);
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
-    useState<Card | null>(null);
+    useState<Card | null>({} as Card);
   const { data: customer, status: CustomerStatus } = trpc.useQuery([
     "square-customer.search-customer",
     {
