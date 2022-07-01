@@ -254,11 +254,11 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
               {/* Product details */}
               <div className="max-w-xl sm:max-w-none border rounded-lg bg-white sm:px-10 flex flex-col justify-around w-full px-4">
                 <div className="flex flex-col space-y-2 items-center justify-center">
-                  <div className="flex space-x-2 items-center w-full justify-center">
+                  <div className="pl-10 flex items-center w-full justify-center">
                     <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl px-3 pt-4">
                       {product?.itemData?.name}
                     </h1>
-                    <div className=" sm:translate-x-20 translate-x-10 pt-3">
+                    <div className="pt-3">
                       <FavouriteButton
                         product={product}
                         image={image?.imageData?.url}
@@ -282,7 +282,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   </div>
                 </div>
 
-                <p className="text-text-primary mt-6 p-3">
+                <p className="text-text-primary mt-6 p-3 text-center">
                   {
                     product.itemData?.variations?.[0]?.customAttributeValues?.[
                       "Square:3b3f304f-3773-471a-a12d-48e58776375b"

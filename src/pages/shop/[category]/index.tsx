@@ -135,8 +135,8 @@ const CategoryPage = (
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="max-w-screen min-h-screen border-2 flex justify-center">
-        <div className="py-4 px-4 sm:py-10 sm:px-6 lg:px-8 bg-bg-lighttan mt-24 shadow-[0_0px_7px_1px_rgba(0,0,0,0.51)] w-full h-full mx-6 md:mx-16 sm:mx-20">
+      <div className="max-w-screen min-h-screen flex justify-center">
+        <div className="py-4 px-4 sm:py-10 sm:px-6 lg:px-8 bg-bg-lighttan mt-24 shadow-[0_0px_7px_1px_rgba(0,0,0,0.51)] w-full h-full mx-6 md:mx-16 sm:mx-20 rounded-md">
           <h2 className="text-4xl text-text-primary font-gothic font-extralight capitalize">
             {currentCategoryName}
           </h2>
@@ -165,7 +165,7 @@ const CategoryPage = (
                             ?.replace(/ /g, "-")
                             .toLowerCase()}`}
                         >
-                          <div className="relative w-full h-72 rounded-lg overflow-hidden cursor-pointer border-2 border-[#DBA37D]">
+                          <div className="relative w-full h-72 rounded-lg overflow-hidden cursor-pointer border border-text-secondary">
                             {productImage && (
                               <Image
                                 layout="fill"
@@ -184,12 +184,12 @@ const CategoryPage = (
                                     ? true
                                     : false
                                 }
-                                className="w-full h-full object-center object-cover"
+                                className="w-full h-full object-center object-cover rounded-md"
                               />
                             )}
                           </div>
                         </Link>
-                        <div className="relative mt-4 space-y-2">
+                        <div className="relative mt-4 ">
                           <div className="flex w-full justify-between">
                             <h3 className="text-sm font-medium text-text-primary">
                               {product.itemData?.name}
