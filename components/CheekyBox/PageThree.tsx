@@ -1,6 +1,6 @@
 const PageThree = () => {
   return (
-    <div>
+    <div className="">
       <span>Fantastic!</span>
       <span>
         Are there any scents you prefer? (Sweet, Fruity, Masculine, Floral,

@@ -1,6 +1,6 @@
 const PageTwo = () => {
   return (
-    <div>
+    <div className="">
       <span>Great!</span>
       <span>
         Now, Which items would you like to recieve as monthly standard refill:
