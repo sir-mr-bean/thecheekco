@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <div className=" w-full h-[250px] sm:h-[400px] mt-20 ">
+    <div className="max-w-screen h-[250px] sm:h-[400px] mt-20 overflow-hidden">
       <div className="flex flex-col w-full bg-footer-backdrop bg-cover bg-center h-full justify-between items-stretch bg-blend-lighten bg-white bg-opacity-20">
         <div className="lg:w-1/2 sm:w-2/3 items-center justify-center  text-text-primary space-y-3 font-gothic font-semibold text-center p-4 sm:pt-20 text-xs sm:text-sm lg:text-lg bg-bg-tan/80 sm:bg-transparent rounded-lg px-3 sm:mx-auto">
           <p>
@@ -37,8 +37,8 @@ const Footer = () => {
               </span>
             </Link>
           </div>
-          <div className="flex  space-x-3 p-3 items-center justify-center">
-            <div className="w-7 h-7 sm:w-20 sm:h-20">
+          <div className="flex space-x-1 sm:space-x-3 p-3 items-center justify-center">
+            <div className="w-6 h-6 sm:w-20 sm:h-20">
               <Image
                 alt="Eco Alliance Badge 1"
                 src="/images/sticker2.png"
@@ -46,7 +46,7 @@ const Footer = () => {
                 width="300"
               />
             </div>
-            <div className="w-7 h-7 sm:w-20 sm:h-20">
+            <div className="w-6 h-6 sm:w-20 sm:h-20">
               <Image
                 alt="Eco Alliance Badge 1"
                 src="/images/sticker1.png"
@@ -54,7 +54,7 @@ const Footer = () => {
                 width="300"
               />
             </div>
-            <div className="w-7 h-7 sm:w-20 sm:h-20">
+            <div className="w-6 h-6 sm:w-20 sm:h-20">
               <a
                 href="https://noissue.co/community/eco-alliance/"
                 target="_blank"
