@@ -1,9 +1,28 @@
 import Image from "next/image";
-import { BsEmojiHeartEyesFill, BsHeartFill } from "react-icons/bs";
-import { FaKissWinkHeart } from "react-icons/fa";
 import maddiAvatar from "../../public/images/Homepage/maddiavatar.png";
+import lottie from "lottie-web";
+import * as LottiePlayer from "@lottiefiles/lottie-player";
+import { useEffect, useRef } from "react";
 
 const HowItBegan = () => {
+  const loaderCatRef = useRef() as React.MutableRefObject<HTMLInputElement>;
+  useEffect(() => {
+    if (loaderCatRef.current) {
+      lottie.loadAnimation({
+        container: loaderCatRef.current,
+        renderer: "svg",
+        loop: true,
+        autoplay: true,
+
+        animationData: require("../../public/images/Homepage/Lottie/loader-cat.json"),
+      });
+    }
+
+    return () => {
+      lottie.destroy();
+    };
+  }, []);
+
   return (
     <section
       aria-labelledby="social-impact-heading"
@@ -42,7 +61,7 @@ const HowItBegan = () => {
               Keep up with Maddi behind the scenes as she whips up fresh goodies
               daily.
             </p>
-            <div className="mt-2">
+            <div className="mt-2 flex w-full items-center justify-between">
               <a
                 href="https://www.instagram.com/thecheekco/"
                 target="_blank"
@@ -50,6 +69,12 @@ const HowItBegan = () => {
               >
                 FOLLOW MADDI’S SHENANIGANS
               </a>
+              <div
+                className="w-4/5 sm:w-1/4 mx-auto"
+                ref={loaderCatRef ? loaderCatRef : ""}
+                onMouseEnter={() => lottie.play()}
+                onMouseLeave={() => lottie.pause()}
+              />
             </div>
           </div>
         </div>

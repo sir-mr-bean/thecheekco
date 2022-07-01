@@ -1,12 +1,11 @@
 import { createRouter } from "@/backend/createRouter";
 import superjson from "superjson";
-
-import { ApiResponse, Client, CreateOrderResponse, Environment } from "square";
+import { Client, Environment } from "square";
 import { randomUUID } from "crypto";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-const { ordersApi, customersApi } = new Client({
+const { customersApi } = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
   environment: Environment.Production,
 });
@@ -57,6 +56,12 @@ export const squareCustomerRouter = createRouter()
         .nullable(),
     }),
     async resolve({ input, ctx }) {
+      if (ctx.session?.user.email !== input?.email) {
+        throw new TRPCError({
+          message: "You are not authorized to perform this action",
+          code: "UNAUTHORIZED",
+        });
+      }
       const { email, firstName, lastName, phoneNumber, address } = input;
       const createCustomer = await customersApi.createCustomer({
         emailAddress: email,
@@ -83,6 +88,7 @@ export const squareCustomerRouter = createRouter()
       firstName: z.string(),
       lastName: z.string(),
       phoneNumber: z.string(),
+      email: z.string(),
       address: z
         .object({
           addressLine1: z.string(),
@@ -95,6 +101,12 @@ export const squareCustomerRouter = createRouter()
         .nullable(),
     }),
     async resolve({ input, ctx }) {
+      if (ctx.session?.user.email !== input?.email) {
+        throw new TRPCError({
+          message: "You are not authorized to perform this action",
+          code: "UNAUTHORIZED",
+        });
+      }
       const { customerId, firstName, lastName, phoneNumber, address } = input;
       const updateCustomer = await customersApi.updateCustomer(customerId, {
         givenName: firstName,

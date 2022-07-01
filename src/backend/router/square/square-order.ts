@@ -1,6 +1,5 @@
 import { createRouter } from "@/backend/createRouter";
 import superjson from "superjson";
-
 import { ApiResponse, Client, CreateOrderResponse, Environment } from "square";
 import { randomUUID } from "crypto";
 import { TRPCError } from "@trpc/server";
@@ -59,7 +58,6 @@ export const squareOrderRouter = createRouter()
     }),
     async resolve({ input, ctx }) {
       const { lineItems, referenceId, billingAddress, shippingAddress } = input;
-      // check if customer exists in square, if not create one
       const customer = await customersApi.listCustomers();
       let customerId: string | undefined;
       const existingCustomer = customer?.result?.customers?.find(
@@ -90,24 +88,21 @@ export const squareOrderRouter = createRouter()
         }
       } else {
         customerId = existingCustomer?.id;
-        const updatedUser = await customersApi.updateCustomer(
-          customerId as string,
-          {
-            address: {
-              addressLine1: billingAddress.addressLine1,
-              addressLine2: billingAddress.addressLine2 as string,
-              administrativeDistrictLevel1: billingAddress.region,
-              locality: billingAddress.locality,
-              postalCode: billingAddress.postalCode,
-              country: billingAddress.country,
-            },
-            companyName: billingAddress.companyName,
-            givenName: billingAddress.firstName,
-            familyName: billingAddress.lastName,
-            emailAddress: billingAddress.email,
-            phoneNumber: billingAddress.phoneNumber,
-          }
-        );
+        await customersApi.updateCustomer(customerId as string, {
+          address: {
+            addressLine1: billingAddress.addressLine1,
+            addressLine2: billingAddress.addressLine2 as string,
+            administrativeDistrictLevel1: billingAddress.region,
+            locality: billingAddress.locality,
+            postalCode: billingAddress.postalCode,
+            country: billingAddress.country,
+          },
+          companyName: billingAddress.companyName,
+          givenName: billingAddress.firstName,
+          familyName: billingAddress.lastName,
+          emailAddress: billingAddress.email,
+          phoneNumber: billingAddress.phoneNumber,
+        });
       }
 
       const order: ApiResponse<CreateOrderResponse> =

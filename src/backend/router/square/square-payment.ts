@@ -59,9 +59,7 @@ export const squarePaymentRouter = createRouter()
         idempotencyKey: randomUUID(),
         paymentIds: [paymentId],
       });
-
       const orderResult = payOrder?.result?.order;
-      // push order to prisma
       if (
         orderResult?.lineItems &&
         (orderResult?.fulfillments?.[0]?.shipmentDetails?.recipient ||
@@ -101,13 +99,15 @@ export const squarePaymentRouter = createRouter()
       customerId: z.string(),
     }),
     async resolve({ input, ctx }) {
-      const { customerId } = input;
-      const getCustomerPaymentMethods = await cardsApi.listCards(
-        undefined,
-        customerId
-      );
-      const customerPaymentMethods = getCustomerPaymentMethods?.result?.cards;
-      return customerPaymentMethods;
+      if (ctx.session?.user?.email) {
+        const { customerId } = input;
+        const getCustomerPaymentMethods = await cardsApi.listCards(
+          undefined,
+          customerId
+        );
+        const customerPaymentMethods = getCustomerPaymentMethods?.result?.cards;
+        return customerPaymentMethods;
+      }
     },
   })
   .mutation("create-customer-payment-method", {
@@ -161,11 +161,13 @@ export const squarePaymentRouter = createRouter()
       paymentMethodId: z.string(),
     }),
     async resolve({ input, ctx }) {
-      const { customerId, paymentMethodId } = input;
-      const deleteCustomerPaymentMethod = await cardsApi.disableCard(
-        paymentMethodId
-      );
-      const customerPaymentMethod = deleteCustomerPaymentMethod?.result?.card;
-      return customerPaymentMethod;
+      if (ctx.session?.user?.email) {
+        const { customerId, paymentMethodId } = input;
+        const deleteCustomerPaymentMethod = await cardsApi.disableCard(
+          paymentMethodId
+        );
+        const customerPaymentMethod = deleteCustomerPaymentMethod?.result?.card;
+        return customerPaymentMethod;
+      }
     },
   });

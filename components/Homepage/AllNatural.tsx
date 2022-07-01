@@ -43,7 +43,7 @@ const AllNatural = ({
 
   return (
     <section>
-      <div className="flex flex-col w-full sm:p-6 items-center justify-center pt-32">
+      <div className="flex flex-col w-full sm:p-6 items-center justify-center sm:pt-32">
         <div className="flex items-center justify-center pt-8">
           <span className="text-2xl sm:text-5xl text-text-primary font-gothic text-center">
             Check out our fav

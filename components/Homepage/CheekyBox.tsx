@@ -11,7 +11,7 @@ const CheekyBox = () => {
         renderer: "svg",
         loop: true,
         autoplay: false,
-        animationData: require("../../public/images/stray-cat.json"),
+        animationData: require("../../public/images/Homepage/Lottie/stray-cat.json"),
       });
     }
 
