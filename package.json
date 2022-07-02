@@ -29,8 +29,6 @@
     "@trpc/next": "^9.25.3",
     "@trpc/react": "^9.25.3",
     "@trpc/server": "^9.25.3",
-    "@types/react-html-parser": "^2.0.2",
-    "@types/showdown": "^2.0.0",
     "bcryptjs": "^2.4.3",
     "emailjs": "^4.0.0",
     "firebase": "^9.8.3",
@@ -76,6 +74,8 @@
     "zod": "^3.17.3"
   },
   "devDependencies": {
+    "@types/react-html-parser": "^2.0.2",
+    "@types/showdown": "^2.0.0",
     "@types/google.maps": "^3.49.2",
     "@types/gtag.js": "^0.0.10",
     "@types/jsonwebtoken": "^8.5.8",
