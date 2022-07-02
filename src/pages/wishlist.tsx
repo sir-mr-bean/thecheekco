@@ -8,6 +8,7 @@ import { CartObject } from "@/types/CartObject";
 import toast from "react-hot-toast";
 import { WishlistObject } from "@/types/WishlistObject";
 import Head from "next/head";
+import { CatalogObject } from "square";
 
 export default function wishlist() {
   const { wishlist, dispatch } = WishlistState();
@@ -77,7 +78,7 @@ export default function wishlist() {
     dispatch({ type: "CLEAR_WISHLIST" });
   };
 
-  const handleRemove = (product) => {
+  const handleRemove = (product: WishlistObject) => {
     dispatch({ type: "REMOVE_FROM_WISHLIST", item: product });
   };
 
