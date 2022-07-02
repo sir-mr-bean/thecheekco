@@ -59,6 +59,7 @@ module.exports = withTM({
               "https://js.squareup.com",
               "ingest.sentry.io",
               "https://pay.google.com",
+              "https://nd.squarecdn.com",
             ],
             "img-src": [
               "data:",
@@ -80,7 +81,11 @@ module.exports = withTM({
               "maps.googleapis.com",
               "https://pci-connect.squareup.com",
             ],
-            "font-src": ["'self'"],
+            "font-src": [
+              "'self'",
+              "https://square-fonts-production-f.squarecdn.com",
+              "https://d1g145x70srn7h.cloudfront.net",
+            ],
             "style-src": [
               "data:",
               "'self'",

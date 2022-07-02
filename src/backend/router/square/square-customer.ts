@@ -4,6 +4,7 @@ import { Client, Environment } from "square";
 import { randomUUID } from "crypto";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { getSession } from "next-auth/react";
 
 const { customersApi } = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
@@ -17,7 +18,10 @@ export const squareCustomerRouter = createRouter()
       email: z.string(),
     }),
     async resolve({ input, ctx }) {
-      if (ctx.session?.user.email !== input?.email) {
+      const { req } = ctx;
+      const session = await getSession({ req });
+      console.log(session);
+      if (session?.user.email !== input?.email) {
         throw new TRPCError({
           message: "You are not authorized to perform this action",
           code: "UNAUTHORIZED",
@@ -56,7 +60,9 @@ export const squareCustomerRouter = createRouter()
         .nullable(),
     }),
     async resolve({ input, ctx }) {
-      if (ctx.session?.user.email !== input?.email) {
+      const { req } = ctx;
+      const session = await getSession({ req });
+      if (session?.user.email !== input?.email) {
         throw new TRPCError({
           message: "You are not authorized to perform this action",
           code: "UNAUTHORIZED",
@@ -101,28 +107,26 @@ export const squareCustomerRouter = createRouter()
         .nullable(),
     }),
     async resolve({ input, ctx }) {
-      if (ctx.session?.user.email !== input?.email) {
-        throw new TRPCError({
-          message: "You are not authorized to perform this action",
-          code: "UNAUTHORIZED",
+      const { req } = ctx;
+      const session = await getSession({ req });
+      if (session?.user.email !== input?.email) {
+        const { customerId, firstName, lastName, phoneNumber, address } = input;
+        const updateCustomer = await customersApi.updateCustomer(customerId, {
+          givenName: firstName,
+          familyName: lastName,
+          phoneNumber: phoneNumber,
+          address: {
+            addressLine1: address?.addressLine1,
+            addressLine2: address?.addressLine2,
+            administrativeDistrictLevel1: address?.region,
+            locality: address?.locality,
+            country: address?.country,
+            postalCode: address?.postalCode,
+          },
         });
-      }
-      const { customerId, firstName, lastName, phoneNumber, address } = input;
-      const updateCustomer = await customersApi.updateCustomer(customerId, {
-        givenName: firstName,
-        familyName: lastName,
-        phoneNumber: phoneNumber,
-        address: {
-          addressLine1: address?.addressLine1,
-          addressLine2: address?.addressLine2,
-          administrativeDistrictLevel1: address?.region,
-          locality: address?.locality,
-          country: address?.country,
-          postalCode: address?.postalCode,
-        },
-      });
 
-      const customerResult = updateCustomer?.result?.customer;
-      return customerResult;
+        const customerResult = updateCustomer?.result?.customer;
+        return customerResult;
+      }
     },
   });
