@@ -93,7 +93,11 @@ module.exports = withTM({
               "'unsafe-inline'",
               "https://web.squarecdn.com",
             ],
-            "frame-src": ["https://web.squarecdn.com/"],
+            "frame-src": [
+              "https://web.squarecdn.com/",
+              "https://connect.squareup.com/",
+              "https://pay.google.com/",
+            ],
           },
           contentTypeOptions: "nosniff",
           frameOptions: "DENY",
