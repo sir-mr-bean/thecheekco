@@ -37,40 +37,6 @@ const SignInHeader = () => {
     }
   };
 
-  // const handleAccountLogin = async () => {
-  //   if (!emailRef.current || !passRef.current) return;
-  //   setLoggingIn(true);
-  //   try {
-  //     const result = await logInWithEmailAndPassword(
-  //       emailRef.current.value,
-  //       passRef.current.value
-  //     );
-
-  //     setLoggingIn(false);
-  //   } catch (error) {}
-  // };
-
-  // const logInWithEmailAndPassword = async (
-  // //   email: string,
-  // //   password: string
-  // // ): Promise<> => {
-  // //   let result;
-  // //   try {
-  // //     result = await signInWithEmailAndPassword(auth, email, password);
-  // //   } catch (e) {
-  // //     const result = (e as Error).message;
-  // //     if (result.includes("invalid-email")) {
-  // //       setIncorrectCreds(true);
-  // //       setLoggingIn(false);
-  // //     }
-  // //     if (result.includes("wrong-password")) {
-  // //       setIncorrectCreds(true);
-  // //       setLoggingIn(false);
-  // //     }
-  // //   }
-  // //   return result as UserCredential;
-  // )
-
   return (
     <>
       <h2 className="text-sm whitespace-nowrap">Already have an account?</h2>
