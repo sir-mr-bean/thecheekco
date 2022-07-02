@@ -55,6 +55,7 @@ module.exports = withTM({
               "https://www.google-analytics.com",
               "https://www.googletagmanager.com",
               "https://maps.googleapis.com",
+              "https://web.squarecdn.com",
             ],
             "img-src": [
               "data:",
@@ -65,6 +66,7 @@ module.exports = withTM({
               "images.ctfassets.net",
               "images.unsplash.com",
               "thecheekco.vercel.app",
+              "https://maps.gstatic.com",
             ],
             "connect-src": [
               "'self'",
