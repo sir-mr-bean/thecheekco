@@ -1,13 +1,16 @@
 import { appRouter } from "@/backend/router/_app";
 import { createSSGHelpers } from "@trpc/react/ssg";
 import { inferRouterContext } from "@trpc/server";
+import { GetServerSidePropsContext, NextPageContext } from "next";
 import { getServerSideSitemap } from "next-sitemap";
 import superjson from "superjson";
 
-export const getServerSideProps = async (context) => {
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
   const ssg = createSSGHelpers({
     router: appRouter,
-    ctx: context as inferRouterContext<typeof appRouter>,
+    ctx: context as unknown as inferRouterContext<typeof appRouter>,
     transformer: superjson,
   });
   const productsQuery = await ssg.fetchQuery("square-products.all-products");

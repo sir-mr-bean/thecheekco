@@ -1,6 +1,8 @@
+import { User } from "@prisma/client";
 import Autocomplete, {
   ReactGoogleAutocompleteInputProps,
 } from "react-google-autocomplete";
+import type { validationErrors } from "@/pages/checkout";
 
 const ShippingForm = ({
   userShippingObj,
@@ -11,6 +13,17 @@ const ShippingForm = ({
   userObj,
   setUserObj,
   register,
+}: {
+  userShippingObj: User;
+  setUserShippingObj: (userShippingObj: User) => void;
+  shippingInfoCheckboxRef: React.RefObject<HTMLInputElement>;
+  setSameAsCustomerInfo: (sameAsCustomerInfo: boolean) => void;
+  sameAsCustomerInfo: boolean;
+  userObj: User;
+  setUserObj: Function;
+  register: Function;
+  validationErrors: validationErrors;
+  setValidationErrors: Function;
 }) => {
   return (
     <form className="mt-4 text-text-primary font-gothic w-full">

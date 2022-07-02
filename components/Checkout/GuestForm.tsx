@@ -195,7 +195,7 @@ const GuestForm = ({
                   (component) => component.types.includes("postal_code")
                 );
 
-                setUserObj((userObj) => {
+                setUserObj((userObj: User) => {
                   return {
                     ...userObj,
 
@@ -224,12 +224,12 @@ const GuestForm = ({
               value={userObj.streetAddress as string}
               onChange={(e) => {
                 setValidationErrors(
-                  (validationErrors) => {
+                  (validationErrors: any) => {
                     return { ...validationErrors, streetAddress: false };
                   },
                   [validationErrors.streetAddress]
                 );
-                setUserObj((userObj) => {
+                setUserObj((userObj: User) => {
                   return {
                     ...userObj,
                     streetAddress: (e.target as HTMLTextAreaElement).value,
@@ -302,7 +302,7 @@ const GuestForm = ({
                   value: (userObj.city as string) || "",
                   onChange: (e) => {
                     setValidationErrors(
-                      (validationErrors) => {
+                      (validationErrors: any) => {
                         return { ...validationErrors, city: false };
                       },
                       [validationErrors.city]
@@ -313,7 +313,7 @@ const GuestForm = ({
                     });
                   },
                   validate: {
-                    matchesFormatOfCityName: (value) =>
+                    matchesFormatOfCityName: (value: string) =>
                       value.match(/^[a-zA-Z ]+$/),
                   },
                 })}
@@ -405,7 +405,7 @@ const GuestForm = ({
                     ? (userObj.postalCode as string)
                     : "",
                   onChange: (e) => {
-                    setValidationErrors((validationErrors) => {
+                    setValidationErrors((validationErrors: any) => {
                       return { ...validationErrors, zip: false };
                     });
                     setUserObj({
@@ -417,7 +417,7 @@ const GuestForm = ({
                   required: true,
                   pattern: "/^[0-9]{4}$/",
                   validate: {
-                    correct: (value) =>
+                    correct: (value: string) =>
                       value.length === 4 || "Invalid post code",
                   },
                 })}
@@ -450,7 +450,7 @@ const GuestForm = ({
                 autoComplete="tel"
                 value={userObj.phoneNumber as string}
                 onChange={(e) => {
-                  setValidationErrors((validationErrors) => {
+                  setValidationErrors((validationErrors: any) => {
                     return { ...validationErrors, phone: false };
                   });
                   setUserObj({

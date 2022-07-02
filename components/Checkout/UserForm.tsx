@@ -227,7 +227,7 @@ const UserForm = ({
                   inputAutocompleteValue={userObj?.streetAddress as string}
                   onChange={(e) => {
                     setValidationErrors(
-                      (validationErrors) => {
+                      (validationErrors: any) => {
                         return { ...validationErrors, streetAddress: false };
                       },
                       [validationErrors.streetAddress]
@@ -307,7 +307,7 @@ const UserForm = ({
                       value: userObj.city ? (userObj.city as string) : "",
                       onChange: (e) => {
                         setValidationErrors(
-                          (validationErrors) => {
+                          (validationErrors: any) => {
                             return { ...validationErrors, city: false };
                           },
                           [validationErrors.city]
@@ -446,7 +446,7 @@ const UserForm = ({
                     type={userObj.phoneNumber ? "text" : "tel"}
                     defaultValue={userObj.phoneNumber as string}
                     onChange={(e) => {
-                      setValidationErrors((validationErrors) => {
+                      setValidationErrors((validationErrors: any) => {
                         return { ...validationErrors, phone: false };
                       });
                       setUserObj({

@@ -5,7 +5,6 @@ export interface User {
   name: string;
   image: string;
   emailVerified: Date;
-  password: string;
   firstName: string;
   lastName: string;
   company: string;

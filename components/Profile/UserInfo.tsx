@@ -8,11 +8,13 @@ import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { User } from "@prisma/client";
 import toast from "react-hot-toast";
+import { Session } from "next-auth";
 
-type AutoCompletePropsExtended = ReactGoogleAutocompleteInputProps &
-  HTMLInputElement[];
+type FormData = {
+  [x: string]: any;
+};
 
-const UserInfo = ({ session }) => {
+const UserInfo = ({ session }: { session: Session }) => {
   const {
     register,
     handleSubmit,
@@ -27,15 +29,14 @@ const UserInfo = ({ session }) => {
   }, z.date());
   type DateSchema = z.infer<typeof dateSchema>;
 
-  const handleFormSubmit = async (d) => {
+  const handleFormSubmit = async (d: FormData) => {
     const updatedUserObj = {
       id: userObj.id,
       createdAt: userObj.createdAt as DateSchema,
       updatedAt: new Date(Date.now()),
-      name: d.name,
+      name: d["first-name"] + " " + d["last-name"],
       email: userObj.email,
       emailVerified: userObj.emailVerified,
-      password: userObj.password,
       image: userObj.image,
       firstName: d["first-name"],
       lastName: d["last-name"],

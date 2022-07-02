@@ -1,5 +1,11 @@
 import { WishlistObject } from "@/types/WishlistObject";
-import { createContext, useContext, useReducer, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  PropsWithChildren,
+} from "react";
 import { CatalogObject } from "square";
 import {
   wishListReducer,
@@ -19,7 +25,7 @@ const WishList = createContext<WishlistContext>({
   dispatch: () => {},
 });
 
-const WishListContext = ({ children }) => {
+const WishListContext = ({ children }: { children: React.ReactNode }) => {
   const [wishlist, dispatch] = useReducer(
     wishListReducer,
     [],

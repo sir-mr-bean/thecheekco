@@ -35,6 +35,8 @@ const tabs = [
   },
 ];
 
+Profile.displayName = "Profile";
+
 export default function Profile(): JSX.Element {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -193,12 +195,12 @@ export default function Profile(): JSX.Element {
                     <UserDashboard />
                   </>
                 )}
-                {openTab === 2 && (
+                {openTab === 2 && session && (
                   <>
                     <UserInfo session={session} />
                   </>
                 )}
-                {openTab === 3 && (
+                {openTab === 3 && customerOrders && (
                   <>
                     <UserOrders
                       customerOrders={customerOrders}
@@ -206,7 +208,7 @@ export default function Profile(): JSX.Element {
                     />
                   </>
                 )}
-                {openTab === 4 && (
+                {openTab === 4 && session && (
                   <>
                     <PaymentMethods userObj={session?.user} />
                   </>

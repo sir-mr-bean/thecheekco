@@ -69,7 +69,7 @@ export default function Login() {
             {!currentUser ? (
               <>
                 <Menu.Item>
-                  {({ active }) => (
+                  {({ active }: { active: boolean }) => (
                     <a
                       href="/login"
                       className={classNames(
@@ -87,7 +87,7 @@ export default function Login() {
             ) : (
               <>
                 <Menu.Item>
-                  {({ active }) => (
+                  {({ active }: { active: boolean }) => (
                     <a
                       href="/profile"
                       className={classNames(
@@ -103,7 +103,7 @@ export default function Login() {
                 </Menu.Item>
 
                 <Menu.Item>
-                  {({ active }) => (
+                  {({ active }: { active: boolean }) => (
                     <button
                       onClick={() => signOut()}
                       className={classNames(

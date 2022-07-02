@@ -2,8 +2,17 @@ import { WishlistState } from "@/context/Wishlist/Context";
 import { useEffect, useState } from "react";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import Heart from "@/components/react-animated-heart/src/components/index";
+import { CatalogObject } from "square";
 
-const FavouriteButton = ({ product, image, styles }) => {
+const FavouriteButton = ({
+  product,
+  image,
+  styles,
+}: {
+  product: CatalogObject;
+  image: string;
+  styles: any;
+}) => {
   const [isFavourite, setIsFavourite] = useState(false);
   const { wishlist, dispatch } = WishlistState();
 

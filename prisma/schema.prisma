@@ -49,7 +49,6 @@ model User {
   lastName        String?
   email           String          @unique
   emailVerified   DateTime?
-  password        String?
   company         String?
   streetAddress   String?
   streetNumber    String?

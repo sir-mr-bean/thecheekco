@@ -1,7 +1,13 @@
 import { useState } from "react";
 import { RatingIcon } from "./RatingIcon";
 
-const NewReview = ({ rating, setRating }) => {
+const NewReview = ({
+  rating,
+  setRating,
+}: {
+  rating: number;
+  setRating: (rating: number) => void;
+}) => {
   const [hoverRating, setHoverRating] = useState(0);
   const onMouseEnter = (index: number) => {
     setHoverRating(index);
@@ -9,7 +15,7 @@ const NewReview = ({ rating, setRating }) => {
   const onMouseLeave = () => {
     setHoverRating(0);
   };
-  const onSaveRating = (index) => {
+  const onSaveRating = (index: number) => {
     setRating(index);
   };
   return (

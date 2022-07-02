@@ -1,4 +1,5 @@
 import { trpc } from "@/utils/trpc";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Card } from "square";
@@ -12,6 +13,7 @@ const PaymentMethodCard = ({
 }) => {
   const [editCard, setEditCard] = useState(false);
   const utils = trpc.useContext();
+  const { data: session, status } = useSession();
   const deleteCardMutation = trpc.useMutation([
     "square-payment.delete-customer-payment-method",
   ]);
@@ -20,7 +22,7 @@ const PaymentMethodCard = ({
     deleteCardMutation.mutate(
       {
         paymentMethodId: paymentMethod.id as string,
-        customerId: paymentMethod.customerId as string,
+        email: session?.user.email as string,
       },
       {
         onSuccess: () => {

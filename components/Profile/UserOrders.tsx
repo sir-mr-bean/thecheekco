@@ -66,7 +66,13 @@ const orders = [
   // More orders...
 ];
 
-const UserOrders = ({ customerOrders, orderQueryStatus }) => {
+const UserOrders = ({
+  customerOrders,
+  orderQueryStatus,
+}: {
+  customerOrders: Order[];
+  orderQueryStatus: string;
+}) => {
   return (
     <>
       {orderQueryStatus !== "success" ? (
@@ -158,48 +164,47 @@ const UserOrders = ({ customerOrders, orderQueryStatus }) => {
 
                         <div className="mt-6 flow-root px-4 sm:mt-10 sm:px-0">
                           <div className="-my-6 divide-y divide-gray-200 sm:-my-10">
-                            {customerOrders?.lineItems &&
-                              customerOrders.lineItems.map(
-                                (product: OrderLineItem) => (
-                                  <div
-                                    key={product.uid}
-                                    className="flex py-6 sm:py-10"
-                                  >
-                                    <div className="min-w-0 flex-1 lg:flex lg:flex-col">
-                                      <div className="lg:flex-1">
-                                        <div className="sm:flex">
-                                          <div>
-                                            <h4 className="font-medium text-text-primary">
-                                              {product.name}
-                                            </h4>
-                                            <p className="hidden mt-2 text-sm text-text-secondary sm:block">
-                                              /description here
-                                            </p>
-                                          </div>
-                                          <p className="mt-1 font-medium text-text-primary sm:mt-0 sm:ml-6">
-                                            {parseInt(
-                                              product?.totalMoney?.amount?.toString() as string
-                                            ) / 100}
+                            {order?.lineItems &&
+                              order.lineItems.map((product: OrderLineItem) => (
+                                <div
+                                  key={product.uid}
+                                  className="flex py-6 sm:py-10"
+                                >
+                                  <div className="min-w-0 flex-1 lg:flex lg:flex-col">
+                                    <div className="lg:flex-1">
+                                      <div className="sm:flex">
+                                        <div>
+                                          <h4 className="font-medium text-text-primary">
+                                            {product.name}
+                                          </h4>
+                                          <p className="hidden mt-2 text-sm text-text-secondary sm:block">
+                                            /description here
                                           </p>
                                         </div>
-                                        <div className="mt-2 flex text-sm font-medium sm:mt-4">
+                                        <p className="mt-1 font-medium text-text-primary sm:mt-0 sm:ml-6">
+                                          {parseInt(
+                                            product?.totalMoney?.amount?.toString() as string
+                                          ) / 100}
+                                        </p>
+                                      </div>
+                                      <div className="mt-2 flex text-sm font-medium sm:mt-4">
+                                        <a
+                                          href={product.uid}
+                                          className="text-text-primary hover:text-text-secondary"
+                                        >
+                                          View Product
+                                        </a>
+                                        <div className="border-l border-gray-200 ml-4 pl-4 sm:ml-6 sm:pl-6">
                                           <a
-                                            href={product.uid}
+                                            href="#"
                                             className="text-text-primary hover:text-text-secondary"
                                           >
-                                            View Product
+                                            Buy Again
                                           </a>
-                                          <div className="border-l border-gray-200 ml-4 pl-4 sm:ml-6 sm:pl-6">
-                                            <a
-                                              href="#"
-                                              className="text-text-primary hover:text-text-secondary"
-                                            >
-                                              Buy Again
-                                            </a>
-                                          </div>
                                         </div>
                                       </div>
-                                      {/* <div className="mt-6 font-medium">
+                                    </div>
+                                    {/* <div className="mt-6 font-medium">
                                     {product.status === "delivered" ? (
                                       <div className="flex space-x-2">
                                         <AiOutlineCheck
@@ -228,17 +233,16 @@ const UserOrders = ({ customerOrders, orderQueryStatus }) => {
                                       </p>
                                     ) : null}
                                     </div> */}
-                                    </div>
-                                    <div className="ml-4 flex-shrink-0 sm:m-0 sm:mr-6 sm:order-first">
-                                      {/* <img
+                                  </div>
+                                  <div className="ml-4 flex-shrink-0 sm:m-0 sm:mr-6 sm:order-first">
+                                    {/* <img
                                     src={product.}
                                     alt={product.imageAlt}
                                     className="col-start-2 col-end-3 sm:col-start-1 sm:row-start-1 sm:row-span-2 w-20 h-20 rounded-lg object-center object-cover sm:w-40 sm:h-40 lg:w-52 lg:h-52"
                                   /> */}
-                                    </div>
                                   </div>
-                                )
-                              )}
+                                </div>
+                              ))}
                           </div>
                         </div>
                       </div>

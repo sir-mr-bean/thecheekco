@@ -2,12 +2,11 @@ import { useState } from "react";
 import { Switch } from "@headlessui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import validator from "validator";
 import { useForm } from "react-hook-form";
 import { trpc } from "@/utils/trpc";
 import Head from "next/head";
 
-function classNames(...classes) {
+function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
@@ -24,7 +23,7 @@ const contactus = () => {
   const [missingLastNameError, setMissingLastNameError] = useState(false);
   const emailMutation = trpc.useMutation(["email.sendEmail"]);
 
-  const handleFormSubmit = async (d) => {
+  const handleFormSubmit = async (d: any) => {
     const { firstName, lastName, company, email, phoneNumber, message } = d;
 
     emailMutation.mutate(

@@ -19,8 +19,15 @@ import { splitLink } from "@trpc/client/links/splitLink";
 import { useRouter } from "next/router";
 import Script from "next/script";
 import React from "react";
+import { NextPage, NextPageContext } from "next";
+import { BaseNextRequestConfig } from "next/dist/server/base-http";
+import { AppProps } from "next/app";
+import { Session } from "next-auth";
 
-const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
+const MyApp = ({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) => {
   const router = useRouter();
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -33,17 +40,17 @@ const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
       router.events.off("hashChangeComplete", handleRouteChange);
     };
   }, [router.events]);
-
+  console.log(Component.displayName);
   useEffect(() => {
-    if (pageProps.session?.data?.user) {
+    if (session?.user) {
       gtag.setUser({
-        userId: pageProps.session.data.user.email,
+        userId: session?.user.email,
       });
     }
   }, [pageProps.session]);
 
   return (
-    <SessionProvider session={pageProps.session}>
+    <SessionProvider session={session}>
       <CartContext>
         <WishListContext>
           <Head>
@@ -75,7 +82,8 @@ const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
           />
           <div className="max-w-screen bg-bg-tan bg-cover">
             <Header />
-            {Component.Oneko ? (
+
+            {Component?.displayName === "Profile" ? (
               <>
                 <Script src="/oneko/oneko.js" strategy="afterInteractive" />
                 <Component {...pageProps} />
@@ -137,7 +145,7 @@ export default withTRPC<AppRouter>({
   ssr: false,
 })(MyApp);
 
-MyApp.getInitialProps = async ({ ctx }) => {
+MyApp.getInitialProps = async ({ ctx }: { ctx: NextPageContext }) => {
   const session = await getSession(ctx);
   if (session) {
     return {

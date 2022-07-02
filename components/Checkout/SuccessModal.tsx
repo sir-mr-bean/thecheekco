@@ -1,6 +1,12 @@
 import { Dialog } from "@headlessui/react";
 
-const SuccessModal = ({ orderComplete, setOrderComplete }) => {
+const SuccessModal = ({
+  orderComplete,
+  setOrderComplete,
+}: {
+  orderComplete: boolean;
+  setOrderComplete: (setOrderComplete: boolean) => void;
+}) => {
   return (
     <Dialog open={orderComplete} onClose={() => setOrderComplete(false)}>
       <Dialog.Panel>

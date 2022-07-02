@@ -1,11 +1,7 @@
 import { CartState } from "../../context/Cart/Context";
 import { Dispatch } from "react";
 import Image from "next/image";
-import {
-  GetStaticProps,
-  GetStaticPropsContext,
-  InferGetStaticPropsType,
-} from "next";
+import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import {
   BsHeartFill,
   BsEmojiHeartEyesFill,
@@ -215,7 +211,7 @@ export default function Home(
   );
 }
 
-export const getStaticProps: GetStaticProps = async (
+export const getStaticProps = async (
   context: GetStaticPropsContext<{ id: string }>
 ) => {
   const ssg = createSSGHelpers({

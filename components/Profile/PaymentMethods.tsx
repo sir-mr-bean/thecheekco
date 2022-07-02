@@ -1,11 +1,10 @@
 import { trpc } from "@/utils/trpc";
+import { User } from "@prisma/client";
 import { useState } from "react";
-import { CreditCard, PaymentForm } from "react-square-web-payments-sdk";
-import PaymentWrapper from "../Checkout/PaymentWrapper";
 import AddPaymentMethodForm from "./PaymentMethods/AddPaymentMethodForm";
 import PaymentMethodCard from "./PaymentMethods/PaymentMethod";
 
-const PaymentMethods = ({ userObj }) => {
+const PaymentMethods = ({ userObj }: { userObj: User }) => {
   const [addCard, setAddCard] = useState(false);
 
   const { data: customer, status: CustomerStatus } = trpc.useQuery([
@@ -24,6 +23,7 @@ const PaymentMethods = ({ userObj }) => {
       "square-payment.get-customer-payment-methods",
       {
         customerId: customer?.id as string,
+        email: userObj.email,
       },
     ],
     {

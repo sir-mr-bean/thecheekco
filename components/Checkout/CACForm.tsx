@@ -135,7 +135,7 @@ const CACForm = ({
             <div className="flex items-center space-x-2 ">
               <input
                 onChange={() =>
-                  setTermsAccepted((termsAccepted) => !termsAccepted)
+                  setTermsAccepted((termsAccepted: boolean) => !termsAccepted)
                 }
                 ref={termsCheckboxRef}
                 checked={termsAccepted}

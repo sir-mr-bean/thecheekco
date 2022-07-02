@@ -97,17 +97,22 @@ export const squarePaymentRouter = createRouter()
   .query("get-customer-payment-methods", {
     input: z.object({
       customerId: z.string(),
+      email: z.string(),
     }),
     async resolve({ input, ctx }) {
-      if (ctx.session?.user?.email) {
-        const { customerId } = input;
-        const getCustomerPaymentMethods = await cardsApi.listCards(
-          undefined,
-          customerId
-        );
-        const customerPaymentMethods = getCustomerPaymentMethods?.result?.cards;
-        return customerPaymentMethods;
+      if (input.email !== ctx.session?.user.email) {
+        throw new TRPCError({
+          message: "You are not authorized to perform this action",
+          code: "UNAUTHORIZED",
+        });
       }
+      const { customerId } = input;
+      const getCustomerPaymentMethods = await cardsApi.listCards(
+        undefined,
+        customerId
+      );
+      const customerPaymentMethods = getCustomerPaymentMethods?.result?.cards;
+      return customerPaymentMethods;
     },
   })
   .mutation("create-customer-payment-method", {
@@ -157,17 +162,21 @@ export const squarePaymentRouter = createRouter()
   })
   .mutation("delete-customer-payment-method", {
     input: z.object({
-      customerId: z.string(),
       paymentMethodId: z.string(),
+      email: z.string(),
     }),
     async resolve({ input, ctx }) {
-      if (ctx.session?.user?.email) {
-        const { customerId, paymentMethodId } = input;
-        const deleteCustomerPaymentMethod = await cardsApi.disableCard(
-          paymentMethodId
-        );
-        const customerPaymentMethod = deleteCustomerPaymentMethod?.result?.card;
-        return customerPaymentMethod;
+      if (input.email !== ctx.session?.user.email) {
+        throw new TRPCError({
+          message: "You are not authorized to perform this action",
+          code: "UNAUTHORIZED",
+        });
       }
+      const { paymentMethodId } = input;
+      const deleteCustomerPaymentMethod = await cardsApi.disableCard(
+        paymentMethodId
+      );
+      const customerPaymentMethod = deleteCustomerPaymentMethod?.result?.card;
+      return customerPaymentMethod;
     },
   });

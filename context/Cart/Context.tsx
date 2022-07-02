@@ -1,5 +1,5 @@
 import { CartObject } from "@/types/CartObject";
-import { createContext, useContext, useReducer, useEffect } from "react";
+import React, { createContext, useContext, useReducer, useEffect } from "react";
 import { cartReducer, cartInitializer } from "./Reducer";
 
 (BigInt.prototype as any).toJSON = function () {
@@ -16,7 +16,7 @@ const Cart = createContext<CartContext>({
   dispatch: () => {},
 });
 
-const CartContext = ({ children }) => {
+const CartContext = ({ children }: { children: React.ReactNode }) => {
   const [cart, dispatch] = useReducer(cartReducer, [], cartInitializer);
 
   useEffect(() => {

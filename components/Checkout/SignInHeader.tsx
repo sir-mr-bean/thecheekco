@@ -17,9 +17,9 @@ const SignInHeader = () => {
   const handleGoogleLogin = async () => {
     try {
       await signIn("google");
-    } catch (err) {
-      console.error(err);
-      alert(err.message);
+    } catch (err: any) {
+      console.error(err?.message);
+      alert(err?.message);
     }
   };
 
@@ -31,9 +31,9 @@ const SignInHeader = () => {
       if (session?.user) {
         router.push("/profile");
       }
-    } catch (err) {
-      console.error(err);
-      alert(err.message);
+    } catch (err: any) {
+      console.error(err?.message);
+      alert(err?.message);
     }
   };
 

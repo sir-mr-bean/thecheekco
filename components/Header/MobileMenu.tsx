@@ -10,7 +10,11 @@ function classNames(...classes: [string, string?, string?, Boolean?]): string {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function MobileMenu({ navigation }): JSX.Element {
+export default function MobileMenu({
+  navigation,
+}: {
+  navigation: CatalogObject[];
+}): JSX.Element {
   return (
     <Menu
       as="div"

@@ -2,11 +2,17 @@ import { Switch } from "@headlessui/react";
 import { FaShippingFast } from "react-icons/fa";
 import { HiCursorClick } from "react-icons/hi";
 
-function classNames(...classes) {
+function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-const PickupToggle = ({ pickup, setPickup }) => {
+const PickupToggle = ({
+  pickup,
+  setPickup,
+}: {
+  pickup: boolean;
+  setPickup: (pickup: boolean) => void;
+}) => {
   return (
     <div className="w-full relative my-5">
       <div className="flex items-center justify-between w-full mx-auto ">
