@@ -56,6 +56,9 @@ module.exports = withTM({
               "https://www.googletagmanager.com",
               "https://maps.googleapis.com",
               "https://web.squarecdn.com",
+              "https://js.squareup.com",
+              "ingest.sentry.io",
+              "https://pay.google.com",
             ],
             "img-src": [
               "data:",
@@ -83,6 +86,7 @@ module.exports = withTM({
               "'self'",
               "fonts.googleapis.com",
               "'unsafe-inline'",
+              "https://web.squarecdn.com",
             ],
             "frame-src": ["https://web.squarecdn.com/"],
           },
