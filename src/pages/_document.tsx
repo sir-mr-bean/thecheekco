@@ -4,7 +4,7 @@ export default function Document() {
   return (
     <Html>
       <Head>
-        <script
+        {/* <script
           async
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
         />
@@ -19,7 +19,7 @@ export default function Document() {
             });
           `,
           }}
-        />
+        /> */}
         <link
           href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Gothic+A1:wght@100;200;300;400;500;600;700;800;900&display=swap"
           rel="stylesheet"
