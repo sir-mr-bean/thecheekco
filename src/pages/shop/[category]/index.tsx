@@ -212,7 +212,7 @@ const CategoryPage = (
                             </h3>
                             <FavouriteButton
                               product={product}
-                              image={productImage?.imageData?.url}
+                              image={productImage?.imageData?.url as string}
                               styles={{
                                 position: "absolute",
                                 top: "-40px",

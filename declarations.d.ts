@@ -3,3 +3,4 @@ declare namespace JSX {
     "lottie-player": any;
   }
 }
+declare module "react-corner-ribbon";
