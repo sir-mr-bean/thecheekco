@@ -28,6 +28,10 @@ const securityHeaders = [
     key: "Permissions-Policy",
     value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
   },
+  {
+    key: "Referrer-Policy",
+    value: "origin-when-cross-origin",
+  },
 ];
 
 /**
