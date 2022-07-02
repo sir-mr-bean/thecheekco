@@ -26,6 +26,22 @@ import { trpc } from "@/utils/trpc";
 import ExistingPaymentMethod from "@/components/Checkout/PaymentMethods/ExistingPaymentMethod";
 import { useRouter } from "next/router";
 
+export type userShippingObject = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  company: string;
+  streetNumber: string;
+  streetAddress: string;
+  apartmentOrUnit: string;
+  city: string;
+  state: string;
+  country: "Australia";
+  postalCode: string;
+  emailAddress: string;
+  phoneNumber: string;
+};
+
 export type validationErrors = {
   name: boolean;
   email: boolean;
@@ -87,7 +103,6 @@ export default function checkout() {
       name: "",
       image: "",
       emailVerified: null,
-      password: "",
       firstName: "",
       lastName: "",
       company: "",
@@ -103,7 +118,7 @@ export default function checkout() {
       isAdmin: false,
     }
   );
-  const [userShippingObj, setUserShippingObj] = useState({
+  const [userShippingObj, setUserShippingObj] = useState<userShippingObject>({
     firstName: "",
     lastName: "",
     email: "",
@@ -142,6 +157,7 @@ export default function checkout() {
       "square-payment.get-customer-payment-methods",
       {
         customerId: customer?.id as string,
+        email: userObj.email,
       },
     ],
     {
@@ -730,7 +746,7 @@ export default function checkout() {
                                 Continue
                               </button>
                             )}
-                            {customerInfoSet && (
+                            {customerInfoSet && userShippingObj && (
                               <>
                                 <ShippingForm
                                   userObj={userObj}

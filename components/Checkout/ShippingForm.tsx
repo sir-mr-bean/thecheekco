@@ -2,7 +2,7 @@ import { User } from "@prisma/client";
 import Autocomplete, {
   ReactGoogleAutocompleteInputProps,
 } from "react-google-autocomplete";
-import type { validationErrors } from "@/pages/checkout";
+import type { userShippingObject, validationErrors } from "@/pages/checkout";
 
 const ShippingForm = ({
   userShippingObj,
@@ -14,16 +14,14 @@ const ShippingForm = ({
   setUserObj,
   register,
 }: {
-  userShippingObj: User;
-  setUserShippingObj: (userShippingObj: User) => void;
+  userShippingObj: userShippingObject;
+  setUserShippingObj: (userShippingObj: userShippingObject) => void;
   shippingInfoCheckboxRef: React.RefObject<HTMLInputElement>;
   setSameAsCustomerInfo: (sameAsCustomerInfo: boolean) => void;
   sameAsCustomerInfo: boolean;
   userObj: User;
   setUserObj: Function;
   register: Function;
-  validationErrors: validationErrors;
-  setValidationErrors: Function;
 }) => {
   return (
     <form className="mt-4 text-text-primary font-gothic w-full">
@@ -218,7 +216,7 @@ const ShippingForm = ({
                       : "",
                     city: city?.long_name as string,
                     state: state?.long_name as string,
-                    country: country?.long_name as string,
+                    country: "Australia",
                     postalCode: postalCode?.long_name as string,
                   });
                 }}
@@ -334,7 +332,7 @@ const ShippingForm = ({
                 onChange={(e) =>
                   setUserShippingObj({
                     ...userShippingObj,
-                    country: e.target.value,
+                    country: "Australia",
                   })
                 }
                 className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 py-1.5"
