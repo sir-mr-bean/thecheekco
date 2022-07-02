@@ -3,6 +3,33 @@ const withTM = require("next-transpile-modules")([
   "react-square-web-payments-sdk",
 ]);
 
+const ContentSecurityPolicy = `
+default-src 'self';
+script-src 'self' https://www.google-analytics.com';
+img-src https://www.google-analytics.com www.google-analytics.com https://stats.g.doubleclick.net;
+connect-src https://www.google-analytics.com www.google-analytics.com https://stats.g.doubleclick.net;
+font-src fonts.gstatic.com;
+style-src 'self' fonts.googleapis.com
+`;
+const securityHeaders = [
+  {
+    key: "Content-Security-Policy",
+    value: ContentSecurityPolicy.replace(/\s{2,}/g, " ").trim(),
+  },
+  {
+    key: "X-XSS-Protection",
+    value: "1; mode=block",
+  },
+  {
+    key: "X-Frame-Options",
+    value: "SAMEORIGIN",
+  },
+  {
+    key: "Permissions-Policy",
+    value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+  },
+];
+
 /**
  * @type {import('next').NextConfig}
  **/
@@ -34,5 +61,14 @@ module.exports = withTM({
     "@/context/*": ["context/*"],
     "@/types/*": ["@types/*"],
     "@/backend/*": ["src/backend/*"],
+  },
+  async headers() {
+    return [
+      {
+        // Apply these headers to all routes in your application.
+        source: "/:path*",
+        headers: securityHeaders,
+      },
+    ];
   },
 });
