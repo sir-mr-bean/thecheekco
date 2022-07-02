@@ -44,6 +44,7 @@ specifiers:
   next: 12.1.6
   next-auth: ^4.5.0
   next-sitemap: ^3.1.7
+  next-strict-csp: ^1.0.1
   next-transpile-modules: ^9.0.0
   nodemailer: ^6.7.5
   nookies: ^2.5.2
@@ -110,6 +111,7 @@ dependencies:
   next: 12.1.6_5ovelu635kdjiiodz74uabvzfu
   next-auth: 4.5.0_5ygs74o5bgk2vdqrahrydzhqe4
   next-sitemap: 3.1.7_nlwwphh5s5ggdfer3ji4ymvzrq
+  next-strict-csp: 1.0.1_2mgcgz5qhsdxw4fgpqzqeafmkq
   next-transpile-modules: 9.0.0
   nodemailer: 6.7.5
   nookies: 2.5.2
@@ -10343,6 +10345,18 @@ packages:
       '@next/env': 12.1.6
       minimist: 1.2.6
       next: 12.1.6_5ovelu635kdjiiodz74uabvzfu
+    dev: false
+
+  /next-strict-csp/1.0.1_2mgcgz5qhsdxw4fgpqzqeafmkq:
+    resolution: {integrity: sha512-X3VvFXAzOD5/63rjJc8hl5JKQYXNyRUYHGRRqvOji8IHLeknxAo1KEa9V58IWOdC7LsCFoUmAcxvQVKaK2jfiQ==}
+    peerDependencies:
+      next: '*'
+      react: '*'
+      react-dom: '*'
+    dependencies:
+      next: 12.1.6_5ovelu635kdjiiodz74uabvzfu
+      react: 18.1.0
+      react-dom: 18.1.0_react@18.1.0
     dev: false
 
   /next-tick/1.1.0:

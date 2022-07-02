@@ -41,6 +41,7 @@
     "next": "12.1.6",
     "next-auth": "^4.5.0",
     "next-sitemap": "^3.1.7",
+    "next-strict-csp": "^1.0.1",
     "next-transpile-modules": "^9.0.0",
     "nodemailer": "^6.7.5",
     "nookies": "^2.5.2",
