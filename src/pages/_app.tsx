@@ -20,6 +20,7 @@ import Script from "next/script";
 import React from "react";
 import { AppProps } from "next/app";
 import { NextPageContext } from "next";
+import "@fontsource/gothic-a1";
 
 const MyApp = ({
   Component,
@@ -72,7 +73,6 @@ const MyApp = ({
             gtag('config', '${gtag.GA_TRACKING_ID}', {
               page_path: window.location.pathname,
             });
-            
           `,
             }}
           />

@@ -45,10 +45,6 @@ module.exports = {
       },
       fontFamily: {
         gothic: ["'Gothic A1'", "sans-serif"],
-        bethellen: ["'Beth Ellen'", "cursive"],
-        arvo: ["Arvo", "serif"],
-        roboto: ["'Roboto Mono'", "monospace"],
-        shadows: ["'Shadows Into Light'", "cursive"],
       },
     },
   },

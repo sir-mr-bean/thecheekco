@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@fontsource/gothic-a1': ^4.5.7
   '@googlemaps/js-api-loader': ^1.14.3
   '@googlemaps/react-wrapper': ^1.1.35
   '@headlessui/react': ^1.6.5
@@ -83,6 +84,7 @@ specifiers:
   zod: ^3.17.3
 
 dependencies:
+  '@fontsource/gothic-a1': 4.5.7
   '@googlemaps/js-api-loader': 1.14.3
   '@googlemaps/react-wrapper': 1.1.35_react@18.1.0
   '@headlessui/react': 1.6.5_ef5jwxihqo6n7gxfmzogljlgcm
@@ -2322,6 +2324,10 @@ packages:
 
   /@firebase/webchannel-wrapper/0.6.2:
     resolution: {integrity: sha512-zThUKcqIU6utWzM93uEvhlh8qj8A5LMPFJPvk/ODb+8GSSif19xM2Lw1M2ijyBy8+6skSkQBbavPzOU5Oh/8tQ==}
+    dev: false
+
+  /@fontsource/gothic-a1/4.5.7:
+    resolution: {integrity: sha512-CAFNKEoojLMWFnx3LvCWSzmkY/ehxnUv5TrjCQ6HkNIKGbDseey+9e6oeg6vdHRznRibddOewG3mCub9tCCjsw==}
     dev: false
 
   /@gar/promisify/1.1.3:
