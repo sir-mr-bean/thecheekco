@@ -21,20 +21,20 @@ const CheekyBox = () => {
   }, []);
 
   return (
-    <section className="bg-paper-bg bg-cover flex flex-col justify-center items-center w-full flex-1 shadow-3xl shadow-slate-600 font-gothic">
-      <div className="flex flex-col items-center justify-center text-text-primary">
-        <span className="text-2xl sm:text-4xl mt-4 ">introducing</span>
-        <span className="text-4xl sm:text-6xl font-semibold mt-4">
+    <section className="bg-paper-bg bg-cover flex flex-col justify-end items-center w-full flex-1 shadow-3xl shadow-slate-600 font-gothic">
+      <div className="flex flex-col items-center justify-end text-text-primary w-full my-16">
+        <span className="text-2xl sm:text-4xl">introducing</span>
+        <span className="text-4xl sm:text-6xl font-semibold">
           the cheeky box.
         </span>
         <div className="flex flex-col-reverse sm:flex-row w-full items-start justify-center mt-4 space-x-10">
           <div
-            className="w-4/5 sm:w-1/3 mx-auto"
+            className="w-4/5 sm:w-1/4 mx-auto"
             ref={strayCatRef ? strayCatRef : ""}
             onMouseEnter={() => lottie.play()}
             onMouseLeave={() => lottie.pause()}
           />
-          <div className="flex flex-col items-start justify-center sm:w-2/3 text-xl w-3/4">
+          <div className="flex flex-col items-start justify-start sm:w-2/3 text-xl w-3/4">
             <span className="sm:w-4/5 pt-10">
               A limited run monthly mystery subscription box designed to keep
               you & your bathroom plastic free and fabulous without any stress.

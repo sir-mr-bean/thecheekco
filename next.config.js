@@ -75,6 +75,7 @@ module.exports = withTM({
               "https://stats.g.doubleclick.net",
               "https://vitals.vercel-insights.com",
               "maps.googleapis.com",
+              "https://pci-connect.squareup.com",
             ],
             "font-src": ["'self'"],
             "style-src": [
@@ -83,6 +84,7 @@ module.exports = withTM({
               "fonts.googleapis.com",
               "'unsafe-inline'",
             ],
+            "frame-src": ["https://web.squarecdn.com/"],
           },
           contentTypeOptions: "nosniff",
           frameOptions: "DENY",
