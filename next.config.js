@@ -32,6 +32,10 @@ const securityHeaders = [
     key: "Referrer-Policy",
     value: "origin-when-cross-origin",
   },
+  {
+    key: "X-Content-Type-Options",
+    value: "nosniff",
+  },
 ];
 
 /**
