@@ -76,7 +76,7 @@ module.exports = withTM({
               "https://vitals.vercel-insights.com",
               "maps.googleapis.com",
             ],
-            "font-src": ["fonts.gstatic.com", "fonts.googleapis.com"],
+            "font-src": ["'self'"],
             "style-src": [
               "data:",
               "'self'",

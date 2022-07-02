@@ -9,10 +9,10 @@ const PageTwo = ({
 }) => {
   return (
     <div>
-      <div className="flex flex-col w-full items-start space-y-2 sm:pt-5">
-        <span className="text-sm sm:text-lg">Great!</span>
-        <span className="text-sm sm:text-lg">
-          Now, Which items would you like to recieve as monthly standard refill:
+      <div className="flex flex-col w-full items-center justify-center space-y-2 sm:pt-5">
+        <span className="text-sm sm:text-lg text-center">Great!</span>
+        <span className="text-sm sm:text-lg text-center">
+          Now, which items would you like to see regularly as part of the box:
         </span>
       </div>
       <div className="flex flex-wrap w-full items-center justify-center py-2 sm:pt-5">

@@ -10,9 +10,10 @@ const PageOne = ({
   return (
     <>
       <div className="flex flex-col items-start w-full h-full justify-center">
-        <div className="flex flex-col space-y-3 items-center justify-center">
+        <div className="flex flex-col space-y-3 items-center justify-center w-full">
           <span className="text-sm sm:text-lg text-center">
-            To begin, tell us a little about your bathing & skin preferences.
+            To begin, tell us a little about your bathing & skin preferences to
+            help shape each months selections.
           </span>
           <span className="text-sm sm:text-lg text-center">
             Would you prefer: Bath Products, Shower Products or Both

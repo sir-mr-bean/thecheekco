@@ -14,3 +14,13 @@ export type PageTwoOptions = {
   bubbleBath: boolean;
   showerSteamer: boolean;
 };
+
+export type PageThreeOptions = {
+  sweet: boolean;
+  fruity: boolean;
+  masculine: boolean;
+  floral: boolean;
+  fragranceFree: boolean;
+  avoid: string;
+  allergies: string;
+};

@@ -42,6 +42,16 @@ const CheekyBoxWrapper = () => {
     showerSteamer: false,
   });
 
+  const [pageThreeOptions, setPageThreeOptions] = useState({
+    sweet: false,
+    fruity: false,
+    masculine: false,
+    floral: false,
+    fragranceFree: false,
+    avoid: "",
+    allergies: "",
+  });
+
   const prevStep = () => {
     setMoving("left");
     setSteps((old) =>
@@ -105,9 +115,9 @@ const CheekyBoxWrapper = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="bg-white mt-10 sm:mt-16 mx-1 md:mx-16 rounded-md shadow-sm shadow-black font-gothic text-text-primary overflow-visible ">
-        <div className="flex-1 flex flex-col justify-between items-center py-12 px-4 sm:px-6 h-[75vh]">
-          <h1 className="text-3xl sm:text-5xl font-light">
+      <div className="bg-white mt-10 sm:mt-16 mx-3 md:mx-16 rounded-md shadow-sm shadow-black font-gothic text-text-primary overflow-visible ">
+        <div className="flex-1 flex flex-col justify-between items-center py-12 px-4 sm:px-6 min-h-[100vh]">
+          <h1 className="text-3xl sm:text-5xl font-light text-center">
             Build your Cheeky Box!
           </h1>
           <div
@@ -220,7 +230,10 @@ const CheekyBoxWrapper = () => {
                 as="div"
               >
                 <div style={{ width: `${wrapperWidth}px`, height: "100%" }}>
-                  <PageThree />
+                  <PageThree
+                    pageThreeOptions={pageThreeOptions}
+                    setPageThreeOptions={setPageThreeOptions}
+                  />
                 </div>
               </Transition>
 
@@ -342,11 +355,11 @@ const CheekyBoxWrapper = () => {
                 type="button"
                 disabled={currentStep === 0}
                 onClick={() => prevStep()}
-                className="uppercase bg-button border border-transparent rounded-md py-2 px-8 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5"
+                className="uppercase bg-button border border-transparent rounded-md py-2 px-4 sm:px-8 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5"
               >
                 Prev
               </button>
-              <ol className="mx-1 sm:mx-8 flex items-center space-x-2 sm:space-x-5">
+              <ol className="mx-2 sm:mx-8 flex items-center space-x-2 sm:space-x-5">
                 {steps.map((step, i) => (
                   <li key={`step_${i}`}>
                     {step.status === "complete" ? (
@@ -391,8 +404,8 @@ const CheekyBoxWrapper = () => {
                 onClick={() => nextStep()}
                 className={
                   currentStep === 7
-                    ? `uppercase bg-button border border-transparent rounded-md py-2 px-8 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5 cursor-not-allowed`
-                    : `uppercase bg-button border border-transparent rounded-md py-2 px-8 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5`
+                    ? `uppercase bg-button border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5 cursor-not-allowed`
+                    : `uppercase bg-button border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5`
                 }
               >
                 Next
