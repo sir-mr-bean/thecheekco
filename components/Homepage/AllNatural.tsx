@@ -103,6 +103,7 @@ const AllNatural = ({
                             productImage?.imageData?.url ||
                             "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
                           }
+                          alt={product.itemData?.name}
                           width={150}
                           height={150}
                           objectFit="cover"

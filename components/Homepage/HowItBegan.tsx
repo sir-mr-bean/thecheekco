@@ -35,6 +35,7 @@ const HowItBegan = () => {
             height={144}
             width={144}
             layout="responsive"
+            alt="Maddi"
           />
         </div>
         <div className="flex flex-col p-5 sm:p-0">
