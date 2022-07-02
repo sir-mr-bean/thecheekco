@@ -71,6 +71,7 @@ module.exports = withTM({
               "images.unsplash.com",
               "thecheekco.vercel.app",
               "https://maps.gstatic.com",
+              "https://www.gstatic.com",
             ],
             "connect-src": [
               "'self'",
@@ -85,6 +86,7 @@ module.exports = withTM({
               "'self'",
               "https://square-fonts-production-f.squarecdn.com",
               "https://d1g145x70srn7h.cloudfront.net",
+              "https://fonts.gstatic.com",
             ],
             "style-src": [
               "data:",
