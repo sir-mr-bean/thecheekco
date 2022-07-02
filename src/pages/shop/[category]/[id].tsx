@@ -216,10 +216,10 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
             <div className="flex flex-col sm:flex-row  justify-items-stretch items-stretch sm:space-x-6">
               {/* Product image */}
 
-              <div className="overflow-hidden relative w-3/4 mx-auto sm:w-2/3 mb-6 sm:mb-0">
+              <div className="relative w-full h-96 sm:h-auto mx-auto sm:w-2/3 mb-6 sm:mb-0">
                 <Image
                   priority
-                  layout="responsive"
+                  layout="fill"
                   objectFit="cover"
                   height={1920}
                   width={1080}
@@ -233,10 +233,10 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
               </div>
 
               {/* Product details */}
-              <div className="max-w-xl sm:max-w-none border rounded-lg bg-white sm:px-10 flex flex-col justify-around w-full px-4">
+              <div className="max-w-xl sm:max-w-sm border rounded-lg bg-white sm:px-10 flex flex-col justify-around w-full px-4">
                 <div className="flex flex-col space-y-2 items-center justify-center">
-                  <div className="pl-10 flex items-center w-full justify-center">
-                    <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl px-3 pt-4">
+                  <div className="flex items-center w-full justify-center">
+                    <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-2xl px-3 pt-4">
                       {product?.itemData?.name}
                     </h1>
                     <div className="pt-3">
