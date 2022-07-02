@@ -12,6 +12,7 @@ import { getSession, SessionProvider, useSession } from "next-auth/react";
 import { AppRouter } from "@/backend/router/_app";
 import superjson from "superjson";
 import Footer from "@/components/Footer/Footer";
+import FooterNoText from "@/components/Footer/FooterNoText";
 import { httpBatchLink } from "@trpc/client/links/httpBatchLink";
 import { httpLink } from "@trpc/client/links/httpLink";
 import { splitLink } from "@trpc/client/links/splitLink";
@@ -45,6 +46,7 @@ const MyApp = ({
       });
     }
   }, [pageProps.session]);
+  console.log(router);
 
   return (
     <SessionProvider session={session}>
@@ -79,7 +81,7 @@ const MyApp = ({
           <div className="max-w-screen bg-bg-tan bg-cover z-50">
             <Header />
             <Component {...pageProps} />
-            <Footer />
+            {router.pathname === "/" ? <Footer /> : <FooterNoText />}
             <Toaster position="top-right" reverseOrder={false} gutter={-40} />
           </div>
         </WishListContext>
