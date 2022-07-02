@@ -3,9 +3,11 @@ export const GA_TRACKING_ID = process.env
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
 export const pageview = (url: string) => {
-  (window as any).gtag("config", GA_TRACKING_ID, {
-    page_path: url,
-  });
+  if (window !== undefined) {
+    (window as any).gtag("config", GA_TRACKING_ID, {
+      page_path: url,
+    });
+  }
 };
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/events

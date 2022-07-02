@@ -48,15 +48,38 @@ module.exports = withTM({
         source: "/:path*",
         headers: nextSafe({
           ContentSecurityPolicy: {
-            "default-src": "'self' https://thecheekco.vercel.app",
-            "script-src":
-              "'self' https://www.google-analytics.com https://www.googletagmanager.com https://maps.googleapis.com",
-            "img-src":
-              "data: 'self' https://www.google-analytics.com www.google-analytics.com https://stats.g.doubleclick.net images.ctfassets.net images.unsplash.com thecheekco.vercel.app",
-            "connect-src":
-              "'self' https://www.google-analytics.com www.google-analytics.com https://stats.g.doubleclick.net https://vitals.vercel-insights.com maps.googleapis.com",
-            "font-src": "fonts.gstatic.com fonts.googleapis.com",
-            "style-src": "data: 'self' fonts.googleapis.com 'unsafe-inline'",
+            "default-src": ["'self'", "https://thecheekco.vercel.app"],
+            "script-src": [
+              "'self'",
+              "https://www.google-analytics.com",
+              "https://www.googletagmanager.com",
+              "https://maps.googleapis.com",
+            ],
+            "img-src": [
+              "data:",
+              "'self'",
+              "https://www.google-analytics.com",
+              "www.google-analytics.com",
+              "https://stats.g.doubleclick.net",
+              "images.ctfassets.net",
+              "images.unsplash.com",
+              "thecheekco.vercel.app",
+            ],
+            "connect-src": [
+              "'self'",
+              "https://www.google-analytics.com",
+              "www.google-analytics.com",
+              "https://stats.g.doubleclick.net",
+              "https://vitals.vercel-insights.com",
+              "maps.googleapis.com",
+            ],
+            "font-src": ["fonts.gstatic.com", "fonts.googleapis.com"],
+            "style-src": [
+              "data:",
+              "'self'",
+              "fonts.googleapis.com",
+              "'unsafe-inline'",
+            ],
           },
           contentTypeOptions: "nosniff",
           frameOptions: "DENY",
