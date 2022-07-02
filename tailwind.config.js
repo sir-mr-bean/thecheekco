@@ -37,6 +37,7 @@ module.exports = {
         eco: "#436A29",
       },
       backgroundImage: {
+        "bum-banner": "url('/images/Homepage/bumlayover.png')",
         "footer-backdrop": "url('/images/footerbackdrop.png')",
         "paper-bg": "url('/images/paper-brown-texture.jpg')",
         "hero-pattern":

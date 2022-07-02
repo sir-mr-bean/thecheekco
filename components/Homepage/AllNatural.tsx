@@ -43,7 +43,7 @@ const AllNatural = ({
 
   return (
     <section>
-      <div className="flex flex-col w-full sm:p-6 items-center justify-center sm:pt-32">
+      <div className="flex flex-col w-full sm:p-6 items-center justify-center sm:pt-16">
         <div className="flex items-center justify-center pt-8">
           <span className="text-2xl sm:text-5xl text-text-primary font-gothic text-center">
             Check out our fav
@@ -83,7 +83,10 @@ const AllNatural = ({
                 (review) => review.productId === product?.id
               );
               return (
-                <div className="flex flex-col items-end justify-end w-fit">
+                <div
+                  key={product.id}
+                  className="flex flex-col items-end justify-end w-fit pb-5"
+                >
                   <Link
                     key={product.id}
                     href={`/shop/${productCategory?.categoryData?.name}/${product.itemData?.name}`}

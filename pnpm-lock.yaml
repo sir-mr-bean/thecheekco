@@ -43,6 +43,7 @@ specifiers:
   moment: ^2.29.3
   next: 12.1.6
   next-auth: ^4.5.0
+  next-safe: ^3.2.1
   next-sitemap: ^3.1.7
   next-strict-csp: ^1.0.1
   next-transpile-modules: ^9.0.0
@@ -110,6 +111,7 @@ dependencies:
   moment: 2.29.3
   next: 12.1.6_5ovelu635kdjiiodz74uabvzfu
   next-auth: 4.5.0_5ygs74o5bgk2vdqrahrydzhqe4
+  next-safe: 3.2.1_next@12.1.6
   next-sitemap: 3.1.7_nlwwphh5s5ggdfer3ji4ymvzrq
   next-strict-csp: 1.0.1_2mgcgz5qhsdxw4fgpqzqeafmkq
   next-transpile-modules: 9.0.0
@@ -10331,6 +10333,14 @@ packages:
       react: 18.1.0
       react-dom: 18.1.0_react@18.1.0
       uuid: 8.3.2
+    dev: false
+
+  /next-safe/3.2.1_next@12.1.6:
+    resolution: {integrity: sha512-2BBbnendVIlbUjrvV/N6cotuba71i2IIczo0dqmpZu9oSl2PlN6hYML22fidcqXZILwghyXULIy4lxyAgPz+Xg==}
+    peerDependencies:
+      next: ^9.5.0 || ^10.2.1 || ^11.1.0
+    dependencies:
+      next: 12.1.6_5ovelu635kdjiiodz74uabvzfu
     dev: false
 
   /next-sitemap/3.1.7_nlwwphh5s5ggdfer3ji4ymvzrq:

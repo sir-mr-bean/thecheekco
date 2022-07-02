@@ -19,7 +19,7 @@ import { CatalogObject } from "square";
 import { CartObject } from "@/types/CartObject";
 import AllNatural from "@/components/Homepage/AllNatural";
 import { ProductReview } from "@prisma/client";
-import Banner from "@/components/Homepage/Banner";
+import Banner from "@/components/Homepage/Banner/Banner";
 import CheekyBox from "@/components/Homepage/CheekyBox";
 import HowItBegan from "@/components/Homepage/HowItBegan";
 import Videos from "@/components/Homepage/Videos";

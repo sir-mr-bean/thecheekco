@@ -76,7 +76,7 @@ const MyApp = ({
           `,
             }}
           />
-          <div className="max-w-screen bg-bg-tan bg-cover">
+          <div className="max-w-screen bg-bg-tan bg-cover z-50">
             <Header />
             <Component {...pageProps} />
             <Footer />
