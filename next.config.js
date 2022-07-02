@@ -6,7 +6,7 @@ const withTM = require("next-transpile-modules")([
 const ContentSecurityPolicy = `
 default-src 'self';
 script-src 'self' https://www.google-analytics.com';
-img-src 'self' https://www.google-analytics.com www.google-analytics.com https://stats.g.doubleclick.net images.ctfassets.net images.unsplash.com thecheekco.vercel.app;
+img-src 'self' https://www.google-analytics.com www.google-analytics.com https://stats.g.doubleclick.net images.ctfassets.net images.unsplash.com thecheekco.vercel.app data:; 
 connect-src https://www.google-analytics.com www.google-analytics.com https://stats.g.doubleclick.net;
 font-src fonts.gstatic.com;
 style-src 'self' fonts.googleapis.com
