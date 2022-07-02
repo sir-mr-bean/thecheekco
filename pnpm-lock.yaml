@@ -23,6 +23,7 @@ specifiers:
   '@types/jsonwebtoken': ^8.5.8
   '@types/node': ^18.0.0
   '@types/react': ^18.0.14
+  '@types/react-datepicker': ^4.4.2
   '@types/react-html-parser': ^2.0.2
   '@types/react-lottie': ^1.2.6
   '@types/showdown': ^2.0.0
@@ -147,6 +148,7 @@ devDependencies:
   '@types/jsonwebtoken': 8.5.8
   '@types/node': 18.0.0
   '@types/react': 18.0.14
+  '@types/react-datepicker': 4.4.2_ef5jwxihqo6n7gxfmzogljlgcm
   '@types/react-html-parser': 2.0.2
   '@types/react-lottie': 1.2.6
   '@types/showdown': 2.0.0
@@ -2913,7 +2915,6 @@ packages:
 
   /@popperjs/core/2.11.5:
     resolution: {integrity: sha512-9X2obfABZuDVLCgPK9aX0a/x4jaOEweTTWE2+9sr0Qqqevj2Uv5XorvusThmc9XGYpS9yI+fhh8RTafBtGposw==}
-    dev: false
 
   /@prisma/client/3.15.2_prisma@3.15.2:
     resolution: {integrity: sha512-ErqtwhX12ubPhU4d++30uFY/rPcyvjk+mdifaZO5SeM21zS3t4jQrscy8+6IyB0GIYshl5ldTq6JSBo1d63i8w==}
@@ -3465,6 +3466,18 @@ packages:
   /@types/q/1.5.5:
     resolution: {integrity: sha512-L28j2FcJfSZOnL1WBjDYp2vUHCeIFlyYI/53EwD/rKUBQ7MtUUfbQWiyKJGpcnv4/WgrhWsFKrcPstcAt/J0tQ==}
     dev: false
+
+  /@types/react-datepicker/4.4.2_ef5jwxihqo6n7gxfmzogljlgcm:
+    resolution: {integrity: sha512-g8DhWvYmaIMLzVrIEVLXncylyImyBaoPsEUr3yR13JDaaHoebhDorqnVv4tLkNGa8SjBB8SAOQvxD5jaPNBX8A==}
+    dependencies:
+      '@popperjs/core': 2.11.5
+      '@types/react': 18.0.14
+      date-fns: 2.28.0
+      react-popper: 2.3.0_42yiot2n2wjamynwfzzmd7tk3i
+    transitivePeerDependencies:
+      - react
+      - react-dom
+    dev: true
 
   /@types/react-html-parser/2.0.2:
     resolution: {integrity: sha512-avS2QzBMCUTGO2+gi3rWG6WreuU8zhf4b5CbS11itYlvLbwt5wmxBqQN4/f2z/JR/6Kvdt8ohAxhztb8XQHdPQ==}
@@ -5965,7 +5978,6 @@ packages:
   /date-fns/2.28.0:
     resolution: {integrity: sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw==}
     engines: {node: '>=0.11'}
-    dev: false
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
@@ -12200,7 +12212,6 @@ packages:
 
   /react-fast-compare/3.2.0:
     resolution: {integrity: sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==}
-    dev: false
 
   /react-google-autocomplete/2.7.0_react@18.1.0:
     resolution: {integrity: sha512-yYhPQC3TDiqhT3pBjslfkn7g6Y4/ihGv0Ch7YG4/PBrpOgA0n+rwJJrcpmPxeqK03sCwvGozTcBKqkJECo3bvA==}
@@ -12349,7 +12360,6 @@ packages:
       react-dom: 18.1.0_react@18.1.0
       react-fast-compare: 3.2.0
       warning: 4.0.3
-    dev: false
 
   /react-query/3.39.1_ef5jwxihqo6n7gxfmzogljlgcm:
     resolution: {integrity: sha512-qYKT1bavdDiQZbngWZyPotlBVzcBjDYEJg5RQLBa++5Ix5jjfbEYJmHSZRZD+USVHUSvl/ey9Hu+QfF1QAK80A==}

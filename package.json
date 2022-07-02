@@ -74,14 +74,15 @@
     "zod": "^3.17.3"
   },
   "devDependencies": {
-    "@types/react-html-parser": "^2.0.2",
-    "@types/showdown": "^2.0.0",
     "@types/google.maps": "^3.49.2",
     "@types/gtag.js": "^0.0.10",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "^18.0.0",
     "@types/react": "^18.0.14",
+    "@types/react-datepicker": "^4.4.2",
+    "@types/react-html-parser": "^2.0.2",
     "@types/react-lottie": "^1.2.6",
+    "@types/showdown": "^2.0.0",
     "autoprefixer": "^10.4.7",
     "babel-eslint": "^10.1.0",
     "depcheck": "^1.4.3",
