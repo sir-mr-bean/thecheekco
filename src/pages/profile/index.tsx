@@ -10,7 +10,7 @@ import BeatLoader from "react-spinners/BeatLoader";
 import { trpc } from "@/utils/trpc";
 import Head from "next/head";
 import Script from "next/script";
-import oneko, { destroyOneko } from "public/oneko/oneko";
+import { oneko, destroyOneko } from "public/oneko/oneko";
 
 const tabs = [
   {

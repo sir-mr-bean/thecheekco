@@ -19,10 +19,8 @@ import { splitLink } from "@trpc/client/links/splitLink";
 import { useRouter } from "next/router";
 import Script from "next/script";
 import React from "react";
-import { NextPage, NextPageContext } from "next";
-import { BaseNextRequestConfig } from "next/dist/server/base-http";
 import { AppProps } from "next/app";
-import { Session } from "next-auth";
+import { NextPageContext } from "next";
 
 const MyApp = ({
   Component,
@@ -60,7 +58,7 @@ const MyApp = ({
             />
             <link rel="icon" href="/favicon.ico" />
           </Head>
-          <Script
+          {/* <Script
             strategy="afterInteractive"
             src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
           />
@@ -78,18 +76,10 @@ const MyApp = ({
             
           `,
             }}
-          />
+          /> */}
           <div className="max-w-screen bg-bg-tan bg-cover">
             <Header />
-
-            {Component?.displayName === "Profile" ? (
-              <>
-                <Script src="/oneko/oneko.js" strategy="afterInteractive" />
-                <Component {...pageProps} />
-              </>
-            ) : (
-              <Component {...pageProps} />
-            )}
+            <Component {...pageProps} />
             <Footer />
             <Toaster position="top-right" reverseOrder={false} gutter={-40} />
           </div>

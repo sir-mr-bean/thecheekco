@@ -1,4 +1,4 @@
-function oneko() {
+export function oneko() {
   const nekoEl = document.createElement("div");
   nekoEl.id = "nekoEl";
   let nekoPosX = 32;
@@ -161,8 +161,6 @@ function oneko() {
 
   create();
 }
-
-export default oneko;
 
 export function destroyOneko() {
   const oneko = document.body.getElementsByClassName("neko")[0];
