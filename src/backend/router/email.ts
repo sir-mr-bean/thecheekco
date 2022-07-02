@@ -99,7 +99,7 @@ export const emailRouter = createRouter().mutation("sendEmail", {
     } catch (e) {
       console.log(e);
       ctx?.res?.status(400).end(JSON.stringify({ e }));
-      throw new TRPCError(e);
+      throw new TRPCError(e as TRPCError);
     }
     return {
       result: "success",

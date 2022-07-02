@@ -34,7 +34,7 @@ export const squareProductRouter = createRouter()
         } while (cursor != "" && cursor != null);
       } catch (e) {
         console.log(e);
-        throw new TRPCError(e.message);
+        throw new TRPCError(e as TRPCError);
       }
       const filterUnderScoreProducts = productsArray.filter(
         (product) => !product.itemData?.name?.startsWith("_")
