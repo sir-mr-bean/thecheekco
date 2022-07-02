@@ -65,9 +65,9 @@ const CheekyBox = () => {
             <span></span>
             <div className="py-6 flex items-center justify-center mx-auto sm:mx-0">
               <button className="bg-button shadow-sm shadow-text-secondary py-1 px-4 rounded-md border border-transparent hover:border-black ">
-                <span className="uppercase text-white text-sm">
+                <a href="/cheekybox" className="uppercase text-white text-sm">
                   Secure your cheeky box today
-                </span>
+                </a>
               </button>
             </div>
           </div>
