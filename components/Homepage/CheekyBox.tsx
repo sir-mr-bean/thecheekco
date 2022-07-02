@@ -21,7 +21,7 @@ const CheekyBox = () => {
   }, []);
 
   return (
-    <section className="bg-paper-bg bg-cover flex flex-col justify-center items-center w-full flex-1 shadow-3xl shadow-slate-600 my-10 font-gothic">
+    <section className="bg-paper-bg bg-cover flex flex-col justify-center items-center w-full flex-1 shadow-3xl shadow-slate-600 font-gothic">
       <div className="flex flex-col items-center justify-center text-text-primary">
         <span className="text-2xl sm:text-4xl mt-4 ">introducing</span>
         <span className="text-4xl sm:text-6xl font-semibold mt-4">
