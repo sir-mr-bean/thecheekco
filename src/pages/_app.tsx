@@ -1,6 +1,5 @@
 // import globals.css
 import "./globals.css";
-import "@/styles/widget.min.css";
 import Header from "@/components/Header/Header";
 import * as gtag from "lib/gtag";
 import Head from "next/head";
