@@ -48,7 +48,7 @@ module.exports = withTM({
         // Apply these headers to all routes in your application.
         source: "/:path*",
         headers: nextSafe({
-          ContentSecurityPolicy: {
+          contentSecurityPolicy: {
             "default-src": ["'self'", "https://thecheekco.vercel.app"],
             "script-src": [
               "'self'",
