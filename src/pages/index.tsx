@@ -2,13 +2,6 @@ import { CartState } from "../../context/Cart/Context";
 import { Dispatch } from "react";
 import Image from "next/image";
 import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
-import {
-  BsHeartFill,
-  BsEmojiHeartEyesFill,
-  BsFillCalendarCheckFill,
-} from "react-icons/bs";
-import { FaKissWinkHeart, FaShippingFast } from "react-icons/fa";
-import { HiCursorClick } from "react-icons/hi";
 import toast from "react-hot-toast";
 import superjson from "superjson";
 import { createSSGHelpers } from "@trpc/react/ssg";
@@ -63,46 +56,6 @@ export default function Home(
       enabled: !!productsData,
     }
   );
-
-  const Icon = (iconName: string) => {
-    switch (iconName) {
-      case "FaKissWinkHeart":
-        return <FaKissWinkHeart size={25} />;
-      case "FaShippingFast":
-        return <FaShippingFast size={25} />;
-      case "HiCursorClick":
-        return <HiCursorClick size={25} />;
-      case "BsHeartFill":
-        return <BsHeartFill size={25} />;
-      case "BsEmojiHeartEyesFill":
-        return <BsEmojiHeartEyesFill size={25} />;
-      case "BsFillCalendarCheckFill":
-        return <BsFillCalendarCheckFill size={25} />;
-      default:
-        return <div>{iconName}</div>;
-    }
-  };
-
-  const offers = [
-    {
-      name: "Free Shipping on orders over $100",
-      icon: "FaShippingFast",
-
-      href: "#",
-    },
-    {
-      name: "Check out our in-store events",
-      icon: "BsFillCalendarCheckFill",
-
-      href: "#",
-    },
-    {
-      name: "Click & Collect",
-      icon: "HiCursorClick",
-
-      href: "/click-and-collect",
-    },
-  ];
 
   const handleAdd = (product: CatalogObject) => {
     const productImage = productsData?.find(
@@ -161,34 +114,6 @@ export default function Home(
   return (
     <div className="overflow-x-hidden">
       <div>
-        <nav
-          aria-label="Offers"
-          className="order-last lg:order-first my-1 sm:my-3 relative z-20"
-        >
-          <div className="max-w-5xl mx-auto lg:px-8">
-            <ul
-              role="list"
-              className="grid grid-cols-3  divide-text-primary divide-x"
-            >
-              {offers.map((offer) => (
-                <li key={offer.name} className="flex flex-col ">
-                  <a
-                    href={offer.href}
-                    className="relative flex-1 flex flex-col justify-between pt-3 sm:py-2 px-2 text-center space-y-2"
-                  >
-                    <div className="text-text-primary mx-auto  h-6 w-6 flex items-center justify-center ">
-                      {Icon(`${offer.icon}`)}
-                    </div>
-                    <p className="hidden sm:block text-xs sm:text-sm text-text-secondary">
-                      {offer.name}
-                    </p>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </nav>
-
         <main>
           <Banner />
           <CheekyBox />
