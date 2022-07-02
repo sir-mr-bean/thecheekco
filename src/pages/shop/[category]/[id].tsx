@@ -60,9 +60,9 @@ const faqs = [
   // More FAQs...
 ];
 
-const Markdown = (content) => {
+const Markdown = ({ content }: { content: string }) => {
   var converter = new showdown.Converter();
-  var html = converter.makeHtml(content.content);
+  var html = converter.makeHtml(content);
   return (
     <div className="bg-transparent text-text-primary font-gothic py-1">
       {ReactHtmlParser(html)}
@@ -260,7 +260,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                     <div className="pt-3">
                       <FavouriteButton
                         product={product}
-                        image={image?.imageData?.url}
+                        image={image?.imageData?.url as string}
                         styles={{
                           position: "absolute",
                           top: "-30px",
@@ -463,7 +463,9 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
               {openTab === 1 && (
                 <div className="p-2">
                   <h3 className="sr-only">Additional Info</h3>
-                  <Markdown content={product?.itemData?.description} />
+                  <Markdown
+                    content={product?.itemData?.description as string}
+                  />
                 </div>
               )}
               {openTab === 2 && (

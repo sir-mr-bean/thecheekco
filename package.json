@@ -29,6 +29,8 @@
     "@trpc/next": "^9.25.3",
     "@trpc/react": "^9.25.3",
     "@trpc/server": "^9.25.3",
+    "@types/react-html-parser": "^2.0.2",
+    "@types/showdown": "^2.0.0",
     "bcryptjs": "^2.4.3",
     "emailjs": "^4.0.0",
     "firebase": "^9.8.3",

@@ -151,7 +151,7 @@ export default function shop(
   );
 }
 
-export const getStaticProps: GetStaticProps = async (
+export const getStaticProps = async (
   context: GetStaticPropsContext<{ id: string }>
 ) => {
   const ssg = createSSGHelpers({

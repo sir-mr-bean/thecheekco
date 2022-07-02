@@ -23,7 +23,9 @@ specifiers:
   '@types/jsonwebtoken': ^8.5.8
   '@types/node': ^18.0.0
   '@types/react': ^18.0.14
+  '@types/react-html-parser': ^2.0.2
   '@types/react-lottie': ^1.2.6
+  '@types/showdown': ^2.0.0
   autoprefixer: ^10.4.7
   babel-eslint: ^10.1.0
   bcryptjs: ^2.4.3
@@ -95,6 +97,8 @@ dependencies:
   '@trpc/next': 9.25.3_jzelg6ngsy7hxywokhnb67zsxq
   '@trpc/react': 9.25.3_ub67m26lhncw2csxgbgk2dkbcm
   '@trpc/server': 9.25.3
+  '@types/react-html-parser': 2.0.2
+  '@types/showdown': 2.0.0
   bcryptjs: 2.4.3
   emailjs: 4.0.0_typescript@4.7.4
   firebase: 9.8.3
@@ -3343,6 +3347,12 @@ packages:
       '@babel/types': 7.18.4
     dev: false
 
+  /@types/domutils/1.7.4:
+    resolution: {integrity: sha512-w542nRQ0vpXQjLYP52LKqrugQtUq580dEDiDIyZ6IBmV8a3LXjGVNxfj/jUQxS0kDsbZAWsSxQOcTfVX3HRdwg==}
+    dependencies:
+      domhandler: 2.4.2
+    dev: false
+
   /@types/eslint/7.29.0:
     resolution: {integrity: sha512-VNcvioYDH8/FxaeTKkM4/TiTwt6pBV9E3OfGmvaw8tPl0rrHCJ4Ll15HRT+pMiFAf/MLQvAzC+6RzUMEL9Ceng==}
     dependencies:
@@ -3381,6 +3391,14 @@ packages:
 
   /@types/html-minifier-terser/5.1.2:
     resolution: {integrity: sha512-h4lTMgMJctJybDp8CQrxTUiiYmedihHWkjnF/8Pxseu2S6Nlfcy8kwboQ8yejh456rP2yWoEVm1sS/FVsfM48w==}
+    dev: false
+
+  /@types/htmlparser2/3.10.3:
+    resolution: {integrity: sha512-XA74aD+acytofnZic9n83Rxy/IZ259299bYPx5SEyx7uymPi79lRyKDkhJlsuCaPHB7rEoTEhRN4Vm2G5WmHHg==}
+    dependencies:
+      '@types/domutils': 1.7.4
+      '@types/node': 18.0.0
+      domhandler: 2.4.2
     dev: false
 
   /@types/istanbul-lib-coverage/2.0.4:
@@ -3448,6 +3466,13 @@ packages:
     resolution: {integrity: sha512-L28j2FcJfSZOnL1WBjDYp2vUHCeIFlyYI/53EwD/rKUBQ7MtUUfbQWiyKJGpcnv4/WgrhWsFKrcPstcAt/J0tQ==}
     dev: false
 
+  /@types/react-html-parser/2.0.2:
+    resolution: {integrity: sha512-avS2QzBMCUTGO2+gi3rWG6WreuU8zhf4b5CbS11itYlvLbwt5wmxBqQN4/f2z/JR/6Kvdt8ohAxhztb8XQHdPQ==}
+    dependencies:
+      '@types/htmlparser2': 3.10.3
+      '@types/react': 18.0.14
+    dev: false
+
   /@types/react-lottie/1.2.6:
     resolution: {integrity: sha512-fvGJHD7SeUdVESHo7f7erRnXkTWaa/6Mo5TB+R0/ieSftKoFspA4sMlF2qMH6BljXI7ehFJbBtrD5bzDxPCkGg==}
     dependencies:
@@ -3469,6 +3494,10 @@ packages:
 
   /@types/scheduler/0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
+
+  /@types/showdown/2.0.0:
+    resolution: {integrity: sha512-70xBJoLv+oXjB5PhtA8vo7erjLDp9/qqI63SRHm4REKrwuPOLs8HhXwlZJBJaB4kC18cCZ1UUZ6Fb/PLFW4TCA==}
+    dev: false
 
   /@types/source-list-map/0.1.2:
     resolution: {integrity: sha512-K5K+yml8LTo9bWJI/rECfIPrGgxdpeNbj+d53lwN4QjW1MCwlkhUms+gtdzigTeUyBr09+u8BwOIY3MXvHdcsA==}
