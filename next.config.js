@@ -60,6 +60,7 @@ module.exports = withTM({
               "ingest.sentry.io",
               "https://pay.google.com",
               "https://nd.squarecdn.com",
+              "https://embed.prod.simpletix.com",
             ],
             "img-src": [
               "data:",
