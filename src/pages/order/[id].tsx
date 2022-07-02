@@ -6,6 +6,7 @@ import { BeatLoader } from "react-spinners";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import Head from "next/head";
+import Image from "next/image";
 
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
@@ -165,14 +166,19 @@ const UserDashboard = () => {
                       );
                       return (
                         <li key={product.id} className="flex py-6 space-x-6">
-                          <img
-                            src={
-                              productImage?.imageData?.url ||
-                              "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
-                            }
-                            alt={product.itemData?.name}
-                            className="flex-none w-24 h-24 bg-gray-100 rounded-md object-center object-cover"
-                          />
+                          <div className="relative w-1/4">
+                            <Image
+                              src={
+                                productImage?.imageData?.url ||
+                                "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
+                              }
+                              alt={product.itemData?.name}
+                              className="flex-none w-24 h-24 bg-gray-100 rounded-md object-center object-cover"
+                              height={10}
+                              width={10}
+                              layout="responsive"
+                            />
+                          </div>
                           <div className="flex-auto space-y-1">
                             <h3 className="text-text-primary">
                               <a href="#">{product.itemData?.name}</a>

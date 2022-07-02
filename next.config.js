@@ -72,6 +72,8 @@ module.exports = withTM({
               "thecheekco.vercel.app",
               "https://maps.gstatic.com",
               "https://www.gstatic.com",
+              "https://items-images-production",
+              "https://tailwindui.com",
             ],
             "connect-src": [
               "'self'",
