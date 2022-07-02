@@ -55,7 +55,7 @@ module.exports = withTM({
               "data: 'self' https://www.google-analytics.com www.google-analytics.com https://stats.g.doubleclick.net images.ctfassets.net images.unsplash.com thecheekco.vercel.app",
             "connect-src":
               "'self' https://www.google-analytics.com www.google-analytics.com https://stats.g.doubleclick.net https://vitals.vercel-insights.com",
-            "font-src": "fonts.gstatic.com",
+            "font-src": "fonts.gstatic.com fonts.googleapis.com",
             "style-src": "data: 'self' fonts.googleapis.com 'unsafe-inline'",
           },
 
