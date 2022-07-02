@@ -22,6 +22,7 @@ import React from "react";
 import { AppProps } from "next/app";
 import { NextPageContext } from "next";
 import "@fontsource/gothic-a1";
+import { NextResponse } from "next/server";
 
 const MyApp = ({
   Component,
@@ -135,8 +136,19 @@ export default withTRPC<AppRouter>({
   ssr: false,
 })(MyApp);
 
-MyApp.getInitialProps = async ({ ctx }: { ctx: NextPageContext }) => {
+MyApp.getInitialProps = async ({
+  ctx,
+  res,
+}: {
+  ctx: NextPageContext;
+  res: NextResponse;
+}) => {
   const session = await getSession(ctx);
+  res.headers.set(
+    "Cache-Control",
+    "public, s-maxage=30, stale-while-revalidate=600"
+  );
+
   if (session) {
     return {
       pageProps: {
