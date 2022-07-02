@@ -1,6 +1,6 @@
 const nextSafe = require("next-safe");
 
-const isDev = process.env.NODE_ENV !== "production";
+const isDev = process.env.NEXT_PUBLIC_VERCEL_ENV !== "production";
 
 const withTM = require("next-transpile-modules")([
   "@square/web-sdk",
