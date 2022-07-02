@@ -3,7 +3,7 @@ const withTM = require("next-transpile-modules")([
   "react-square-web-payments-sdk",
 ]);
 
-const ContentSecurityPolicy = `default-src 'self' https://thecheekco.vercel.app;script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com;img-src data: 'self' https://www.google-analytics.com www.google-analytics.com https://stats.g.doubleclick.net images.ctfassets.net images.unsplash.com thecheekco.vercel.app;connect-src 'self' https://www.google-analytics.com www.google-analytics.com https://stats.g.doubleclick.net https://vitals.vercel-insights.com;font-src fonts.gstatic.com;style-src data: 'self' fonts.googleapis.com`;
+const ContentSecurityPolicy = `default-src 'self' https://thecheekco.vercel.app;script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com;img-src data: 'self' https://www.google-analytics.com www.google-analytics.com https://stats.g.doubleclick.net images.ctfassets.net images.unsplash.com thecheekco.vercel.app;connect-src 'self' https://www.google-analytics.com www.google-analytics.com https://stats.g.doubleclick.net https://vitals.vercel-insights.com;font-src fonts.gstatic.com;style-src data: 'self' fonts.googleapis.com 'unsafe-inline'`;
 
 const securityHeaders = [
   {
