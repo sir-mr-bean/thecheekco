@@ -14,7 +14,7 @@ const shopMarker = [
   },
 ];
 
-const SimpleMap = ({ children }) => {
+const SimpleMap = ({ children }: { children: React.ReactNode }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map>({} as google.maps.Map);
   const shop = { lat: -16.921913551261635, lng: 145.77625914833033 };
