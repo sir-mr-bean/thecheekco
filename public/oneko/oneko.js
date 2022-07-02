@@ -75,10 +75,10 @@ function oneko() {
       mousePosY = event.clientY;
     };
 
-    (window as any).onekoInterval = setInterval(frame, 100);
+    window.onekoInterval = setInterval(frame, 100);
   }
 
-  function setSprite(name: string, frame: number) {
+  function setSprite(name, frame) {
     const sprite = spriteSets[name][frame % spriteSets[name].length];
     nekoEl.style.backgroundPosition = `${sprite[0] * 64}px ${sprite[1] * 64}px`;
   }
@@ -169,5 +169,5 @@ export function destroyOneko() {
   if (oneko) {
     oneko.remove();
   }
-  clearInterval((window as any).onekoInterval);
+  clearInterval(window.onekoInterval);
 }

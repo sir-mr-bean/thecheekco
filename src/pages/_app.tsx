@@ -40,7 +40,6 @@ const MyApp = ({
       router.events.off("hashChangeComplete", handleRouteChange);
     };
   }, [router.events]);
-  console.log(Component.displayName);
   useEffect(() => {
     if (session?.user) {
       gtag.setUser({
