@@ -1,10 +1,8 @@
 import { useRef, useState, useEffect } from "react";
-
 import Image from "next/image";
 import Logo from "../../public/images/logo.png";
 import { AiOutlineFacebook } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
-
 import { useRouter } from "next/router";
 import BeatLoader from "react-spinners/BeatLoader";
 import {
@@ -15,8 +13,9 @@ import {
   getSession,
 } from "next-auth/react";
 import Head from "next/head";
+import { AppProviders } from "next-auth/providers";
 
-const login = ({ csrfToken, providers }) => {
+const login = ({ providers }: { providers: AppProviders }) => {
   const { data: session, status } = useSession();
 
   const [incorrectCreds, setIncorrectCreds] = useState(false);
@@ -44,9 +43,9 @@ const login = ({ csrfToken, providers }) => {
       if (session?.user) {
         router.push("/profile");
       }
-    } catch (err) {
-      console.error(err);
-      alert(err.message);
+    } catch (err: any) {
+      if (err) console.error(err);
+      alert(err?.message);
     }
   };
 
@@ -58,7 +57,7 @@ const login = ({ csrfToken, providers }) => {
       if (session?.user) {
         router.push("/profile");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
       alert(err.message);
     }
@@ -69,8 +68,6 @@ const login = ({ csrfToken, providers }) => {
     await signIn("email", { email: emailRef.current?.value as string });
     setLoggingIn(false);
   };
-
-  const logInWithEmailAndPassword = async (email, password) => {};
 
   return (
     <>
@@ -219,7 +216,7 @@ const login = ({ csrfToken, providers }) => {
 
 export default login;
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps() {
   return {
     props: {
       providers: await getProviders(),
