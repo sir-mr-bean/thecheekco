@@ -38,26 +38,8 @@ const tabs = [
   },
   {
     index: 2,
-    name: "faq",
+    name: "reviews",
   },
-  {
-    index: 3,
-    name: "license",
-  },
-];
-
-const faqs = [
-  {
-    question: "What format are these icons?",
-    answer:
-      "The icons are in SVG (Scalable Vector Graphic) format. They can be imported into your design tool of choice and used directly in code.",
-  },
-  {
-    question: "Can I use the icons at different sizes?",
-    answer:
-      "Yes. The icons are drawn on a 24 x 24 pixel grid, but the icons can be scaled to different sizes as needed. We don't recommend going smaller than 20 x 20 or larger than 64 x 64 to retain legibility and visual balance.",
-  },
-  // More FAQs...
 ];
 
 const Markdown = ({ content }: { content: string }) => {
@@ -442,26 +424,12 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   }
                 >
                   <span className={openTab === 2 ? `font-bold` : `font-normal`}>
-                    FAQ
-                  </span>
-                </div>
-                <div
-                  onClick={() => {
-                    setOpenTab(3);
-                  }}
-                  className={
-                    openTab === 3
-                      ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full select-none  text-center`
-                      : ` border-b-text-primary cursor-pointer w-full text-center`
-                  }
-                >
-                  <span className={openTab === 3 ? `font-bold` : `font-normal`}>
                     Reviews
                   </span>
                 </div>
               </div>
               {openTab === 1 && (
-                <div className="p-2">
+                <div className="p-8">
                   <h3 className="sr-only">Additional Info</h3>
                   <Markdown
                     content={product?.itemData?.description as string}
@@ -469,24 +437,6 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 </div>
               )}
               {openTab === 2 && (
-                <div className="text-sm text-text-primary p-2">
-                  <h3 className="sr-only">Frequently Asked Questions</h3>
-
-                  <dl>
-                    {faqs.map((faq) => (
-                      <Fragment key={faq.question}>
-                        <dt className="mt-5 font-medium text-text-primary">
-                          {faq.question}
-                        </dt>
-                        <dd className="mt-2 prose prose-sm max-w-none text-text-primary">
-                          <p>{faq.answer}</p>
-                        </dd>
-                      </Fragment>
-                    ))}
-                  </dl>
-                </div>
-              )}
-              {openTab === 3 && (
                 <div className="p-2">
                   <h3 className="sr-only">License</h3>
 
