@@ -8,7 +8,7 @@ const BannerCategory = ({
   image: StaticImageData;
 }) => {
   return (
-    <div className="relative w-24 h-24 lg:w-48 lg:h-48 border rounded-lg border-text-secondary hover:scale-[102%] cursor-pointer">
+    <div className="relative w-28 h-28 lg:w-48 lg:h-48 border rounded-lg border-text-secondary hover:scale-[102%] cursor-pointer">
       <Image
         src={image}
         alt={`Shop ${category}`}

@@ -102,6 +102,7 @@ module.exports = withTM({
               "https://web.squarecdn.com/",
               "https://connect.squareup.com/",
               "https://pay.google.com/",
+              "https://embed.prod.simpletix.com/",
             ],
           },
           contentTypeOptions: "nosniff",
