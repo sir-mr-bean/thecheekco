@@ -356,11 +356,18 @@ const UserForm = ({
                 >
                   State
                 </label>
-                <div className="mt-1">
+                <div className="mt-1 relative">
+                  <div>
+                    {validationErrors.state && (
+                      <span className="text-red-500 text-xs sm:text-sm absolute -top-2 right-0 bg-white rounded-sm px-1 font-gothic">
+                        This field is required
+                      </span>
+                    )}
+                  </div>
                   <select
                     {...(register("guest-region"),
                     {
-                      value: (userObj.state as string) || "ACT",
+                      value: (userObj.state as string) || "",
                       onChange: (e) =>
                         setUserObj({ ...userObj, state: e.target.value }),
                     })}
@@ -368,6 +375,7 @@ const UserForm = ({
                     autoComplete="address-level1"
                     className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full border sm:text-sm border-text-secondary rounded-md p-1 py-1.5 focus:ring"
                   >
+                    <option></option>
                     <option>ACT</option>
                     <option>NSW</option>
                     <option>NT</option>

@@ -117,7 +117,7 @@ const CACForm = ({
                     {...register("tel")}
                     autoComplete="tel"
                     type={userObj.phoneNumber ? "text" : "tel"}
-                    defaultValue={userObj.phoneNumber as string}
+                    value={userObj.phoneNumber as string}
                     onChange={(e) => {
                       setUserObj({
                         ...userObj,

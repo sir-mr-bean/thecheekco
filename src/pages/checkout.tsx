@@ -216,7 +216,8 @@ export default function checkout() {
         userObj.city !== "" &&
         userObj.postalCode !== "" &&
         userObj.email !== "" &&
-        userObj.phoneNumber !== ""
+        userObj.phoneNumber !== "" &&
+        userObj.state !== ""
       ) {
         setCustomerInfoSet(true);
       } else {
@@ -249,6 +250,11 @@ export default function checkout() {
         if (userObj.email === "") {
           setValidationErrors((validationErrors) => {
             return { ...validationErrors, email: true };
+          });
+        }
+        if (userObj.state === "") {
+          setValidationErrors((validationErrors) => {
+            return { ...validationErrors, state: true };
           });
         }
       }
@@ -479,14 +485,14 @@ export default function checkout() {
         orderComplete={orderComplete}
         setOrderComplete={setOrderComplete}
       />
-      <div className="bg-white mt-16 mx-1 md:mx-16 rounded-md shadow-sm shadow-text-primary font-gothic min-h-screen">
+      <div className="bg-white mt-16 mx-1 md:mx-8 rounded-md shadow-sm shadow-text-primary font-gothic min-h-screen">
         <div className="max-w-7xl mx-auto px-4 pt-4 pb-16 sm:px-6 sm:pt-8 sm:pb-24 lg:px-8 xl:px-2 xl:pt-14">
           {total ? (
             <>
               <h1 className="sr-only">Checkout</h1>
               <div className="flex flex-col-reverse sm:flex-row md:space-x-6">
                 <div className="flex flex-col-reverse sm:flex-row sm:flex-1 lg:max-w-none w-full">
-                  <div className="sm:pl-16 w-full">
+                  <div className="sm:pl-8 w-full">
                     <div className="flex flex-col justify-start items-start text-text-primary w-full flex-1 ">
                       <div className="flex flex-col justify-between w-full items-center p-1 sm:p-4">
                         <span className="hidden sm:block whitespace-nowrap text-3xl font-medium pt-3 sm:pt-0 my-3">
@@ -506,15 +512,10 @@ export default function checkout() {
                                 <span className="text-sm">Collect from:</span>
                                 <span>The Cheek Co Shop</span>
                                 <span>9 Shields Street Cairns</span>
+                                <span>(Opposite the Woolshed)</span>
                               </div>
-                              {/* <Wrapper
-                                apiKey={
-                                  process.env
-                                    .NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string
-                                }
-                                render={render}
-                              > */}
-                              <SimpleMap>
+
+                              {/* <SimpleMap>
                                 <Marker
                                   position={{
                                     lat: -16.92196302222459,
@@ -528,7 +529,7 @@ export default function checkout() {
                                     ),
                                   }}
                                 />
-                              </SimpleMap>
+                              </SimpleMap> */}
                               {/* </Wrapper> */}
                             </div>
                             <CACForm
@@ -956,7 +957,7 @@ export default function checkout() {
                       </div>
                     </div>
                   </div>
-                  <div className="sm:px-16 sm:w-2/3 h-min md:sticky md:top-44 scroll-smooth mx-auto sm:mx-0">
+                  <div className="sm:px-8 sm:w-2/3 h-min md:sticky md:top-44 scroll-smooth mx-auto sm:mx-0">
                     <div className="w-full h-min flex flex-col justify-center items-center p-3">
                       <h2 className="sr-only">Order summary</h2>
                       <table className="inline-flex flex-col rounded-lg border divide-y divide-gray-300 bg-button text-text-primary min-w-full">
