@@ -8,17 +8,22 @@ const BannerCategory = ({
   category: string;
   image: StaticImageData;
 }) => {
+  console.log(category);
   return (
     <div className="flex flex-col w-full items-center justify-center">
-      <div className="relative w-28 h-28 lg:w-48 lg:h-48 border rounded-lg border-text-secondary cursor-pointer">
+      <div className="relative w-28 h-28 lg:w-52 lg:h-52 border rounded-lg border-text-secondary cursor-pointer overflow-hidden">
         <Image
           src={image}
           alt={`Shop ${category}`}
           objectFit="cover"
-          objectPosition="center"
+          objectPosition={
+            category === "Home" || category === "Accessories"
+              ? `25% 10%`
+              : `90% 60%`
+          }
           layout="responsive"
-          height={200}
-          width={200}
+          height={category === "Home" || category === "Accessories" ? 900 : 600}
+          width={600}
           priority
           className="w-full h-full rounded-md"
         />

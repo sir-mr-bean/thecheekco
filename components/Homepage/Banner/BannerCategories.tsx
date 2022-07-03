@@ -13,7 +13,7 @@ const BannerCategories = () => {
       <span className="w-4/5 sm:w-2/3 mx-auto flex items-center justify-start my-4 font-semibold">
         shop by category
       </span>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-10 max-w-3xl place-items-center justify-items-center content-center pb-10">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6 max-w-3xl place-items-center justify-items-center content-center pb-10">
         <BannerCategory image={bath} category="Bath" />
         <BannerCategory image={home_decor} category="Home" />
         <BannerCategory image={gift_sets} category="Gift Sets" />
