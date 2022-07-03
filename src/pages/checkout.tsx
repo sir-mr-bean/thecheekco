@@ -16,7 +16,6 @@ import PickupToggle from "@/components/Checkout/PickupToggle";
 import ShippingForm from "@/components/Checkout/ShippingForm";
 import PaymentWrapper from "@/components/Checkout/PaymentWrapper";
 import { CartObject } from "@/types/CartObject";
-import { Session } from "next-auth";
 import CACForm from "@/components/Checkout/CACForm";
 import SimpleMap from "@/components/Checkout/Map/GoogleMaps";
 import { Wrapper, Status } from "@googlemaps/react-wrapper";

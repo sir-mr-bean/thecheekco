@@ -198,7 +198,6 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
       );
     });
   };
-
   return (
     <div className="max-w-screen">
       <Head>

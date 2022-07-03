@@ -10,6 +10,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { CartObject } from "@/types/CartObject";
 import Head from "next/head";
+import useShippingRate from "@/utils/hooks/useShippingRate";
 
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
@@ -30,6 +31,7 @@ export default function cart() {
     }>;
   } = CartState();
   const [mounted, setMounted] = useState(false);
+  const [shipping, setShipping] = useState("");
   const tax = (parseInt(total.toFixed(2)) * 0.1).toFixed(2);
 
   useEffect(() => {
@@ -44,6 +46,8 @@ export default function cart() {
       );
     }, 0);
     setTotal(total);
+    const shippingRate = useShippingRate(products);
+    setShipping(shippingRate);
   }, [cart]);
 
   useEffect(() => {
@@ -68,6 +72,7 @@ export default function cart() {
   };
 
   const products = cart;
+
   return (
     <>
       <Head>
@@ -78,14 +83,14 @@ export default function cart() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      mounted && (
+
       <div className="bg-white mt-16 mx-1 md:mx-16 font-gothic rounded-md">
         <div className="max-w-7xl mx-auto px-4 pt-4 pb-16 sm:px-6 sm:pt-8 sm:pb-24 lg:px-8 xl:px-2 xl:pt-14">
           <div className="max-w-2xl mx-auto sm:pt-16 pb-24 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-            <h1 className="text-3xl tracking-tight text-text-primary sm:text-4xl">
+            <h1 className="text-3xl tracking-tight text-text-primary sm:text-4xl font-light">
               Shopping Cart
             </h1>
-            {products && products.length ? (
+            {mounted && products && products.length ? (
               <form className="mt-12 lg:flex w-full justify-center items-center lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16">
                 <section aria-labelledby="cart-heading" className="w-full">
                   <h2 id="cart-heading" className="sr-only">
@@ -94,7 +99,7 @@ export default function cart() {
 
                   <ul
                     role="list"
-                    className="border-t border-b border-gray-200 divide-y divide-gray-200 w-full"
+                    className="border-t border-b border-text-secondary divide-y divide-text-secondary w-full"
                   >
                     {products.map((product: CartObject, productIdx: number) => {
                       return (
@@ -160,7 +165,7 @@ export default function cart() {
                                   id={`quantity-${productIdx}`}
                                   name={`quantity-${productIdx}`}
                                   defaultValue={product.quantity}
-                                  className="min-w-fit  max-w-full block rounded-md border border-gray-300 py-1.5 px-1 text-base font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-text-secondary focus:border-text-secondary sm:text-sm"
+                                  className="min-w-fit text-text-secondary max-w-full block rounded-md border border-text-secondary py-1.5 px-1 text-base font-medium text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-text-secondary focus:border-text-secondary sm:text-sm"
                                 >
                                   <option value={1}>1</option>
                                   <option value={2}>2</option>
@@ -189,26 +194,6 @@ export default function cart() {
                                 </div>
                               </div>
                             </div>
-
-                            <p className="mt-4 flex text-sm text-gray-700 space-x-2">
-                              {/* {product?.inStock ? (
-                              <AiOutlineCheck
-                                className="flex-shrink-0 h-5 w-5 text-green-500"
-                                aria-hidden="true"
-                              />
-                            ) : (
-                              <AiOutlineClockCircle
-                                className="flex-shrink-0 h-5 w-5 text-gray-300"
-                                aria-hidden="true"
-                              />
-                            )} */}
-
-                              {/* <span>
-                              {product.inStock
-                                ? "In stock"
-                                : `Ships in ${product.leadTime}`}
-                            </span> */}
-                            </p>
                           </div>
                         </li>
                       );
@@ -238,14 +223,14 @@ export default function cart() {
                       </dd>
                     </div>
 
-                    <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
+                    <div className="border-t border-text-secondary pt-4 flex items-center justify-between">
                       <dt className="text-sm text-text-secondary">GST</dt>
 
                       <dd className="text-sm font-medium text-text-primary">
                         ${tax}
                       </dd>
                     </div>
-                    <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
+                    <div className="border-t border-text-secondary pt-4 flex items-center justify-between">
                       <dt className="flex items-center text-sm text-text-secondary">
                         <span>Shipping estimate</span>
                         <a
@@ -262,22 +247,22 @@ export default function cart() {
                         </a>
                       </dt>
                       <dd className="text-sm font-medium text-text-primary">
-                        $5.00
+                        ${shipping}
                       </dd>
                     </div>
-                    <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
+                    <div className="border-t border-text-secondary pt-4 flex items-center justify-between">
                       <dt className="text-base font-medium text-text-primary">
                         Order total
                       </dt>
                       <dd className="text-base font-medium text-text-primary">
-                        ${total.toFixed(2)}
+                        ${(total + Number(shipping)).toFixed(2)}
                       </dd>
                     </div>
                   </dl>
 
                   <div className="mt-6">
                     <Link href="/checkout">
-                      <div className="cursor-pointer w-full bg-button border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-button/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500">
+                      <div className="cursor-pointer w-full bg-button border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-button/90">
                         Checkout
                       </div>
                     </Link>
@@ -300,7 +285,6 @@ export default function cart() {
           </div>
         </div>
       </div>
-      )
     </>
   );
 }

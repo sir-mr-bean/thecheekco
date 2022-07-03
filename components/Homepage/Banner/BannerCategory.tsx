@@ -1,4 +1,5 @@
 import Image, { StaticImageData } from "next/image";
+import { slugify } from "@/utils/hooks/useSlugify";
 
 const BannerCategory = ({
   category,
@@ -8,24 +9,29 @@ const BannerCategory = ({
   image: StaticImageData;
 }) => {
   return (
-    <div className="relative w-28 h-28 lg:w-48 lg:h-48 border rounded-lg border-text-secondary hover:scale-[102%] cursor-pointer">
-      <Image
-        src={image}
-        alt={`Shop ${category}`}
-        objectFit="cover"
-        objectPosition="center"
-        layout="responsive"
-        height={200}
-        width={200}
-        priority
-        className="w-full h-full rounded-md"
-      />
-      <span className="hidden lg:block lg:absolute lg:inset-x-0 lg:bottom-1 lg:left-0.5 lg:w-fit px-1 py-1 lg:bg-button lg:text-sm rounded-lg font-semibold text-white capitalize">
+    <div className="flex flex-col w-full items-start justify-center">
+      <div className="relative w-28 h-28 lg:w-48 lg:h-48 border rounded-lg border-text-secondary cursor-pointer">
+        <Image
+          src={image}
+          alt={`Shop ${category}`}
+          objectFit="cover"
+          objectPosition="center"
+          layout="responsive"
+          height={200}
+          width={200}
+          priority
+          className="w-full h-full rounded-md"
+        />
+      </div>
+      <a
+        href={`/shop/${slugify(category)}`}
+        className="lg:w-fit px-4 py-1.5 lg:bg-button lg:text-sm rounded-xl font-semibold text-white uppercase mt-2 cursor-pointer border border-transparent hover:border-white"
+      >
         Shop {category}
-      </span>
-      <span className="absolute lg:hidden inset-x-0 bottom-1 left-1 w-fit px-1 py-1 bg-button text-xs rounded-lg font-semibold text-white capitalize">
+      </a>
+      {/* <span className="w-fit px-1 py-1 bg-button text-xs rounded-lg font-semibold text-white capitalize">
         {category}
-      </span>
+      </span> */}
     </div>
   );
 };

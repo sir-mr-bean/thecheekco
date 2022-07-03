@@ -48,6 +48,7 @@ const UserDashboard = () => {
   );
   const products = productsQuery?.products.relatedObjects;
   const images = productsQuery?.images;
+
   if (status === "loading") {
     return (
       <div className="flex h-screen w-full justify-center items-center mx-auto  text-text-primary">

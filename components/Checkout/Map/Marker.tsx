@@ -8,7 +8,7 @@ const Marker: React.FC<google.maps.MarkerOptions> = (options) => {
   useEffect(() => {
     if (!marker) {
       setMarker(
-        new google.maps.Marker({
+        new window.google.maps.Marker({
           position: marker,
           icon: {
             url: "https://thecheekco.vercel.app/images/logo.png",
