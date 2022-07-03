@@ -31,7 +31,7 @@ export default function cart() {
     }>;
   } = CartState();
   const [mounted, setMounted] = useState(false);
-  const [shipping, setShipping] = useState("");
+  const [shipping, setShipping] = useState(0);
   const tax = (parseInt(total.toFixed(2)) * 0.1).toFixed(2);
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export default function cart() {
       );
     }, 0);
     setTotal(total);
-    const shippingRate = useShippingRate(products);
+    const shippingRate = useShippingRate(cart);
     setShipping(shippingRate);
   }, [cart]);
 
@@ -247,7 +247,7 @@ export default function cart() {
                         </a>
                       </dt>
                       <dd className="text-sm font-medium text-text-primary">
-                        ${shipping}
+                        ${shipping.toFixed(2)}
                       </dd>
                     </div>
                     <div className="border-t border-text-secondary pt-4 flex items-center justify-between">
