@@ -13,6 +13,17 @@ const { customersApi } = new Client({
 
 export const squareCustomerRouter = createRouter()
   .transformer(superjson)
+  .middleware(async ({ ctx, next }) => {
+    // Any query or mutation after this middleware will raise
+    // an error unless there is a current session
+    if (!ctx.session) {
+      throw new TRPCError({
+        message: "You are not authorized to perform this action",
+        code: "UNAUTHORIZED",
+      });
+    }
+    return next();
+  })
   .query("search-customer", {
     input: z.object({
       email: z.string(),
