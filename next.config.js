@@ -112,6 +112,7 @@ module.exports = withTM({
               "https://embed.prod.simpletix.com/",
               "*.google.com",
             ],
+            reportOnly: true,
           },
           //contentTypeOptions: "nosniff",
           frameOptions: "DENY",
