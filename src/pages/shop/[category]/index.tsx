@@ -78,22 +78,16 @@ const CategoryPage = (
       quantity: 1,
       productImage: productImage?.imageData?.url,
     });
-    gtag.event({
-      action: "add_to_cart",
-      category: "ecommerce",
-      label: product.itemData?.name as string,
-      value: `/shop/${query.category}`,
-    });
     toast.custom((t) => {
       return (
         <div
           className={`${
-            t.visible ? "animate-enter" : "animate-leave"
-          } max-w-md w-full bg-bg-tan shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            t.visible ? "animate-enter" : "animate-leave after:opacity-0"
+          } max-w-md w-full bg-bg-tan shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 shadow-text-primary`}
         >
           <div className="flex-1 w-0 p-4">
             <div className="flex items-start">
-              <div className="flex-shrink-0 pt-0.5 relative">
+              <div className="flex-shrink-0 pt-0.5">
                 <Image
                   className="w-24 h-24 rounded-full"
                   height={50}
@@ -123,6 +117,12 @@ const CategoryPage = (
           </div>
         </div>
       );
+    });
+    gtag.event({
+      action: "add_to_cart",
+      category: "ecommerce",
+      label: product.itemData?.name as string,
+      value: `/shop/${query.category}`,
     });
   };
 
