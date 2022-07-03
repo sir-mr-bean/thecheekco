@@ -24,6 +24,7 @@ import Head from "next/head";
 import { trpc } from "@/utils/trpc";
 import ExistingPaymentMethod from "@/components/Checkout/PaymentMethods/ExistingPaymentMethod";
 import { useRouter } from "next/router";
+import useShippingRate from "@/utils/hooks/useShippingRate";
 
 export type userShippingObject = {
   firstName: string;
@@ -79,6 +80,7 @@ export default function checkout() {
     }>;
   } = CartState();
   const [total, setTotal] = useState(0);
+  const [shipping, setShipping] = useState(0);
   const tax = (parseInt(total.toFixed(2)) * 0.1).toFixed(2);
   const products = cart;
   const [termsAccepted, setTermsAccepted] = useState(false);
@@ -193,6 +195,14 @@ export default function checkout() {
       );
     }, 0);
     setTotal(total);
+    const shippingRate = useShippingRate(cart);
+    if (shippingRate) {
+      if (total > 100) {
+        setShipping(0);
+      } else {
+        setShipping(shippingRate as number);
+      }
+    }
   }, [cart]);
 
   const handlePickupCustomerInfoComplete = (userObject: typeof userObj) => {
@@ -514,23 +524,6 @@ export default function checkout() {
                                 <span>9 Shields Street Cairns</span>
                                 <span>(Opposite the Woolshed)</span>
                               </div>
-
-                              {/* <SimpleMap>
-                                <Marker
-                                  position={{
-                                    lat: -16.92196302222459,
-                                    lng: 145.7763141413842,
-                                  }}
-                                  icon={{
-                                    url: "https://thecheekco.vercel.app/images/logo.png",
-                                    scaledSize: new window.google.maps.Size(
-                                      75,
-                                      75
-                                    ),
-                                  }}
-                                />
-                              </SimpleMap> */}
-                              {/* </Wrapper> */}
                             </div>
                             <CACForm
                               termsAccepted={pickupTermsAccepted}
@@ -920,7 +913,14 @@ export default function checkout() {
                                               />
                                             </div>
                                           ) : (
-                                            <span>Pay ${total.toFixed(2)}</span>
+                                            <span>
+                                              Pay $
+                                              {shipping > 0
+                                                ? (
+                                                    total + Number(shipping)
+                                                  ).toFixed(2)
+                                                : total.toFixed(2)}
+                                            </span>
                                           )}
                                         </div>
                                       </CreditCard>
@@ -1039,12 +1039,23 @@ export default function checkout() {
                         {!pickup && (
                           <div className="flex justify-between">
                             <dt>Shipping</dt>
-                            <dd className="text-text-primary">$14.00</dd>
+                            <dd className="text-text-primary">
+                              {shipping > 0
+                                ? `$${shipping.toFixed(2)}`
+                                : "Free"}
+                            </dd>
                           </div>
                         )}
                         <div className="flex justify-between border-t border-text-secondary text-text-primary pt-6">
                           <dt className="text-base">Total</dt>
-                          <dd className="text-base">${total.toFixed(2)}</dd>
+                          <dd className="text-base">
+                            $
+                            {pickup
+                              ? total.toFixed(2)
+                              : !pickup && shipping > 0
+                              ? (total + Number(shipping)).toFixed(2)
+                              : total.toFixed(2)}
+                          </dd>
                         </div>
                       </dl>
                     </div>

@@ -50,7 +50,6 @@ export default function cart() {
         setShipping(shippingRate as number);
       }
     }
-    console.log(shippingRate);
   }, [cart]);
 
   useEffect(() => {
