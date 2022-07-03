@@ -1,9 +1,4 @@
-import {
-  AiOutlineCheck,
-  AiOutlineClockCircle,
-  AiOutlineQuestionCircle,
-  AiOutlineClose,
-} from "react-icons/ai";
+import { AiOutlineQuestionCircle, AiOutlineClose } from "react-icons/ai";
 import { CartState } from "@/context/Cart/Context";
 import { useState, useEffect, Dispatch } from "react";
 import Link from "next/link";
@@ -11,6 +6,7 @@ import Image from "next/image";
 import { CartObject } from "@/types/CartObject";
 import Head from "next/head";
 import useShippingRate from "@/utils/hooks/useShippingRate";
+import { Popover } from "@headlessui/react";
 
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
@@ -47,7 +43,14 @@ export default function cart() {
     }, 0);
     setTotal(total);
     const shippingRate = useShippingRate(cart);
-    setShipping(shippingRate);
+    if (shippingRate) {
+      if (total > 100) {
+        setShipping(0);
+      } else {
+        setShipping(shippingRate as number);
+      }
+    }
+    console.log(shippingRate);
   }, [cart]);
 
   useEffect(() => {
@@ -240,14 +243,28 @@ export default function cart() {
                           <span className="sr-only">
                             Learn more about how shipping is calculated
                           </span>
-                          <AiOutlineQuestionCircle
-                            className="h-5 w-5"
-                            aria-hidden="true"
-                          />
+                          <Popover className="relative">
+                            <Popover.Button>
+                              <AiOutlineQuestionCircle
+                                className="h-5 w-5 text-text-secondary"
+                                aria-hidden="true"
+                              />
+                            </Popover.Button>
+                            <Popover.Panel className="absolute -left-20 -top-16 z-10">
+                              <div className="flex flex-col w-full p-2 bg-bg-tan rounded-lg text-text-primary font-gothic whitespace-nowrap text-xs sm:text-sm text-center">
+                                <span>
+                                  Free shipping on all orders over $100 😍
+                                </span>
+                                <a href="/shipping-policy">
+                                  Click here to learn more!
+                                </a>
+                              </div>
+                            </Popover.Panel>
+                          </Popover>
                         </a>
                       </dt>
                       <dd className="text-sm font-medium text-text-primary">
-                        ${shipping.toFixed(2)}
+                        {shipping > 0 ? `$${shipping.toFixed(2)}` : "Free"}
                       </dd>
                     </div>
                     <div className="border-t border-text-secondary pt-4 flex items-center justify-between">
@@ -255,7 +272,10 @@ export default function cart() {
                         Order total
                       </dt>
                       <dd className="text-base font-medium text-text-primary">
-                        ${(total + Number(shipping)).toFixed(2)}
+                        $
+                        {shipping > 0
+                          ? (total + Number(shipping)).toFixed(2)
+                          : total.toFixed(2)}
                       </dd>
                     </div>
                   </dl>
