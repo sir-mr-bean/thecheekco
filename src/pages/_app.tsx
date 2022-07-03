@@ -47,7 +47,6 @@ const MyApp = ({
       });
     }
   }, [pageProps.session]);
-  console.log(router);
 
   return (
     <SessionProvider session={session}>

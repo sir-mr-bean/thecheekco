@@ -95,6 +95,7 @@ module.exports = withTM({
               "https://square-fonts-production-f.squarecdn.com",
               "https://d1g145x70srn7h.cloudfront.net",
               "https://fonts.gstatic.com",
+              "maps.googleapis.com",
             ],
             "style-src": [
               "data:",
@@ -102,6 +103,7 @@ module.exports = withTM({
               "fonts.googleapis.com",
               "'unsafe-inline'",
               "https://web.squarecdn.com",
+              "maps.googleapis.com",
             ],
             "frame-src": [
               "https://web.squarecdn.com/",
