@@ -3,7 +3,7 @@ import Script from "next/script";
 const events = () => {
   return (
     <>
-      <div className="p-20 text-text-primary rounded-xl ">
+      <div className="p-1 sm:p-20 text-text-primary rounded-xl ">
         <div
           className="rounded-xl"
           style={{

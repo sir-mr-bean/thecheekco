@@ -10,19 +10,16 @@ const offers = [
   {
     name: "Free Shipping on orders over $100",
     icon: "FaShippingFast",
-
-    href: "#",
+    href: "/shipping-policy",
   },
   {
     name: "Check out our in-store events",
     icon: "BsFillCalendarCheckFill",
-
-    href: "#",
+    href: "/events",
   },
   {
     name: "Click & Collect",
     icon: "HiCursorClick",
-
     href: "/click-and-collect",
   },
 ];
