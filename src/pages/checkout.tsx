@@ -972,12 +972,8 @@ export default function checkout() {
                             <th
                               scope="col"
                               className="px-3 py-3.5 text-left text-sm font-semibold "
-                            ></th>
-                            <th
-                              scope="col"
-                              className="px-3 py-3.5 text-left text-sm font-semibold "
                             >
-                              Subtotal
+                              Quantity
                             </th>
                           </tr>
                         </thead>
@@ -986,9 +982,9 @@ export default function checkout() {
                             products.map((product) => (
                               <tr
                                 key={product.id}
-                                className="grid grid-cols-3 content-center items-center justify-center min-w-full"
+                                className="flex items-center justify-between min-w-full"
                               >
-                                <td className="py-4 pl-4 text-sm font-medium text-text-primary sm:pl-6 flex flex-nowrap items-center">
+                                <td className="py-4 text-sm font-medium text-text-primary sm:pl-6 flex flex-nowrap items-center">
                                   <div className="relative h-20 w-20">
                                     <Image
                                       src={
@@ -1003,23 +999,24 @@ export default function checkout() {
                                       className="flex-none w-16 h-16 object-center object-cover bg-gray-100 rounded-md"
                                     />
                                   </div>
-
-                                  <h3 className="text-text-primary pl-2  py-4 text-xs lg:whitespace-nowrap">
-                                    <a href={"#"}>{product.itemData?.name}</a>
-                                  </h3>
+                                  <div className="flex flex-col text-xs pl-2">
+                                    <h3 className="text-text-primary  lg:whitespace-nowrap">
+                                      <a href={"#"}>{product.itemData?.name}</a>
+                                    </h3>
+                                    <h3>
+                                      $
+                                      {(
+                                        parseInt(
+                                          parseInt(
+                                            product.itemData?.variations?.[0].itemVariationData?.priceMoney?.amount?.toString() as string
+                                          ).toFixed(2)
+                                        ) / 100
+                                      ).toFixed(2)}
+                                    </h3>
+                                  </div>
                                 </td>
-                                <td className="whitespace-nowrap translate-x-3 justify-self-end px-3 py-4 text-sm">
+                                <td className="whitespace-nowrap justify-self-end px-3 py-4 text-sm">
                                   {product.quantity}
-                                </td>
-                                <td className="whitespace-nowrap px-3 py-4 text-sm justify-self-end">
-                                  $
-                                  {(
-                                    parseInt(
-                                      parseInt(
-                                        product.itemData?.variations?.[0].itemVariationData?.priceMoney?.amount?.toString() as string
-                                      ).toFixed(2)
-                                    ) / 100
-                                  ).toFixed(2)}
                                 </td>
                               </tr>
                             ))}
