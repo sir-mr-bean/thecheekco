@@ -161,88 +161,94 @@ const UserInfo = ({ session }: { session: Session }) => {
                     >
                       Street address
                     </label>
-                    <Autocomplete<
-                      ReactGoogleAutocompleteInputProps & {
-                        value: string;
-                      }
-                    >
-                      apiKey={`${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
-                      onPlaceSelected={(place) => {
-                        const apartmentOrUnit = place?.address_components?.find(
-                          (component) => component.types.includes("subpremise")
-                        );
+                    <div className="col-span-1 sm:col-span-2">
+                      <Autocomplete<
+                        ReactGoogleAutocompleteInputProps & {
+                          value: string;
+                        }
+                      >
+                        apiKey={`${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
+                        onPlaceSelected={(place) => {
+                          const apartmentOrUnit =
+                            place?.address_components?.find((component) =>
+                              component.types.includes("subpremise")
+                            );
 
-                        const streetNumber = place?.address_components?.find(
-                          (component) =>
-                            component.types.includes("street_number")
-                        );
-                        const streetAddress = place?.address_components?.find(
-                          (component) => component.types.includes("route")
-                        );
-                        const city = place?.address_components?.find(
-                          (component) => component.types.includes("locality")
-                        );
-                        const state = place?.address_components?.find(
-                          (component) =>
-                            component.types.includes(
-                              "administrative_area_level_1"
-                            )
-                        );
-                        const country = place?.address_components?.find(
-                          (component) => component.types.includes("country")
-                        );
-                        const postalCode = place?.address_components?.find(
-                          (component) => component.types.includes("postal_code")
-                        );
+                          const streetNumber = place?.address_components?.find(
+                            (component) =>
+                              component.types.includes("street_number")
+                          );
+                          const streetAddress = place?.address_components?.find(
+                            (component) => component.types.includes("route")
+                          );
+                          const city = place?.address_components?.find(
+                            (component) => component.types.includes("locality")
+                          );
+                          const state = place?.address_components?.find(
+                            (component) =>
+                              component.types.includes(
+                                "administrative_area_level_1"
+                              )
+                          );
+                          const country = place?.address_components?.find(
+                            (component) => component.types.includes("country")
+                          );
+                          const postalCode = place?.address_components?.find(
+                            (component) =>
+                              component.types.includes("postal_code")
+                          );
 
-                        setUserObj({
-                          ...userObj,
-                          streetNumber: streetNumber?.long_name as string,
-                          streetAddress: streetNumber?.long_name
-                            ? `${streetNumber?.long_name} ${streetAddress?.long_name}`
-                            : `${streetAddress?.long_name}`,
-                          apartmentOrUnit: apartmentOrUnit
-                            ? apartmentOrUnit?.long_name
-                            : "",
-                          city: city?.long_name as string,
-                          state: state?.long_name as string,
-                          country: country?.long_name as string,
-                          postalCode: postalCode?.long_name as string,
-                        });
-                      }}
-                      options={{
-                        componentRestrictions: { country: "au" },
-                        fields: ["address_components", "formatted_address"],
-                        types: ["address"],
-                      }}
-                      {...register("street-address")}
-                      id="street-address"
-                      //defaultValue={userObj?.streetAddress as string}
-                      value={userObj?.streetAddress as string}
-                      inputAutocompleteValue={userObj?.streetAddress as string}
-                      onChange={(e) => {
-                        setUserObj({
-                          ...userObj,
-                          streetAddress: (e.target as HTMLTextAreaElement)
-                            .value,
-                        });
-                      }}
-                      className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full border sm:text-sm border-text-secondary rounded-md p-1 focus:ring"
-                    />
-                    <input
-                      hidden
-                      id="street-address"
-                      ref={streetAddressRef}
-                      type="text"
-                      value={userObj?.streetAddress as string}
-                      autoComplete="off"
-                      onChange={(e) => {
-                        setUserObj({
-                          ...userObj,
-                          streetAddress: (e.target as HTMLInputElement).value,
-                        });
-                      }}
-                    />
+                          setUserObj({
+                            ...userObj,
+                            streetNumber: streetNumber?.long_name as string,
+                            streetAddress: streetNumber?.long_name
+                              ? `${streetNumber?.long_name} ${streetAddress?.long_name}`
+                              : `${streetAddress?.long_name}`,
+                            apartmentOrUnit: apartmentOrUnit
+                              ? apartmentOrUnit?.long_name
+                              : "",
+                            city: city?.long_name as string,
+                            state: state?.short_name as string,
+                            country: country?.long_name as string,
+                            postalCode: postalCode?.long_name as string,
+                          });
+                        }}
+                        options={{
+                          componentRestrictions: { country: "au" },
+                          fields: ["address_components", "formatted_address"],
+                          types: ["address"],
+                        }}
+                        {...register("street-address")}
+                        id="street-address"
+                        //defaultValue={userObj?.streetAddress as string}
+                        value={userObj?.streetAddress as string}
+                        inputAutocompleteValue={
+                          userObj?.streetAddress as string
+                        }
+                        onChange={(e) => {
+                          setUserObj({
+                            ...userObj,
+                            streetAddress: (e.target as HTMLTextAreaElement)
+                              .value,
+                          });
+                        }}
+                        className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full border sm:text-sm border-text-secondary rounded-md p-1 focus:ring"
+                      />
+                      <input
+                        hidden
+                        id="street-address"
+                        ref={streetAddressRef}
+                        type="text"
+                        value={userObj?.streetAddress as string}
+                        autoComplete="off"
+                        onChange={(e) => {
+                          setUserObj({
+                            ...userObj,
+                            streetAddress: (e.target as HTMLInputElement).value,
+                          });
+                        }}
+                      />
+                    </div>
                   </div>
 
                   <div className="col-span-6 sm:col-span-3">

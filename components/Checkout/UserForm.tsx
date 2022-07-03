@@ -210,7 +210,7 @@ const UserForm = ({
                         ? apartmentOrUnit?.long_name
                         : "",
                       city: city?.long_name as string,
-                      state: state?.long_name as string,
+                      state: state?.short_name as string,
                       country: country?.long_name as string,
                       postalCode: postalCode?.long_name as string,
                     });
