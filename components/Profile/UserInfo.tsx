@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactHTMLElement } from "react";
+import { useState, useEffect, ReactHTMLElement, useRef } from "react";
 import { trpc } from "@/utils/trpc";
 import { z } from "zod";
 import Autocomplete, {
@@ -15,6 +15,7 @@ type FormData = {
 };
 
 const UserInfo = ({ session }: { session: Session }) => {
+  const streetAddressRef = useRef<HTMLInputElement>(null);
   const {
     register,
     handleSubmit,
@@ -226,7 +227,21 @@ const UserInfo = ({ session }: { session: Session }) => {
                             .value,
                         });
                       }}
-                      className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-secondary block w-full border shadow-text-secondary sm:text-sm border-text-secondary rounded-md p-1 focus:ring"
+                      className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full border sm:text-sm border-text-secondary rounded-md p-1 focus:ring"
+                    />
+                    <input
+                      hidden
+                      id="street-address"
+                      ref={streetAddressRef}
+                      type="text"
+                      value={userObj?.streetAddress as string}
+                      autoComplete="off"
+                      onChange={(e) => {
+                        setUserObj({
+                          ...userObj,
+                          streetAddress: (e.target as HTMLInputElement).value,
+                        });
+                      }}
                     />
                   </div>
 
