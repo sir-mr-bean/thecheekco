@@ -1,28 +1,25 @@
+import Image from "next/image";
+import accessories from "../../../public/images/Homepage/accessories.png";
+import bath from "../../../public/images/Homepage/bath.png";
+import gift_sets from "../../../public/images/Homepage/gift_sets.png";
+import home_decor from "../../../public/images/Homepage/home_decor.png";
+import shower from "../../../public/images/Homepage/shower.png";
+import skin_care from "../../../public/images/Homepage/skin_care.png";
+import BannerCategory from "./BannerCategory";
+
 const BannerCategories = () => {
   return (
-    <div className="w-2/3 flex flex-col flex-wrap text-text-primary items-center justify-center mx-auto pt-8 sm:pt-16 font-gothic">
-      <span className="w-full flex items-center justify-center -translate-x-16 sm:-translate-x-48 my-4 font-semibold">
+    <div className="flex flex-col flex-wrap text-text-primary items-center justify-center mx-auto pt-8 sm:pt-16 font-gothic">
+      <span className="w-4/5 sm:w-1/2 mx-auto flex items-center justify-start my-4 font-semibold">
         shop by category
       </span>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-12 max-w-3xl place-items-center justify-items-center pb-10">
-        <div className="w-24 h-24 lg:w-32 lg:h-32 border rounded-xl border-text-secondary ">
-          Bath
-        </div>
-        <div className="w-24 h-24 lg:w-32 lg:h-32 border rounded-xl border-text-secondary ">
-          Home
-        </div>
-        <div className="w-24 h-24 lg:w-32 lg:h-32 border rounded-xl border-text-secondary ">
-          Gift Sets
-        </div>
-        <div className="w-24 h-24 lg:w-32 lg:h-32 border rounded-xl border-text-secondary ">
-          Accessories
-        </div>
-        <div className="w-24 h-24 lg:w-32 lg:h-32 border rounded-xl border-text-secondary ">
-          Shower
-        </div>
-        <div className="w-24 h-24 lg:w-32 lg:h-32 border rounded-xl border-text-secondary ">
-          Skin Care
-        </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-10 max-w-3xl place-items-center justify-items-center pb-10">
+        <BannerCategory image={bath} category="Bath" />
+        <BannerCategory image={home_decor} category="Home" />
+        <BannerCategory image={gift_sets} category="Gift Sets" />
+        <BannerCategory image={accessories} category="Accessories" />
+        <BannerCategory image={shower} category="Shower" />
+        <BannerCategory image={skin_care} category="Skin Care" />
       </div>
     </div>
   );
