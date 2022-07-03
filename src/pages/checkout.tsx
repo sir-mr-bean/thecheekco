@@ -507,29 +507,29 @@ export default function checkout() {
                                 <span>The Cheek Co Shop</span>
                                 <span>9 Shields Street Cairns</span>
                               </div>
-                              <Wrapper
+                              {/* <Wrapper
                                 apiKey={
                                   process.env
                                     .NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string
                                 }
                                 render={render}
-                              >
-                                <SimpleMap>
-                                  <Marker
-                                    position={{
-                                      lat: -16.92196302222459,
-                                      lng: 145.7763141413842,
-                                    }}
-                                    icon={{
-                                      url: "https://thecheekco.vercel.app/images/logo.png",
-                                      scaledSize: new window.google.maps.Size(
-                                        75,
-                                        75
-                                      ),
-                                    }}
-                                  />
-                                </SimpleMap>
-                              </Wrapper>
+                              > */}
+                              <SimpleMap>
+                                <Marker
+                                  position={{
+                                    lat: -16.92196302222459,
+                                    lng: 145.7763141413842,
+                                  }}
+                                  icon={{
+                                    url: "https://thecheekco.vercel.app/images/logo.png",
+                                    scaledSize: new window.google.maps.Size(
+                                      75,
+                                      75
+                                    ),
+                                  }}
+                                />
+                              </SimpleMap>
+                              {/* </Wrapper> */}
                             </div>
                             <CACForm
                               termsAccepted={pickupTermsAccepted}

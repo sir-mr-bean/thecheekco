@@ -76,6 +76,8 @@ module.exports = withTM({
               "https://items-images-production",
               "https://tailwindui.com",
               "*.googleusercontent.com",
+              "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com",
+              "*.googleapis.com",
             ],
             "connect-src": [
               "'self'",
