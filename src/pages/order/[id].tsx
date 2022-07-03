@@ -1,12 +1,11 @@
 import { useRouter } from "next/router";
-import superjson from "superjson";
 import { trpc } from "@/utils/trpc";
-import moment from "moment";
 import { BeatLoader } from "react-spinners";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
+import thankYou from "../../../public/images/Order/thankyou.png";
 
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
@@ -113,23 +112,19 @@ const UserDashboard = () => {
           </div>
         </div>
       )}
-      return (
       <>
-        {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-white">
-        <body class="h-full">
-        ```
-      */}
         <main className="relative lg:min-h-full">
-          <div className="h-80 overflow-hidden lg:absolute lg:w-1/2 lg:h-full lg:pr-4 xl:pr-12">
-            <img
-              src="https://tailwindui.com/img/ecommerce-images/confirmation-page-06-hero.jpg"
-              alt="TODO"
-              className="h-full w-full object-center object-cover"
-            />
+          <div className="h-80 lg:absolute lg:w-1/2 lg:h-full">
+            <div className="relative w-full h-80 lg:h-full rounded-lg">
+              <Image
+                src={thankYou}
+                alt="Thank you for your order!"
+                layout="fill"
+                objectFit="cover"
+                objectPosition="center"
+                className="h-full w-full object-top object-cover rounded-r-lg"
+              />
+            </div>
           </div>
 
           <div>
@@ -147,7 +142,7 @@ const UserDashboard = () => {
                 </p>
 
                 <dl className="mt-16 text-sm font-medium">
-                  <dt className="text-text-primary">Tracking number</dt>
+                  <dt className="text-text-primary">Order number</dt>
                   <dd className="mt-2 text-text-secondary">
                     {order?.id?.toLocaleUpperCase()}
                   </dd>
@@ -155,7 +150,7 @@ const UserDashboard = () => {
 
                 <ul
                   role="list"
-                  className="mt-6 text-sm font-medium text-text-secondary border-t border-gray-200 divide-y divide-gray-200"
+                  className="mt-6 text-sm font-medium text-text-secondary border-t border-text-primary divide-y divide-text-primary"
                 >
                   {products &&
                     products.map((product) => {
@@ -197,7 +192,7 @@ const UserDashboard = () => {
                     })}
                 </ul>
 
-                <dl className="text-sm font-medium text-text-secondary space-y-6 border-t border-gray-200 pt-6">
+                <dl className="text-sm font-medium text-text-secondary space-y-6 border-t border-text-primary pt-6">
                   <div className="flex justify-between">
                     <dt>Subtotal</dt>
                     <dd className="text-text-primary">
@@ -225,7 +220,7 @@ const UserDashboard = () => {
                     </dd>
                   </div>
 
-                  <div className="flex items-center justify-between border-t border-gray-200 text-text-primary pt-6">
+                  <div className="flex items-center justify-between border-t border-text-primary text-text-primary pt-6">
                     <dt className="text-base">Total</dt>
                     <dd className="text-base">{`$${(
                       Number(order?.totalMoney?.amount) / 100
@@ -327,7 +322,7 @@ const UserDashboard = () => {
                   </div>
                 </dl>
 
-                <div className="mt-16 border-t border-gray-200 py-6 text-right">
+                <div className="mt-16 border-t border-text-primary py-6 text-right">
                   <a
                     href="/"
                     className="text-sm font-medium text-text-secondary hover:text-text-primary"
