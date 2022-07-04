@@ -53,8 +53,8 @@ body {
   background-color: #fff;
   position: absolute !important;
   z-index: 1000;
-  border-radius: 2px;
-  border-top: 1px solid #d9d9d9;
+  border-radius: 8px;
+  border-top: 1px solid #a75e2f;
   font-family: Arial, sans-serif;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   -moz-box-sizing: border-box;
@@ -65,11 +65,11 @@ body {
 
 .pac-logo:after {
   content: "";
-  padding: 1px 1px 1px 0;
-  height: 16px;
+  padding: 0px 0px 0px 0;
+  height: 1px;
   text-align: right;
   display: block;
-  background-image: url(https://maps.gstatic.com/mapfiles/api-3/images/powered-by-google-on-white3.png);
+  background-image: none;
   background-position: right;
   background-repeat: no-repeat;
   background-size: 120px 14px;
@@ -85,12 +85,12 @@ body {
   white-space: nowrap;
   line-height: 30px;
   text-align: left;
-  border-top: 1px solid #e6e6e6;
+  border-top: 1px solid #a75e2f;
   font-size: 11px;
-  color: #999;
+  color: #a75e2f;
 }
 .pac-item:hover {
-  background-color: #fafafa;
+  background-color: #f5e7dd;
 }
 .pac-item-selected,
 .pac-item-selected:hover {
@@ -102,7 +102,7 @@ body {
 .pac-item-query {
   font-size: 13px;
   padding-right: 3px;
-  color: #000;
+  color: #602d0d;
 }
 .pac-icon {
   width: 15px;
