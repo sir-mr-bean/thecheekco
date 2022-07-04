@@ -505,7 +505,7 @@ export default function checkout() {
                   <div className="sm:pl-8 w-full">
                     <div className="flex flex-col justify-start items-start text-text-primary w-full flex-1 ">
                       <div className="flex flex-col justify-between w-full items-center p-1 sm:p-4">
-                        <span className="hidden sm:block whitespace-nowrap text-3xl font-medium pt-3 sm:pt-0 my-3">
+                        <span className="hidden sm:block whitespace-nowrap text-3xl sm:text-4xl font-medium pt-3 sm:pt-0 my-3">
                           Checkout
                         </span>
                         {status != "loading" && !session?.user && (

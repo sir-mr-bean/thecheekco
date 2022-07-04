@@ -28,7 +28,7 @@ const PickupToggle = ({
             onChange={setPickup}
             className={classNames(
               pickup ? "" : "",
-              "relative bg-gray-200 inline-flex h-7 lg:h-11 w-16 lg:w-[110px] border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 "
+              "relative bg-bg-tan inline-flex h-7 lg:h-11 w-16 lg:w-[110px] border-2 rounded-full cursor-pointer transition-colors ease-in-out duration-200 shadow-inner shadow-text-secondary  border-text-secondary"
             )}
           >
             <span className="sr-only">Delivery or Click and Collect</span>
@@ -37,7 +37,7 @@ const PickupToggle = ({
                 pickup
                   ? "translate-x-9 lg:translate-x-[66px]"
                   : "translate-x-0",
-                "pointer-events-none relative inline-block h-6 w-6 lg:h-10 lg:w-10 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200"
+                "pointer-events-none relative inline-block h-6 w-6 lg:h-10 lg:w-10 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200 border border-text-secondary"
               )}
             >
               <span
