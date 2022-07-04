@@ -24,3 +24,18 @@ export type PageThreeOptions = {
   avoid: string;
   allergies: string;
 };
+
+export type PageFourOptions = {
+  dry: boolean;
+  oily: boolean;
+  normal: boolean;
+  mix: boolean;
+};
+
+export type PageFiveOptions = {
+  hair: boolean;
+  skin: boolean;
+  sleep: boolean;
+  home: boolean;
+  wearable: boolean;
+};

@@ -47,7 +47,7 @@ const HowItBegan = () => {
               How it all began...
             </span>
           </h2>
-          <div className="text-text-secondary text-lg py-4 flex flex-col items-start justify-start text-left space-y-4">
+          <div className="text-text-primary text-lg py-4 flex flex-col items-start justify-start text-left space-y-4 font-gothic">
             <p>
               It began with an itch, an eczema itch! Suffering from eczema Maddi
               struggled to find natural, local products that weren't wrapped in
@@ -66,7 +66,7 @@ const HowItBegan = () => {
               <a
                 href="https://www.instagram.com/thecheekco/"
                 target="_blank"
-                className="relative flex w-fit mx-auto bg-button rounded-md py-2 px-8 items-center justify-center text-sm font-medium text-white border border-invisible hover:border-black uppercase cursor-pointer"
+                className="font-gothic relative flex w-fit mx-auto bg-button rounded-md py-2 px-8 items-center justify-center text-sm font-semibold tracking-wide text-white border border-transparent shadow-sm shadow-text-secondary hover:border-white uppercase cursor-pointer"
               >
                 FOLLOW MADDI’S SHENANIGANS
               </a>

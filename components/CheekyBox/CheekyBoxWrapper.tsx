@@ -52,6 +52,21 @@ const CheekyBoxWrapper = () => {
     allergies: "",
   });
 
+  const [pageFourOptions, setPageFourOptions] = useState({
+    dry: false,
+    oily: false,
+    normal: false,
+    mix: false,
+  });
+
+  const [pageFiveOptions, setPageFiveOptions] = useState({
+    hair: false,
+    skin: false,
+    sleep: false,
+    home: false,
+    wearable: false,
+  });
+
   const prevStep = () => {
     setMoving("left");
     setSteps((old) =>
@@ -255,14 +270,14 @@ const CheekyBoxWrapper = () => {
                     ? `-translate-x-80 opacity-0`
                     : `translate-x-80 opacity-0`
                 }
-                className="bg-blue-200 w-0 overflow-visible"
+                className="w-0 overflow-visible"
                 as="div"
               >
-                <div
-                  className="mx-auto"
-                  style={{ width: `${wrapperWidth / 1.3}px` }}
-                >
-                  <PageFour />
+                <div style={{ width: `${wrapperWidth}px`, height: "100%" }}>
+                  <PageFour
+                    pageFourOptions={pageFourOptions}
+                    setPageFourOptions={setPageFourOptions}
+                  />
                 </div>
               </Transition>
               <Transition
@@ -287,7 +302,10 @@ const CheekyBoxWrapper = () => {
                 as="div"
               >
                 <div style={{ width: `${wrapperWidth}px`, height: "100%" }}>
-                  <PageFive />
+                  <PageFive
+                    pageFiveOptions={pageFiveOptions}
+                    setPageFiveOptions={setPageFiveOptions}
+                  />
                 </div>
               </Transition>
               <Transition
