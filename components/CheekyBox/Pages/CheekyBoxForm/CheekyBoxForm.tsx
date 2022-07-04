@@ -1,31 +1,31 @@
 import { UseFormReturn } from "react-hook-form";
 import FormField from "./FormField";
 
-const CheekyBoxForm = ({ methods }: { methods: UseFormReturn<any> }) => {
+const CheekyBoxForm = ({ giftForm }: { giftForm: UseFormReturn<any> }) => {
   return (
-    <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-4 sm:gap-x-4">
-      <div className="col-span-2">
-        <FormField methods={methods} field="First Name" />
+    <div className="mt-4 grid grid-cols-1 gap-y-3 sm:gap-y-6 sm:grid-cols-2 xl:grid-cols-4 sm:gap-x-4">
+      <div className="col-span-1">
+        <FormField giftForm={giftForm} field="First Name" />
       </div>
-      <div className="col-span-2">
-        <FormField methods={methods} field="Last Name" />
+      <div className="col-span-1">
+        <FormField giftForm={giftForm} field="Last Name" />
       </div>
-      <div className="col-span-2">
-        <FormField methods={methods} field="Email" />
+      <div className="col-span-1">
+        <FormField giftForm={giftForm} field="Email" />
       </div>
-      <div className="col-span-2">
-        <FormField methods={methods} field="Company" />
+      <div className="col-span-1">
+        <FormField giftForm={giftForm} field="Company" />
       </div>
-      <div className="col-span-2">
-        <FormField methods={methods} field="Phone Number" />
+      <div className="col-span-1">
+        <FormField giftForm={giftForm} field="Phone Number" />
       </div>
-      <div className="col-span-3">
-        <FormField methods={methods} field="Address" />
+      <div className="col-span-1 sm:col-span-2">
+        <FormField giftForm={giftForm} field="Address" />
       </div>
-      <FormField methods={methods} field="City" />
-      <FormField methods={methods} field="State" />
-      <FormField methods={methods} field="Post Code" />
-      <FormField methods={methods} field="Country" />
+      <FormField giftForm={giftForm} field="City" />
+      <FormField giftForm={giftForm} field="State" />
+      <FormField giftForm={giftForm} field="Post Code" />
+      <FormField giftForm={giftForm} field="Country" />
     </div>
   );
 };

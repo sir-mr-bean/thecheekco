@@ -1,9 +1,9 @@
 import { createRouter } from "@/backend/createRouter";
 import superjson from "superjson";
 import * as z from "zod";
-import { cheekyBoxUserObject } from "@/components/CheekyBox/Pages/PageSix";
+import { cheekyBoxUserRecipient } from "@/components/CheekyBox/Pages/PageSix";
 
-const cheekyBoxUser = [
+const cheekyBoxRecipient = [
   {
     firstName: "",
     lastName: "",
@@ -18,17 +18,27 @@ const cheekyBoxUser = [
   },
 ];
 
+const cheekyBoxSender = [
+  {
+    firstName: "",
+    lastName: "",
+    company: "",
+    email: "",
+    phoneNumber: "",
+  },
+];
+
 export const cheekyBoxFormRouter = createRouter()
   .transformer(superjson)
   .query("list", {
     async resolve({ input, ctx }) {
-      return cheekyBoxUser;
+      return cheekyBoxRecipient;
     },
   })
   .mutation("add", {
-    input: cheekyBoxUserObject,
+    input: cheekyBoxUserRecipient,
     async resolve({ input }) {
       console.log(input);
-      return cheekyBoxUser;
+      return cheekyBoxRecipient;
     },
   });

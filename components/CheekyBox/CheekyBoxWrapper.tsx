@@ -5,7 +5,10 @@ import PageOne from "./Pages/PageOne";
 import PageTwo from "./Pages/PageTwo";
 import PageFour from "./Pages/PageFour";
 import PageFive from "./Pages/PageFive";
-import PageSix, { cheekyBoxUserObject } from "./Pages/PageSix";
+import PageSix, {
+  cheekyBoxUserGifter,
+  cheekyBoxUserRecipient,
+} from "./Pages/PageSix";
 import PageThree from "./Pages/PageThree";
 import FinalPage from "./Pages/FinalPage";
 import Head from "next/head";
@@ -28,7 +31,7 @@ const CheekyBoxWrapper = () => {
 
   const [currentStep, setCurrentStep] = useState(0);
   const [moving, setMoving] = useState("right");
-
+  const [gift, setGift] = useState(false);
   const [steps, setSteps] = useState([
     { name: "Step 1", href: "#", status: "current" },
     { name: "Step 2", href: "#", status: "upcoming" },
@@ -98,8 +101,8 @@ const CheekyBoxWrapper = () => {
     return false;
   };
 
-  const methods = useZodForm({
-    schema: cheekyBoxUserObject,
+  const giftForm = useZodForm({
+    schema: cheekyBoxUserRecipient,
     shouldFocusError: true,
     defaultValues: {
       firstName: "",
@@ -115,14 +118,25 @@ const CheekyBoxWrapper = () => {
     },
   });
 
-  const { handleSubmit } = methods;
+  const gifterForm = useZodForm({
+    schema: cheekyBoxUserGifter,
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      company: "",
+      email: "",
+      phoneNumber: "",
+    },
+  });
+
+  const { handleSubmit } = giftForm;
 
   const nextStep = async () => {
     setMoving("right");
     // getValues('firstname')
     if (currentStep === 6) {
-      methods.trigger();
-      methods.handleSubmit(async (values) => {
+      giftForm.trigger();
+      giftForm.handleSubmit(async (values) => {
         console.log("data is ");
         console.log(values);
       });
@@ -371,7 +385,13 @@ const CheekyBoxWrapper = () => {
                 as="div"
               >
                 <div style={{ width: `${wrapperWidth}px`, height: "100%" }}>
-                  <PageSix methods={methods} nextStep={nextStep} />
+                  <PageSix
+                    gift={gift}
+                    setGift={setGift}
+                    giftForm={giftForm}
+                    gifterForm={gifterForm}
+                    nextStep={nextStep}
+                  />
                 </div>
               </Transition>
               <Transition
@@ -462,9 +482,19 @@ const CheekyBoxWrapper = () => {
                   type="submit"
                   onClick={async () => {
                     console.log("done!");
-                    await methods.trigger();
-                    if (methods.formState.isValid) {
-                      nextStep();
+                    if (gift) await gifterForm.trigger();
+                    await giftForm.trigger();
+                    if (gift) {
+                      if (
+                        giftForm.formState.isValid &&
+                        gifterForm.formState.isValid
+                      ) {
+                        nextStep();
+                      }
+                    } else {
+                      if (giftForm.formState.isValid) {
+                        nextStep();
+                      }
                     }
                   }}
                   className={`uppercase bg-button border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5`}
