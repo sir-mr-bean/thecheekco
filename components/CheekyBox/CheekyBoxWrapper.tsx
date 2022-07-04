@@ -5,12 +5,27 @@ import PageOne from "./Pages/PageOne";
 import PageTwo from "./Pages/PageTwo";
 import PageFour from "./Pages/PageFour";
 import PageFive from "./Pages/PageFive";
-import PageSix from "./Pages/PageSix";
+import PageSix, { cheekyBoxUserObject } from "./Pages/PageSix";
 import PageThree from "./Pages/PageThree";
 import FinalPage from "./Pages/FinalPage";
 import Head from "next/head";
+import * as z from "zod";
+import { useZodForm } from "@/utils/hooks/useZodForm";
 
 const CheekyBoxWrapper = () => {
+  const [cbUserObject, setCbUserObject] = useState({
+    firstName: "",
+    lastName: "",
+    company: "",
+    email: "",
+    phoneNumber: "",
+    address: "",
+    city: "",
+    state: "",
+    postCode: "",
+    country: "",
+  });
+
   const [currentStep, setCurrentStep] = useState(0);
   const [moving, setMoving] = useState("right");
 
@@ -83,9 +98,35 @@ const CheekyBoxWrapper = () => {
     return false;
   };
 
+  const methods = useZodForm({
+    schema: cheekyBoxUserObject,
+    shouldFocusError: true,
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      company: "",
+      email: "",
+      phoneNumber: "",
+      address: "",
+      city: "",
+      state: "",
+      postCode: "",
+      country: "Australia",
+    },
+  });
+
+  const { handleSubmit } = methods;
+
   const nextStep = async () => {
     setMoving("right");
     // getValues('firstname')
+    if (currentStep === 6) {
+      methods.trigger();
+      methods.handleSubmit(async (values) => {
+        console.log("data is ");
+        console.log(values);
+      });
+    }
 
     if (true) {
       setSteps((old) =>
@@ -330,7 +371,7 @@ const CheekyBoxWrapper = () => {
                 as="div"
               >
                 <div style={{ width: `${wrapperWidth}px`, height: "100%" }}>
-                  <PageSix />
+                  <PageSix methods={methods} nextStep={nextStep} />
                 </div>
               </Transition>
               <Transition
@@ -416,18 +457,34 @@ const CheekyBoxWrapper = () => {
                   </li>
                 ))}
               </ol>
-              <button
-                type="button"
-                disabled={currentStep === 7}
-                onClick={() => nextStep()}
-                className={
-                  currentStep === 7
-                    ? `uppercase bg-button border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5 cursor-not-allowed`
-                    : `uppercase bg-button border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5`
-                }
-              >
-                Next
-              </button>
+              {currentStep === 6 ? (
+                <button
+                  type="submit"
+                  onClick={async () => {
+                    console.log("done!");
+                    await methods.trigger();
+                    if (methods.formState.isValid) {
+                      nextStep();
+                    }
+                  }}
+                  className={`uppercase bg-button border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5`}
+                >
+                  Next
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  disabled={currentStep === 7}
+                  onClick={() => nextStep()}
+                  className={
+                    currentStep === 7
+                      ? `uppercase bg-button border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5 cursor-not-allowed`
+                      : `uppercase bg-button border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5`
+                  }
+                >
+                  Next
+                </button>
+              )}
             </nav>
           </div>
         </div>

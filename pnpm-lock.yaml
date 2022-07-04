@@ -6,6 +6,7 @@ specifiers:
   '@googlemaps/react-wrapper': ^1.1.35
   '@headlessui/react': ^1.6.5
   '@headlessui/tailwindcss': ^0.1.0
+  '@hookform/resolvers': ^2.9.3
   '@lottiefiles/lottie-interactivity': ^1.6.0
   '@lottiefiles/lottie-player': ^1.5.7
   '@lottiefiles/react-lottie-player': ^3.4.7
@@ -90,6 +91,7 @@ dependencies:
   '@googlemaps/react-wrapper': 1.1.35_react@18.1.0
   '@headlessui/react': 1.6.5_ef5jwxihqo6n7gxfmzogljlgcm
   '@headlessui/tailwindcss': 0.1.0_ugi4xkrfysqkt4c4y6hkyfj344
+  '@hookform/resolvers': 2.9.3_react-hook-form@7.32.2
   '@lottiefiles/lottie-interactivity': 1.6.0
   '@lottiefiles/lottie-player': 1.5.7
   '@lottiefiles/react-lottie-player': 3.4.7_react@18.1.0
@@ -2430,6 +2432,14 @@ packages:
       - autoprefixer
       - postcss
       - ts-node
+    dev: false
+
+  /@hookform/resolvers/2.9.3_react-hook-form@7.32.2:
+    resolution: {integrity: sha512-Eqc/qgjq0VX/TU0a5D2O+yR/kAKflnjaVlYFC1wI2qBm/sgjKTXxv27ijLwHUoHPIF+MUkB/VuQqHJ5DcmbCww==}
+    peerDependencies:
+      react-hook-form: ^7.0.0
+    dependencies:
+      react-hook-form: 7.32.2_react@18.1.0
     dev: false
 
   /@humanwhocodes/config-array/0.5.0:
