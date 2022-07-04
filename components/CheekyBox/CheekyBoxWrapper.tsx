@@ -416,7 +416,14 @@ const CheekyBoxWrapper = () => {
                 as="div"
               >
                 <div style={{ width: `${wrapperWidth}px`, height: "100%" }}>
-                  <FinalPage />
+                  <FinalPage
+                    pageOneOptions={pageOneOptions}
+                    pageTwoOptions={pageTwoOptions}
+                    pageThreeOptions={pageThreeOptions}
+                    pageFourOptions={pageFourOptions}
+                    pageFiveOptions={pageFiveOptions}
+                    gift={gift}
+                  />
                 </div>
               </Transition>
             </div>

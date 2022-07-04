@@ -1,4 +1,5 @@
 import { PageThreeOptions } from "@/types/PageOptions";
+import { useState } from "react";
 
 const PageThree = ({
   pageThreeOptions,
@@ -7,6 +8,7 @@ const PageThree = ({
   pageThreeOptions: PageThreeOptions;
   setPageThreeOptions: (PageThreeOptions: PageThreeOptions) => void;
 }) => {
+  const [allergies, setAllergies] = useState(false);
   return (
     <div className="flex flex-col w-full items-center justify-center space-y-2">
       <span className="text-sm sm:text-lg text-center">Fantastic!</span>
@@ -126,6 +128,30 @@ const PageThree = ({
           >
             Fragrance Free
           </span>
+        </div>
+      </div>
+      <div className="flex flex-col items-center justify-center">
+        <span>Any allergies we should be aware of?</span>
+        <div className="flex space-x-2 items-center justify-center">
+          <input
+            onClick={() => setAllergies(false)}
+            className="accent-text-primary"
+            type="radio"
+            checked={!allergies}
+          ></input>
+          <label>No</label>
+          <label>Yes</label>
+          <input
+            onClick={() => setAllergies(true)}
+            className="accent-text-primary"
+            type="radio"
+            checked={allergies}
+          ></input>
+          <input
+            disabled={!allergies}
+            className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full border sm:text-sm border-text-secondary rounded-md p-1 py-1.5 overflow-y-scroll"
+            type="text"
+          />
         </div>
       </div>
     </div>
