@@ -124,9 +124,11 @@ const AllNatural = ({
                   </Link>
                   <div className="w-full flex items-center justify-start pl-3 pt-1">
                     <Stars rating={averageReview} />
-                    <span className="text-text-primary text-xs pl-1">
-                      ({productReviews.length})
-                    </span>
+                    {productReviews?.length > 0 && (
+                      <span className="text-text-primary text-xs pl-1">
+                        ({productReviews.length})
+                      </span>
+                    )}
                   </div>
                   <div className="w-full flex items-center justify-start pl-3 pt-2">
                     <span className="text-text-primary text-xs sm:text-sm">

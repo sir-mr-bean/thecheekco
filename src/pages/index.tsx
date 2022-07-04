@@ -67,8 +67,6 @@ export default function Home(
       quantity: 1,
       productImage: productImage?.imageData?.url,
     });
-    if (window !== undefined) {
-    }
     toast.custom((t) => {
       return (
         <div
