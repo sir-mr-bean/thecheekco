@@ -14,12 +14,15 @@ import {
 } from "next-auth/react";
 import Head from "next/head";
 import { AppProviders } from "next-auth/providers";
+import { FaDiscord } from "react-icons/fa";
 
 const login = ({ providers }: { providers: AppProviders }) => {
   const { data: session, status } = useSession();
 
   const [incorrectCreds, setIncorrectCreds] = useState(false);
   const router = useRouter();
+  const { query } = router;
+  console.log(query);
   const emailRef = useRef<HTMLInputElement>(null);
   const passRef = useRef<HTMLInputElement>(null);
   const [loggingIn, setLoggingIn] = useState(false);
@@ -103,7 +106,12 @@ const login = ({ providers }: { providers: AppProviders }) => {
                   Sign in to your account
                 </h2>
               </div>
-
+              {query?.error === "OAuthAccountNotLinked" && (
+                <div className="w-full bg-text-primary text-white font-gothic text-center p-2 rounded-xl mt-2">
+                  To confirm your identity, please sign in with the same account
+                  you used originally.
+                </div>
+              )}
               <div className="mt-8">
                 <div>
                   {providers && (

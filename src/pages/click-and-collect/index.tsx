@@ -32,7 +32,7 @@ const index = () => {
                 available to collect, you will receive a Ready to Collect email,
                 then pop into the store to grab your goodies. To use our Click
                 and Collect service, simply select this option during the
-                checkout at the delivery stage and select your desired store.
+                checkout at the delivery stage.
               </span>
             </div>
           </div>
