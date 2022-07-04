@@ -79,9 +79,15 @@ const AllNatural = ({
               const productCategory = categoriesData?.find(
                 (category) => category.id === product?.itemData?.categoryId
               );
-              const productReview = productReviewsData?.find(
+              const productReviews = productReviewsData?.filter(
                 (review) => review.productId === product?.id
               );
+              const averageReview =
+                productReviews?.reduce(
+                  (acc, curr) => acc + Number(curr.rating),
+                  0
+                ) / productReviews?.length;
+
               return (
                 <div
                   key={product.id}
@@ -116,8 +122,11 @@ const AllNatural = ({
                       </span>
                     </div>
                   </Link>
-                  <div className="w-full flex items-center justify-start pl-3 pt-2">
-                    <Stars review={productReview} />
+                  <div className="w-full flex items-center justify-start pl-3 pt-1">
+                    <Stars rating={averageReview} />
+                    <span className="text-text-primary text-xs pl-1">
+                      ({productReviews.length})
+                    </span>
                   </div>
                   <div className="w-full flex items-center justify-start pl-3 pt-2">
                     <span className="text-text-primary text-xs sm:text-sm">

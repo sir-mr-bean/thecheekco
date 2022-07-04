@@ -10,7 +10,7 @@ import BannerCategory from "./BannerCategory";
 const BannerCategories = () => {
   return (
     <div className="flex flex-col flex-wrap text-text-primary items-center justify-center mx-auto pt-8 sm:pt-16 font-gothic">
-      <span className="w-4/5 sm:w-2/3 mx-auto flex items-center justify-start my-4 font-semibold">
+      <span className="w-4/5 sm:w-1/2 mx-auto flex items-center justify-start my-4 font-semibold">
         shop by category
       </span>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6 max-w-3xl place-items-center justify-items-center content-center pb-10">
