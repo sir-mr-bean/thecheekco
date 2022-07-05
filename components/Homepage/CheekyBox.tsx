@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import lottie from "lottie-web";
+import Link from "next/link";
 
 const CheekyBox = () => {
   const strayCatRef = useRef() as React.MutableRefObject<HTMLInputElement>;
@@ -65,14 +66,15 @@ const CheekyBox = () => {
               </ul>
               <span></span>
               <div className="py-6 flex items-center justify-center mx-auto sm:mx-0">
-                <button className="bg-button shadow-sm shadow-text-secondary py-1 px-4 rounded-md border border-transparent hover:border-white">
-                  <a
-                    href="/cheekybox"
-                    className="uppercase text-white text-sm font-semibold tracking-wide font-gothic"
-                  >
-                    Secure your cheeky box today
+                <Link passHref href="/cheekybox">
+                  <a href="/cheekybox">
+                    <button className="bg-button shadow-sm shadow-text-secondary py-1 px-4 rounded-md border border-transparent hover:border-white">
+                      <span className="uppercase text-white text-sm font-semibold tracking-wide font-gothic">
+                        Secure your cheeky box today
+                      </span>
+                    </button>
                   </a>
-                </button>
+                </Link>
               </div>
             </div>
           </div>

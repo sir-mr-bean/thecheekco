@@ -13,11 +13,9 @@ const HowItBegan = () => {
         renderer: "svg",
         loop: true,
         autoplay: true,
-
         animationData: require("../../public/images/Homepage/Lottie/loader-cat.json"),
       });
     }
-
     return () => {
       lottie.destroy();
     };

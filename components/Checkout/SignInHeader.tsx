@@ -10,7 +10,6 @@ const SignInHeader = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const emailRef = useRef<HTMLInputElement>(null);
-  const passRef = useRef<HTMLInputElement>(null);
   const [loggingIn, setLoggingIn] = useState(false);
   const [incorrectCreds, setIncorrectCreds] = useState(false);
 
@@ -35,6 +34,12 @@ const SignInHeader = () => {
       console.error(err?.message);
       alert(err?.message);
     }
+  };
+
+  const handleAccountLogin = async () => {
+    setLoggingIn(true);
+    await signIn("email", { email: emailRef.current?.value as string });
+    setLoggingIn(false);
   };
 
   return (
@@ -91,7 +96,7 @@ const SignInHeader = () => {
                         </div>
                       </div>
 
-                      <div className="mt-6 relative">
+                      <div className="mt-6 relative max-w-xl mx-auto">
                         <div
                           className="absolute inset-0 flex items-center"
                           aria-hidden="true"
@@ -100,18 +105,14 @@ const SignInHeader = () => {
                         </div>
                         <div className="relative flex justify-center text-sm">
                           <span className="px-2 bg-white text-text-primary">
-                            Or
+                            or sign in with a magic link
                           </span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="mt-6 ">
-                      <form
-                        action="#"
-                        method="POST"
-                        className="space-y-6 text-text-primary"
-                      >
+                    <div className="mt-6 max-w-xl mx-auto">
+                      <form className="space-y-6 text-text-primary">
                         <div>
                           <label
                             htmlFor="email"
@@ -132,57 +133,11 @@ const SignInHeader = () => {
                           </div>
                         </div>
 
-                        <div className="space-y-1">
-                          <label
-                            htmlFor="password"
-                            className="block text-sm font-medium "
-                          >
-                            Password
-                          </label>
-                          <div className="mt-1">
-                            <input
-                              ref={passRef}
-                              id="password"
-                              name="password"
-                              type="password"
-                              autoComplete="current-password"
-                              required
-                              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm shadow-text-secondary placeholder-text-primary focus:outline-none focus:ring-text-primary focus:border-text-primary sm:text-sm"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center">
-                            <input
-                              id="remember-me"
-                              name="remember-me"
-                              type="checkbox"
-                              className="h-4 w-4 text-text-primary focus:ring-text-primary border-gray-300 rounded"
-                            />
-                            <label
-                              htmlFor="remember-me"
-                              className="ml-2 block text-sm"
-                            >
-                              Remember me
-                            </label>
-                          </div>
-
-                          <div className="">
-                            <a
-                              href="#"
-                              className="text-sm text-text-primary hover:text-text-primary"
-                            >
-                              Forgot your password?
-                            </a>
-                          </div>
-                        </div>
-
                         <div>
                           <button
                             //onClick={handleAccountLogin}
                             type="button"
-                            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary       "
+                            className="w-fit flex mx-auto justify-center py-2 px-4 border border-transparent rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary       "
                           >
                             {loggingIn ? (
                               <BeatLoader
@@ -191,7 +146,9 @@ const SignInHeader = () => {
                                 size={8}
                               />
                             ) : (
-                              <>Sign In</>
+                              <span className="text-sm">
+                                Send me a sign in link!
+                              </span>
                             )}
                           </button>
                         </div>

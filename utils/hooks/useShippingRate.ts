@@ -30,28 +30,28 @@ const useShippingRate = (products: CartObject[]) => {
     },
   ];
   let totalShippingCost = 0;
-  products.forEach((product) => {
-    let productWeight = Number(
-      product.itemData?.variations?.[0]?.customAttributeValues?.[
-        "Square:3ba5a5e4-f9c6-46dc-abb9-d799ca83d91e"
-      ]?.numberValue
-    );
-    if (product.quantity) {
-      productWeight = productWeight * product.quantity;
-      console.log("product weight is ", productWeight);
-    }
-    const productShippingRate = closestRate(
-      shippingRates.map((rate) => {
-        return rate.weight;
-      }),
-      productWeight
-    );
-    console.log("product shipping rate is ", productShippingRate);
-    totalShippingCost += Number(
-      shippingRates.find((rate) => rate.weight === productShippingRate)?.price
-    );
-  });
-
+  const totalWeight = products.reduce(
+    (acc, cur) =>
+      acc +
+      cur.quantity *
+        Number(
+          cur.itemData?.variations?.[0]?.customAttributeValues?.[
+            "Square:3ba5a5e4-f9c6-46dc-abb9-d799ca83d91e"
+          ]?.numberValue
+        ),
+    0
+  );
+  const closestShippingRate = closestRate(
+    shippingRates.map((rate) => rate.weight),
+    totalWeight
+  );
+  const shippingRate = shippingRates.find(
+    (rate) => rate.weight === closestShippingRate
+  );
+  if (shippingRate) {
+    totalShippingCost = Number(shippingRate.price);
+  }
+  console.log(totalShippingCost, totalWeight, closestShippingRate);
   return totalShippingCost;
 };
 

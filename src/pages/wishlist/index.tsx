@@ -74,6 +74,12 @@ export default function wishlist() {
     );
   };
 
+  const handleAddAllToCart = () => {
+    wishlist.forEach((product) => {
+      handleAddToCart(product, product.productImage as string);
+    });
+  };
+
   const handleClearWishList = () => {
     dispatch({ type: "CLEAR_WISHLIST" });
   };
@@ -108,9 +114,11 @@ export default function wishlist() {
                 <div className="w-full flex flex-col items-end justify-end pb-4 cursor-pointer group">
                   <div className="relative">
                     <AiOutlineShoppingCart className="text-text-primary h-8 w-8 group-hover:w-9 group-hover:h-9 absolute -top-7 right-0" />
-                    <span className="text-xs group-hover:text-sm text-text-primary">
-                      Add All Items To Cart
-                    </span>
+                    <button onClick={handleAddAllToCart}>
+                      <span className="text-xs group-hover:text-sm text-text-primary">
+                        Add All Items To Cart
+                      </span>
+                    </button>
                   </div>
                 </div>
 

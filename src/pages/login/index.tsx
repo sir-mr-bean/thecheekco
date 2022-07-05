@@ -1,20 +1,13 @@
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
-import Logo from "../../public/images/logo.png";
+import Logo from "../../../public/images/logo.png";
 import { AiOutlineFacebook } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/router";
 import BeatLoader from "react-spinners/BeatLoader";
-import {
-  signIn,
-  getCsrfToken,
-  getProviders,
-  useSession,
-  getSession,
-} from "next-auth/react";
+import { signIn, getProviders, useSession } from "next-auth/react";
 import Head from "next/head";
 import { AppProviders } from "next-auth/providers";
-import { FaDiscord } from "react-icons/fa";
 
 const login = ({ providers }: { providers: AppProviders }) => {
   const { data: session, status } = useSession();
@@ -152,7 +145,9 @@ const login = ({ providers }: { providers: AppProviders }) => {
                       <div className="w-full border-t border-gray-300" />
                     </div>
                     <div className="relative flex justify-center text-sm">
-                      <span className="px-2 bg-bg-tan">Or continue with</span>
+                      <span className="px-2 bg-bg-tan">
+                        or sign in with a magic link
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -192,7 +187,9 @@ const login = ({ providers }: { providers: AppProviders }) => {
                             size={8}
                           />
                         ) : (
-                          <>Continue</>
+                          <span className="text-sm">
+                            Send me a sign in link!
+                          </span>
                         )}
                       </button>
                     </div>
