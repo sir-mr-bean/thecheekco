@@ -101,6 +101,26 @@ const CheekyBoxWrapper = () => {
     return false;
   };
 
+  const thisStep = (stepNumber: number) => {
+    if (stepNumber > currentStep) {
+      return false;
+    }
+    setSteps((old) =>
+      old.map((v, i) => {
+        if (i === stepNumber) {
+          v.status = "current";
+        } else if (i > stepNumber) {
+          v.status = "upcoming";
+        } else {
+          v.status = "complete";
+        }
+        return v;
+      })
+    );
+    setCurrentStep(stepNumber);
+    return false;
+  };
+
   const giftForm = useZodForm({
     schema: cheekyBoxUserRecipient,
     shouldFocusError: true,
@@ -185,16 +205,16 @@ const CheekyBoxWrapper = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="bg-white mt-10 sm:mt-16 mx-3 md:mx-16 rounded-md shadow-sm shadow-black font-gothic text-text-primary overflow-visible ">
-        <div className="flex-1 flex flex-col justify-between items-center py-12 px-4 sm:px-6 min-h-[100vh]">
-          <h1 className="text-3xl sm:text-5xl font-light text-center">
-            Build your Cheeky Box!
+      <div className=" mt-10 sm:mt-16 mx-3 md:mx-16  font-gothic text-text-primary overflow-visible ">
+        <div className="flex-1 flex flex-col justify-start items-center py-12 px-4 sm:px-6 ">
+          <h1 className="text-3xl sm:text-7xl font-light text-center">
+            the cheeky box
           </h1>
           <div
-            className="flex items-start overflow-hidden w-80 sm:w-full"
+            className="flex items-start overflow-hidden w-80 sm:w-full min-h-[60vh]"
             ref={wrapper}
           >
-            <div className="flex flex-nowrap items-center">
+            <div className="flex flex-nowrap items-center ">
               <Transition
                 appear={false}
                 unmount={false}
@@ -449,12 +469,12 @@ const CheekyBoxWrapper = () => {
                 {steps.map((step, i) => (
                   <li key={`step_${i}`}>
                     {step.status === "complete" ? (
-                      <a
-                        href={step.href}
-                        className="block w-2.5 h-2.5 bg-text-primary rounded-full hover:bg-text-secondary"
+                      <div
+                        onClick={() => thisStep(i)}
+                        className="block w-2.5 h-2.5 bg-text-primary rounded-full hover:bg-text-secondary cursor-pointer"
                       >
                         <span className="sr-only"></span>
-                      </a>
+                      </div>
                     ) : step.status === "current" ? (
                       <a
                         href={step.href}
@@ -474,12 +494,12 @@ const CheekyBoxWrapper = () => {
                         <span className="sr-only"></span>
                       </a>
                     ) : (
-                      <a
-                        href={step.href}
-                        className="block w-2.5 h-2.5 bg-gray-200 rounded-full hover:bg-gray-400"
+                      <div
+                        onClick={() => thisStep(i)}
+                        className="block w-2.5 h-2.5 bg-text-secondary rounded-full cursor-pointer"
                       >
                         <span className="sr-only"></span>
-                      </a>
+                      </div>
                     )}
                   </li>
                 ))}
