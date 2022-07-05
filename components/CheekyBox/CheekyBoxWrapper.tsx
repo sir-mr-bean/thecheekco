@@ -134,13 +134,13 @@ const CheekyBoxWrapper = () => {
   const nextStep = async () => {
     setMoving("right");
     // getValues('firstname')
-    if (currentStep === 6) {
-      giftForm.trigger();
-      giftForm.handleSubmit(async (values) => {
-        console.log("data is ");
-        console.log(values);
-      });
-    }
+    // if (currentStep === 6) {
+    //   giftForm.trigger();
+    //   giftForm.handleSubmit(async (values) => {
+    //     console.log("data is ");
+    //     console.log(values);
+    //   });
+    //}
 
     if (true) {
       setSteps((old) =>

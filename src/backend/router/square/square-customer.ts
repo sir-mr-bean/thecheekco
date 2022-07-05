@@ -31,7 +31,6 @@ export const squareCustomerRouter = createRouter()
     async resolve({ input, ctx }) {
       const { req } = ctx;
       const session = await getSession({ req });
-      console.log(session);
       if (session?.user.email !== input?.email) {
         throw new TRPCError({
           message: "You are not authorized to perform this action",

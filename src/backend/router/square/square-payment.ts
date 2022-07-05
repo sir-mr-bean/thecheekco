@@ -40,7 +40,6 @@ export const squarePaymentRouter = createRouter()
     async resolve({ input, ctx }) {
       const { orderId, totalMoney, token } = input;
       const totalPayment = BigInt(totalMoney);
-      console.log(input);
       const payment = await paymentsApi.createPayment({
         idempotencyKey: randomUUID(),
         customerId: input.customerId ? (input.customerId as string) : undefined,
@@ -147,7 +146,6 @@ export const squarePaymentRouter = createRouter()
     }),
     async resolve({ input, ctx }) {
       const { customerId, token } = input;
-      console.log("saving card", token);
       const createCustomerPaymentMethod = await cardsApi.createCard({
         idempotencyKey: randomUUID(),
         sourceId: token.cardNonce,
@@ -165,8 +163,6 @@ export const squarePaymentRouter = createRouter()
           customerId: customerId,
         },
       });
-      console.log(createCustomerPaymentMethod.result);
-      console.log("saved card", createCustomerPaymentMethod);
       const customerPaymentMethod = createCustomerPaymentMethod?.result?.card;
       return customerPaymentMethod;
     },

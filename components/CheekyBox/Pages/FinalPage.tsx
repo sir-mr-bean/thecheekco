@@ -24,15 +24,6 @@ const FinalPage = ({
   pageFiveOptions: PageFiveOptions;
   gift: boolean;
 }) => {
-  console.log(
-    pageOneOptions,
-    pageTwoOptions,
-    pageThreeOptions,
-    pageFourOptions,
-    pageFiveOptions,
-    gift
-  );
-
   return (
     <div className="w-full justify-center">
       <div className="mx-4 rounded-lg bg-bg-tan p-2">

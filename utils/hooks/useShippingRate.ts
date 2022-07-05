@@ -10,7 +10,6 @@ function closestRate(arr: number[], closestTo: number) {
 }
 
 const useShippingRate = (products: CartObject[]) => {
-  console.log(products);
   const shippingRates = [
     {
       weight: 500,
@@ -51,7 +50,6 @@ const useShippingRate = (products: CartObject[]) => {
   if (shippingRate) {
     totalShippingCost = Number(shippingRate.price);
   }
-  console.log(totalShippingCost, totalWeight, closestShippingRate);
   return totalShippingCost;
 };
 

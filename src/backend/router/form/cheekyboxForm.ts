@@ -38,7 +38,6 @@ export const cheekyBoxFormRouter = createRouter()
   .mutation("add", {
     input: cheekyBoxUserRecipient,
     async resolve({ input }) {
-      console.log(input);
       return cheekyBoxRecipient;
     },
   });

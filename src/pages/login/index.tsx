@@ -15,7 +15,6 @@ const login = ({ providers }: { providers: AppProviders }) => {
   const [incorrectCreds, setIncorrectCreds] = useState(false);
   const router = useRouter();
   const { query } = router;
-  console.log(query);
   const emailRef = useRef<HTMLInputElement>(null);
   const passRef = useRef<HTMLInputElement>(null);
   const [loggingIn, setLoggingIn] = useState(false);
