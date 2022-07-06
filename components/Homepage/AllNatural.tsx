@@ -131,12 +131,12 @@ const AllNatural = ({
                       <span className=" w-full whitespace-nowrap text-left text-xs text-text-primary sm:text-sm">
                         {product?.itemData?.name}
                       </span>
-                      <span className="mb-2 w-full whitespace-nowrap pb-4 text-left text-xs text-text-primary ">
+                      <span className="w-full whitespace-nowrap pb-2 text-left text-xs text-text-primary sm:pb-4">
                         {productSubCategory}
                       </span>
                     </div>
                   </Link>
-                  <div className="flex w-full items-center justify-start pl-3 pt-1">
+                  <div className="flex w-full items-center justify-start pl-3">
                     <Stars rating={averageReview} />
                     {productReviews?.length > 0 && (
                       <span className="pl-1 text-xs text-text-primary">
