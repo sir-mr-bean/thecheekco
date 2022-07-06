@@ -10,10 +10,10 @@ const BannerCategory = ({
   image: StaticImageData;
 }) => {
   return (
-    <div className="flex flex-col w-full items-center justify-center">
+    <div className="flex w-full flex-col items-center justify-center">
       <Link passHref href={`/shop/${slugify(category)}`}>
         <a className="text-text-primary">
-          <div className="relative w-28 h-28 lg:w-52 lg:h-52 border rounded-lg border-text-secondary cursor-pointer overflow-hidden">
+          <div className="relative h-28 w-28 cursor-pointer overflow-hidden rounded-lg border border-text-secondary lg:h-52 lg:w-52">
             <Image
               src={image}
               alt={`Shop ${category}`}
@@ -29,14 +29,14 @@ const BannerCategory = ({
               }
               width={600}
               priority
-              className="w-full h-full rounded-md"
+              className="h-full w-full rounded-md"
             />
           </div>
         </a>
       </Link>
       <a
         href={`/shop/${slugify(category)}`}
-        className="w-fit px-1.5 sm:px-4 py-1 sm:py-1.5 bg-button text-xs lg:text-sm rounded-xl font-semibold text-white uppercase mt-2 cursor-pointer border border-transparent hover:border-white"
+        className="mt-2 w-full cursor-pointer rounded-xl border border-transparent bg-button px-1.5 py-1 text-center text-xs font-semibold uppercase text-white hover:border-white sm:px-4 sm:py-1.5 lg:text-sm"
       >
         {category}
       </a>

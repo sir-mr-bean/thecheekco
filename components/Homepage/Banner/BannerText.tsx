@@ -1,21 +1,22 @@
 const BannerText = () => {
   return (
-    <div className="flex flex-col items-center  text-center justify-center w-full font-gothic pt-6 px-10">
-      <span className="text-text-primary text-5xl sm:text-7xl lg:text-9xl font-light pb-3">
+    <div className="flex w-full flex-col  items-center justify-center px-10 pt-6 text-center font-gothic">
+      <span className="pb-3 text-5xl font-light text-text-primary sm:text-7xl lg:text-9xl">
         the cheek co.
       </span>
-      <span className="text-text-secondary text-xl sm:text-3xl lg:text-5xl pb-6">
+      <span className="pb-6 text-xl text-text-secondary sm:text-3xl lg:text-5xl">
         bath & body boutique
       </span>
-      <div className="lg:w-1/2 space-y-3 flex flex-col">
-        <span className="text-text-secondary text-sm sm:text-lg pb-3">
+      <div className="flex flex-col space-y-3 lg:w-1/2">
+        <span className="pb-3 text-sm text-text-secondary sm:text-lg">
           Clean, quality bath and body products shouldn't cost the earth or your
           back pocket. So we at the cheek co. have taken on the task. Our
           gorgeous range is clean, sustainable, eco conscious & handmade
           locally.
         </span>
-        <span className="text-text-secondary text-sm sm:text-lg">
-          We create it in small batches so you can consume, without waste.{" "}
+        <span className="text-sm text-text-secondary sm:text-lg">
+          We create all our products in small batches so you recieve the
+          freshest quality product without waste.
         </span>
       </div>
     </div>

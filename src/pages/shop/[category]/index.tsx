@@ -68,6 +68,10 @@ const CategoryPage = (
     },
   ]);
 
+  const { data: subCategories } = trpc.useQuery([
+    "square-products.get-product-subcategories",
+  ]);
+
   const handleAdd = (product: CartObject) => {
     const productImage = products?.find(
       (p) => p.type === "IMAGE" && product.itemData?.imageIds?.includes(p.id)
@@ -83,13 +87,13 @@ const CategoryPage = (
         <div
           className={`${
             t.visible ? "animate-enter" : "animate-leave after:opacity-0"
-          } max-w-md w-full bg-bg-tan shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 shadow-text-primary`}
+          } pointer-events-auto flex w-full max-w-md rounded-lg bg-bg-tan shadow-lg shadow-text-primary ring-1 ring-black ring-opacity-5`}
         >
-          <div className="flex-1 w-0 p-4">
+          <div className="w-0 flex-1 p-4">
             <div className="flex items-start">
               <div className="flex-shrink-0 pt-0.5">
                 <Image
-                  className="w-24 h-24 rounded-full"
+                  className="h-24 w-24 rounded-full"
                   height={50}
                   width={50}
                   objectFit="cover"
@@ -100,8 +104,8 @@ const CategoryPage = (
                   alt={product.itemData?.name}
                 />
               </div>
-              <div className="ml-3 flex-1 my-auto">
-                <p className="mt-1 text-sm text-text-primary font-gothic">
+              <div className="my-auto ml-3 flex-1">
+                <p className="mt-1 font-gothic text-sm text-text-primary">
                   {product.itemData?.name} added to cart.
                 </p>
               </div>
@@ -110,7 +114,7 @@ const CategoryPage = (
           <div className="flex border-l border-text-primary border-opacity-10">
             <button
               onClick={() => toast.dismiss(t.id)}
-              className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:text-text-primary"
+              className="flex w-full items-center justify-center rounded-none rounded-r-lg border border-transparent p-4 text-sm font-medium text-text-primary focus:text-text-primary focus:outline-none focus:ring-2"
             >
               Close
             </button>
@@ -136,9 +140,9 @@ const CategoryPage = (
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="max-w-screen min-h-screen flex justify-center">
-        <div className="py-4 px-4 sm:py-10 sm:px-6 lg:px-8 bg-bg-lighttan mt-24 shadow-[0_0px_7px_1px_rgba(0,0,0,0.51)] w-full h-full mx-6 md:mx-16 sm:mx-20 rounded-md">
-          <h2 className="text-4xl text-text-primary font-gothic font-extralight capitalize">
+      <div className="max-w-screen flex min-h-screen justify-center">
+        <div className="mx-6 mt-24 h-full w-full rounded-md bg-bg-lighttan py-4 px-4 shadow-[0_0px_7px_1px_rgba(0,0,0,0.51)] sm:mx-20 sm:py-10 sm:px-6 md:mx-16 lg:px-8">
+          <h2 className="font-gothic text-4xl font-extralight capitalize text-text-primary">
             {currentCategoryName}
           </h2>
           <div className="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-3 lg:grid-cols-4 xl:gap-x-10 ">
@@ -157,6 +161,15 @@ const CategoryPage = (
                   const reviewCount = reviews?.filter(
                     (r) => r.productId === product.id
                   ).length;
+                  const productSubCategory =
+                    subCategories?.customAttributeDefinitionData?.selectionConfig?.allowedSelections?.find(
+                      (subCategory) =>
+                        subCategory.uid ===
+                        product?.itemData?.variations?.[0]
+                          ?.customAttributeValues?.[
+                          "Square:c373acb7-e030-422a-bbcc-aae6e4f11958"
+                        ]?.selectionUidValues?.[0]
+                    )?.name;
                   return (
                     <div key={product.id}>
                       <div className="relative">
@@ -166,7 +179,7 @@ const CategoryPage = (
                             ?.replace(/ /g, "-")
                             .toLowerCase()}`}
                         >
-                          <div className="relative w-full h-72 rounded-lg overflow-hidden cursor-pointer border border-text-secondary">
+                          <div className="relative h-72 w-full cursor-pointer overflow-hidden rounded-lg border border-text-secondary">
                             {productImage &&
                               product.itemData?.variations?.[0]
                                 ?.itemVariationData?.locationOverrides?.[0]
@@ -200,16 +213,30 @@ const CategoryPage = (
                                     ? true
                                     : false
                                 }
-                                className="w-full h-full object-center object-cover rounded-md"
+                                className="h-full w-full rounded-md object-cover object-center"
                               />
                             )}
                           </div>
                         </Link>
                         <div className="relative mt-4 ">
                           <div className="flex w-full justify-between">
-                            <h3 className="text-sm font-medium text-text-primary">
-                              {product.itemData?.name}
-                            </h3>
+                            <div className="flex w-full flex-col items-start justify-center">
+                              <h3 className="text-sm font-medium text-text-primary">
+                                {product.itemData?.name}
+                              </h3>
+                              <h3 className="pb-1 text-xs font-medium text-text-primary">
+                                {productSubCategory}
+                              </h3>
+                              <h3 className="text-base font-medium text-text-primary">
+                                $
+                                {(
+                                  Number(
+                                    product.itemData?.variations?.[0]
+                                      .itemVariationData?.priceMoney?.amount
+                                  ) / 100
+                                ).toFixed(2)}
+                              </h3>
+                            </div>
                             <FavouriteButton
                               product={product}
                               image={productImage?.imageData?.url as string}
@@ -221,12 +248,12 @@ const CategoryPage = (
                             />
                           </div>
 
-                          <div className="flex text-header-brown">
+                          <div className="flex items-center text-header-brown">
                             <Stars review={review} />
-                            <span className="text-sm text-text-primary font-medium pl-4">
+                            <span className="pl-4 text-sm font-medium text-text-primary">
                               ({reviewCount ? reviewCount : 0})
                             </span>
-                            <span className="text-sm text-text-primary font-medium pl-1">
+                            <span className="pl-1 text-xs font-medium text-text-primary">
                               {(reviewCount && reviewCount > 1) ||
                               reviewCount === 0
                                 ? "reviews"
@@ -248,7 +275,7 @@ const CategoryPage = (
                       <div className="mt-6">
                         <button
                           onClick={() => handleAdd(product)}
-                          className="relative flex bg-button rounded-2xl py-2 px-8 items-center justify-center text-sm font-medium text-white border border-invisible hover:border-black uppercase cursor-pointer"
+                          className="border-invisible relative flex cursor-pointer items-center justify-center rounded-2xl border bg-button py-2 px-8 text-sm font-medium uppercase text-white hover:border-black"
                         >
                           Add to cart
                           <span className="sr-only">
@@ -313,6 +340,7 @@ export const getStaticProps: GetStaticProps = async (
   await ssg.fetchQuery("square-products.search-products", {
     categoryIds: [categoryObject?.id as string],
   });
+  await ssg.fetchQuery("square-products.get-product-subcategories");
   return {
     props: {
       trpcState: ssg.dehydrate(),

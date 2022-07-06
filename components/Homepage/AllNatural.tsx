@@ -13,16 +13,18 @@ const AllNatural = ({
   categoriesData,
   productReviewsData,
   handleAdd,
+  subCategories,
 }: {
   productsData: CatalogObject[];
   categoriesData: CatalogObject[];
   productReviewsData: ProductReview[];
   handleAdd: (product: CatalogObject) => void;
+  subCategories: CatalogObject;
 }) => {
   const notationRef = useRef(null);
   const { inViewport } = useInViewport(notationRef);
   const [randomAllNatural, setRandomAllNatural] = useState<CatalogObject[]>([]);
-
+  console.log(subCategories);
   useEffect(() => {
     const allNaturalProducts = productsData?.filter(
       (p) =>
@@ -40,20 +42,20 @@ const AllNatural = ({
       setRandomAllNatural(randomProducts);
     }
   }, [productsData]);
-
+  console.log(randomAllNatural);
   return (
     <section>
-      <div className="flex flex-col w-full sm:p-6 items-center justify-center sm:pt-16">
+      <div className="flex w-full flex-col items-center justify-center sm:p-6 sm:pt-16">
         <div className="flex items-center justify-center pt-8">
-          <span className="text-2xl sm:text-5xl text-text-primary font-gothic text-center">
+          <span className="text-center font-gothic text-2xl text-text-primary sm:text-5xl">
             Check out our fav
           </span>
         </div>
         <div
           ref={notationRef}
-          className="flex items-center justify-center w-full text-3xl sm:text-6xl lg:text-7xl text-text-secondary font-gothic text-center py-3 space-x-2 sm:space-x-3"
+          className="flex w-full items-center justify-center space-x-2 py-3 text-center font-gothic text-3xl text-text-secondary sm:space-x-3 sm:text-6xl lg:text-7xl"
         >
-          <span className="w-fit mr-3">all</span>
+          <span className="mr-3 w-fit">all</span>
           <RoughNotation
             type="circle"
             color="#E3BB9D"
@@ -68,8 +70,9 @@ const AllNatural = ({
           </RoughNotation>
           <span>picks.</span>
         </div>
-        <div className="flex flex-wrap w-full items-center justify-center pt-10 flex-auto">
+        <div className="flex w-full flex-auto flex-wrap items-center justify-center pt-10">
           {randomAllNatural &&
+            subCategories &&
             randomAllNatural?.map((product) => {
               const productImage = productsData?.find(
                 (p) =>
@@ -79,6 +82,14 @@ const AllNatural = ({
               const productCategory = categoriesData?.find(
                 (category) => category.id === product?.itemData?.categoryId
               );
+              const productSubCategory =
+                subCategories?.customAttributeDefinitionData?.selectionConfig?.allowedSelections?.find(
+                  (subCategory) =>
+                    subCategory.uid ===
+                    product?.itemData?.variations?.[0]?.customAttributeValues?.[
+                      "Square:c373acb7-e030-422a-bbcc-aae6e4f11958"
+                    ]?.selectionUidValues?.[0]
+                )?.name;
               const productReviews = productReviewsData?.filter(
                 (review) => review.productId === product?.id
               );
@@ -91,7 +102,7 @@ const AllNatural = ({
               return (
                 <div
                   key={product.id}
-                  className="flex flex-col items-end justify-end w-fit pb-5"
+                  className="flex w-fit flex-col items-end justify-end pb-5"
                 >
                   <Link
                     key={product.id}
@@ -101,8 +112,8 @@ const AllNatural = ({
                     )}/${slugify(product.itemData?.name as string)}`}
                     className="relative overflow-hidden"
                   >
-                    <div className="flex flex-col justify-center items-center h-32 w-32 m-4 md:m-4 cursor-pointer hover:scale-105 space-y-3">
-                      <div className="relative w-full border border-text-secondary rounded-lg">
+                    <div className="m-4 flex h-32 w-32 cursor-pointer flex-col items-center justify-center hover:scale-105 md:m-4">
+                      <div className="relative w-full rounded-lg border border-text-secondary">
                         <Image
                           priority={true}
                           src={
@@ -117,21 +128,24 @@ const AllNatural = ({
                           className="rounded-md"
                         />
                       </div>
-                      <span className="text-xs sm:text-sm text-text-primary w-full text-left my-2 pb-4 whitespace-nowrap">
+                      <span className=" w-full whitespace-nowrap text-left text-xs text-text-primary sm:text-sm">
                         {product?.itemData?.name}
+                      </span>
+                      <span className="mb-2 w-full whitespace-nowrap pb-4 text-left text-xs text-text-primary ">
+                        {productSubCategory}
                       </span>
                     </div>
                   </Link>
-                  <div className="w-full flex items-center justify-start pl-3 pt-1">
+                  <div className="flex w-full items-center justify-start pl-3 pt-1">
                     <Stars rating={averageReview} />
                     {productReviews?.length > 0 && (
-                      <span className="text-text-primary text-xs pl-1">
+                      <span className="pl-1 text-xs text-text-primary">
                         ({productReviews.length})
                       </span>
                     )}
                   </div>
-                  <div className="w-full flex items-center justify-start pl-3 pt-2">
-                    <span className="text-text-primary text-xs sm:text-sm">
+                  <div className="flex w-full items-center justify-start pl-3 pt-2">
+                    <span className="text-xs text-text-primary sm:text-sm">
                       $
                       {(
                         Number(
@@ -144,7 +158,7 @@ const AllNatural = ({
                   <div className="mt-2">
                     <button
                       onClick={() => handleAdd(product)}
-                      className="relative flex w-fit mx-auto bg-button rounded-2xl py-2 px-8 items-center justify-center text-sm font-medium text-white border border-invisible hover:border-black uppercase cursor-pointer"
+                      className="border-invisible relative mx-auto flex w-fit cursor-pointer items-center justify-center rounded-2xl border bg-button py-2 px-8 text-sm font-medium uppercase text-white hover:border-black"
                     >
                       Add to cart
                       <span className="sr-only">{product.itemData?.name}</span>

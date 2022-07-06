@@ -22,22 +22,22 @@ const CheekyBox = () => {
   }, []);
 
   return (
-    <section className="bg-paper-bg bg-cover flex flex-col justify-end items-center w-full flex-1 shadow-3xl shadow-slate-600 font-gothic">
-      <div className="bg-button shadow-text-primary bg-opacity-30 flex items-center justify-center w-full">
-        <div className="flex flex-col items-center justify-end text-text-primary w-full my-16">
+    <section className="flex w-full flex-1 flex-col items-center justify-end bg-paper-bg bg-cover font-gothic shadow-3xl shadow-slate-600">
+      <div className="flex w-full items-center justify-center bg-white bg-opacity-20 shadow-text-primary">
+        <div className="my-16 flex w-full flex-col items-center justify-end text-text-primary">
           <span className="text-2xl sm:text-4xl">introducing</span>
-          <span className="text-4xl sm:text-6xl font-semibold">
+          <span className="text-4xl font-semibold sm:text-6xl">
             the cheeky box.
           </span>
-          <div className="flex flex-col-reverse sm:flex-row w-full items-start justify-center mt-4 space-x-10">
+          <div className="mt-4 flex w-full flex-col-reverse items-start justify-center space-x-10 sm:flex-row">
             <div
-              className="w-4/5 sm:w-1/4 mx-auto"
+              className="mx-auto w-4/5 sm:w-1/4"
               ref={strayCatRef ? strayCatRef : ""}
               onMouseEnter={() => lottie.play()}
               onMouseLeave={() => lottie.pause()}
             />
-            <div className="flex flex-col items-start justify-start sm:w-2/3 text-xl w-3/4">
-              <span className="sm:w-4/5 pt-10">
+            <div className="flex w-3/4 flex-col items-start justify-start text-xl sm:w-2/3">
+              <span className="pt-10 sm:w-4/5">
                 A limited run monthly mystery subscription box designed to keep
                 you & your bathroom plastic free and fabulous without any
                 stress. Each month will contain an assortment of bathroom
@@ -48,28 +48,28 @@ const CheekyBox = () => {
                 Each month will contain (but of course will not be limited to):
               </span>
               <ul className="pl-5 text-lg sm:text-xl">
-                <li className="text-text-secondary  list-disc">
+                <li className="list-disc  text-text-secondary">
                   shampoo & conditioner bar{" "}
                 </li>
-                <li className="text-text-secondary list-disc">
+                <li className="list-disc text-text-secondary">
                   limited edition soap bar
                 </li>
-                <li className="text-text-secondary list-disc">
+                <li className="list-disc text-text-secondary">
                   skin care product
                 </li>
-                <li className="text-text-secondary list-disc">
+                <li className="list-disc text-text-secondary">
                   bathroom / beauty accessory
                 </li>
-                <li className="text-text-secondary list-disc">
+                <li className="list-disc text-text-secondary">
                   bath soak or shower steamer
                 </li>
               </ul>
               <span></span>
-              <div className="py-6 flex items-center justify-center mx-auto sm:mx-0">
+              <div className="mx-auto flex items-center justify-center py-6 sm:mx-0">
                 <Link passHref href="/cheekybox">
                   <a href="/cheekybox">
-                    <button className="bg-button shadow-sm shadow-text-secondary py-1 px-4 rounded-md border border-transparent hover:border-white">
-                      <span className="uppercase text-white text-sm font-semibold tracking-wide font-gothic">
+                    <button className="rounded-md border border-transparent bg-button py-1 px-4 shadow-sm shadow-text-secondary hover:border-white">
+                      <span className="font-gothic text-sm font-semibold uppercase tracking-wide text-white">
                         Secure your cheeky box today
                       </span>
                     </button>

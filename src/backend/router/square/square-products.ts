@@ -198,4 +198,19 @@ export const squareProductRouter = createRouter()
         return productsQuery;
       }
     },
+  })
+  .query("get-product-subcategories", {
+    async resolve({ input, ctx }) {
+      const attributesQuery = await catalogApi.searchCatalogObjects({
+        objectTypes: ["CUSTOM_ATTRIBUTE_DEFINITION"],
+        includeRelatedObjects: true,
+      });
+      const allAttributes = attributesQuery?.result?.objects;
+      const subCategoryAttribute = allAttributes?.find(
+        (attribute) =>
+          attribute?.customAttributeDefinitionData?.name === "Sub-Category"
+      );
+
+      return subCategoryAttribute;
+    },
   });

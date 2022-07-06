@@ -24,10 +24,10 @@ const HowItBegan = () => {
   return (
     <section
       aria-labelledby="social-impact-heading"
-      className="mt-16 sm:mt-24 bg-paper-bg bg-cover bg-center w-full"
+      className="mt-16 w-full bg-paper-bg bg-cover sm:mt-24"
     >
-      <div className="bg-button shadow-text-primary bg-opacity-30 py-16 sm:py-20 flex items-center justify-center w-full sm:px-32">
-        <div className="relative sm:w-96 sm:h-96 sm:pt-10">
+      <div className="flex w-full items-start justify-center bg-white bg-opacity-20 pt-16 shadow-text-primary sm:px-12 sm:pt-20 xl:px-32">
+        <div className="relative sm:h-96 sm:w-96">
           <Image
             src={maddiAvatar}
             height={144}
@@ -39,13 +39,13 @@ const HowItBegan = () => {
         <div className="flex flex-col p-5 sm:p-0">
           <h2
             id="social-impact-heading"
-            className="font-extrabold tracking-tight text-text-secondary max-w-xl font-gothic text-center sm:text-left mx-1"
+            className="mx-1 max-w-xl text-center font-gothic font-extrabold tracking-tight text-text-secondary sm:text-left"
           >
-            <span className="text-4xl lg:text-6xl font-semibold">
+            <span className="text-4xl font-semibold lg:text-6xl">
               How it all began...
             </span>
           </h2>
-          <div className="text-text-primary text-lg py-4 flex flex-col items-start justify-start text-left space-y-4 font-gothic">
+          <div className="flex flex-col items-start justify-start space-y-4 py-4 text-left font-gothic text-lg text-text-primary">
             <p>
               It began with an itch, an eczema itch! Suffering from eczema Maddi
               struggled to find natural, local products that weren't wrapped in
@@ -60,16 +60,16 @@ const HowItBegan = () => {
               Keep up with Maddi behind the scenes as she whips up fresh goodies
               daily.
             </p>
-            <div className="mt-2 flex w-full items-center justify-between">
+            <div className="mt-2 flex w-full items-start justify-start">
               <a
                 href="https://www.instagram.com/thecheekco/"
                 target="_blank"
-                className="font-gothic relative flex w-fit mx-auto bg-button rounded-md py-2 px-8 items-center justify-center text-sm font-semibold tracking-wide text-white border border-transparent shadow-sm shadow-text-secondary hover:border-white uppercase cursor-pointer"
+                className="relative mt-6 flex w-fit cursor-pointer items-center justify-center rounded-md border border-transparent bg-button py-2 px-8 font-gothic text-xs font-semibold uppercase tracking-wide text-white shadow-sm shadow-text-secondary hover:border-white sm:text-sm"
               >
                 FOLLOW MADDI’S SHENANIGANS
               </a>
               <div
-                className="w-4/5 sm:w-1/4 mx-auto"
+                className="w-7/8 mx-auto sm:w-1/4 xl:-translate-y-16"
                 ref={loaderCatRef ? loaderCatRef : ""}
                 onMouseEnter={() => lottie.play()}
                 onMouseLeave={() => lottie.pause()}
