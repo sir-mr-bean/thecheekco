@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
-const VerificationStep = ({ email }: { email: string }) => {
+const VerificationStep = ({ email, page }: { email: string; page: string }) => {
   const [code, setCode] = useState("");
   const tokenRefOne = useRef<HTMLInputElement>(null);
   const tokenRefTwo = useRef<HTMLInputElement>(null);
@@ -47,18 +47,40 @@ const VerificationStep = ({ email }: { email: string }) => {
   );
 
   return (
-    <div className="flex h-[70vh] w-full flex-col items-center justify-start">
-      <span className="mb-12 mt-6 w-fit rounded-xl bg-text-secondary px-3 py-2 text-center text-lg text-white sm:mt-12 sm:mb-24 sm:px-20">
+    <div
+      className={
+        page === "checkout"
+          ? `flex w-full flex-col items-center justify-start`
+          : `flex h-[70vh] w-full flex-col items-center justify-start`
+      }
+    >
+      <span
+        className={
+          page === "checkout"
+            ? `mb-12 mt-2 w-fit rounded-xl bg-text-secondary px-3 py-2 text-center text-base text-white sm:mb-6 sm:px-6`
+            : `mb-12 mt-6 w-fit rounded-xl bg-text-secondary px-3 py-2 text-center text-lg text-white sm:mt-12 sm:mb-24 sm:px-20`
+        }
+      >
         Email sent! Check your inbox to find your 5 digit verification number.
         This is only valid for 5 minutes.
       </span>
-      <span className=" pb-12 pt-2 text-center text-2xl text-text-primary sm:pb-24">
+      <span
+        className={
+          page === "checkout"
+            ? `pb-6 pt-2 text-center text-2xl text-text-primary sm:pb-12`
+            : `pb-12 pt-2 text-center text-2xl text-text-primary sm:pb-24`
+        }
+      >
         Enter your 5 digit verification number:
       </span>
-      <div className="flex w-full max-w-xl items-center justify-center space-x-1 px-1">
+      <div className="flex w-full max-w-xl items-center justify-center space-x-6 px-1">
         <input
           ref={tokenRefOne}
-          className="w-full appearance-none rounded-xl border border-text-primary py-10 text-center text-lg text-text-primary caret-text-secondary focus:border-transparent focus:ring-2 focus:ring-text-primary"
+          className={
+            page === "checkout"
+              ? `w-full appearance-none rounded-xl border border-text-primary py-6 text-center text-lg text-text-primary caret-text-secondary focus:border-transparent focus:ring-2 focus:ring-text-primary`
+              : `w-full appearance-none rounded-xl border border-text-primary py-10 text-center text-lg text-text-primary caret-text-secondary focus:border-transparent focus:ring-2 focus:ring-text-primary`
+          }
           type="number"
           maxLength={1}
           onChange={(e) => {
@@ -68,7 +90,11 @@ const VerificationStep = ({ email }: { email: string }) => {
         />
         <input
           ref={tokenRefTwo}
-          className="w-full appearance-none rounded-xl border border-text-primary py-10 text-center text-lg text-text-primary caret-text-secondary focus:border-transparent focus:ring-2 focus:ring-text-primary "
+          className={
+            page === "checkout"
+              ? `w-full appearance-none rounded-xl border border-text-primary py-6 text-center text-lg text-text-primary caret-text-secondary focus:border-transparent focus:ring-2 focus:ring-text-primary`
+              : `w-full appearance-none rounded-xl border border-text-primary py-10 text-center text-lg text-text-primary caret-text-secondary focus:border-transparent focus:ring-2 focus:ring-text-primary`
+          }
           type="number"
           maxLength={1}
           onChange={(e) => {
@@ -78,7 +104,11 @@ const VerificationStep = ({ email }: { email: string }) => {
         />
         <input
           ref={tokenRefThree}
-          className="w-full appearance-none rounded-xl border border-text-primary py-10 text-center text-lg text-text-primary caret-text-secondary  focus:border-transparent focus:ring-2 focus:ring-text-primary "
+          className={
+            page === "checkout"
+              ? `w-full appearance-none rounded-xl border border-text-primary py-6 text-center text-lg text-text-primary caret-text-secondary  focus:border-transparent focus:ring-2 focus:ring-text-primary`
+              : `w-full appearance-none rounded-xl border border-text-primary py-10 text-center text-lg text-text-primary caret-text-secondary  focus:border-transparent focus:ring-2 focus:ring-text-primary`
+          }
           type="number"
           maxLength={1}
           onChange={(e) => {
@@ -88,7 +118,11 @@ const VerificationStep = ({ email }: { email: string }) => {
         />
         <input
           ref={tokenRefFour}
-          className="w-full appearance-none rounded-xl border border-text-primary py-10 text-center text-lg text-text-primary caret-text-secondary  focus:border-transparent focus:ring-2 focus:ring-text-primary "
+          className={
+            page === "checkout"
+              ? `w-full appearance-none rounded-xl border border-text-primary py-6 text-center text-lg text-text-primary caret-text-secondary  focus:border-transparent focus:ring-2 focus:ring-text-primary`
+              : `w-full appearance-none rounded-xl border border-text-primary py-10 text-center text-lg text-text-primary caret-text-secondary  focus:border-transparent focus:ring-2 focus:ring-text-primary`
+          }
           type="number"
           maxLength={1}
           onChange={(e) => {
@@ -98,7 +132,11 @@ const VerificationStep = ({ email }: { email: string }) => {
         />
         <input
           ref={tokenRefFive}
-          className="w-full appearance-none rounded-xl border border-text-primary py-10 text-center text-lg text-text-primary caret-text-secondary  focus:border-transparent focus:ring-2 focus:ring-text-primary "
+          className={
+            page === "checkout"
+              ? `w-full appearance-none rounded-xl border border-text-primary py-6 text-center text-lg text-text-primary caret-text-secondary  focus:border-transparent focus:ring-2 focus:ring-text-primary`
+              : `w-full appearance-none rounded-xl border border-text-primary py-10 text-center text-lg text-text-primary caret-text-secondary  focus:border-transparent focus:ring-2 focus:ring-text-primary`
+          }
           type="number"
           maxLength={1}
           onKeyPress={(e: any) => onVerificationCodeKeyPress(e)}
@@ -107,7 +145,13 @@ const VerificationStep = ({ email }: { email: string }) => {
           }}
         />
       </div>
-      <div className="flex w-full items-center justify-center pt-24">
+      <div
+        className={
+          page === "checkout"
+            ? `flex w-full items-center justify-center pt-12`
+            : `flex w-full items-center justify-center pt-24`
+        }
+      >
         <button
           className="w-fit appearance-none rounded-xl border border-transparent bg-button py-4 px-8 text-center text-xl capitalize text-white hover:border-white focus:border-transparent focus:ring-2 focus:ring-text-primary"
           onClick={onReady}

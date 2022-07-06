@@ -20,7 +20,6 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/login",
     signOut: "/",
-    newUser: "/profile",
     verifyRequest: "/verify-code",
     error: "/error",
   },

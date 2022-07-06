@@ -30,8 +30,6 @@ const login = ({ providers }: { providers: AppProviders }) => {
   const returnUrl = router.query?.returnTo;
   const error = router.query?.error;
 
-  const [code, setCode] = useState("");
-
   useEffect(() => {
     if (status === String("authenticated")) {
       if (returnUrl) {
@@ -118,7 +116,7 @@ const login = ({ providers }: { providers: AppProviders }) => {
         </div>
       ) : showVerificationStep ? (
         <>
-          <VerificationStep email={email} />
+          <VerificationStep email={email} page="login" />
         </>
       ) : (
         <div className="flex min-h-full text-text-primary">
@@ -213,7 +211,7 @@ const login = ({ providers }: { providers: AppProviders }) => {
                           autoComplete="email"
                           required
                           onKeyPress={(e: any) => onPasswordKeyPress(e)}
-                          className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-text-primary focus:outline-none        focus:ring-text-primary       sm:text-sm"
+                          className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-text-primary focus:outline-none        focus:ring-text-primary sm:text-sm"
                         />
                       </div>
                     </div>
