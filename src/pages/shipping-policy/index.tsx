@@ -6,21 +6,13 @@ const deliveryOptions = [
     id: 1,
     name: "Standard Delivery By Australia Post",
     cutoff:
-      "Orders placed Monday to Friday before 3pm will be dispatched within 1 business day. Any orders placed after 3pm Monday to Friday will be dispatched within 2 business days. Orders placed after 3pm on a Friday or over the weekend will be dispatched on Monday. Any orders placed during our sale periods may take a little longer and will be dispatched within 3-5 business days.",
+      "Please allow 1-2 days for processing. You will recieve a confirmation email once your order has been shipped.",
     deliveryTime:
       "5-10 business days in metro areas and 5-12 business days in regional areas",
-    deliveryCosts: "Minimum $7.95 or Free on orders over $99",
+    deliveryCosts: "Minimum $9.30 or Free on orders over $100",
   },
   {
     id: 2,
-    name: "Express Delivery By Australia Post",
-    cutoff: "As above",
-    deliveryTime:
-      "1 – 3 business days in metro areas and 1-5 business days in regional areas",
-    deliveryCosts: "Minimum $14.95 or Free on orders over $99",
-  },
-  {
-    id: 3,
     name: "Special Orders",
     cutoff: "Special orders will be assessed on a case by case basis by day.",
     deliveryTime:
@@ -41,10 +33,10 @@ const ShippingPolicy = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="bg-white mt-16 mx-1 md:mx-16 rounded-md shadow-sm shadow-black font-gothic text-text-primary">
+      <div className="mx-1 mt-16 rounded-lg bg-white font-gothic  text-text-primary shadow-sm shadow-black md:mx-16">
         <div className="mx-auto px-4 pt-4 pb-16 sm:px-6 sm:pt-8 sm:pb-24 lg:px-8 xl:px-2 xl:pt-14">
-          <div className="flex flex-col w-full font-gothic space-y-3 px-2 sm:px-10 text-sm sm:text-base">
-            <h1 className="text-2xl sm:text-4xl py-4">Shipping Policy</h1>
+          <div className="flex w-full flex-col space-y-3 px-2 font-gothic text-sm sm:px-10 sm:text-base">
+            <h1 className="py-4 text-2xl sm:text-4xl">Shipping Policy</h1>
             <p>
               At this stage, we do not support international delivery however
               we’re happy to accommodate special orders.
@@ -52,7 +44,9 @@ const ShippingPolicy = () => {
             <p>
               Reach out to our team{" "}
               <Link href="contact-us">
-                <span className="underline cursor-pointer">here</span>
+                <span className="cursor-pointer font-semibold underline">
+                  here
+                </span>
               </Link>{" "}
               to request a special order today.
             </p>
@@ -60,20 +54,22 @@ const ShippingPolicy = () => {
             <p>
               For information on returns, please visit our{" "}
               <Link href="returns">
-                <span className="underline cursor-pointer">returns page</span>
+                <span className="cursor-pointer font-semibold underline">
+                  returns page
+                </span>
               </Link>
             </p>
-            <h1 className="text-2xl sm:text-4xl py-4">Delivery Options</h1>
+            <h1 className="py-4 text-2xl sm:text-4xl">Delivery Options</h1>
             <p>
               Delivery costs will be calculated at checkout once the delivery
               option and destination has been selected/entered. We offer the
               below delivery options:
             </p>
-            <div className="px-4 sm:px-6 lg:px-8">
+            <div className="">
               <div className="sm:flex sm:items-center">
-                <div className="-mx-4 mt-8 overflow-hidden shadow shadow-text-primary ring-1 ring-text-secondary ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
+                <div className="-mx-4 mt-8 overflow-hidden rounded-xl shadow shadow-text-secondary sm:-mx-6 md:mx-0">
                   <table className="min-w-full divide-y divide-text-secondary">
-                    <thead className=" w-full border border-text-secondary">
+                    <thead className=" w-full">
                       <tr>
                         <th
                           scope="col"
@@ -106,9 +102,9 @@ const ShippingPolicy = () => {
                         <tr key={option.id}>
                           <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-text-primary sm:w-auto sm:max-w-none sm:pl-6">
                             {option.name}
-                            <dl className="font-normal lg:hidden">
+                            <dl className="font-medium lg:hidden">
                               <dt className="sr-only">Cut Off Times</dt>
-                              <dd className="mt-1 text-gray-700">
+                              <dd className="mt-1 text-text-secondary">
                                 Delivery Time: {option.deliveryTime}
                               </dd>
                             </dl>
@@ -117,10 +113,10 @@ const ShippingPolicy = () => {
                             {option.deliveryTime}
                           </td>
                           <td className="px-3 py-4 text-sm text-text-secondary lg:table-cell">
-                            {option.cutoff}{" "}
+                            {option.cutoff}
                             {option.href ? (
                               <Link href={option.href}>
-                                <a className="text-text-primary underline cursor-pointer">
+                                <a className="cursor-pointer pl-1 font-semibold text-text-primary underline">
                                   Apply here
                                 </a>
                               </Link>
