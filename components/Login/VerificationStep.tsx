@@ -15,6 +15,10 @@ const VerificationStep = ({ email }: { email: string }) => {
   };
 
   useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
     tokenRefOne.current?.focus();
     return () => {
       tokenRefOne.current?.focus();

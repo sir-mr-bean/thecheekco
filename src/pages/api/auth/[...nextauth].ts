@@ -2,11 +2,11 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import EmailProvider from "next-auth/providers/email";
-import Credentials from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { User } from "@prisma/client";
 import { prisma } from "@/backend/utils/prisma";
 import { MailService } from "@sendgrid/mail";
+import moment from "moment";
 
 //generate 5 digit random number for verification code
 const generateAuthtoken = (): number => {
@@ -56,14 +56,13 @@ export const authOptions: NextAuthOptions = {
         console.log("generating token: ", token);
         return token;
       },
-      sendVerificationRequest: ({
+      sendVerificationRequest: async ({
         identifier: email,
         url,
         token,
         expires,
         provider,
       }) => {
-        // return new Promise((resolve, reject) => {
         const { server, from } = provider;
         // Strip protocol from URL and use domain as site name
         const site = (process.env.API_URL as string).replace(
@@ -71,28 +70,19 @@ export const authOptions: NextAuthOptions = {
           ""
         );
         console.log(email, url, token, expires, provider);
-        //return resolve();
-
-        // nodemailer.createTransport(server).sendMail(
-        //   {
-        //     to: email,
-        //     from,
-        //     subject: `Authentication code: ${token}`,
-        //     text: text({ url, site, email, token }),
-        //     html: html({ url, site, email, token }),
-        //   },
-        //   (error) => {
-        //     if (error) {
-        //       // logger.error('SEND_VERIFICATION_EMAIL_ERROR', email, error);
-        //       console.error('SEND_VERIFICATION_EMAIL_ERROR', email, error);
-        //       return reject(
-        //         new Error(`SEND_VERIFICATION_EMAIL_ERROR ${error}`)
-        //       );
-        //     }
-        //     return resolve();
-        //   }
-        // );
-        //});
+        const templateData = {
+          verificationToken: token,
+          expiryTime: moment(expires).format("LLL"),
+        };
+        const sgMail = new MailService();
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
+        await sgMail.send({
+          templateId: "d-c50bf55c36974432ae1527c8898ffe8b",
+          to: email, // Change to your recipient
+          from: "contact@thecheekco.com", // Change to your verified sender
+          subject: "Your One-Time Password from The Cheek Co.",
+          dynamicTemplateData: templateData,
+        });
       },
     }),
   ],
