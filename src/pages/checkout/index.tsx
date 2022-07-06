@@ -495,21 +495,21 @@ export default function checkout() {
         orderComplete={orderComplete}
         setOrderComplete={setOrderComplete}
       />
-      <div className="bg-white mt-16 mx-1 md:mx-8 rounded-md shadow-sm shadow-text-primary font-gothic min-h-screen">
-        <div className="max-w-7xl mx-auto px-4 pt-4 pb-16 sm:px-6 sm:pt-8 sm:pb-24 lg:px-8 xl:px-2 xl:pt-14">
+      <div className="mx-1 mt-16 min-h-screen rounded-md bg-white font-gothic shadow-sm shadow-text-primary md:mx-8">
+        <div className="mx-auto max-w-7xl px-4 pt-4 pb-16 sm:px-6 sm:pt-8 sm:pb-24 lg:px-8 xl:px-2 xl:pt-14">
           {total ? (
             <>
               <h1 className="sr-only">Checkout</h1>
               <div className="flex flex-col-reverse sm:flex-row md:space-x-6">
-                <div className="flex flex-col-reverse sm:flex-row sm:flex-1 lg:max-w-none w-full">
-                  <div className="sm:pl-8 w-full">
-                    <div className="flex flex-col justify-start items-start text-text-primary w-full flex-1 ">
-                      <div className="flex flex-col justify-between w-full items-center p-1 sm:p-4">
-                        <span className="hidden sm:block whitespace-nowrap text-3xl sm:text-5xl font-medium pt-3 sm:pt-0 my-3">
+                <div className="flex w-full flex-col-reverse sm:flex-1 sm:flex-row lg:max-w-none">
+                  <div className="w-full sm:pl-8">
+                    <div className="flex w-full flex-1 flex-col items-start justify-start text-text-primary ">
+                      <div className="flex w-full flex-col items-center justify-between p-1 sm:p-4">
+                        <span className="my-3 hidden whitespace-nowrap pt-3 text-3xl font-medium sm:block sm:pt-0 sm:text-5xl">
                           Checkout
                         </span>
                         {status != "loading" && !session?.user && (
-                          <div className="my-3 w-full flex flex-col items-center justify-center">
+                          <div className="my-3 flex w-full flex-col items-center justify-center">
                             <SignInHeader />
                           </div>
                         )}
@@ -517,7 +517,7 @@ export default function checkout() {
                         <PickupToggle pickup={pickup} setPickup={setPickup} />
                         {pickup ? (
                           <>
-                            <div className="flex items-center space-x-2 py-10 w-full h-full">
+                            <div className="flex h-full w-full items-center space-x-2 py-10">
                               <div className="flex flex-col whitespace-nowrap">
                                 <span className="text-sm">Collect from:</span>
                                 <span>The Cheek Co Shop</span>
@@ -538,12 +538,12 @@ export default function checkout() {
                                 handlePickupCustomerInfoComplete(userObj)
                               }
                               disabled={pickupTermsAccepted === false}
-                              className="w-full flex justify-center py-2 my-4 px-4 border border-transparent rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
+                              className="my-4 flex w-full justify-center rounded-md border border-transparent bg-button py-2 px-4 text-sm font-medium text-white shadow-sm shadow-text-secondary hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-button/50 disabled:hover:border-transparent disabled:focus:ring-0"
                             >
                               Continue
                             </button>
                             {pickupInfoSet && (
-                              <div className="w-full relative">
+                              <div className="relative w-full">
                                 <PaymentWrapper
                                   setOrderProcessing={setOrderProcessing}
                                   total={total}
@@ -552,21 +552,21 @@ export default function checkout() {
                                   saveCardDetails={saveCardDetails}
                                   selectedPaymentMethod={selectedPaymentMethod}
                                 >
-                                  <div className="w-full flex flex-col space-y-4 pt-3">
-                                    <h2 className="text-lg font-medium py-3">
+                                  <div className="flex w-full flex-col space-y-4 pt-3">
+                                    <h2 className="py-3 text-lg font-medium">
                                       Payment Method
                                     </h2>
-                                    <div className="mt-6 flex space-x-2 space-y-2 flex-col">
+                                    <div className="mt-6 flex flex-col space-x-2 space-y-2">
                                       {paymentMethods && (
                                         <div
                                           className={
                                             !newCard
-                                              ? `bg-button border rounded-lg p-2 border-text-secondary`
-                                              : `border rounded-lg p-2 border-text-secondary`
+                                              ? `rounded-lg border border-text-secondary bg-button p-2`
+                                              : `rounded-lg border border-text-secondary p-2`
                                           }
                                         >
                                           <div>
-                                            <h3 className="text-lg font-medium py-3">
+                                            <h3 className="py-3 text-lg font-medium">
                                               Existing Payment Method:
                                             </h3>
                                             {paymentMethods.map(
@@ -595,7 +595,7 @@ export default function checkout() {
                                                   : setNewCard(true);
                                               }}
                                               disabled={newCard}
-                                              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-text-secondary hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
+                                              className="flex w-full justify-center rounded-md border border-transparent bg-text-secondary py-2 px-4 text-sm font-medium text-white shadow-sm hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-button/50 disabled:hover:border-transparent disabled:focus:ring-0"
                                             >
                                               {savedCardOrderProcessing ? (
                                                 <div className="flex w-full items-center justify-center space-x-2">
@@ -619,12 +619,12 @@ export default function checkout() {
                                     <div
                                       className={
                                         newCard
-                                          ? `border rounded-lg p-2 bg-button border-text-secondary`
-                                          : `border rounded-lg p-2 border-text-secondary`
+                                          ? `rounded-lg border border-text-secondary bg-button p-2`
+                                          : `rounded-lg border border-text-secondary p-2`
                                       }
                                     >
                                       <div className="flex flex-col items-start justify-start space-x-2 space-y-4 pt-4 ">
-                                        <div className="ml-3 flex items-center h-5 space-x-4">
+                                        <div className="ml-3 flex h-5 items-center space-x-4">
                                           <input
                                             id="new-card"
                                             onClick={() => {
@@ -635,17 +635,17 @@ export default function checkout() {
                                             name="new-card"
                                             type="radio"
                                             checked={newCard}
-                                            className="focus:text-text-primary h-4 w-4 text-text-primary border-gray-300 c accent-text-primary"
+                                            className="c h-4 w-4 border-gray-300 text-text-primary accent-text-primary focus:text-text-primary"
                                           />
 
                                           <label
-                                            className="text-lg font-medium py-3"
+                                            className="py-3 text-lg font-medium"
                                             htmlFor="new-card"
                                           >
                                             New Card
                                           </label>
                                         </div>
-                                        <div className="ml-3 flex items-center h-5 space-x-4 py-8 justify-center">
+                                        <div className="ml-3 flex h-5 items-center justify-center space-x-4 py-8">
                                           <input
                                             onChange={() =>
                                               setSaveCardDetails(
@@ -657,11 +657,11 @@ export default function checkout() {
                                             id="save-card-details"
                                             name="save-card-details"
                                             type="checkbox"
-                                            className="h-6 w-6 border-text-secondary rounded text-text-secondary focus:ring-text-secondary accent-text-secondary"
+                                            className="h-6 w-6 rounded border-text-secondary text-text-secondary accent-text-secondary focus:ring-text-secondary"
                                           />
                                           <label
                                             htmlFor="save-card-details"
-                                            className="text-sm text-text-primary select-none"
+                                            className="select-none text-sm text-text-primary"
                                           >
                                             Save card details for faster online
                                             checkout.
@@ -683,7 +683,7 @@ export default function checkout() {
                                           },
                                         }}
                                       >
-                                        <div className="w-full h-full flex items-center justify-center">
+                                        <div className="flex h-full w-full items-center justify-center">
                                           {orderProcessing ? (
                                             <div className="flex w-full items-center justify-center space-x-2">
                                               <span>Processing Order</span>
@@ -734,7 +734,7 @@ export default function checkout() {
                                 type="button"
                                 onClick={() => handleCustomerInfoComplete()}
                                 disabled={!termsAccepted}
-                                className="w-full flex justify-center py-2 my-4 px-4 border border-transparent rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
+                                className="my-4 flex w-full justify-center rounded-md border border-transparent bg-button py-2 px-4 text-sm font-medium text-white shadow-sm shadow-text-secondary hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-button/50 disabled:hover:border-transparent disabled:focus:ring-0"
                               >
                                 Continue
                               </button>
@@ -756,7 +756,7 @@ export default function checkout() {
                                 <button
                                   type="button"
                                   onClick={handleShippingInfoComplete}
-                                  className="w-full flex justify-center py-2 my-4 px-4 border border-transparent rounded-md shadow-sm shadow-text-secondary text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
+                                  className="my-4 flex w-full justify-center rounded-md border border-transparent bg-button py-2 px-4 text-sm font-medium text-white shadow-sm shadow-text-secondary hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-button/50 disabled:hover:border-transparent disabled:focus:ring-0"
                                 >
                                   Continue
                                 </button>
@@ -772,21 +772,21 @@ export default function checkout() {
                                   saveCardDetails={saveCardDetails}
                                   selectedPaymentMethod={selectedPaymentMethod}
                                 >
-                                  <div className="w-full flex flex-col space-y-4 pt-3">
-                                    <h2 className="text-lg font-medium py-3">
+                                  <div className="flex w-full flex-col space-y-4 pt-3">
+                                    <h2 className="py-3 text-lg font-medium">
                                       Payment Method
                                     </h2>
-                                    <div className="mt-6 flex space-x-2 space-y-2 flex-col ">
+                                    <div className="mt-6 flex flex-col space-x-2 space-y-2 ">
                                       {paymentMethods && (
                                         <div
                                           className={
                                             !newCard
-                                              ? `bg-button border rounded-lg p-2 border-text-secondary`
-                                              : `border rounded-lg p-2 border-text-secondary`
+                                              ? `rounded-lg border border-text-secondary bg-button p-2`
+                                              : `rounded-lg border border-text-secondary p-2`
                                           }
                                         >
                                           <div>
-                                            <h3 className="text-lg font-medium py-3">
+                                            <h3 className="py-3 text-lg font-medium">
                                               Existing Payment Method:
                                             </h3>
                                             {paymentMethods.map(
@@ -815,7 +815,7 @@ export default function checkout() {
                                                   : setNewCard(true);
                                               }}
                                               disabled={newCard}
-                                              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-text-secondary hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary disabled:bg-button/50 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:hover:border-transparent"
+                                              className="flex w-full justify-center rounded-md border border-transparent bg-text-secondary py-2 px-4 text-sm font-medium text-white shadow-sm hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-button/50 disabled:hover:border-transparent disabled:focus:ring-0"
                                             >
                                               {savedCardOrderProcessing ? (
                                                 <div className="flex w-full items-center justify-center space-x-2">
@@ -838,12 +838,12 @@ export default function checkout() {
                                     <div
                                       className={
                                         newCard
-                                          ? `border rounded-lg p-2 bg-button border-text-secondary`
-                                          : `border rounded-lg p-2 border-text-secondary`
+                                          ? `rounded-lg border border-text-secondary bg-button p-2`
+                                          : `rounded-lg border border-text-secondary p-2`
                                       }
                                     >
                                       <div className="flex flex-col items-start justify-start space-x-2 space-y-4 pt-4 ">
-                                        <div className="ml-3 flex items-center h-5 space-x-4">
+                                        <div className="ml-3 flex h-5 items-center space-x-4">
                                           <input
                                             id="new-card"
                                             onClick={() => {
@@ -854,17 +854,17 @@ export default function checkout() {
                                             name="new-card"
                                             type="radio"
                                             checked={newCard}
-                                            className="focus:text-text-primary h-4 w-4 text-text-primary border-gray-300 c accent-text-primary"
+                                            className="c h-4 w-4 border-gray-300 text-text-primary accent-text-primary focus:text-text-primary"
                                           />
 
                                           <label
-                                            className="text-lg font-medium py-3"
+                                            className="py-3 text-lg font-medium"
                                             htmlFor="new-card"
                                           >
                                             New Card
                                           </label>
                                         </div>
-                                        <div className="ml-3 flex items-center h-5 space-x-4 py-8 justify-center">
+                                        <div className="ml-3 flex h-5 items-center justify-center space-x-4 py-8">
                                           <input
                                             onChange={() =>
                                               setSaveCardDetails(
@@ -876,11 +876,11 @@ export default function checkout() {
                                             id="save-card-details"
                                             name="save-card-details"
                                             type="checkbox"
-                                            className="h-6 w-6 border-text-secondary rounded text-text-secondary focus:ring-text-secondary accent-text-secondary"
+                                            className="h-6 w-6 rounded border-text-secondary text-text-secondary accent-text-secondary focus:ring-text-secondary"
                                           />
                                           <label
                                             htmlFor="save-card-details"
-                                            className="text-sm text-text-primary select-none"
+                                            className="select-none text-sm text-text-primary"
                                           >
                                             Save card details for faster online
                                             checkout.
@@ -903,7 +903,7 @@ export default function checkout() {
                                           },
                                         }}
                                       >
-                                        <div className="w-full h-full flex items-center justify-center">
+                                        <div className="flex h-full w-full items-center justify-center">
                                           {orderProcessing ? (
                                             <div className="flex w-full items-center justify-center space-x-2">
                                               <span>Processing Order</span>
@@ -924,7 +924,7 @@ export default function checkout() {
                                           )}
                                         </div>
                                       </CreditCard>
-                                      <div className="mt-6 relative">
+                                      <div className="relative mt-6">
                                         <div
                                           className="absolute inset-0 flex items-center"
                                           aria-hidden="true"
@@ -935,8 +935,8 @@ export default function checkout() {
                                           <span
                                             className={
                                               newCard
-                                                ? `px-2 bg-button`
-                                                : `px-2 bg-white`
+                                                ? `bg-button px-2`
+                                                : `bg-white px-2`
                                             }
                                           >
                                             Or continue with
@@ -957,12 +957,12 @@ export default function checkout() {
                       </div>
                     </div>
                   </div>
-                  <div className="sm:px-8 sm:w-2/3 h-min md:sticky md:top-44 scroll-smooth mx-auto sm:mx-0 w-full">
-                    <div className="w-full h-min flex flex-col justify-center items-center p-3">
+                  <div className="mx-auto h-min w-full scroll-smooth sm:mx-0 sm:w-2/3 sm:px-8 md:sticky md:top-44">
+                    <div className="flex h-min w-full flex-col items-center justify-center p-3">
                       <h2 className="sr-only">Order summary</h2>
-                      <table className="inline-flex flex-col rounded-lg border divide-y divide-gray-300 bg-button text-text-primary min-w-full">
+                      <table className="inline-flex min-w-full flex-col divide-y divide-gray-300 rounded-lg border bg-button text-text-primary">
                         <thead className="w-full min-w-full ">
-                          <tr className="flex items-center justify-between min-w-full">
+                          <tr className="flex min-w-full items-center justify-between">
                             <th
                               scope="col"
                               className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold  sm:pl-6"
@@ -977,14 +977,14 @@ export default function checkout() {
                             </th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-200 bg-white rounded-b-lg min-w-full">
+                        <tbody className="min-w-full divide-y divide-gray-200 rounded-b-lg bg-white">
                           {products &&
                             products.map((product) => (
                               <tr
                                 key={product.id}
-                                className="flex items-center justify-between min-w-full"
+                                className="mx-1 flex min-w-full items-center justify-between"
                               >
-                                <td className="py-4 text-sm font-medium text-text-primary sm:pl-6 flex flex-nowrap items-center">
+                                <td className="ml-2 flex flex-nowrap items-center py-4 text-sm font-medium text-text-primary sm:pl-2">
                                   <div className="relative h-20 w-20">
                                     <Image
                                       src={
@@ -996,10 +996,10 @@ export default function checkout() {
                                       height={75}
                                       layout="fixed"
                                       priority={true}
-                                      className="flex-none w-16 h-16 object-center object-cover bg-gray-100 rounded-md"
+                                      className="h-16 w-16 flex-none rounded-md bg-gray-100 object-cover object-center"
                                     />
                                   </div>
-                                  <div className="flex flex-col text-xs pl-2">
+                                  <div className="flex flex-col pl-2 text-xs">
                                     <h3 className="text-text-primary  lg:whitespace-nowrap">
                                       <a href={"#"}>{product.itemData?.name}</a>
                                     </h3>
@@ -1015,7 +1015,7 @@ export default function checkout() {
                                     </h3>
                                   </div>
                                 </td>
-                                <td className="whitespace-nowrap justify-self-end px-3 py-4 text-sm">
+                                <td className="justify-self-end whitespace-nowrap px-3 py-4 text-sm">
                                   {product.quantity}
                                 </td>
                               </tr>
@@ -1023,7 +1023,7 @@ export default function checkout() {
                         </tbody>
                       </table>
 
-                      <dl className="text-sm font-medium text-text-primary mt-10 space-y-6 w-full">
+                      <dl className="mt-10 w-full space-y-6 text-sm font-medium text-text-primary">
                         <div className="flex justify-between">
                           <dt>Subtotal</dt>
                           <dd className="text-text-primary">
@@ -1046,7 +1046,7 @@ export default function checkout() {
                             </dd>
                           </div>
                         )}
-                        <div className="flex justify-between border-t border-text-secondary text-text-primary pt-6">
+                        <div className="flex justify-between border-t border-text-secondary pt-6 text-text-primary">
                           <dt className="text-base">Total</dt>
                           <dd className="text-base">
                             $
@@ -1064,13 +1064,13 @@ export default function checkout() {
               </div>
             </>
           ) : (
-            <div className="py-4 flex flex-col space-y-4 items-center">
+            <div className="flex flex-col items-center space-y-4 py-4">
               <span className="text-xl text-text-primary">
                 Nothing in here yet!
               </span>
               <a
                 href="/shop"
-                className="text-xl text-text-primary underline cursor-pointer hover:decoration-text-primary"
+                className="cursor-pointer text-xl text-text-primary underline hover:decoration-text-primary"
               >
                 Return to shop
               </a>

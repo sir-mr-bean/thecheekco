@@ -167,7 +167,7 @@ export default function cart() {
                                   id={`quantity-${productIdx}`}
                                   name={`quantity-${productIdx}`}
                                   defaultValue={product.quantity}
-                                  className="block w-fit appearance-none rounded-md border border-text-secondary py-1.5 px-2.5 pr-5 text-left text-base text-xs font-medium text-text-secondary accent-text-secondary shadow-sm focus:border-text-secondary focus:outline-none focus:ring-1 focus:ring-text-secondary sm:text-sm"
+                                  className="block w-fit appearance-none rounded-md border border-text-secondary py-1.5 px-2.5 pr-5 text-left text-xs font-medium text-text-secondary accent-text-secondary shadow-sm focus:border-text-secondary focus:outline-none focus:ring-1 focus:ring-text-secondary sm:text-sm"
                                 >
                                   <option value={1}>1</option>
                                   <option value={2}>2</option>
