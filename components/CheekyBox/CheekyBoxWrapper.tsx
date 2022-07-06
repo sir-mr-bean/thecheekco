@@ -206,8 +206,8 @@ const CheekyBoxWrapper = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className=" mt-10 sm:mt-16 mx-3 md:mx-16  font-gothic text-text-primary overflow-visible ">
-        <div className="flex-1 flex flex-col justify-start items-center py-12 px-4 sm:px-6 ">
-          <h1 className="text-3xl sm:text-7xl font-light text-center">
+        <div className="flex-1 flex flex-col justify-start items-center sm:py-3 px-4 sm:px-6 ">
+          <h1 className="text-4xl sm:text-7xl font-light text-center">
             the cheeky box
           </h1>
           <div
@@ -237,7 +237,7 @@ const CheekyBoxWrapper = () => {
                 as="div"
               >
                 <div style={{ width: `${wrapperWidth}px`, height: "100%" }}>
-                  <CheekyBoxIntro />
+                  <CheekyBoxIntro nextStep={nextStep} />
                 </div>
               </Transition>
 
@@ -448,102 +448,104 @@ const CheekyBoxWrapper = () => {
               </Transition>
             </div>
           </div>
-          <div className={`mt-2`}>
-            <p className="text-xs sm:text-sm font-medium mb-1 mt-3 text-center">
-              Step {steps.findIndex((step) => step.status === "current") + 1} of{" "}
-              {steps.length}
-            </p>
-            <nav
-              className="flex items-center justify-center"
-              aria-label="Progress"
-            >
-              <button
-                type="button"
-                disabled={currentStep === 0}
-                onClick={() => prevStep()}
-                className="uppercase bg-button border border-transparent rounded-md py-2 px-4 sm:px-8 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5"
+          {currentStep > 1 && (
+            <div className={`mt-2`}>
+              <p className="text-xs sm:text-sm font-medium mb-1 mt-3 text-center">
+                Step {steps.findIndex((step) => step.status === "current") + 1}{" "}
+                of {steps.length}
+              </p>
+              <nav
+                className="flex items-center justify-center"
+                aria-label="Progress"
               >
-                Prev
-              </button>
-              <ol className="mx-2 sm:mx-8 flex items-center space-x-2 sm:space-x-5">
-                {steps.map((step, i) => (
-                  <li key={`step_${i}`}>
-                    {step.status === "complete" ? (
-                      <div
-                        onClick={() => thisStep(i)}
-                        className="block w-2.5 h-2.5 bg-text-primary rounded-full hover:bg-text-secondary cursor-pointer"
-                      >
-                        <span className="sr-only"></span>
-                      </div>
-                    ) : step.status === "current" ? (
-                      <a
-                        href={step.href}
-                        className="relative flex items-center justify-center"
-                        aria-current="step"
-                      >
-                        <span
-                          className="absolute w-4 h-4 sm:w-6 sm:h-6 p-px flex"
-                          aria-hidden="true"
-                        >
-                          <span className="w-full h-full rounded-full bg-text-secondary/30" />
-                        </span>
-                        <span
-                          className="relative block sm:w-2.5 sm:h-2.5 w-2 h-2 bg-text-secondary rounded-full"
-                          aria-hidden="true"
-                        />
-                        <span className="sr-only"></span>
-                      </a>
-                    ) : (
-                      <div
-                        onClick={() => thisStep(i)}
-                        className="block w-2.5 h-2.5 bg-text-secondary rounded-full cursor-pointer"
-                      >
-                        <span className="sr-only"></span>
-                      </div>
-                    )}
-                  </li>
-                ))}
-              </ol>
-              {currentStep === 6 ? (
-                <button
-                  type="submit"
-                  onClick={async () => {
-                    console.log("done!");
-                    if (gift) await gifterForm.trigger();
-                    await giftForm.trigger();
-                    if (gift) {
-                      if (
-                        giftForm.formState.isValid &&
-                        gifterForm.formState.isValid
-                      ) {
-                        nextStep();
-                      }
-                    } else {
-                      if (giftForm.formState.isValid) {
-                        nextStep();
-                      }
-                    }
-                  }}
-                  className={`uppercase bg-button border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5`}
-                >
-                  Next
-                </button>
-              ) : (
                 <button
                   type="button"
-                  disabled={currentStep === 7}
-                  onClick={() => nextStep()}
-                  className={
-                    currentStep === 7
-                      ? `uppercase bg-button border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5 cursor-not-allowed`
-                      : `uppercase bg-button border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5`
-                  }
+                  disabled={currentStep === 0}
+                  onClick={() => prevStep()}
+                  className="uppercase bg-button border border-transparent rounded-md py-2 px-4 sm:px-8 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5"
                 >
-                  Next
+                  Prev
                 </button>
-              )}
-            </nav>
-          </div>
+                <ol className="mx-2 sm:mx-8 flex items-center space-x-2 sm:space-x-5">
+                  {steps.map((step, i) => (
+                    <li key={`step_${i}`}>
+                      {step.status === "complete" ? (
+                        <div
+                          onClick={() => thisStep(i)}
+                          className="block w-2.5 h-2.5 bg-text-primary rounded-full hover:bg-text-secondary cursor-pointer"
+                        >
+                          <span className="sr-only"></span>
+                        </div>
+                      ) : step.status === "current" ? (
+                        <a
+                          href={step.href}
+                          className="relative flex items-center justify-center"
+                          aria-current="step"
+                        >
+                          <span
+                            className="absolute w-4 h-4 sm:w-6 sm:h-6 p-px flex"
+                            aria-hidden="true"
+                          >
+                            <span className="w-full h-full rounded-full bg-text-secondary/30" />
+                          </span>
+                          <span
+                            className="relative block sm:w-2.5 sm:h-2.5 w-2 h-2 bg-text-secondary rounded-full"
+                            aria-hidden="true"
+                          />
+                          <span className="sr-only"></span>
+                        </a>
+                      ) : (
+                        <div
+                          onClick={() => thisStep(i)}
+                          className="block w-2.5 h-2.5 bg-text-secondary rounded-full cursor-pointer"
+                        >
+                          <span className="sr-only"></span>
+                        </div>
+                      )}
+                    </li>
+                  ))}
+                </ol>
+                {currentStep === 6 ? (
+                  <button
+                    type="submit"
+                    onClick={async () => {
+                      console.log("done!");
+                      if (gift) await gifterForm.trigger();
+                      await giftForm.trigger();
+                      if (gift) {
+                        if (
+                          giftForm.formState.isValid &&
+                          gifterForm.formState.isValid
+                        ) {
+                          nextStep();
+                        }
+                      } else {
+                        if (giftForm.formState.isValid) {
+                          nextStep();
+                        }
+                      }
+                    }}
+                    className={`uppercase bg-button border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5`}
+                  >
+                    Next
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    disabled={currentStep === 7}
+                    onClick={() => nextStep()}
+                    className={
+                      currentStep === 7
+                        ? `uppercase bg-button border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5 cursor-not-allowed`
+                        : `uppercase bg-button border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5`
+                    }
+                  >
+                    Next
+                  </button>
+                )}
+              </nav>
+            </div>
+          )}
         </div>
       </div>
     </>

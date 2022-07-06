@@ -1,13 +1,24 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Logo from "../../../public/images/logo.png";
 import { AiOutlineFacebook } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/router";
 import BeatLoader from "react-spinners/BeatLoader";
-import { signIn, getProviders, useSession } from "next-auth/react";
+import {
+  signIn,
+  getProviders,
+  useSession,
+  SignInResponse,
+  getSession,
+} from "next-auth/react";
+import sha256 from "crypto-js/sha256";
+import { HmacSHA256 } from "crypto-js";
+
 import Head from "next/head";
 import { AppProviders } from "next-auth/providers";
+import toast from "react-hot-toast";
+import VerificationStep from "@/components/Login/VerificationStep";
 
 const login = ({ providers }: { providers: AppProviders }) => {
   const { data: session, status } = useSession();
@@ -15,10 +26,14 @@ const login = ({ providers }: { providers: AppProviders }) => {
   const [incorrectCreds, setIncorrectCreds] = useState(false);
   const router = useRouter();
   const { query } = router;
+  const [showVerificationStep, setShowVerificationStep] = useState(false);
   const emailRef = useRef<HTMLInputElement>(null);
-  const passRef = useRef<HTMLInputElement>(null);
+  const [email, setEmail] = useState("");
+
   const [loggingIn, setLoggingIn] = useState(false);
   const returnUrl = router.query?.returnTo;
+
+  const [code, setCode] = useState("");
 
   useEffect(() => {
     if (status === String("authenticated")) {
@@ -58,11 +73,33 @@ const login = ({ providers }: { providers: AppProviders }) => {
     }
   };
 
-  const handleAccountLogin = async () => {
+  const handleAccountLogin = async (e: any) => {
+    setEmail(emailRef.current?.value as string);
+    e.preventDefault();
     setLoggingIn(true);
-    await signIn("email", { email: emailRef.current?.value as string });
+    const res: unknown = await signIn("email", {
+      email: emailRef.current?.value as string,
+      redirect: false,
+    });
+    if ((res as SignInResponse)?.error) {
+      if ((res as SignInResponse)?.url) {
+        window.location.replace((res as SignInResponse)?.url as string);
+      }
+    } else {
+      setShowVerificationStep(true);
+    }
+
     setLoggingIn(false);
   };
+
+  const onPasswordKeyPress = useCallback(
+    async (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        await handleAccountLogin(e);
+      }
+    },
+    [handleAccountLogin]
+  );
 
   return (
     <>
@@ -75,18 +112,22 @@ const login = ({ providers }: { providers: AppProviders }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {status === String("loading") || status === "authenticated" ? (
-        <div className="flex h-screen w-full justify-center items-center mx-auto  text-text-primary">
+        <div className="mx-auto flex h-screen w-full items-center justify-center text-text-primary">
           <BeatLoader
             color="#602d0d"
             loading={status === String("loading")}
             size={20}
           />
         </div>
+      ) : showVerificationStep ? (
+        <>
+          <VerificationStep email={email} />
+        </>
       ) : (
-        <div className="min-h-full flex text-text-primary">
-          <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+        <div className="flex min-h-full text-text-primary">
+          <div className="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
             <div className="mx-auto w-full max-w-sm lg:w-96">
-              <div className="flex flex-col justify-center items-center">
+              <div className="flex flex-col items-center justify-center">
                 <Image
                   height={147.5}
                   width={147.5}
@@ -99,7 +140,7 @@ const login = ({ providers }: { providers: AppProviders }) => {
                 </h2>
               </div>
               {query?.error === "OAuthAccountNotLinked" && (
-                <div className="w-full bg-text-primary text-white font-gothic text-center p-2 rounded-xl mt-2">
+                <div className="mt-2 w-full rounded-xl bg-text-primary p-2 text-center font-gothic text-white">
                   To confirm your identity, please sign in with the same account
                   you used originally.
                 </div>
@@ -114,7 +155,7 @@ const login = ({ providers }: { providers: AppProviders }) => {
                         <div>
                           <button
                             onClick={() => handleFacebookLogin()}
-                            className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium  hover:bg-gray-50 cursor-pointer"
+                            className="inline-flex w-full cursor-pointer justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium  shadow-sm hover:bg-gray-50"
                           >
                             <span className="sr-only">
                               Sign in with Facebook
@@ -126,7 +167,7 @@ const login = ({ providers }: { providers: AppProviders }) => {
                         <div>
                           <button
                             onClick={handleGoogleLogin}
-                            className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium  hover:bg-gray-50 cursor-pointer"
+                            className="inline-flex w-full cursor-pointer justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium  shadow-sm hover:bg-gray-50"
                           >
                             <span className="sr-only">Sign in with Google</span>
                             <FcGoogle size={22} color="#1DA1F2" />
@@ -136,7 +177,7 @@ const login = ({ providers }: { providers: AppProviders }) => {
                     </div>
                   )}
 
-                  <div className="mt-6 relative">
+                  <div className="relative mt-6">
                     <div
                       className="absolute inset-0 flex items-center"
                       aria-hidden="true"
@@ -144,8 +185,8 @@ const login = ({ providers }: { providers: AppProviders }) => {
                       <div className="w-full border-t border-gray-300" />
                     </div>
                     <div className="relative flex justify-center text-sm">
-                      <span className="px-2 bg-bg-tan">
-                        or sign in with a magic link
+                      <span className="bg-bg-tan px-2">
+                        or sign in with a one-time code
                       </span>
                     </div>
                   </div>
@@ -168,7 +209,8 @@ const login = ({ providers }: { providers: AppProviders }) => {
                           type="email"
                           autoComplete="email"
                           required
-                          className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-text-primary        focus:border-text-primary       sm:text-sm"
+                          onKeyPress={(e: any) => onPasswordKeyPress(e)}
+                          className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-text-primary focus:outline-none        focus:ring-text-primary       sm:text-sm"
                         />
                       </div>
                     </div>
@@ -177,7 +219,7 @@ const login = ({ providers }: { providers: AppProviders }) => {
                       <button
                         onClick={handleAccountLogin}
                         type="button"
-                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-button hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary"
+                        className="flex w-full justify-center rounded-md border border-transparent bg-button py-2 px-4 text-sm font-medium text-white shadow-sm hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2"
                       >
                         {loggingIn ? (
                           <BeatLoader
@@ -187,15 +229,15 @@ const login = ({ providers }: { providers: AppProviders }) => {
                           />
                         ) : (
                           <span className="text-sm">
-                            Send me a sign in link!
+                            Send me a verification code!
                           </span>
                         )}
                       </button>
                     </div>
                   </form>
-                  <div className="w-1/2 flex justify-center items-center text-center mx-auto pt-2">
+                  <div className="mx-auto flex w-1/2 items-center justify-center pt-2 text-center">
                     {incorrectCreds && (
-                      <span className="text-sm text-center font-gothic text-red-600 ">
+                      <span className="text-center font-gothic text-sm text-red-600 ">
                         Incorrect Username or Password. Please try again.
                       </span>
                     )}
@@ -204,10 +246,10 @@ const login = ({ providers }: { providers: AppProviders }) => {
               </div>
             </div>
           </div>
-          <div className="hidden lg:block relative w-0 flex-1 mt-10 ">
+          <div className="relative mt-10 hidden w-0 flex-1 lg:block ">
             <Image
               layout="fill"
-              className="absolute inset-0 h-full w-full object-cover rounded-sm"
+              className="absolute inset-0 h-full w-full rounded-sm object-cover"
               src="https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/theladyagave_5bad4bd4c2.jpeg"
               alt=""
             />

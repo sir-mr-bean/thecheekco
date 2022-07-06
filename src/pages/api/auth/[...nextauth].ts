@@ -2,10 +2,16 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import EmailProvider from "next-auth/providers/email";
+import Credentials from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { PrismaClient, User } from "@prisma/client";
-import { setCookie } from "nookies";
+import { User } from "@prisma/client";
 import { prisma } from "@/backend/utils/prisma";
+import { MailService } from "@sendgrid/mail";
+
+//generate 5 digit random number for verification code
+const generateAuthtoken = (): number => {
+  return Math.floor(Math.random() * 90000) + 10000;
+};
 
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
@@ -15,8 +21,9 @@ export const authOptions: NextAuthOptions = {
     signIn: "/login",
     signOut: "/",
     newUser: "/profile",
-    verifyRequest: "/verify-email",
+    verifyRequest: "/verify-code",
   },
+
   providers: [
     GoogleProvider({
       id: "google",
@@ -40,7 +47,53 @@ export const authOptions: NextAuthOptions = {
           pass: process.env.DO_NOT_REPLY_EMAIL_PASS,
         },
       },
+      secret: process.env.NEXTAUTH_SECRET,
+
       from: process.env.DO_NOT_REPLY_EMAIL,
+      maxAge: 5 * 60,
+      generateVerificationToken() {
+        const token = generateAuthtoken().toString();
+        console.log("generating token: ", token);
+        return token;
+      },
+      sendVerificationRequest: ({
+        identifier: email,
+        url,
+        token,
+        expires,
+        provider,
+      }) => {
+        // return new Promise((resolve, reject) => {
+        const { server, from } = provider;
+        // Strip protocol from URL and use domain as site name
+        const site = (process.env.API_URL as string).replace(
+          /^https?:\/\//,
+          ""
+        );
+        console.log(email, url, token, expires, provider);
+        //return resolve();
+
+        // nodemailer.createTransport(server).sendMail(
+        //   {
+        //     to: email,
+        //     from,
+        //     subject: `Authentication code: ${token}`,
+        //     text: text({ url, site, email, token }),
+        //     html: html({ url, site, email, token }),
+        //   },
+        //   (error) => {
+        //     if (error) {
+        //       // logger.error('SEND_VERIFICATION_EMAIL_ERROR', email, error);
+        //       console.error('SEND_VERIFICATION_EMAIL_ERROR', email, error);
+        //       return reject(
+        //         new Error(`SEND_VERIFICATION_EMAIL_ERROR ${error}`)
+        //       );
+        //     }
+        //     return resolve();
+        //   }
+        // );
+        //});
+      },
     }),
   ],
   session: {

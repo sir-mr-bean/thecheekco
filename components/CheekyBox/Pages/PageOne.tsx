@@ -9,17 +9,17 @@ const PageOne = ({
 }) => {
   return (
     <>
-      <div className="flex flex-col items-start w-full h-full justify-center">
-        <div className="flex flex-col space-y-3 items-center justify-center w-full">
-          <span className="text-sm sm:text-lg text-center">
+      <div className="flex h-full w-full flex-col items-start justify-center">
+        <div className="flex w-full flex-col items-center justify-center space-y-3">
+          <span className="text-center text-sm sm:text-lg">
             To begin, tell us a little about your bathing & skin preferences to
             help shape each months selections.
           </span>
-          <span className="text-sm sm:text-lg text-center">
+          <span className="text-center text-sm sm:text-lg">
             Would you prefer: Bath Products, Shower Products or Both
           </span>
         </div>
-        <div className="flex w-full items-center justify-between space-x-4 sm:px-5 py-2 sm:pt-5">
+        <div className="flex w-full items-center justify-between space-x-4 py-2 sm:px-5 sm:pt-5">
           <div
             onClick={() =>
               setPageOneOptions({
@@ -30,15 +30,15 @@ const PageOne = ({
             }
             className={
               pageOneOptions.bathProducts
-                ? `relative border border-text-secondary bg-button w-full h-64 p-3 rounded-lg cursor-pointer hover:scale-[1.01]`
-                : `relative border border-text-secondary bg-bg-tan w-full h-64 p-3 rounded-lg cursor-pointer hover:scale-[1.01]`
+                ? `relative h-64 w-full cursor-pointer rounded-lg border border-text-secondary bg-button p-3 hover:scale-[1.01]`
+                : `relative h-64 w-full cursor-pointer rounded-lg border border-text-secondary bg-bg-tan p-3 hover:scale-[1.01]`
             }
           >
             <span
               className={
                 pageOneOptions.bathProducts
-                  ? `absolute inset-x-[22px] sm:inset-x-[58px]  bottom-8 rounded-lg bg-bg-tan border border-text-secondary w-fit px-2 py-1 sm:px-4 sm:pt-2 text-text-primary font-semibold`
-                  : `absolute inset-x-[22px] sm:inset-x-[58px]  bottom-8 rounded-lg bg-button border border-text-secondary w-fit px-2 py-1 sm:px-4 sm:pt-2 text-white font-semibold`
+                  ? `absolute inset-x-[22px] bottom-8  w-fit rounded-lg border border-text-secondary bg-bg-tan px-2 py-1 font-semibold text-text-primary sm:inset-x-[58px] sm:px-4 sm:pt-2`
+                  : `absolute inset-x-[22px] bottom-8  w-fit rounded-lg border border-text-secondary bg-button px-2 py-1 font-semibold text-white sm:inset-x-[58px] sm:px-4 sm:pt-2`
               }
             >
               Bath
@@ -54,15 +54,15 @@ const PageOne = ({
             }
             className={
               pageOneOptions.showerProducts
-                ? `relative border border-text-secondary bg-button w-full h-64 p-3 rounded-lg cursor-pointer hover:scale-[1.01]`
-                : `relative border border-text-secondary bg-bg-tan w-full h-64 p-3 rounded-lg cursor-pointer hover:scale-[1.01]`
+                ? `relative h-64 w-full cursor-pointer rounded-lg border border-text-secondary bg-button p-3 hover:scale-[1.01]`
+                : `relative h-64 w-full cursor-pointer rounded-lg border border-text-secondary bg-bg-tan p-3 hover:scale-[1.01]`
             }
           >
             <span
               className={
                 pageOneOptions.showerProducts
-                  ? `absolute inset-x-3 sm:inset-x-[58px]  bottom-8 rounded-lg bg-bg-tan border border-text-secondary w-fit px-2 py-1 sm:px-4 sm:pt-2 text-text-primary font-semibold`
-                  : `absolute inset-x-3 sm:inset-x-[58px]  bottom-8 rounded-lg bg-button border border-text-secondary w-fit px-2 py-1 sm:px-4 sm:pt-2 text-white font-semibold`
+                  ? `absolute inset-x-3 bottom-8  w-fit rounded-lg border border-text-secondary bg-bg-tan px-2 py-1 font-semibold text-text-primary sm:inset-x-[58px] sm:px-4 sm:pt-2`
+                  : `absolute inset-x-3 bottom-8  w-fit rounded-lg border border-text-secondary bg-button px-2 py-1 font-semibold text-white sm:inset-x-[58px] sm:px-4 sm:pt-2`
               }
             >
               Shower
@@ -78,15 +78,15 @@ const PageOne = ({
             }
             className={
               pageOneOptions.both
-                ? `relative border border-text-secondary bg-button w-full h-64 p-3 rounded-lg cursor-pointer hover:scale-[1.01]`
-                : `relative border border-text-secondary bg-bg-tan w-full h-64 p-3 rounded-lg cursor-pointer hover:scale-[1.01]`
+                ? `relative h-64 w-full cursor-pointer rounded-lg border border-text-secondary bg-button p-3 hover:scale-[1.01]`
+                : `relative h-64 w-full cursor-pointer rounded-lg border border-text-secondary bg-bg-tan p-3 hover:scale-[1.01]`
             }
           >
             <span
               className={
                 pageOneOptions.both
-                  ? `absolute inset-x-5 sm:inset-x-[58px]  bottom-8 rounded-lg bg-bg-tan border border-text-secondary w-fit px-2 py-1 sm:px-4 sm:pt-2 text-text-primary font-semibold`
-                  : `absolute inset-x-5 sm:inset-x-[58px]  bottom-8 rounded-lg bg-button border border-text-secondary w-fit px-2 py-1 sm:px-4 sm:pt-2 text-white font-semibold`
+                  ? `absolute inset-x-5 bottom-8  w-fit rounded-lg border border-text-secondary bg-bg-tan px-2 py-1 font-semibold text-text-primary sm:inset-x-[58px] sm:px-4 sm:pt-2`
+                  : `absolute inset-x-5 bottom-8  w-fit rounded-lg border border-text-secondary bg-button px-2 py-1 font-semibold text-white sm:inset-x-[58px] sm:px-4 sm:pt-2`
               }
             >
               Both

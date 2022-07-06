@@ -16,6 +16,14 @@
   }
 }
 
+@layer utilities {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
 .card:hover {
   transform: rotateY(180deg);
   transform-style: preserve-3d;

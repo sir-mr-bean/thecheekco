@@ -1,3 +1,4 @@
+/** @type {import('tailwindcss').Config} */
 // eslint-ignore-next-line
 module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
@@ -48,8 +49,11 @@ module.exports = {
       },
     },
   },
+
   plugins: [
-    require("@tailwindcss/typography", "@tailwindcss/forms"),
+    require("@tailwindcss/typography"),
+    require("@tailwindcss/forms"),
     require("@headlessui/tailwindcss"),
+    require("prettier-plugin-tailwindcss"),
   ],
 };
