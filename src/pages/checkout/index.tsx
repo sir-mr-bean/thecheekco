@@ -623,51 +623,53 @@ export default function checkout() {
                                           : `rounded-lg border border-text-secondary p-2`
                                       }
                                     >
-                                      <div className="flex flex-col items-start justify-start space-x-2 space-y-4 pt-4 ">
-                                        <div className="ml-3 flex h-5 items-center space-x-4">
-                                          <input
-                                            id="new-card"
-                                            onClick={() => {
-                                              setNewCard(true);
-                                              setSelectedPaymentMethod(null);
-                                            }}
-                                            aria-describedby={`new-card-description`}
-                                            name="new-card"
-                                            type="radio"
-                                            checked={newCard}
-                                            className="c h-4 w-4 border-gray-300 text-text-primary accent-text-primary focus:text-text-primary"
-                                          />
+                                      {session?.user && (
+                                        <div className="flex flex-col items-start justify-start space-x-2 space-y-4 pt-4 ">
+                                          <div className="ml-3 flex h-5 items-center space-x-4">
+                                            <input
+                                              id="new-card"
+                                              onClick={() => {
+                                                setNewCard(true);
+                                                setSelectedPaymentMethod(null);
+                                              }}
+                                              aria-describedby={`new-card-description`}
+                                              name="new-card"
+                                              type="radio"
+                                              checked={newCard}
+                                              className="c h-4 w-4 border-gray-300 text-text-primary accent-text-primary focus:text-text-primary"
+                                            />
 
-                                          <label
-                                            className="py-3 text-lg font-medium"
-                                            htmlFor="new-card"
-                                          >
-                                            New Card
-                                          </label>
+                                            <label
+                                              className="py-3 text-lg font-medium"
+                                              htmlFor="new-card"
+                                            >
+                                              New Card
+                                            </label>
+                                          </div>
+                                          <div className="ml-3 flex h-5 items-center justify-center space-x-4 py-8">
+                                            <input
+                                              onChange={() =>
+                                                setSaveCardDetails(
+                                                  (saveCardDetails: boolean) =>
+                                                    !saveCardDetails
+                                                )
+                                              }
+                                              checked={saveCardDetails}
+                                              id="save-card-details"
+                                              name="save-card-details"
+                                              type="checkbox"
+                                              className="h-6 w-6 rounded border-text-secondary text-text-secondary accent-text-secondary focus:ring-text-secondary"
+                                            />
+                                            <label
+                                              htmlFor="save-card-details"
+                                              className="select-none text-sm text-text-primary"
+                                            >
+                                              Save card details for faster
+                                              online checkout.
+                                            </label>
+                                          </div>
                                         </div>
-                                        <div className="ml-3 flex h-5 items-center justify-center space-x-4 py-8">
-                                          <input
-                                            onChange={() =>
-                                              setSaveCardDetails(
-                                                (saveCardDetails: boolean) =>
-                                                  !saveCardDetails
-                                              )
-                                            }
-                                            checked={saveCardDetails}
-                                            id="save-card-details"
-                                            name="save-card-details"
-                                            type="checkbox"
-                                            className="h-6 w-6 rounded border-text-secondary text-text-secondary accent-text-secondary focus:ring-text-secondary"
-                                          />
-                                          <label
-                                            htmlFor="save-card-details"
-                                            className="select-none text-sm text-text-primary"
-                                          >
-                                            Save card details for faster online
-                                            checkout.
-                                          </label>
-                                        </div>
-                                      </div>
+                                      )}
 
                                       <CreditCard
                                         includeInputLabels
