@@ -33,7 +33,7 @@ const ShippingPolicy = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="mx-1 mt-16 rounded-lg bg-white font-gothic  text-text-primary shadow-sm shadow-black md:mx-16">
+      <div className="mx-1 mt-16 rounded-lg bg-white font-gothic  text-text-primary shadow-sm shadow-black md:mx-32">
         <div className="mx-auto px-4 pt-4 pb-16 sm:px-6 sm:pt-8 sm:pb-24 lg:px-8 xl:px-2 xl:pt-14">
           <div className="flex w-full flex-col space-y-3 px-2 font-gothic text-sm sm:px-10 sm:text-base">
             <h1 className="py-4 text-2xl sm:text-4xl">Shipping Policy</h1>
@@ -67,7 +67,7 @@ const ShippingPolicy = () => {
             </p>
             <div className="">
               <div className="sm:flex sm:items-center">
-                <div className="-mx-4 mt-8 overflow-hidden rounded-xl shadow shadow-text-secondary sm:-mx-6 md:mx-0">
+                <div className="-mx-4 mt-8 overflow-hidden rounded-xl border border-text-secondary sm:-mx-6 md:mx-0">
                   <table className="min-w-full divide-y divide-text-secondary">
                     <thead className=" w-full">
                       <tr>
