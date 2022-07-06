@@ -13,7 +13,7 @@ const Footer = () => {
             <Link href="/shipping-policy">
               <span className="cursor-pointer hover:scale-105">Shipping</span>
             </Link>
-            <Link href="/contact-us">
+            <Link href="/returns-policy">
               <span className="cursor-pointer hover:scale-105">Returns</span>
             </Link>
             <Link href="/privacy-policy">
