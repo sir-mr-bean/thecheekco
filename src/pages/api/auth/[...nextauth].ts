@@ -53,7 +53,6 @@ export const authOptions: NextAuthOptions = {
       maxAge: 5 * 60,
       generateVerificationToken() {
         const token = generateAuthtoken().toString();
-        console.log("generating token: ", token);
         return token;
       },
       sendVerificationRequest: async ({
@@ -69,7 +68,6 @@ export const authOptions: NextAuthOptions = {
           /^https?:\/\//,
           ""
         );
-        console.log(email, url, token, expires, provider);
         const templateData = {
           verificationToken: token,
           expiryTime: moment(expires).format("LLL"),

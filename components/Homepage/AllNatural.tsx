@@ -24,7 +24,6 @@ const AllNatural = ({
   const notationRef = useRef(null);
   const { inViewport } = useInViewport(notationRef);
   const [randomAllNatural, setRandomAllNatural] = useState<CatalogObject[]>([]);
-  console.log(subCategories);
   useEffect(() => {
     const allNaturalProducts = productsData?.filter(
       (p) =>
@@ -42,7 +41,6 @@ const AllNatural = ({
       setRandomAllNatural(randomProducts);
     }
   }, [productsData]);
-  console.log(randomAllNatural);
   return (
     <section>
       <div className="flex w-full flex-col items-center justify-center sm:p-6 sm:pt-16">

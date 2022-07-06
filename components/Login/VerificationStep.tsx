@@ -26,9 +26,7 @@ const VerificationStep = ({ email, page }: { email: string; page: string }) => {
   }, []);
 
   const onReady = useCallback(() => {
-    console.log("code is ", code);
     if (code) {
-      console.log(`/api/auth/callback/email?email=${email}&token=${code}`);
       window.location.href = `/api/auth/callback/email?email=${encodeURIComponent(
         email
       )}&token=${code}${callbackUrl ? `&callbackUrl=${callbackUrl}` : ""}`;

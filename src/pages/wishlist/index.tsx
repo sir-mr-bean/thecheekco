@@ -14,12 +14,9 @@ export default function wishlist() {
   const { cart, dispatch: dispatchCart } = CartState();
   const [mounted, setMounted] = useState(false);
   const wishListImage = useRef() as React.MutableRefObject<HTMLInputElement>;
-  console.log(wishlist);
 
   useEffect(() => {
-    console.log("in use effect");
     if (wishListImage.current) {
-      console.log("loading animation");
       lottie.loadAnimation({
         container: wishListImage.current,
         renderer: "svg",
