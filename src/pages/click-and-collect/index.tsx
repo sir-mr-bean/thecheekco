@@ -1,5 +1,6 @@
 import Head from "next/head";
-
+import Image from "next/image";
+import Shop from "../../../public/images/ClickAndCollect/shop.png";
 const index = () => {
   return (
     <>
@@ -11,11 +12,11 @@ const index = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="bg-white mt-16 mx-1 md:mx-16 rounded-md shadow-sm shadow-black font-gothic text-text-primary">
-        <div className="mx-auto px-4 pt-4 pb-16 sm:px-6 sm:pt-8 sm:pb-24 lg:px-8 xl:px-2 xl:pt-14">
-          <div className="flex flex-col w-full font-gothic space-y-3 px-2 sm:px-10">
-            <h1 className="text-2xl sm:text-4xl">Click and Collect</h1>
-            <div className="flex flex-col items-start justify-center space-y-3">
+      <div className="mx-1 mt-16 flex rounded-md bg-white font-gothic text-text-primary shadow-sm shadow-black md:mx-16">
+        <div className="w-full px-4 pt-4 pb-8 sm:px-6 sm:pt-8 sm:pb-24 md:w-1/2 lg:px-8 xl:px-2 xl:pt-14">
+          <div className="flex h-full w-full flex-col space-y-3 px-2 font-gothic sm:px-10">
+            <h1 className="text-2xl sm:pt-14 sm:text-4xl">Click and Collect</h1>
+            <div className="flex h-full w-full flex-col items-center justify-evenly space-y-8">
               <span className="text-sm sm:text-base">
                 Save time, enjoy super-fast collection for FREE from our store
                 in Cairns when you pay online. Click and Collect gives you full
@@ -36,6 +37,15 @@ const index = () => {
               </span>
             </div>
           </div>
+        </div>
+        <div className="relative hidden w-0 flex-1 py-96 md:block">
+          <Image
+            src={Shop}
+            layout="fill"
+            className="absolute inset-0 h-full w-full rounded-lg object-cover"
+            priority
+            alt="Our cute store on Shields Street in Cairns"
+          />
         </div>
       </div>
     </>

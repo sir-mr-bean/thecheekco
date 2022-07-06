@@ -57,6 +57,10 @@ const MyApp = ({
               name="description"
               content="More than just amazing bath and skin care products. Ethically sourced handmade in Australia, cruelty free, vegan."
             />
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1"
+            />
             <link rel="icon" href="/favicon.ico" />
           </Head>
           <Script

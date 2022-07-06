@@ -18,10 +18,10 @@ export default function MobileMenu({
   return (
     <Menu
       as="div"
-      className="relative inline-block justify-center items-center"
+      className="relative inline-block items-center justify-center"
     >
       <div className="">
-        <Menu.Button className="inline-flex justify-center w-full rounded-md shadow-sm py-2 font-medium font-gothic">
+        <Menu.Button className="inline-flex w-full justify-center rounded-md py-2 font-gothic font-medium shadow-sm">
           <div className="flex sm:hidden">
             <GiHamburgerMenu size={21} className="fill-text-primary" />
           </div>
@@ -37,10 +37,10 @@ export default function MobileMenu({
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="origin-top-right absolute top-8 right-0 mt-2 w-32 rounded-md shadow-lg bg-bg-lighttan focus:outline-none">
+        <Menu.Items className="absolute top-8 right-0 mt-2 w-32 origin-top-right rounded-md bg-bg-lighttan shadow-lg focus:outline-none">
           <div className="">
             <>
-              <div className="divide divide-text-primary divide-y">
+              <div className="divide divide-y divide-text-primary">
                 <ul>
                   {navigation &&
                     navigation?.length > 0 &&
@@ -59,22 +59,25 @@ export default function MobileMenu({
                               {({ active }: any) => (
                                 <Link
                                   key={nav.id}
+                                  passHref
                                   href="/shop/[id]/"
                                   as={`/shop/${nav.categoryData?.name
                                     ?.toLowerCase()
                                     .replaceAll(" ", "-")}`}
                                 >
-                                  <div
-                                    className={classNames(
-                                      active
-                                        ? "bg-gray-100 text-text-secondary"
-                                        : "text-text-primary",
-                                      i === 0 ? "rounded-t-md" : "",
-                                      "block px-4 py-2 text-sm hover:bg-bg-tan cursor-pointer"
-                                    )}
-                                  >
-                                    {nav.categoryData?.name}
-                                  </div>
+                                  <a href="/shop/[id]/">
+                                    <div
+                                      className={classNames(
+                                        active
+                                          ? "bg-gray-100 text-text-secondary"
+                                          : "text-text-primary",
+                                        i === 0 ? "rounded-t-md" : "",
+                                        "block cursor-pointer px-4 py-2 text-sm hover:bg-bg-tan"
+                                      )}
+                                    >
+                                      {nav.categoryData?.name}
+                                    </div>
+                                  </a>
                                 </Link>
                               )}
                             </Menu.Item>
@@ -83,37 +86,14 @@ export default function MobileMenu({
                       })}
                 </ul>
                 <div>
-                  <Menu.Item>
-                    {({ active }: any) => (
-                      <Link href="/eco-innovation/">
-                        <div
-                          className={classNames(
-                            active
-                              ? "bg-gray-100 text-text-secondary"
-                              : "text-text-primary",
-                            "block px-4 py-2 text-sm hover:bg-bg-tan cursor-pointer"
-                          )}
-                        >
-                          Eco Innovation
-                        </div>
-                      </Link>
-                    )}
-                  </Menu.Item>
-                  <Menu.Item>
-                    {({ active }: any) => (
-                      <Link href="/wishlist/">
-                        <div
-                          className={classNames(
-                            active
-                              ? "bg-gray-100 text-text-secondary rounded-b-md"
-                              : "text-text-primary",
-                            "block px-4 py-2 text-sm hover:bg-bg-tan cursor-pointer rounded-b-md"
-                          )}
-                        >
+                  <Menu.Item as="div">
+                    <Link passHref href="/wishlist/">
+                      <a href="/wishlist/">
+                        <div className="block cursor-pointer rounded-b-md px-4 py-2 text-sm text-text-primary hover:bg-bg-tan ui-active:rounded-b-md ui-active:bg-gray-100 ui-active:text-text-secondary">
                           My Wishlist
                         </div>
-                      </Link>
-                    )}
+                      </a>
+                    </Link>
                   </Menu.Item>
                 </div>
               </div>

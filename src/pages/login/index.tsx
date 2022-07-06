@@ -11,7 +11,7 @@ import {
   useSession,
   SignInResponse,
 } from "next-auth/react";
-
+import Login from "../../../public/images/Login/login.png";
 import Head from "next/head";
 import { AppProviders } from "next-auth/providers";
 
@@ -250,9 +250,10 @@ const login = ({ providers }: { providers: AppProviders }) => {
           <div className="relative mt-10 hidden w-0 flex-1 lg:block ">
             <Image
               layout="fill"
-              className="absolute inset-0 h-full w-full rounded-sm object-cover"
-              src="https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/theladyagave_5bad4bd4c2.jpeg"
-              alt=""
+              className="absolute inset-0 h-full w-full rounded-lg object-cover"
+              src={Login}
+              priority
+              alt="Login to The Cheek Co."
             />
           </div>
         </div>
