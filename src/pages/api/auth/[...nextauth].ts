@@ -22,6 +22,7 @@ export const authOptions: NextAuthOptions = {
     signOut: "/",
     newUser: "/profile",
     verifyRequest: "/verify-code",
+    error: "/error",
   },
 
   providers: [

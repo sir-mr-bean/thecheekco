@@ -10,19 +10,15 @@ import {
   getProviders,
   useSession,
   SignInResponse,
-  getSession,
 } from "next-auth/react";
-import sha256 from "crypto-js/sha256";
-import { HmacSHA256 } from "crypto-js";
 
 import Head from "next/head";
 import { AppProviders } from "next-auth/providers";
-import toast from "react-hot-toast";
+
 import VerificationStep from "@/components/Login/VerificationStep";
 
 const login = ({ providers }: { providers: AppProviders }) => {
   const { data: session, status } = useSession();
-
   const [incorrectCreds, setIncorrectCreds] = useState(false);
   const router = useRouter();
   const { query } = router;
@@ -32,6 +28,7 @@ const login = ({ providers }: { providers: AppProviders }) => {
 
   const [loggingIn, setLoggingIn] = useState(false);
   const returnUrl = router.query?.returnTo;
+  const error = router.query?.error;
 
   const [code, setCode] = useState("");
 
@@ -126,6 +123,12 @@ const login = ({ providers }: { providers: AppProviders }) => {
       ) : (
         <div className="flex min-h-full text-text-primary">
           <div className="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+            {error && (
+              <span className="mb-12 w-fit rounded-xl bg-text-secondary px-3 py-2 text-center text-lg text-white sm:mt-6 sm:mb-24 sm:px-20">
+                The entered token was incorrect, expired or has already been
+                used. Please try again.
+              </span>
+            )}
             <div className="mx-auto w-full max-w-sm lg:w-96">
               <div className="flex flex-col items-center justify-center">
                 <Image
