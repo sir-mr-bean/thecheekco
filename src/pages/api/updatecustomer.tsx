@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { MailService } from "@sendgrid/mail";
-import { trpc } from "@/utils/trpc";
 import {
   Client,
   Environment,
