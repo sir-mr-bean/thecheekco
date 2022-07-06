@@ -86,14 +86,14 @@ export default function cart() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="bg-white mt-16 mx-1 md:mx-16 font-gothic rounded-md">
-        <div className="max-w-7xl mx-auto px-4 pt-4 pb-16 sm:px-6 sm:pt-8 sm:pb-24 lg:px-8 xl:px-2 xl:pt-14">
-          <div className="max-w-2xl mx-auto sm:pt-16 pb-24 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-            <h1 className="text-3xl tracking-tight text-text-primary sm:text-4xl font-light">
+      <div className="mx-1 mt-16 rounded-md bg-white font-gothic md:mx-16">
+        <div className="mx-auto max-w-7xl px-4 pt-4 pb-16 sm:px-6 sm:pt-8 sm:pb-24 lg:px-8 xl:px-2 xl:pt-14">
+          <div className="mx-auto max-w-2xl px-4 pb-24 sm:px-6 sm:pt-16 lg:max-w-7xl lg:px-8">
+            <h1 className="text-3xl font-light tracking-tight text-text-primary sm:text-4xl">
               Shopping Cart
             </h1>
             {mounted && products && products.length ? (
-              <form className="mt-12 lg:flex w-full justify-center items-center lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16">
+              <form className="mt-12 w-full items-center justify-center lg:flex lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
                 <section aria-labelledby="cart-heading" className="w-full">
                   <h2 id="cart-heading" className="sr-only">
                     Items in your shopping cart
@@ -101,12 +101,12 @@ export default function cart() {
 
                   <ul
                     role="list"
-                    className="border-t border-b border-text-secondary divide-y divide-text-secondary w-full"
+                    className="w-full divide-y divide-text-secondary border-t border-b border-text-secondary"
                   >
                     {products.map((product: CartObject, productIdx: number) => {
                       return (
                         <li key={product.id} className="flex py-6 px-2 ">
-                          <div className="flex-shrink-0 relative w-20 h-20">
+                          <div className="relative h-20 w-20 flex-shrink-0">
                             <Image
                               src={
                                 product?.productImage
@@ -117,11 +117,11 @@ export default function cart() {
                               height={200}
                               layout="responsive"
                               alt={product.itemData?.name}
-                              className="w-24 h-24 rounded-md object-center object-cover sm:w-48 sm:h-48"
+                              className="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
                             />
                           </div>
 
-                          <div className="ml-4 flex-1 flex flex-col justify-between sm:ml-6">
+                          <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
                             <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
                               <div>
                                 <div className="flex justify-between">
@@ -167,7 +167,7 @@ export default function cart() {
                                   id={`quantity-${productIdx}`}
                                   name={`quantity-${productIdx}`}
                                   defaultValue={product.quantity}
-                                  className="min-w-fit text-text-secondary max-w-full block rounded-md border border-text-secondary py-1.5 px-1 text-base font-medium text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-text-secondary focus:border-text-secondary sm:text-sm"
+                                  className="block w-fit appearance-none rounded-md border border-text-secondary py-1.5 px-2.5 pr-5 text-left text-base text-xs font-medium text-text-secondary accent-text-secondary shadow-sm focus:border-text-secondary focus:outline-none focus:ring-1 focus:ring-text-secondary sm:text-sm"
                                 >
                                   <option value={1}>1</option>
                                   <option value={2}>2</option>
@@ -185,7 +185,7 @@ export default function cart() {
                                   <button
                                     type="button"
                                     onClick={() => handleRemove(product)}
-                                    className="-m-2 p-2 inline-flex text-text-primary hover:text-text-secondary"
+                                    className="-m-2 inline-flex p-2 text-text-primary hover:text-text-secondary"
                                   >
                                     <span className="sr-only">Remove</span>
                                     <AiOutlineClose
@@ -206,7 +206,7 @@ export default function cart() {
                 {/* Order summary */}
                 <section
                   aria-labelledby="summary-heading"
-                  className="mt-16 bg-gray-50 rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 w-full"
+                  className="mt-16 w-full rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:mt-0 lg:p-8"
                 >
                   <h2
                     id="summary-heading"
@@ -225,14 +225,14 @@ export default function cart() {
                       </dd>
                     </div>
 
-                    <div className="border-t border-text-secondary pt-4 flex items-center justify-between">
+                    <div className="flex items-center justify-between border-t border-text-secondary pt-4">
                       <dt className="text-sm text-text-secondary">GST</dt>
 
                       <dd className="text-sm font-medium text-text-primary">
                         ${tax}
                       </dd>
                     </div>
-                    <div className="border-t border-text-secondary pt-4 flex items-center justify-between">
+                    <div className="flex items-center justify-between border-t border-text-secondary pt-4">
                       <dt className="flex items-center text-sm text-text-secondary">
                         <span>Shipping estimate</span>
                         <a
@@ -250,7 +250,7 @@ export default function cart() {
                               />
                             </Popover.Button>
                             <Popover.Panel className="absolute -left-20 -top-16 z-10">
-                              <div className="flex flex-col w-full p-2 bg-bg-tan rounded-lg text-text-primary font-gothic whitespace-nowrap text-xs sm:text-sm text-center">
+                              <div className="flex w-full flex-col whitespace-nowrap rounded-lg bg-bg-tan p-2 text-center font-gothic text-xs text-text-primary sm:text-sm">
                                 <span>
                                   Free shipping on all orders over $100 😍
                                 </span>
@@ -266,7 +266,7 @@ export default function cart() {
                         {shipping > 0 ? `$${shipping.toFixed(2)}` : "Free"}
                       </dd>
                     </div>
-                    <div className="border-t border-text-secondary pt-4 flex items-center justify-between">
+                    <div className="flex items-center justify-between border-t border-text-secondary pt-4">
                       <dt className="text-base font-medium text-text-primary">
                         Order total
                       </dt>
@@ -281,7 +281,7 @@ export default function cart() {
 
                   <div className="mt-6">
                     <Link href="/checkout">
-                      <div className="cursor-pointer w-full bg-button border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-button/90">
+                      <div className="w-full cursor-pointer rounded-md border border-transparent bg-button py-3 px-4 text-base font-medium text-white shadow-sm hover:bg-button/90">
                         Checkout
                       </div>
                     </Link>
@@ -289,13 +289,13 @@ export default function cart() {
                 </section>
               </form>
             ) : (
-              <div className="py-4 flex flex-col space-y-4">
+              <div className="flex flex-col space-y-4 py-4">
                 <span className="text-xl text-text-primary">
                   Nothing in here yet!
                 </span>
                 <a
                   href="/shop"
-                  className="text-xl text-text-primary underline cursor-pointer hover:decoration-text-primary"
+                  className="cursor-pointer text-xl text-text-primary underline hover:decoration-text-primary"
                 >
                   Return to shop
                 </a>
