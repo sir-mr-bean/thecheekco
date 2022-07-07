@@ -46,7 +46,7 @@ const Markdown = ({ content }: { content: string }) => {
   var converter = new showdown.Converter();
   var html = converter.makeHtml(content);
   return (
-    <div className="bg-transparent text-text-primary font-gothic py-1">
+    <div className="bg-transparent py-1 font-gothic text-text-primary">
       {ReactHtmlParser(html)}
     </div>
   );
@@ -92,6 +92,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   //   { productName: router.query?.id as string },
   // ]);
   const productQuery = props.productQuery as CatalogObject[];
+  console.log(productQuery);
 
   const product = productQuery?.find((product) => product.type === "ITEM");
   const image = productQuery?.find((product) => product.type === "IMAGE");
@@ -161,13 +162,13 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
         <div
           className={`${
             t.visible ? "animate-enter" : "animate-leave after:opacity-0"
-          } max-w-md w-full bg-bg-tan shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 shadow-text-primary`}
+          } pointer-events-auto flex w-full max-w-md rounded-lg bg-bg-tan shadow-lg shadow-text-primary ring-1 ring-black ring-opacity-5`}
         >
-          <div className="flex-1 w-0 p-4">
+          <div className="w-0 flex-1 p-4">
             <div className="flex items-start">
               <div className="flex-shrink-0 pt-0.5">
                 <Image
-                  className="w-24 h-24 rounded-full"
+                  className="h-24 w-24 rounded-full"
                   height={50}
                   width={50}
                   objectFit="cover"
@@ -178,8 +179,8 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   alt={product.itemData?.name}
                 />
               </div>
-              <div className="ml-3 flex-1 my-auto">
-                <p className="mt-1 text-sm text-text-primary font-gothic">
+              <div className="my-auto ml-3 flex-1">
+                <p className="mt-1 font-gothic text-sm text-text-primary">
                   {quantity?.current?.value} {product.itemData?.name} added to
                   cart.
                 </p>
@@ -189,7 +190,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
           <div className="flex border-l border-text-primary border-opacity-10">
             <button
               onClick={() => toast.dismiss(t.id)}
-              className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:text-text-primary"
+              className="flex w-full items-center justify-center rounded-none rounded-r-lg border border-transparent p-4 text-sm font-medium text-text-primary focus:text-text-primary focus:outline-none focus:ring-2"
             >
               Close
             </button>
@@ -198,6 +199,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
       );
     });
   };
+  console.log(product);
   return (
     <div className="max-w-screen">
       <Head>
@@ -210,12 +212,12 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
       </Head>
       {product && (
         <div className="font-gothic text-text-primary">
-          <div className="mx-auto pt-10 pb-16 px-4 sm:pb-12 sm:px-6 lg:max-w-5xl lg:px-8 space-y-6 ">
+          <div className="mx-auto space-y-6 px-4 pt-10 pb-16 sm:px-6 sm:pb-12 lg:max-w-5xl lg:px-8 ">
             {/* Product */}
-            <div className="flex flex-col sm:flex-row  justify-items-stretch items-stretch sm:space-x-6">
+            <div className="flex flex-col items-stretch  justify-items-stretch sm:flex-row sm:space-x-6">
               {/* Product image */}
 
-              <div className="relative w-full h-96 sm:h-auto mx-auto sm:w-2/3 mb-6 sm:mb-0">
+              <div className="relative mx-auto mb-6 h-96 w-full sm:mb-0 sm:h-auto sm:w-2/3">
                 <Image
                   priority
                   layout="fill"
@@ -227,15 +229,15 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                     "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
                   }
                   alt={product?.itemData?.name}
-                  className="object-cover rounded-lg"
+                  className="rounded-lg object-cover"
                 />
               </div>
 
               {/* Product details */}
-              <div className="max-w-xl sm:max-w-sm border rounded-lg bg-white sm:px-10 flex flex-col justify-around w-full px-4">
-                <div className="flex flex-col space-y-2 items-center justify-center">
-                  <div className="flex items-center w-full justify-center">
-                    <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-2xl px-3 pt-4">
+              <div className="flex w-full max-w-xl flex-col justify-around rounded-lg border bg-white px-4 sm:max-w-sm sm:px-10">
+                <div className="flex flex-col items-center justify-center space-y-2">
+                  <div className="flex w-full items-center justify-center">
+                    <h1 className="px-3 pt-4 text-2xl font-bold tracking-tight text-text-primary sm:text-2xl">
                       {product?.itemData?.name}
                     </h1>
                     <div className="pt-3">
@@ -262,18 +264,18 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   </div>
                 </div>
 
-                <p className="text-text-secondary mt-6 p-3 text-center">
+                <p className="mt-6 p-3 text-center text-text-secondary">
                   {
                     product.itemData?.variations?.[0]?.customAttributeValues?.[
                       "Square:3b3f304f-3773-471a-a12d-48e58776375b"
                     ]?.stringValue
                   }
                 </p>
-                <div className="flex justify-between items-center space-x-10">
+                <div className="flex items-center justify-between space-x-10">
                   <button
                     onClick={() => handleAdd(product)}
                     type="button"
-                    className="mt-3 uppercase bg-button border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-text-primary"
+                    className="mt-3 flex items-center justify-center rounded-md border border-transparent bg-button py-3 px-8 text-base font-medium uppercase text-white hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2 focus:ring-offset-gray-50"
                   >
                     Add to cart
                   </button>
@@ -289,7 +291,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                       ref={quantity}
                       id="quantity"
                       name="quantity"
-                      className="mt-1 block w-full pl-3 pr-4 py-2 text-base border-gray-300 focus:outline-none focus:ring-text-primary focus:border-text-primary sm:text-sm rounded-md border text-text-primary"
+                      className="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-4 text-base text-text-primary focus:border-text-primary focus:outline-none focus:ring-text-primary sm:text-sm"
                       defaultValue={1}
                     >
                       <option>1</option>
@@ -306,8 +308,8 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   </div>
                 </div>
 
-                <div className="border-t border-gray-200 mt-5 pt-5 flex justify-evenly items-center w-full">
-                  <span className="text-text-primary text-2xl">
+                <div className="mt-5 flex w-full items-center justify-evenly border-t border-gray-200 pt-5">
+                  <span className="text-2xl text-text-primary">
                     $
                     {(
                       Number(
@@ -318,16 +320,16 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   </span>
                 </div>
 
-                <div className="border-t border-gray-200 mt-5 py-1 w-full flex justify-center items-center">
+                <div className="mt-5 flex w-full items-center justify-center border-t border-gray-200 py-1">
                   <ul role="list" className="flex items-center space-x-6">
                     <li>
                       <a
                         href="#"
-                        className="flex items-center justify-center w-6 h-6 text-gray-400 hover:text-[#4267B2]"
+                        className="flex h-6 w-6 items-center justify-center text-gray-400 hover:text-[#4267B2]"
                       >
                         <span className="sr-only">Share on Facebook</span>
                         <svg
-                          className="w-5 h-5"
+                          className="h-5 w-5"
                           aria-hidden="true"
                           fill="currentColor"
                           viewBox="0 0 20 20"
@@ -343,10 +345,10 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                     <li>
                       <a
                         href="#"
-                        className="flex items-center justify-center w-6 h-6 text-gray-400"
+                        className="flex h-6 w-6 items-center justify-center text-gray-400"
                       >
                         <span className="sr-only">Share on Instagram</span>
-                        <svg className="w-6 h-6">
+                        <svg className="h-6 w-6">
                           <radialGradient id="rg" r="150%" cx="30%" cy="107%">
                             <stop stopColor="#fdf497" offset="0" />
                             <stop stopColor="#fdf497" offset="0.05" />
@@ -357,7 +359,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                         </svg>
                         <div id="ig">
                           <svg
-                            className="w-6 h-6 igsvg"
+                            className="igsvg h-6 w-6"
                             aria-hidden="true"
                             fill="currentColor"
                             viewBox="0 0 24 24"
@@ -375,11 +377,11 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                     <li>
                       <a
                         href="#"
-                        className="flex items-center justify-center w-6 h-6 text-gray-400 hover:text-[#1DA1F2]"
+                        className="flex h-6 w-6 items-center justify-center text-gray-400 hover:text-[#1DA1F2]"
                       >
                         <span className="sr-only">Share on Twitter</span>
                         <svg
-                          className="w-5 h-5"
+                          className="h-5 w-5"
                           aria-hidden="true"
                           fill="currentColor"
                           viewBox="0 0 20 20"
@@ -392,21 +394,21 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col w-full justify-center items-start bg-white rounded-lg ">
-              <div className="lg:mt-0 lg:col-span-4  flex flex-row justify-center items-center pb-5 px-4 w-full py-4">
+            <div className="flex w-full flex-col items-start justify-center rounded-lg bg-white ">
+              <div className="flex w-full  flex-row items-center justify-center px-4 py-4 pb-5 lg:col-span-4 lg:mt-0">
                 <div
                   onClick={() => {
                     setOpenTab(1);
                   }}
                   className={
                     openTab === 1
-                      ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full select-none text-center`
-                      : ` border-b-text-primary cursor-pointer w-full text-center`
+                      ? `w-full cursor-pointer select-none border-2 border-x-0 border-t-0 border-b-text-primary text-center font-bold`
+                      : ` w-full cursor-pointer border-b-text-primary text-center`
                   }
                 >
                   <span
                     className={
-                      openTab === 1 ? `font-bold my-4` : `font-normal py-1`
+                      openTab === 1 ? `my-4 font-bold` : `py-1 font-normal`
                     }
                   >
                     Additional Info
@@ -418,8 +420,8 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   }}
                   className={
                     openTab === 2
-                      ? `font-bold border-2 border-x-0 border-t-0 border-b-text-primary cursor-pointer w-full select-none  text-center`
-                      : ` border-b-text-primary cursor-pointer w-full text-center`
+                      ? `w-full cursor-pointer select-none border-2 border-x-0 border-t-0 border-b-text-primary text-center  font-bold`
+                      : ` w-full cursor-pointer border-b-text-primary text-center`
                   }
                 >
                   <span className={openTab === 2 ? `font-bold` : `font-normal`}>
@@ -440,7 +442,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   <h3 className="sr-only">License</h3>
 
                   <div className="max-w-none text-text-primary">
-                    <div className="w-full mx-auto py-2 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:py-2 lg:px-8 lg:grid lg:grid-cols-12 lg:gap-x-8">
+                    <div className="mx-auto w-full py-2 px-4 sm:py-24 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-12 lg:gap-x-8 lg:py-2 lg:px-8">
                       <div className="lg:col-span-4">
                         <h2 className="text-2xl font-extrabold tracking-tight text-text-primary">
                           Customer Reviews
@@ -475,8 +477,8 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                                   key={review.id}
                                   className="flex items-center text-sm"
                                 >
-                                  <dt className="flex-1 flex items-center">
-                                    <span className="w-3 font-medium text-text-primary pr-5 pt-0.5">
+                                  <dt className="flex flex-1 items-center">
+                                    <span className="w-3 pr-5 pt-0.5 font-medium text-text-primary">
                                       {parseFloat(review.rating.toString())}
                                     </span>
                                     <span className="sr-only">
@@ -484,15 +486,15 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                                     </span>
                                     <div
                                       aria-hidden="true"
-                                      className="ml-1 flex-1 flex items-center"
+                                      className="ml-1 flex flex-1 items-center"
                                     >
                                       <Stars review={review} />
-                                      <div className="ml-3 relative flex-1">
-                                        <div className="h-3 bg-gray-100 border border-gray-200 rounded-full" />
+                                      <div className="relative ml-3 flex-1">
+                                        <div className="h-3 rounded-full border border-gray-200 bg-gray-100" />
                                         {parseFloat(review.rating.toString()) >
                                         0 ? (
                                           <div
-                                            className="absolute inset-y-0 bg-yellow-400 border border-yellow-400 rounded-full"
+                                            className="absolute inset-y-0 rounded-full border border-yellow-400 bg-yellow-400"
                                             style={{
                                               width: `calc(${review.rating} / ${reviews.length} * 100% / 5)`,
                                             }}
@@ -501,7 +503,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                                       </div>
                                     </div>
                                   </dt>
-                                  <dd className="ml-3 w-10 text-right tabular-nums text-sm text-text-primary">
+                                  <dd className="ml-3 w-10 text-right text-sm tabular-nums text-text-primary">
                                     {Math.round(
                                       ((parseInt(
                                         reviews
@@ -522,7 +524,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                           </dl>
                         </div>
 
-                        <div className="mt-10 border border-text-secondary rounded-md p-3">
+                        <div className="mt-10 rounded-md border border-text-secondary p-3">
                           <h3 className="text-lg font-medium text-text-primary">
                             Share your thoughts
                           </h3>
@@ -531,13 +533,13 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                             with other customers
                           </p>
                           {!session?.user ? (
-                            <div className="mt-6 inline-flex w-full bg-white border border-gray-300 rounded-md py-2 px-8 items-center justify-center text-sm font-medium text-text-primary hover:bg-gray-50 sm:w-auto lg:w-full">
+                            <div className="mt-6 inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white py-2 px-8 text-sm font-medium text-text-primary hover:bg-gray-50 sm:w-auto lg:w-full">
                               <Link href={`/login?returnTo=${currentPath}`}>
                                 <a>Login to write a review</a>
                               </Link>
                             </div>
                           ) : (
-                            <div className="flex flex-col items-stretch justify-start w-full space-y-3 p-2">
+                            <div className="flex w-full flex-col items-stretch justify-start space-y-3 p-2">
                               <div className="flex space-x-2 text-sm">
                                 <span>Reviewed by:</span>
                                 <span>{session.user.firstName}</span>
@@ -551,7 +553,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                               <div>
                                 <label
                                   htmlFor="comment"
-                                  className="block text-sm font-medium text-text-primary w-full"
+                                  className="block w-full text-sm font-medium text-text-primary"
                                 ></label>
                                 <div className="mt-1">
                                   <textarea
@@ -559,7 +561,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                                     rows={4}
                                     name="comment"
                                     id="comment"
-                                    className="border focus:ring-text-primary focus:border-text-primary block w-full sm:text-sm border-text-secondary rounded-md p-2"
+                                    className="block w-full rounded-md border border-text-secondary p-2 focus:border-text-primary focus:ring-text-primary sm:text-sm"
                                     defaultValue={""}
                                   />
                                 </div>
@@ -568,7 +570,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                                 <button
                                   onClick={handleNewReview}
                                   type="button"
-                                  className="w-fit inline-flex items-center px-2.5 py-1.5 border border-text-secondary shadow-sm text-xs font-medium rounded-md bg-button hover:border-black text-white"
+                                  className="inline-flex w-fit items-center rounded-md border border-text-secondary bg-button px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:border-black"
                                 >
                                   Submit
                                 </button>
@@ -578,7 +580,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                         </div>
                       </div>
 
-                      <div className="sm:pt-12 pt-8 lg:mt-0 lg:col-start-6 lg:col-span-7">
+                      <div className="pt-8 sm:pt-12 lg:col-span-7 lg:col-start-6 lg:mt-0">
                         <h3 className="sr-only">Recent reviews</h3>
 
                         <div className="flow-root">
@@ -591,7 +593,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                                 <div key={review.id} className="py-12">
                                   <div className="flex items-center">
                                     <div className="ml-4">
-                                      <div className="flex space-x-2 items-center">
+                                      <div className="flex items-center space-x-2">
                                         <h4 className="text-sm font-bold text-text-primary">
                                           {reviewer?.firstName}
                                         </h4>
@@ -673,15 +675,19 @@ export const getStaticPaths = async (context: GetStaticPathsContext) => {
 export const getStaticProps: GetStaticProps = async (
   context: GetStaticPropsContext
 ) => {
+  console.log("in static props");
   const ssg = createSSGHelpers({
     router: appRouter,
     ctx: context as inferRouterContext<typeof appRouter>,
     transformer: superjson,
   });
 
+  console.log(context?.params?.id);
+
   const productsQuery = await ssg.fetchQuery("square-products.search-product", {
     productName: context?.params?.id as string,
   });
+  //console.log(productsQuery);
 
   return {
     props: {
