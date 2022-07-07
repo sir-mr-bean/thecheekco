@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import thankYou from "../../../public/images/Order/thankyou.png";
+import { CatalogObject } from "square";
 
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
@@ -47,11 +48,11 @@ const UserDashboard = () => {
     }
   );
   const products = productsQuery?.products.relatedObjects;
-  const images = productsQuery?.images;
+  const images = productsQuery?.items?.filter((i) => i.type === "IMAGE") as any;
 
   if (status === "loading") {
     return (
-      <div className="flex h-screen w-full justify-center items-center mx-auto  text-text-primary">
+      <div className="mx-auto flex h-screen w-full items-center justify-center  text-text-primary">
         <BeatLoader
           color="#602d0d"
           loading={status === String("loading")}
@@ -72,11 +73,11 @@ const UserDashboard = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {bannerOpen && (
-        <div className="bg-text-secondary rounded-xl m-2">
-          <div className="max-w-7xl mx-auto py-3 px-3 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between flex-wrap">
-              <div className="w-0 flex-1 flex items-center">
-                <span className="flex p-2 rounded-lg bg-text-primary">
+        <div className="m-2 rounded-xl bg-text-secondary">
+          <div className="mx-auto max-w-7xl py-3 px-3 sm:px-6 lg:px-8">
+            <div className="flex flex-wrap items-center justify-between">
+              <div className="flex w-0 flex-1 items-center">
+                <span className="flex rounded-lg bg-text-primary p-2">
                   <AiOutlineCheck
                     className="h-6 w-6 text-white"
                     aria-hidden="true"
@@ -100,7 +101,7 @@ const UserDashboard = () => {
                     setBannerOpen(false);
                   }}
                   type="button"
-                  className="-mr-1 flex p-2 rounded-md hover:bg-text-primary focus:outline-none focus:ring-2 focus:ring-white sm:-mr-2"
+                  className="-mr-1 flex rounded-md p-2 hover:bg-text-primary focus:outline-none focus:ring-2 focus:ring-white sm:-mr-2"
                 >
                   <span className="sr-only">Dismiss</span>
                   <AiOutlineClose
@@ -115,21 +116,21 @@ const UserDashboard = () => {
       )}
       <>
         <main className="relative lg:min-h-full">
-          <div className="h-80 lg:absolute lg:w-1/2 lg:h-full">
-            <div className="relative w-full h-80 lg:h-full rounded-lg">
+          <div className="h-80 lg:absolute lg:h-full lg:w-1/2">
+            <div className="relative h-80 w-full rounded-lg lg:h-full">
               <Image
                 src={thankYou}
                 alt="Thank you for your order!"
                 layout="fill"
                 objectFit="cover"
                 objectPosition="center"
-                className="h-full w-full object-top object-cover rounded-r-lg"
+                className="h-full w-full rounded-r-lg object-cover object-top"
               />
             </div>
           </div>
 
           <div>
-            <div className="max-w-2xl mx-auto py-16 px-4 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 lg:py-32 lg:grid lg:grid-cols-2 lg:gap-x-8 xl:gap-x-24">
+            <div className="mx-auto max-w-2xl py-16 px-4 sm:px-6 sm:py-24 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8 lg:py-32 xl:gap-x-24">
               <div className="lg:col-start-2">
                 <h1 className="text-sm font-medium text-text-secondary">
                   Payment successful
@@ -151,17 +152,15 @@ const UserDashboard = () => {
 
                 <ul
                   role="list"
-                  className="mt-6 text-sm font-medium text-text-secondary border-t border-text-primary divide-y divide-text-primary"
+                  className="mt-6 divide-y divide-text-primary border-t border-text-primary text-sm font-medium text-text-secondary"
                 >
                   {products &&
                     products.map((product) => {
-                      const productImage = images?.find(
-                        (p) =>
-                          p.type === "IMAGE" &&
-                          product.itemData?.imageIds?.includes(p.id)
+                      const productImage = images?.find((p: CatalogObject) =>
+                        product.itemData?.imageIds?.includes(p.id)
                       );
                       return (
-                        <li key={product.id} className="flex py-6 space-x-6">
+                        <li key={product.id} className="flex space-x-6 py-6">
                           <div className="relative w-1/4">
                             <Image
                               src={
@@ -169,7 +168,7 @@ const UserDashboard = () => {
                                 "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
                               }
                               alt={product.itemData?.name}
-                              className="flex-none w-24 h-24 bg-gray-100 rounded-md object-center object-cover"
+                              className="h-24 w-24 flex-none rounded-md bg-gray-100 object-cover object-center"
                               height={10}
                               width={10}
                               layout="responsive"
@@ -193,7 +192,7 @@ const UserDashboard = () => {
                     })}
                 </ul>
 
-                <dl className="text-sm font-medium text-text-secondary space-y-6 border-t border-text-primary pt-6">
+                <dl className="space-y-6 border-t border-text-primary pt-6 text-sm font-medium text-text-secondary">
                   <div className="flex justify-between">
                     <dt>Subtotal</dt>
                     <dd className="text-text-primary">
@@ -221,7 +220,7 @@ const UserDashboard = () => {
                     </dd>
                   </div>
 
-                  <div className="flex items-center justify-between border-t border-text-primary text-text-primary pt-6">
+                  <div className="flex items-center justify-between border-t border-text-primary pt-6 text-text-primary">
                     <dt className="text-base">Total</dt>
                     <dd className="text-base">{`$${(
                       Number(order?.totalMoney?.amount) / 100
