@@ -16,7 +16,7 @@ const index = () => {
         <div className="w-full px-4 pt-4 pb-8 sm:px-6 sm:pt-8 sm:pb-24 md:w-1/2 lg:px-8 xl:px-2 xl:pt-14">
           <div className="flex h-full w-full flex-col space-y-3 px-2 font-gothic sm:px-10">
             <h1 className="text-2xl sm:pt-14 sm:text-4xl">Click and Collect</h1>
-            <div className="flex h-full w-full flex-col items-center justify-evenly space-y-8">
+            <div className="flex h-full w-full flex-col items-start justify-evenly space-y-8">
               <span className="text-sm sm:text-base">
                 Save time, enjoy super-fast collection for FREE from our store
                 in Cairns when you pay online. Click and Collect gives you full

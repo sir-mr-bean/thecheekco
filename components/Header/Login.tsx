@@ -23,13 +23,13 @@ export default function Login() {
   return (
     <Menu
       as="div"
-      className="relative inline-block justify-center items-center"
+      className="relative inline-block items-center justify-center"
     >
       <div className="">
-        <Menu.Button className="inline-flex justify-center w-full rounded-md shadow-sm py-2 font-medium font-gothic">
+        <Menu.Button className="inline-flex w-full justify-center rounded-md py-2 font-gothic font-medium shadow-sm">
           {session.status != String("loading") &&
           session.status != String("authenticated") ? (
-            <div className="hidden sm:flex items-center">
+            <div className="hidden items-center sm:flex">
               Login
               <BsChevronDown
                 className="-mr-1 ml-2 h-4 w-4 bg-transparent"
@@ -39,7 +39,7 @@ export default function Login() {
           ) : (
             session.status != String("loading") &&
             session.status === String("authenticated") && (
-              <div className="hidden sm:flex items-center sm:pr-10 whitespace-nowrap">
+              <div className="hidden items-center whitespace-nowrap sm:flex sm:pr-10">
                 My Account
                 <BsChevronDown
                   className="-mr-1 ml-2 h-4 w-4 bg-transparent"
@@ -49,9 +49,9 @@ export default function Login() {
             )
           )}
 
-          <div className="active:bg-black rounded-md active:bg-opacity-10 py-1.5 px-1.5 sm:hidden">
+          {/* <div className="active:bg-black rounded-md active:bg-opacity-10 py-1.5 px-1.5 sm:hidden">
             <BsPerson size={21} className="fill-text-primary" />
-          </div>
+          </div> */}
         </Menu.Button>
       </div>
 
@@ -64,7 +64,7 @@ export default function Login() {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="origin-top-right absolute top-8 right-0 mt-2 w-56 rounded-md shadow-lg bg-bg-lighttan focus:outline-none">
+        <Menu.Items className="absolute top-8 right-0 mt-2 w-56 origin-top-right rounded-md bg-bg-lighttan shadow-lg focus:outline-none">
           <div className="">
             {!currentUser ? (
               <>
@@ -74,7 +74,7 @@ export default function Login() {
                       href="/login"
                       className={classNames(
                         active
-                          ? "bg-bg-tan text-text-primary rounded-md"
+                          ? "rounded-md bg-bg-tan text-text-primary"
                           : "text-text-primary",
                         "block px-4 py-2 text-sm"
                       )}
@@ -92,7 +92,7 @@ export default function Login() {
                       href="/profile"
                       className={classNames(
                         active
-                          ? "bg-bg-tan text-text-primary rounded-t-md"
+                          ? "rounded-t-md bg-bg-tan text-text-primary"
                           : "text-text-primary",
                         "block px-4 py-2 text-sm"
                       )}
@@ -108,9 +108,9 @@ export default function Login() {
                       onClick={() => signOut()}
                       className={classNames(
                         active
-                          ? "bg-bg-tan text-text-primary rounded-b-md"
+                          ? "rounded-b-md bg-bg-tan text-text-primary"
                           : "text-text-primary",
-                        "block px-4 py-2 text-sm w-full text-left"
+                        "block w-full px-4 py-2 text-left text-sm"
                       )}
                     >
                       Sign Out

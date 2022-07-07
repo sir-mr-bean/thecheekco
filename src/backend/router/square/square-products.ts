@@ -101,33 +101,30 @@ export const squareProductRouter = createRouter()
     },
   })
   .query("search-product", {
-    input: z.object({
-      productName: z.string(),
-    }),
+    input: z
+      .object({
+        productName: z.string(),
+      })
+      .nullish(),
     async resolve({ input, ctx }) {
-      const { productName } = input;
-      const productsQuery = await catalogApi.searchCatalogObjects({
-        objectTypes: ["ITEM", "CATEGORY", "IMAGE"],
-        includeRelatedObjects: true,
-      });
-      if (productsQuery?.result?.objects) {
-        const products = productsQuery.result.objects;
-        const productsResults = products.filter(
-          (product) =>
-            product.itemData?.name?.toLowerCase().replaceAll(" ", "-") ===
-              productName.toLowerCase() || product.type === "IMAGE"
-        );
-        const singleProduct = productsResults.find(
-          (product) => product.type === "ITEM"
-        );
-        const productsResult = productsResults.filter(
-          (product) =>
-            product.id === singleProduct?.id ||
-            (product.type === "IMAGE" &&
-              product.id === singleProduct?.itemData?.imageIds?.[0])
-        );
+      if (input?.productName) {
+        const { productName } = input;
+        console.log("searching!");
 
-        return productsResult;
+        const productsQuery = await catalogApi.searchCatalogObjects({
+          objectTypes: ["ITEM"],
+        });
+        console.log(productName);
+        if (productsQuery?.result?.objects) {
+          const products = productsQuery.result.objects;
+          console.log(products);
+          const productsResults = products.filter((product) =>
+            product.itemData?.name?.toLowerCase().includes(productName)
+          );
+          return productsResults;
+        }
+      } else {
+        return null;
       }
     },
   })

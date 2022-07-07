@@ -9,6 +9,7 @@ import { Product } from "@/types/Product";
 import { trpc } from "@/utils/trpc";
 import { CatalogObject } from "square";
 import { CartObject } from "@/types/CartObject";
+import SearchBar from "../Search/SearchBar";
 
 function useScrollDirection() {
   const [scrollDirection, setScrollDirection] = useState("");
@@ -91,36 +92,22 @@ export const Header = (): JSX.Element => {
       >
         <div className="flex flex-col">
           <div className="h-11 bg-opacity-10 bg-paper-bg bg-cover drop-shadow-[0_-7px_5px_rgba(0,0,0,0.31)]">
-            <div className="flex items-center justify-around md:justify-between lg:mx-36">
+            <div className="flex items-center justify-between md:justify-between lg:mx-36">
               <Link href="/">
-                <div className="ml-2 flex cursor-pointer select-none whitespace-nowrap py-2 font-gothic text-[21px] text-header-brown sm:ml-10 lg:py-0 lg:text-[34px]">
+                <div className="ml-10 flex cursor-pointer select-none whitespace-nowrap py-2 font-gothic text-[21px] text-header-brown sm:ml-10 lg:py-0 lg:text-[34px]">
                   the cheek co.
                 </div>
               </Link>
-              <Link href="/cart">
-                <a>
-                  <div className="relative top-2 right-3 ml-10 mb-3 cursor-pointer sm:absolute sm:top-3 sm:block sm:rounded-full sm:bg-white sm:bg-opacity-100 md:h-[65px] md:w-[65px] md:border-text-secondary md:shadow-md md:shadow-text-primary lg:right-20">
-                    {cart ? (
-                      <IoBasketSharp className="m-2 h-6 w-6 text-shopping-cart opacity-100 sm:h-12 sm:w-12" />
-                    ) : (
-                      <IoBasketSharp className="m-2 h-8 w-8 -translate-y-2 text-shopping-cart opacity-100 sm:h-12 sm:w-12 sm:translate-y-0" />
-                    )}
-                    {cart && (
-                      <div className="absolute -top-2 -left-1 flex h-5 w-5 items-center justify-center rounded-full bg-shopping-cart-badge text-white sm:-top-1">
-                        {cart.length}
-                      </div>
-                    )}
-                  </div>
-                </a>
-              </Link>
-              <div className="flex items-center justify-between font-gothic text-header-brown">
+
+              <div className="mx-1 flex items-center justify-between font-gothic text-header-brown">
                 {/* Mobile Menu */}
-                <div className="pl-10">
-                  <div className="rounded-md p-1.5 active:bg-black active:bg-opacity-10 sm:hidden">
-                    {navigation && <MobileMenu navigation={navigation} />}
-                  </div>
+                <SearchBar />
+
+                <div className="rounded-md p-1.5 active:bg-black active:bg-opacity-10 sm:hidden">
+                  {navigation && <MobileMenu navigation={navigation} />}
                 </div>
-                <div className="flex items-center justify-center whitespace-nowrap sm:space-x-8">
+
+                <div className="flex items-center justify-end whitespace-nowrap sm:space-x-3 md:pl-8">
                   {/* Eco Innovation */}
                   {/* <span className="hidden md:block font-medium font-gothic">
                     Eco Innovation
@@ -144,6 +131,22 @@ export const Header = (): JSX.Element => {
                       </div>
                     </div>
                   </div>
+                  <Link href="/cart">
+                    <a>
+                      <div className="relative top-2 right-3 ml-5 mb-3 cursor-pointer sm:absolute sm:top-3 sm:block sm:rounded-full sm:bg-white sm:bg-opacity-100 md:h-[65px] md:w-[65px] md:border-text-secondary md:shadow-md md:shadow-text-primary lg:right-20">
+                        {cart ? (
+                          <IoBasketSharp className="m-2 h-6 w-6 -translate-y-1.5 text-shopping-cart opacity-100 sm:h-12 sm:w-12" />
+                        ) : (
+                          <IoBasketSharp className="m-2 h-8 w-8 -translate-y-2 text-shopping-cart opacity-100 sm:h-12 sm:w-12 sm:translate-y-0" />
+                        )}
+                        {cart && (
+                          <div className="font-gothica absolute -top-4 -left-1 flex h-5 w-5 items-center justify-center rounded-full bg-shopping-cart-badge text-white sm:-top-1">
+                            {cart.length}
+                          </div>
+                        )}
+                      </div>
+                    </a>
+                  </Link>
                   {/* Login */}
                   <div className="sm:pl-0 sm:pr-24 lg:pr-10">
                     <Login />
