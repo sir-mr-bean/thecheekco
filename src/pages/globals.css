@@ -144,6 +144,7 @@ body {
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
+  scroll-behavior: smooth;
 }
 ::-webkit-scrollbar-track {
   background: #a75e2f;
