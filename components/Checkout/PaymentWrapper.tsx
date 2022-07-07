@@ -1,8 +1,10 @@
 import { CartState } from "@/context/Cart/Context";
+import { userShippingObject } from "@/pages/checkout";
 import { CartObject } from "@/types/CartObject";
 import { trpc } from "@/utils/trpc";
 import { User } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
+import { Session } from "next-auth";
 import { useRouter } from "next/router";
 import { Dispatch, useState } from "react";
 import toast from "react-hot-toast";
@@ -18,15 +20,19 @@ const PaymentWrapper = ({
   saveCardDetails,
   selectedPaymentMethod,
   shipping,
+  session,
+  userShippingObj,
 }: {
   children: React.ReactNode;
   setOrderProcessing: Dispatch<boolean>;
   total: number;
   userObj: User;
+  userShippingObj: userShippingObject | null;
   pickup: boolean;
   saveCardDetails: boolean;
   selectedPaymentMethod: Card | null;
   shipping: number;
+  session: Session | null;
 }) => {
   const router = useRouter();
   const { data: customer, status } = trpc.useQuery([

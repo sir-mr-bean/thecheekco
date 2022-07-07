@@ -200,8 +200,28 @@ export default function checkout() {
       }
     }
   }, [cart]);
-  console.log(shipping);
-  console.log(total);
+
+  console.log(userObj, userShippingObj);
+
+  useEffect(() => {
+    if (sameAsCustomerInfo) {
+      setUserShippingObj({
+        firstName: (userObj.firstName as string) || ("" as string),
+        lastName: (userObj.lastName as string) || ("" as string),
+        email: userObj.email,
+        company: (userObj.company as string) || ("" as string),
+        streetNumber: (userObj.streetNumber as string) || ("" as string),
+        streetAddress: (userObj.streetAddress as string) || ("" as string),
+        apartmentOrUnit: (userObj.apartmentOrUnit as string) || ("" as string),
+        city: (userObj.city as string) || ("" as string),
+        state: (userObj.state as string) || ("" as string),
+        country: "Australia",
+        postalCode: (userObj.postalCode as string) || ("" as string),
+        phoneNumber: (userObj.phoneNumber as string) || ("" as string),
+      });
+    }
+  }, [sameAsCustomerInfo]);
+
   const handlePickupCustomerInfoComplete = (userObject: typeof userObj) => {
     if (pickupTermsAccepted) {
       if (userObject.email !== "" && userObject.phoneNumber !== "") {
@@ -570,6 +590,8 @@ export default function checkout() {
                                   saveCardDetails={saveCardDetails}
                                   selectedPaymentMethod={selectedPaymentMethod}
                                   shipping={shipping}
+                                  session={session}
+                                  userShippingObj={null}
                                 >
                                   <div className="flex w-full flex-col space-y-4 pt-3">
                                     <h2 className="py-3 text-lg font-medium">
@@ -789,10 +811,12 @@ export default function checkout() {
                                   setOrderProcessing={setOrderProcessing}
                                   total={total}
                                   userObj={userObj}
+                                  userShippingObj={userShippingObj}
                                   pickup={pickup}
                                   saveCardDetails={saveCardDetails}
                                   selectedPaymentMethod={selectedPaymentMethod}
                                   shipping={shipping}
+                                  session={session}
                                 >
                                   <div className="flex w-full flex-col space-y-4 pt-3">
                                     <h2 className="py-3 text-lg font-medium">

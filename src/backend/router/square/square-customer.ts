@@ -13,46 +13,6 @@ const { customersApi } = new Client({
 
 export const squareCustomerRouter = createRouter()
   .transformer(superjson)
-  .middleware(async ({ ctx, next }) => {
-    // Any query or mutation after this middleware will raise
-    // an error unless there is a current session
-    if (!ctx.session) {
-      throw new TRPCError({
-        message: "You are not authorized to perform this action",
-        code: "UNAUTHORIZED",
-      });
-    }
-    return next();
-  })
-  .query("search-customer", {
-    input: z.object({
-      email: z.string(),
-    }),
-    async resolve({ input, ctx }) {
-      const { req } = ctx;
-      const session = await getSession({ req });
-      if (session?.user.email !== input?.email) {
-        throw new TRPCError({
-          message: "You are not authorized to perform this action",
-          code: "UNAUTHORIZED",
-        });
-      }
-      const { email } = input;
-      const searchCustomer = await customersApi.searchCustomers({
-        query: {
-          filter: {
-            emailAddress: {
-              exact: email,
-            },
-          },
-        },
-        limit: 1 as unknown as bigint,
-      });
-
-      const customerResult = searchCustomer?.result?.customers?.[0];
-      return customerResult;
-    },
-  })
   .mutation("create-customer", {
     input: z.object({
       email: z.string(),
@@ -98,6 +58,17 @@ export const squareCustomerRouter = createRouter()
       return customerResult;
     },
   })
+  .middleware(async ({ ctx, next }) => {
+    // Any query or mutation after this middleware will raise
+    // an error unless there is a current session
+    if (!ctx.session) {
+      throw new TRPCError({
+        message: "You are not authorized to perform this action",
+        code: "UNAUTHORIZED",
+      });
+    }
+    return next();
+  })
   .mutation("update-customer", {
     input: z.object({
       customerId: z.string(),
@@ -138,5 +109,35 @@ export const squareCustomerRouter = createRouter()
         const customerResult = updateCustomer?.result?.customer;
         return customerResult;
       }
+    },
+  })
+
+  .query("search-customer", {
+    input: z.object({
+      email: z.string(),
+    }),
+    async resolve({ input, ctx }) {
+      const { req } = ctx;
+      const session = await getSession({ req });
+      if (session?.user.email !== input?.email) {
+        throw new TRPCError({
+          message: "You are not authorized to perform this action",
+          code: "UNAUTHORIZED",
+        });
+      }
+      const { email } = input;
+      const searchCustomer = await customersApi.searchCustomers({
+        query: {
+          filter: {
+            emailAddress: {
+              exact: email,
+            },
+          },
+        },
+        limit: 1 as unknown as bigint,
+      });
+
+      const customerResult = searchCustomer?.result?.customers?.[0];
+      return customerResult;
     },
   });
