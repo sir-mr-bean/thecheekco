@@ -49,11 +49,16 @@ module.exports = {
       },
     },
   },
-
   plugins: [
     require("@tailwindcss/typography"),
     require("@tailwindcss/forms"),
     require("@headlessui/tailwindcss"),
     require("prettier-plugin-tailwindcss"),
+    require("tailwind-scrollbar"),
   ],
+  variants: {
+    extend: {
+      scrollbar: ["rounded"],
+    },
+  },
 };

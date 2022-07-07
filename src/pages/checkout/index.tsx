@@ -790,7 +790,7 @@ export default function checkout() {
                                               Existing Payment Method:
                                             </h3>
                                             {paymentMethods.map(
-                                              (paymentMethod) => {
+                                              (paymentMethod: any) => {
                                                 return (
                                                   <ExistingPaymentMethod
                                                     setNewCard={setNewCard}

@@ -84,7 +84,7 @@ export const Header = (): JSX.Element => {
   return (
     <>
       <div
-        className={`sticky z-50 h-max ${
+        className={`sticky z-50 h-max  ${
           scrollDirection === "down"
             ? "-top-24 transition-all duration-700"
             : "top-0 transition-all duration-700"
@@ -94,20 +94,20 @@ export const Header = (): JSX.Element => {
           <div className="h-11 bg-opacity-10 bg-paper-bg bg-cover drop-shadow-[0_-7px_5px_rgba(0,0,0,0.31)]">
             <div className="flex items-center justify-between md:justify-between lg:mx-36">
               <Link href="/">
-                <div className="ml-10 flex cursor-pointer select-none whitespace-nowrap py-2 font-gothic text-[21px] text-header-brown sm:ml-10 lg:py-0 lg:text-[34px]">
+                <div className="ml-2 flex cursor-pointer select-none whitespace-nowrap py-2 font-gothic text-[21px] text-header-brown sm:ml-10 lg:py-0 lg:text-[34px]">
                   the cheek co.
                 </div>
               </Link>
 
-              <div className="mx-1 flex items-center justify-between font-gothic text-header-brown">
+              <div className="mr-3 flex items-center justify-between font-gothic text-header-brown">
                 {/* Mobile Menu */}
                 <SearchBar />
 
-                <div className="rounded-md p-1.5 active:bg-black active:bg-opacity-10 sm:hidden">
+                <div className="rounded-md p-1.5 sm:hidden">
                   {navigation && <MobileMenu navigation={navigation} />}
                 </div>
 
-                <div className="flex items-center justify-end whitespace-nowrap sm:space-x-3 md:pl-8">
+                <div className="flex items-center justify-center whitespace-nowrap sm:space-x-3 md:pl-8">
                   {/* Eco Innovation */}
                   {/* <span className="hidden md:block font-medium font-gothic">
                     Eco Innovation

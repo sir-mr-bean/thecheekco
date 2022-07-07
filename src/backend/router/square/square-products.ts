@@ -112,14 +112,17 @@ export const squareProductRouter = createRouter()
         console.log("searching!");
 
         const productsQuery = await catalogApi.searchCatalogObjects({
-          objectTypes: ["ITEM"],
+          objectTypes: ["ITEM", "CATEGORY", "IMAGE"],
         });
         console.log(productName);
         if (productsQuery?.result?.objects) {
           const products = productsQuery.result.objects;
           console.log(products);
-          const productsResults = products.filter((product) =>
-            product.itemData?.name?.toLowerCase().includes(productName)
+          const productsResults = products.filter(
+            (product) =>
+              product.itemData?.name?.toLowerCase().includes(productName) ||
+              product.type === "IMAGE" ||
+              product.type === "CATEGORY"
           );
           return productsResults;
         }
