@@ -62,7 +62,7 @@ const SearchBar = () => {
     <>
       <div
         id="searchbar-wrapper"
-        className="relative flex w-32 cursor-pointer items-center justify-end font-gothic md:w-52 lg:w-64"
+        className="w-42 relative flex cursor-pointer items-center justify-end font-gothic md:w-52 lg:w-64"
       >
         <input
           id="searchbar"
