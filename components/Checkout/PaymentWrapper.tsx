@@ -261,19 +261,19 @@ const PaymentWrapper = ({
                 country: "AU",
               },
               shippingAddress: {
-                email: userObj.email,
-                firstName: userObj.firstName as string,
-                lastName: userObj.lastName as string,
-                displayName: `${userObj?.firstName} ${userObj.lastName}`,
-                companyName: userObj.company as string,
-                phoneNumber: userObj.phoneNumber as string,
-                addressLine1: userObj.apartmentOrUnit
-                  ? `${userObj.apartmentOrUnit} / ${userObj.streetAddress}`
-                  : `${userObj.streetAddress}`,
+                email: userShippingObj?.email as string,
+                firstName: userShippingObj?.firstName as string,
+                lastName: userShippingObj?.lastName as string,
+                displayName: `${userShippingObj?.firstName} ${userShippingObj?.lastName}`,
+                companyName: userShippingObj?.company as string,
+                phoneNumber: userShippingObj?.phoneNumber as string,
+                addressLine1: userShippingObj?.apartmentOrUnit
+                  ? `${userShippingObj?.apartmentOrUnit} / ${userShippingObj?.streetAddress}`
+                  : (`${userShippingObj?.streetAddress}` as string),
 
-                locality: userObj.city as string,
-                region: userObj.state as string,
-                postalCode: userObj.postalCode as string,
+                locality: userShippingObj?.city as string,
+                region: userShippingObj?.state as string,
+                postalCode: userShippingObj?.postalCode as string,
                 country: "AU",
               },
             },
