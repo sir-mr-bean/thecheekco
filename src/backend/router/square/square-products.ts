@@ -17,7 +17,7 @@ export const squareProductRouter = createRouter()
       try {
         let listProductsResponse = await catalogApi.listCatalog(
           undefined,
-          "item,image"
+          "item,item"
         );
         productsArray.push(...(listProductsResponse.result.objects as never[]));
         let cursor = listProductsResponse.result.cursor;
@@ -25,7 +25,7 @@ export const squareProductRouter = createRouter()
           if (cursor != null)
             listProductsResponse = await catalogApi.listCatalog(
               cursor,
-              "item,image"
+              "item,item"
             );
           productsArray.push(
             ...(listProductsResponse.result.objects as never[])
@@ -90,14 +90,14 @@ export const squareProductRouter = createRouter()
         objectIds: input?.productIds as string[],
         includeRelatedObjects: true,
       });
-      const imagesQuery = await catalogApi.searchCatalogObjects({
+      const itemsQuery = await catalogApi.searchCatalogObjects({
         objectTypes: ["IMAGE"],
       });
 
       const productResult = productsQuery.result;
-      const imagesResult = imagesQuery?.result?.objects;
+      const itemsResult = itemsQuery?.result?.objects;
 
-      return { products: productResult, images: imagesResult };
+      return { products: productResult, items: itemsResult };
     },
   })
   .query("search-product", {
@@ -119,14 +119,37 @@ export const squareProductRouter = createRouter()
 
           const productsResults = products.filter(
             (product) =>
-              product.itemData?.name
-                ?.toLowerCase()
-                .replace(/ /g, "-")
-                .includes(productName?.toLowerCase().replace(/ /g, "-")) ||
+              (product.itemData?.variations?.[0]?.customAttributeValues?.[
+                "Square:bc63391b-f09f-4399-846a-6721f81e4a4d"
+              ]?.booleanValue !== true &&
+                product.itemData?.name
+                  ?.toLowerCase()
+                  .replace(/ /g, "-")
+                  .includes(productName?.toLowerCase().replace(/ /g, "-"))) ||
               product.type === "IMAGE" ||
               product.type === "CATEGORY"
-          );
-          return productsResults;
+          ) as CatalogObject[];
+          const thisProduct: CatalogObject = productsResults.find(
+            (product) => product.type === "ITEM"
+          ) as CatalogObject;
+          const ImageResults = productsResults.filter(
+            (item) =>
+              item.type === "ITEM" ||
+              item.type === "CATEGORY" ||
+              (item.type === "IMAGE" &&
+                thisProduct?.itemData?.imageIds?.includes(item.id))
+          ) as CatalogObject[];
+          console.log("image results are: ", ImageResults);
+          console.log(ImageResults);
+          const categoryResults = ImageResults.filter(
+            (item) =>
+              item.type === "ITEM" ||
+              item.type === "IMAGE" ||
+              (item.type === "CATEGORY" &&
+                thisProduct?.itemData?.categoryId === item.id)
+          ) as CatalogObject[];
+
+          return categoryResults;
         }
       } else {
         return null;
@@ -154,7 +177,7 @@ export const squareProductRouter = createRouter()
         );
         const products = productsResponse?.map((item) => {
           const currentImage = productsQuery.result?.relatedObjects?.find(
-            (image) => image.id === item.itemData?.imageIds?.[0]
+            (item) => item.id === item.itemData?.itemIds?.[0]
           );
           const categories = productsQuery.result?.objects?.filter(
             (category) => category.type === "CATEGORY"
@@ -191,7 +214,7 @@ export const squareProductRouter = createRouter()
             description: item.itemData?.description,
             category: currentCategory,
             price: item?.itemData?.variations?.[0],
-            image: currentImage?.imageData?.url,
+            item: currentImage?.itemData?.url,
             isAllNatural,
           };
         });
