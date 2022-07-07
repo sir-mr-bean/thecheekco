@@ -17,6 +17,7 @@ const PaymentWrapper = ({
   pickup,
   saveCardDetails,
   selectedPaymentMethod,
+  shipping,
 }: {
   children: React.ReactNode;
   setOrderProcessing: Dispatch<boolean>;
@@ -25,6 +26,7 @@ const PaymentWrapper = ({
   pickup: boolean;
   saveCardDetails: boolean;
   selectedPaymentMethod: Card | null;
+  shipping: number;
 }) => {
   const router = useRouter();
   const { data: customer, status } = trpc.useQuery([
@@ -274,11 +276,13 @@ const PaymentWrapper = ({
                 const orderId = data?.id as string;
                 const totalMoney =
                   data?.totalMoney?.amount?.toString() as string;
+                const totalWithShipping =
+                  data?.totalMoney?.amount + shipping.toFixed(2);
 
                 paymentMutation.mutate(
                   {
                     orderId: orderId,
-                    totalMoney: totalMoney,
+                    totalMoney: totalWithShipping,
                     token: token.token as string,
                   },
                   {

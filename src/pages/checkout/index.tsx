@@ -202,7 +202,8 @@ export default function checkout() {
       }
     }
   }, [cart]);
-
+  console.log(shipping);
+  console.log(total);
   const handlePickupCustomerInfoComplete = (userObject: typeof userObj) => {
     if (pickupTermsAccepted) {
       if (userObject.email !== "" && userObject.phoneNumber !== "") {
@@ -549,6 +550,7 @@ export default function checkout() {
                                   pickup={pickup}
                                   saveCardDetails={saveCardDetails}
                                   selectedPaymentMethod={selectedPaymentMethod}
+                                  shipping={shipping}
                                 >
                                   <div className="flex w-full flex-col space-y-4 pt-3">
                                     <h2 className="py-3 text-lg font-medium">
@@ -771,6 +773,7 @@ export default function checkout() {
                                   pickup={pickup}
                                   saveCardDetails={saveCardDetails}
                                   selectedPaymentMethod={selectedPaymentMethod}
+                                  shipping={shipping}
                                 >
                                   <div className="flex w-full flex-col space-y-4 pt-3">
                                     <h2 className="py-3 text-lg font-medium">
