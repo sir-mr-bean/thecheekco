@@ -52,6 +52,7 @@ export const Header = (): JSX.Element => {
     context: {
       skipBatch: true,
     },
+    suspense: true,
   });
   const { data: navigation } = categoryQuery;
   //const [cartItems, setCartItems] = useState<CatalogObject[]>(cart || []);
@@ -77,9 +78,9 @@ export const Header = (): JSX.Element => {
       .replace(/-+$/, "");
   };
 
-  if (!hasMounted) {
-    return <></>;
-  }
+  // if (!hasMounted) {
+  //   return <></>;
+  // }
 
   return (
     <>
@@ -104,7 +105,9 @@ export const Header = (): JSX.Element => {
                 <SearchBar />
 
                 <div className="rounded-md p-1.5 sm:hidden">
-                  {navigation && <MobileMenu navigation={navigation} />}
+                  {navigation && hasMounted && (
+                    <MobileMenu navigation={navigation} />
+                  )}
                 </div>
 
                 <div className="flex items-center justify-center whitespace-nowrap sm:space-x-3 md:pl-8">
@@ -134,12 +137,12 @@ export const Header = (): JSX.Element => {
                   <Link href="/cart">
                     <a>
                       <div className="relative top-2 right-3 ml-5 mb-3 cursor-pointer sm:absolute sm:top-3 sm:block sm:rounded-full sm:bg-white sm:bg-opacity-100 md:h-[65px] md:w-[65px] md:border-text-secondary md:shadow-md md:shadow-text-primary lg:right-20">
-                        {cart ? (
+                        {cart && hasMounted ? (
                           <IoBasketSharp className="m-2 h-6 w-6 -translate-y-1.5 text-shopping-cart opacity-100 sm:h-12 sm:w-12" />
                         ) : (
                           <IoBasketSharp className="m-2 h-8 w-8 -translate-y-2 text-shopping-cart opacity-100 sm:h-12 sm:w-12 sm:translate-y-0" />
                         )}
-                        {cart && (
+                        {cart && hasMounted && (
                           <div className="font-gothica absolute -top-4 -left-1 flex h-5 w-5 items-center justify-center rounded-full bg-shopping-cart-badge text-white sm:-top-1">
                             {cart.length}
                           </div>
@@ -158,6 +161,7 @@ export const Header = (): JSX.Element => {
           <div className="h-5 bg-header-brown bg-opacity-90 font-gothic text-[10px] text-header-text sm:h-auto">
             <ul className="hidden justify-center pl-3 sm:flex sm:space-x-6">
               {navigation &&
+                hasMounted &&
                 navigation
                   .sort((a, b) => (a.id > b.id ? 1 : -1))
                   .filter((item) => item?.categoryData?.name?.charAt(0) != "_")
