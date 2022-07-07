@@ -10,6 +10,7 @@ import { trpc } from "@/utils/trpc";
 import { CatalogObject } from "square";
 import { CartObject } from "@/types/CartObject";
 import SearchBar from "../Search/SearchBar";
+import HeaderBottom from "./HeaderBottom";
 
 function useScrollDirection() {
   const [scrollDirection, setScrollDirection] = useState("");
@@ -104,17 +105,10 @@ export const Header = (): JSX.Element => {
                 <SearchBar />
 
                 <div className="rounded-md p-1.5 sm:hidden">
-                  {navigation && hasMounted && (
-                    <MobileMenu navigation={navigation} />
-                  )}
+                  <MobileMenu />
                 </div>
 
                 <div className="flex items-center justify-center whitespace-nowrap sm:space-x-3 md:pl-8">
-                  {/* Eco Innovation */}
-                  {/* <span className="hidden md:block font-medium font-gothic">
-                    Eco Innovation
-                  </span> */}
-                  {/* Wishlist */}
                   <div className="relative h-5">
                     <div className="hidden h-full w-full md:block">
                       <div className="absolute top-0 h-full w-full items-center justify-center space-x-1 ">
@@ -157,35 +151,7 @@ export const Header = (): JSX.Element => {
               </div>
             </div>
           </div>
-          <div className="h-5 bg-header-brown bg-opacity-90 font-gothic text-[10px] text-header-text sm:h-auto">
-            <ul className="hidden justify-center pl-3 sm:flex sm:space-x-6">
-              {navigation &&
-                hasMounted &&
-                navigation
-                  .sort((a, b) => (a.id > b.id ? 1 : -1))
-                  .filter((item) => item?.categoryData?.name?.charAt(0) != "_")
-                  .map((nav, i) => {
-                    return (
-                      <Link
-                        key={nav.id}
-                        href="/shop/[id]/"
-                        as={`/shop/${slugify(
-                          nav?.categoryData?.name as string
-                        )}`}
-                      >
-                        <li
-                          key={i}
-                          className="h-full cursor-pointer px-1.5 py-1 hover:scale-125 hover:transform hover:transition-all"
-                        >
-                          <span className="font-gothic text-xs font-normal capitalize">
-                            {nav.categoryData?.name}
-                          </span>
-                        </li>
-                      </Link>
-                    );
-                  })}
-            </ul>
-          </div>
+          <HeaderBottom />
         </div>
       </div>
     </>

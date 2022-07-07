@@ -5,16 +5,15 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import Link from "next/link";
 import { Category } from "@/types/Category";
 import { CatalogObject } from "square";
+import { trpc } from "@/utils/trpc";
 
 function classNames(...classes: [string, string?, string?, Boolean?]): string {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function MobileMenu({
-  navigation,
-}: {
-  navigation: CatalogObject[];
-}): JSX.Element {
+export default function MobileMenu(): JSX.Element {
+  const categoryQuery = trpc.useQuery(["square-categories.all-categories"]);
+  const { data: navigation } = categoryQuery;
   return (
     <Menu
       as="div"
