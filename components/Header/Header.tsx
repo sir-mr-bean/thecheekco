@@ -52,7 +52,6 @@ export const Header = (): JSX.Element => {
     context: {
       skipBatch: true,
     },
-    suspense: true,
   });
   const { data: navigation } = categoryQuery;
   //const [cartItems, setCartItems] = useState<CatalogObject[]>(cart || []);
