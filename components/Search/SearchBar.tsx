@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { AiOutlineSearch, AiOutlineClose } from "react-icons/ai";
 import { IconBase } from "react-icons/lib";
+import { BeatLoader } from "react-spinners";
 import { CatalogObject } from "square";
 
 const SearchBar = () => {
@@ -161,17 +162,25 @@ const SearchBar = () => {
           }}
         >
           {isOpen ? (
-            <AiOutlineClose
-              id="close-search"
-              onClick={() => {
-                setSearch("");
-                searchRef.current ? (searchRef.current.value = "") : null;
-                setIsSearching(false);
-                setSearchResults([]);
-                setIsOpen(false);
-              }}
-              className="absolute right-1 top-1.5 z-20 h-5 w-5 transform text-text-primary opacity-100 transition-all duration-1000 ease-out"
-            />
+            <>
+              {status === "loading" ? (
+                <div className="absolute right-1 top-1.5 z-20 h-5 w-8 transform text-text-primary opacity-100 transition-all duration-1000 ease-out">
+                  <BeatLoader size={6} color="#602d0d" />
+                </div>
+              ) : (
+                <AiOutlineClose
+                  id="close-search"
+                  onClick={() => {
+                    setSearch("");
+                    searchRef.current ? (searchRef.current.value = "") : null;
+                    setIsSearching(false);
+                    setSearchResults([]);
+                    setIsOpen(false);
+                  }}
+                  className="absolute right-1 top-1.5 z-20 h-5 w-5 transform text-text-primary opacity-100 transition-all duration-1000 ease-out"
+                />
+              )}
+            </>
           ) : (
             <AiOutlineSearch
               id="search-icon"

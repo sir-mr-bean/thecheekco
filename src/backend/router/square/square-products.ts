@@ -17,7 +17,7 @@ export const squareProductRouter = createRouter()
       try {
         let listProductsResponse = await catalogApi.listCatalog(
           undefined,
-          "item,item"
+          "item,image"
         );
         productsArray.push(...(listProductsResponse.result.objects as never[]));
         let cursor = listProductsResponse.result.cursor;
@@ -25,7 +25,7 @@ export const squareProductRouter = createRouter()
           if (cursor != null)
             listProductsResponse = await catalogApi.listCatalog(
               cursor,
-              "item,item"
+              "item,image"
             );
           productsArray.push(
             ...(listProductsResponse.result.objects as never[])

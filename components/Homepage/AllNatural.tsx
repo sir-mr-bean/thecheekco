@@ -41,6 +41,7 @@ const AllNatural = ({
       setRandomAllNatural(randomProducts);
     }
   }, [productsData]);
+  console.log("productsData", randomAllNatural);
   return (
     <section>
       <div className="flex w-full flex-col items-center justify-center sm:p-6 sm:pt-16">
