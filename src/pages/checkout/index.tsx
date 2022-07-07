@@ -36,7 +36,6 @@ export type userShippingObject = {
   state: string;
   country: "Australia";
   postalCode: string;
-  emailAddress: string;
   phoneNumber: string;
 };
 
@@ -126,10 +125,9 @@ export default function checkout() {
     streetAddress: "",
     apartmentOrUnit: "",
     city: "",
-    state: "",
+    state: "ACT",
     country: "Australia",
     postalCode: "",
-    emailAddress: "",
     phoneNumber: "",
   });
   const [customerInfoSet, setCustomerInfoSet] = useState(false);
@@ -457,7 +455,28 @@ export default function checkout() {
     ) {
       setShippingInfoSet(true);
     } else {
-      toast.error("Please fill out all fields");
+      console.log(userShippingObj);
+      if (!userShippingObj.firstName) {
+        toast.error("First name is required for shipping");
+      }
+      if (!userShippingObj.streetAddress) {
+        toast.error("Street address is required for shipping");
+      }
+      if (!userShippingObj.city) {
+        toast.error("City is required for shipping");
+      }
+      if (!userShippingObj.state) {
+        toast.error("State is required for shipping");
+      }
+      if (!userShippingObj.postalCode) {
+        toast.error("Postal code is required for shipping");
+      }
+      if (!userShippingObj.phoneNumber) {
+        toast.error("Phone number is required for shipping");
+      }
+      if (!userShippingObj.email) {
+        toast.error("Email is required for shipping");
+      }
     }
   };
 
@@ -895,6 +914,7 @@ export default function checkout() {
                                         buttonProps={{
                                           isLoading:
                                             orderProcessing || !newCard,
+
                                           css: {
                                             backgroundColor: "#a75e2f",
                                             fontSize: "14px",

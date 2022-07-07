@@ -3,6 +3,7 @@ import Autocomplete, {
   ReactGoogleAutocompleteInputProps,
 } from "react-google-autocomplete";
 import type { userShippingObject, validationErrors } from "@/pages/checkout";
+import { useRef } from "react";
 
 const ShippingForm = ({
   userShippingObj,
@@ -15,7 +16,7 @@ const ShippingForm = ({
   register,
 }: {
   userShippingObj: userShippingObject;
-  setUserShippingObj: (userShippingObj: userShippingObject) => void;
+  setUserShippingObj: Function;
   shippingInfoCheckboxRef: React.RefObject<HTMLInputElement>;
   setSameAsCustomerInfo: (sameAsCustomerInfo: boolean) => void;
   sameAsCustomerInfo: boolean;
@@ -23,8 +24,9 @@ const ShippingForm = ({
   setUserObj: Function;
   register: Function;
 }) => {
+  const streetAddressRef = useRef<HTMLInputElement>(null);
   return (
-    <form className="mt-4 text-text-primary font-gothic w-full">
+    <form className="mt-4 w-full font-gothic text-text-primary">
       <div className="">
         <div className="flex justify-between">
           <h2 className="text-lg font-medium ">Shipping Contact</h2>
@@ -35,11 +37,11 @@ const ShippingForm = ({
               id="sameAsCustomerInfo"
               name="sameAsCustomerInfo"
               type="checkbox"
-              className="h-5 w-5 border-text-secondary rounded checked:bg-text-secondary accent-text-secondary text-text-secondary focus:ring-text-secondary"
+              className="h-5 w-5 rounded border-text-secondary text-text-secondary accent-text-secondary checked:bg-text-secondary focus:ring-text-secondary"
             />
             <label
               htmlFor="sameAsCustomerInfo"
-              className="text-xs text-text-primary select-none"
+              className="select-none text-xs text-text-primary"
             >
               Same as Billing Contact
             </label>
@@ -72,7 +74,7 @@ const ShippingForm = ({
                     firstName: e.target.value,
                   })
                 }
-                className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                className="block w-full rounded-md border border-text-secondary p-1 focus:border-text-primary focus:ring-text-primary sm:text-sm"
               />
             </div>
           </div>
@@ -102,7 +104,7 @@ const ShippingForm = ({
                     lastName: e.target.value,
                   })
                 }
-                className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                className="block w-full rounded-md border border-text-secondary p-1 focus:border-text-primary focus:ring-text-primary sm:text-sm"
               />
             </div>
           </div>
@@ -127,12 +129,12 @@ const ShippingForm = ({
                     : (userShippingObj.email as string)
                 }
                 onChange={(e) =>
-                  setUserObj({
-                    ...userObj,
+                  setUserShippingObj({
+                    ...userShippingObj,
                     email: e.target.value,
                   })
                 }
-                className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                className="block w-full rounded-md border border-text-secondary p-1 focus:border-text-primary focus:ring-text-primary sm:text-sm"
               />
             </div>
           </div>
@@ -161,7 +163,7 @@ const ShippingForm = ({
                     company: e.target.value,
                   })
                 }
-                className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                className="block w-full rounded-md border border-text-secondary p-1 focus:border-text-primary focus:ring-text-primary sm:text-sm"
               />
             </div>
           </div>
@@ -177,7 +179,6 @@ const ShippingForm = ({
               <Autocomplete<
                 ReactGoogleAutocompleteInputProps & {
                   value: string;
-                  disabled: boolean;
                 }
               >
                 apiKey={`${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
@@ -204,50 +205,67 @@ const ShippingForm = ({
                   const postalCode = place?.address_components?.find(
                     (component) => component.types.includes("postal_code")
                   );
+                  console.log("found place!");
+                  console.log(place);
 
-                  setUserShippingObj({
-                    ...userShippingObj,
-                    streetNumber: streetNumber?.long_name as string,
-                    streetAddress: streetNumber?.long_name
-                      ? `${streetNumber?.long_name} ${streetAddress?.long_name}`
-                      : `${streetAddress?.long_name}`,
-                    apartmentOrUnit: apartmentOrUnit
-                      ? apartmentOrUnit?.long_name
-                      : "",
-                    city: city?.long_name as string,
-                    state: state?.long_name as string,
-                    country: "Australia",
-                    postalCode: postalCode?.long_name as string,
+                  // streetNumber: "",
+                  // streetAddress: "",
+                  // apartmentOrUnit: "",
+                  // city: "",
+                  // state: "ACT",
+                  // country: "Australia",
+                  // postalCode: "",
+                  // phoneNumber: "",
+                  setUserShippingObj((userShippingObj: userShippingObject) => {
+                    return {
+                      ...userShippingObj,
+                      streetNumber: streetNumber?.long_name as string,
+                      streetAddress: streetNumber?.long_name
+                        ? `${streetNumber?.long_name} ${streetAddress?.long_name}`
+                        : `${streetAddress?.long_name}`,
+                      apartmentOrUnit: apartmentOrUnit
+                        ? apartmentOrUnit?.long_name
+                        : "",
+                      city: city?.long_name as string,
+                      state: state?.short_name as string,
+                      country: "Australia",
+                      postalCode: postalCode?.long_name as string,
+                    } as userShippingObject;
                   });
                 }}
                 options={{
-                  componentRestrictions: {
-                    country: "au",
-                  },
+                  componentRestrictions: { country: "au" },
                   fields: ["address_components", "formatted_address"],
                   types: ["address"],
                 }}
-                {...register("street-address")}
-                id="street-address"
+                {...register("guest-street-address")}
+                id="guest-street-address"
                 //defaultValue={userObj?.streetAddress as string}
-                value={
-                  sameAsCustomerInfo
-                    ? (userObj.streetAddress as string)
-                    : (userShippingObj.streetAddress as string)
-                }
-                inputAutocompleteValue={
-                  sameAsCustomerInfo
-                    ? (userObj.streetAddress as string)
-                    : (userShippingObj.streetAddress as string)
-                }
-                disabled={sameAsCustomerInfo}
+                value={userShippingObj.streetAddress as string}
                 onChange={(e) => {
                   setUserShippingObj({
                     ...userShippingObj,
                     streetAddress: (e.target as HTMLTextAreaElement).value,
                   });
                 }}
-                className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full border sm:text-sm border-text-primary rounded-md p-1 focus:ring"
+                inputAutocompleteValue={
+                  userShippingObj?.streetAddress as string
+                }
+                className="mt-1 block w-full appearance-none rounded-md border border-text-secondary p-1 text-text-primary focus:border-text-secondary focus:ring focus:ring-text-primary sm:text-sm"
+              />
+              <input
+                hidden
+                id="street-address"
+                ref={streetAddressRef}
+                type="text"
+                value={userShippingObj?.streetAddress as string}
+                autoComplete="off"
+                onChange={(e) => {
+                  setUserShippingObj({
+                    ...userShippingObj,
+                    streetAddress: (e.target as HTMLInputElement).value,
+                  });
+                }}
               />
             </div>
           </div>
@@ -276,7 +294,7 @@ const ShippingForm = ({
                     apartmentOrUnit: e.target.value,
                   })
                 }
-                className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                className="block w-full rounded-md border border-text-secondary p-1 focus:border-text-primary focus:ring-text-primary sm:text-sm"
               />
             </div>
           </div>
@@ -306,7 +324,7 @@ const ShippingForm = ({
                     city: e.target.value,
                   })
                 }
-                className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                className="block w-full rounded-md border border-text-secondary p-1 focus:border-text-primary focus:ring-text-primary sm:text-sm"
               />
             </div>
           </div>
@@ -335,7 +353,7 @@ const ShippingForm = ({
                     country: "Australia",
                   })
                 }
-                className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 py-1.5"
+                className="block w-full rounded-md border border-text-secondary p-1 py-1.5 focus:border-text-primary focus:ring-text-primary sm:text-sm"
               >
                 <option>Australia</option>
               </select>
@@ -360,7 +378,7 @@ const ShippingForm = ({
                 id="guest-region"
                 disabled={sameAsCustomerInfo}
                 autoComplete="address-level1"
-                className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 py-1.5"
+                className="block w-full rounded-md border border-text-secondary p-1 py-1.5 focus:border-text-primary focus:ring-text-primary sm:text-sm"
               >
                 <option>ACT</option>
                 <option>NSW</option>
@@ -399,7 +417,7 @@ const ShippingForm = ({
                     postalCode: e.target.value,
                   })
                 }
-                className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                className="block w-full rounded-md border border-text-secondary p-1 focus:border-text-primary focus:ring-text-primary sm:text-sm"
               />
             </div>
           </div>
@@ -429,7 +447,7 @@ const ShippingForm = ({
                     phoneNumber: e.target.value,
                   })
                 }
-                className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1"
+                className="block w-full rounded-md border border-text-secondary p-1 focus:border-text-primary focus:ring-text-primary sm:text-sm"
               />
             </div>
           </div>
