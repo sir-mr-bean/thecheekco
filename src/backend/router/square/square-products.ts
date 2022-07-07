@@ -139,8 +139,7 @@ export const squareProductRouter = createRouter()
               (item.type === "IMAGE" &&
                 thisProduct?.itemData?.imageIds?.includes(item.id))
           ) as CatalogObject[];
-          console.log("image results are: ", ImageResults);
-          console.log(ImageResults);
+
           const categoryResults = ImageResults.filter(
             (item) =>
               item.type === "ITEM" ||

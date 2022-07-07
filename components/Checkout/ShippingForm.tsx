@@ -205,17 +205,7 @@ const ShippingForm = ({
                   const postalCode = place?.address_components?.find(
                     (component) => component.types.includes("postal_code")
                   );
-                  console.log("found place!");
-                  console.log(place);
 
-                  // streetNumber: "",
-                  // streetAddress: "",
-                  // apartmentOrUnit: "",
-                  // city: "",
-                  // state: "ACT",
-                  // country: "Australia",
-                  // postalCode: "",
-                  // phoneNumber: "",
                   setUserShippingObj((userShippingObj: userShippingObject) => {
                     return {
                       ...userShippingObj,

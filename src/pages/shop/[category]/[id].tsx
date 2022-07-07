@@ -92,7 +92,6 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   //   { productName: router.query?.id as string },
   // ]);
   const productQuery = props.productQuery as CatalogObject[];
-  console.log(productQuery);
 
   const product = productQuery?.find((product) => product.type === "ITEM");
   const image = productQuery?.find((product) => product.type === "IMAGE");
@@ -199,7 +198,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
       );
     });
   };
-  console.log(product);
+
   return (
     <div className="max-w-screen">
       <Head>
@@ -675,19 +674,15 @@ export const getStaticPaths = async (context: GetStaticPathsContext) => {
 export const getStaticProps: GetStaticProps = async (
   context: GetStaticPropsContext
 ) => {
-  console.log("in static props");
   const ssg = createSSGHelpers({
     router: appRouter,
     ctx: context as inferRouterContext<typeof appRouter>,
     transformer: superjson,
   });
 
-  console.log(context?.params?.id);
-
   const productsQuery = await ssg.fetchQuery("square-products.search-product", {
     productName: context?.params?.id as string,
   });
-  //console.log(productsQuery);
 
   return {
     props: {

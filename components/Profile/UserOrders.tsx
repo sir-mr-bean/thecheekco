@@ -108,7 +108,6 @@ const UserOrders = ({
                           <div className="-my-6 divide-y divide-gray-200 sm:-my-10">
                             {order?.lineItems &&
                               order.lineItems.map((product: OrderLineItem) => {
-                                console.log(product);
                                 return (
                                   <div
                                     key={product.uid}

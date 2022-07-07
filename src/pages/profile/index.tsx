@@ -77,7 +77,6 @@ export default function Profile(): JSX.Element {
       enabled: !!customerQuery.data,
     }
   );
-  console.log(orderProducts);
 
   useEffect(() => {
     if (status === String("unauthenticated")) {

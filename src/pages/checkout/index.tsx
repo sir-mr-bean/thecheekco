@@ -201,8 +201,6 @@ export default function checkout() {
     }
   }, [cart]);
 
-  console.log(userObj, userShippingObj);
-
   useEffect(() => {
     if (sameAsCustomerInfo) {
       setUserShippingObj({
@@ -475,7 +473,6 @@ export default function checkout() {
     ) {
       setShippingInfoSet(true);
     } else {
-      console.log(userShippingObj);
       if (!userShippingObj.firstName) {
         toast.error("First name is required for shipping");
       }

@@ -153,14 +153,6 @@ const CheekyBoxWrapper = () => {
 
   const nextStep = async () => {
     setMoving("right");
-    // getValues('firstname')
-    // if (currentStep === 6) {
-    //   giftForm.trigger();
-    //   giftForm.handleSubmit(async (values) => {
-    //     console.log("data is ");
-    //     console.log(values);
-    //   });
-    //}
 
     if (true) {
       setSteps((old) =>
@@ -205,13 +197,13 @@ const CheekyBoxWrapper = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className=" mt-10 sm:mt-16 mx-3 md:mx-16  font-gothic text-text-primary overflow-visible ">
-        <div className="flex-1 flex flex-col justify-start items-center sm:py-3 px-4 sm:px-6 ">
-          <h1 className="text-4xl sm:text-7xl font-light text-center">
+      <div className=" mx-3 mt-10 overflow-visible font-gothic  text-text-primary sm:mt-16 md:mx-16 ">
+        <div className="flex flex-1 flex-col items-center justify-start px-4 sm:py-3 sm:px-6 ">
+          <h1 className="text-center text-4xl font-light sm:text-7xl">
             the cheeky box
           </h1>
           <div
-            className="flex items-start overflow-hidden w-80 sm:w-full min-h-[60vh]"
+            className="flex min-h-[60vh] w-80 items-start overflow-hidden sm:w-full"
             ref={wrapper}
           >
             <div className="flex flex-nowrap items-center ">
@@ -373,7 +365,7 @@ const CheekyBoxWrapper = () => {
                     ? `-translate-x-80 opacity-0`
                     : `translate-x-80 opacity-0`
                 }
-                className="bg-blue-200 w-0 overflow-visible"
+                className="w-0 overflow-visible bg-blue-200"
                 as="div"
               >
                 <div style={{ width: `${wrapperWidth}px`, height: "100%" }}>
@@ -401,7 +393,7 @@ const CheekyBoxWrapper = () => {
                     ? `-translate-x-80 opacity-0`
                     : `translate-x-80 opacity-0`
                 }
-                className="bg-blue-200 w-0 overflow-visible"
+                className="w-0 overflow-visible bg-blue-200"
                 as="div"
               >
                 <div style={{ width: `${wrapperWidth}px`, height: "100%" }}>
@@ -432,7 +424,7 @@ const CheekyBoxWrapper = () => {
                     ? `-translate-x-80 opacity-0`
                     : `translate-x-80 opacity-0`
                 }
-                className="bg-blue-200 w-0 overflow-visible"
+                className="w-0 overflow-visible bg-blue-200"
                 as="div"
               >
                 <div style={{ width: `${wrapperWidth}px`, height: "100%" }}>
@@ -450,7 +442,7 @@ const CheekyBoxWrapper = () => {
           </div>
           {currentStep > 1 && (
             <div className={`mt-2`}>
-              <p className="text-xs sm:text-sm font-medium mb-1 mt-3 text-center">
+              <p className="mb-1 mt-3 text-center text-xs font-medium sm:text-sm">
                 Step {steps.findIndex((step) => step.status === "current") + 1}{" "}
                 of {steps.length}
               </p>
@@ -462,17 +454,17 @@ const CheekyBoxWrapper = () => {
                   type="button"
                   disabled={currentStep === 0}
                   onClick={() => prevStep()}
-                  className="uppercase bg-button border border-transparent rounded-md py-2 px-4 sm:px-8 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5"
+                  className="flex items-center justify-center rounded-md border border-transparent bg-button py-2 px-4 pt-2.5 text-base font-medium uppercase text-white hover:border hover:border-black sm:px-8"
                 >
                   Prev
                 </button>
-                <ol className="mx-2 sm:mx-8 flex items-center space-x-2 sm:space-x-5">
+                <ol className="mx-2 flex items-center space-x-2 sm:mx-8 sm:space-x-5">
                   {steps.map((step, i) => (
                     <li key={`step_${i}`}>
                       {step.status === "complete" ? (
                         <div
                           onClick={() => thisStep(i)}
-                          className="block w-2.5 h-2.5 bg-text-primary rounded-full hover:bg-text-secondary cursor-pointer"
+                          className="block h-2.5 w-2.5 cursor-pointer rounded-full bg-text-primary hover:bg-text-secondary"
                         >
                           <span className="sr-only"></span>
                         </div>
@@ -483,13 +475,13 @@ const CheekyBoxWrapper = () => {
                           aria-current="step"
                         >
                           <span
-                            className="absolute w-4 h-4 sm:w-6 sm:h-6 p-px flex"
+                            className="absolute flex h-4 w-4 p-px sm:h-6 sm:w-6"
                             aria-hidden="true"
                           >
-                            <span className="w-full h-full rounded-full bg-text-secondary/30" />
+                            <span className="h-full w-full rounded-full bg-text-secondary/30" />
                           </span>
                           <span
-                            className="relative block sm:w-2.5 sm:h-2.5 w-2 h-2 bg-text-secondary rounded-full"
+                            className="relative block h-2 w-2 rounded-full bg-text-secondary sm:h-2.5 sm:w-2.5"
                             aria-hidden="true"
                           />
                           <span className="sr-only"></span>
@@ -497,7 +489,7 @@ const CheekyBoxWrapper = () => {
                       ) : (
                         <div
                           onClick={() => thisStep(i)}
-                          className="block w-2.5 h-2.5 bg-text-secondary rounded-full cursor-pointer"
+                          className="block h-2.5 w-2.5 cursor-pointer rounded-full bg-text-secondary"
                         >
                           <span className="sr-only"></span>
                         </div>
@@ -509,7 +501,6 @@ const CheekyBoxWrapper = () => {
                   <button
                     type="submit"
                     onClick={async () => {
-                      console.log("done!");
                       if (gift) await gifterForm.trigger();
                       await giftForm.trigger();
                       if (gift) {
@@ -525,7 +516,7 @@ const CheekyBoxWrapper = () => {
                         }
                       }
                     }}
-                    className={`uppercase bg-button border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5`}
+                    className={`flex items-center justify-center rounded-md border border-transparent bg-button py-2 px-4 pt-2.5 text-base font-medium uppercase text-white hover:border hover:border-black`}
                   >
                     Next
                   </button>
@@ -536,8 +527,8 @@ const CheekyBoxWrapper = () => {
                     onClick={() => nextStep()}
                     className={
                       currentStep === 7
-                        ? `uppercase bg-button border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5 cursor-not-allowed`
-                        : `uppercase bg-button border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:border hover:border-black pt-2.5`
+                        ? `flex cursor-not-allowed items-center justify-center rounded-md border border-transparent bg-button py-2 px-4 pt-2.5 text-base font-medium uppercase text-white hover:border hover:border-black`
+                        : `flex items-center justify-center rounded-md border border-transparent bg-button py-2 px-4 pt-2.5 text-base font-medium uppercase text-white hover:border hover:border-black`
                     }
                   >
                     Next

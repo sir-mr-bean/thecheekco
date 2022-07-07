@@ -23,15 +23,9 @@ const SearchBar = () => {
     },
   ]);
 
-  console.log(product);
-  console.log(status);
-
   useEffect(() => {
     const searchIcon = document.getElementById("search-icon");
     function handleClickOutside(event: any) {
-      console.log(event.target.id);
-      console.log("element is ", searchIcon);
-      console.log(isOpen);
       if (searchRef.current) {
         if (
           !searchRef.current.contains(event.target) &&
@@ -46,7 +40,6 @@ const SearchBar = () => {
       }
     }
     document.addEventListener("click", handleClickOutside);
-    console.log(isOpen);
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
@@ -60,7 +53,6 @@ const SearchBar = () => {
     }
   }, [status, product, isSearching]);
 
-  console.log("search results are ", searchResults);
   return (
     <>
       <div
@@ -109,8 +101,7 @@ const SearchBar = () => {
                   p.type === "CATEGORY" &&
                   result.itemData?.categoryId?.includes(p.id)
               );
-              console.log(productImage);
-              console.log(productCategory);
+
               return (
                 <div className="flex w-full items-center justify-between px-1.5 py-1  text-text-primary hover:bg-text-secondary hover:text-bg-tan">
                   <Link
