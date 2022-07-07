@@ -36,6 +36,8 @@ const SearchBar = () => {
           !searchRef.current.contains(event.target) &&
           event.target.id !== "search-icon"
         ) {
+          setSearch("");
+          searchRef.current.value = "";
           setIsOpen(false);
           setIsSearching(false);
           setSearchResults([]);
@@ -70,9 +72,9 @@ const SearchBar = () => {
           ref={searchRef}
           className={
             isOpen && searchResults && searchResults.length > 0
-              ? `z-10 h-8 w-full origin-right transform appearance-none rounded-t-xl border-x-text-secondary border-t-text-secondary border-b-transparent bg-bg-tan bg-opacity-100 p-1 pl-3 text-xs text-text-primary opacity-100 transition-[width] duration-1000 ease-in-out focus:border-text-primary  sm:text-base`
+              ? `z-10 h-8 w-full origin-right transform appearance-none rounded-t-xl border border-x-text-secondary border-t-text-secondary border-b-transparent bg-bg-tan bg-opacity-100 p-1 pl-3 text-xs text-text-primary opacity-100 transition-[width] duration-1000 ease-in-out   focus:border-x-text-secondary focus:border-t-text-secondary focus:border-b-transparent  focus:ring-0 sm:text-base`
               : isOpen
-              ? `z-10 h-8 w-full origin-right transform appearance-none rounded-full border border-text-secondary bg-bg-tan bg-opacity-100 p-1 pl-3 text-xs text-text-primary opacity-100 transition-[width] duration-1000 ease-in-out focus:border-text-primary  sm:text-base`
+              ? `z-10 h-8 w-full origin-right transform appearance-none rounded-full border border-text-secondary bg-bg-tan bg-opacity-100  p-1 pl-3 text-xs text-text-primary opacity-100 ring-0 transition-[width] duration-1000 ease-in-out focus:border-0 focus:border-text-primary  focus:ring-0  sm:text-base`
               : `z-10 h-6 w-6 origin-right transform rounded-full border border-text-secondary bg-bg-tan transition-[width] delay-500 duration-1000 ease-in-out`
           }
           onChange={(e) => {
@@ -161,7 +163,13 @@ const SearchBar = () => {
           {isOpen ? (
             <AiOutlineClose
               id="close-search"
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                setSearch("");
+                searchRef.current ? (searchRef.current.value = "") : null;
+                setIsSearching(false);
+                setSearchResults([]);
+                setIsOpen(false);
+              }}
               className="absolute right-1 top-1.5 z-20 h-5 w-5 transform text-text-primary opacity-100 transition-all duration-1000 ease-out"
             />
           ) : (
