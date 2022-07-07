@@ -88,21 +88,25 @@ export const squareOrderRouter = createRouter()
         }
       } else {
         customerId = existingCustomer?.id;
-        await customersApi.updateCustomer(customerId as string, {
-          address: {
-            addressLine1: billingAddress.addressLine1,
-            addressLine2: billingAddress.addressLine2 as string,
-            administrativeDistrictLevel1: billingAddress.region,
-            locality: billingAddress.locality,
-            postalCode: billingAddress.postalCode,
-            country: billingAddress.country,
-          },
-          companyName: billingAddress.companyName,
-          givenName: billingAddress.firstName,
-          familyName: billingAddress.lastName,
-          emailAddress: billingAddress.email,
-          phoneNumber: billingAddress.phoneNumber,
-        });
+        try {
+          await customersApi.updateCustomer(customerId as string, {
+            address: {
+              addressLine1: billingAddress.addressLine1,
+              addressLine2: billingAddress?.addressLine2 || "",
+              administrativeDistrictLevel1: billingAddress.region,
+              locality: billingAddress.locality,
+              postalCode: billingAddress.postalCode,
+              country: billingAddress.country,
+            },
+            companyName: billingAddress.companyName,
+            givenName: billingAddress.firstName,
+            familyName: billingAddress.lastName,
+            emailAddress: billingAddress.email,
+            phoneNumber: billingAddress.phoneNumber,
+          });
+        } catch (e) {
+          console.log(e);
+        }
       }
 
       const order: ApiResponse<CreateOrderResponse> =

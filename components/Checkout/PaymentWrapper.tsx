@@ -309,6 +309,11 @@ const PaymentWrapper = ({
                   }
                 );
               },
+              onError(error, variables, context) {
+                console.log(error);
+                toast.error("Order unsuccessful. Please try again.");
+                setOrderProcessing(false);
+              },
             }
           );
         }

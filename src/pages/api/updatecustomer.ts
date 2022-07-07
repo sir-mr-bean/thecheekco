@@ -25,7 +25,10 @@ export default async function handler(
   const event = request.body as SquareEvent;
   const sgMail = new MailService();
   sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
-  const orderId = event.data.id;
+  const orderId = event?.data?.id;
+  if (!orderId) {
+    return response.status(404).send("No order id");
+  }
   const dbOrder = await prisma.order.findUnique({
     where: {
       id: orderId,
