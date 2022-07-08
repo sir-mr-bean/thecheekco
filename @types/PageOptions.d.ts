@@ -20,12 +20,12 @@ export type PageTwoOptions = {
 };
 
 export type PageThreeOptions = {
-  sweet: boolean;
-  fruity: boolean;
-  masculine: boolean;
   floral: boolean;
+  allNatural: boolean;
+  darkAndSexy: boolean;
+  fruity: boolean;
+  sweet: boolean;
   fragranceFree: boolean;
-  avoid: string;
   allergies: string;
 };
 

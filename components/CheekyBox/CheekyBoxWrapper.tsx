@@ -9,7 +9,7 @@ import PageSix, {
   cheekyBoxUserGifter,
   cheekyBoxUserRecipient,
 } from "./Pages/PageSix";
-import PageThree from "./Pages/PageThree";
+import PageThree from "./Pages/PageThree/PageThree";
 import FinalPage from "./Pages/FinalPage";
 import Head from "next/head";
 import * as z from "zod";
@@ -66,12 +66,12 @@ const CheekyBoxWrapper = () => {
   });
 
   const [pageThreeOptions, setPageThreeOptions] = useState({
-    sweet: false,
-    fruity: false,
-    masculine: false,
     floral: false,
+    allNatural: false,
+    darkAndSexy: false,
+    fruity: false,
+    sweet: false,
     fragranceFree: false,
-    avoid: "",
     allergies: "",
   });
 
