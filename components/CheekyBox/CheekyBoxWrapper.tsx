@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import CheekyBoxIntro from "./CheekyBoxIntro";
 import PageOne from "./Pages/PageOne/PageOne";
 import PageTwo from "./Pages/PageTwo/PageTwo";
-import PageFour from "./Pages/PageFour";
+import PageFour from "./Pages/PageFour/PageFour";
 import PageFive from "./Pages/PageFive";
 import PageSix, {
   cheekyBoxUserGifter,
@@ -78,8 +78,10 @@ const CheekyBoxWrapper = () => {
   const [pageFourOptions, setPageFourOptions] = useState({
     dry: false,
     oily: false,
-    normal: false,
-    mix: false,
+    combination: false,
+    mild: false,
+    medium: false,
+    high: false,
   });
 
   const [pageFiveOptions, setPageFiveOptions] = useState({
@@ -208,7 +210,7 @@ const CheekyBoxWrapper = () => {
             the cheeky box
           </h1>
           <div
-            className="flex min-h-[60vh] w-full flex-1 grow items-start overflow-hidden"
+            className="flex min-h-[60vh] w-full flex-1 grow items-start"
             ref={wrapper}
           >
             <div className="flex flex-nowrap items-center ">

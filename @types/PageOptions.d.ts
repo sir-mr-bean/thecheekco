@@ -32,8 +32,10 @@ export type PageThreeOptions = {
 export type PageFourOptions = {
   dry: boolean;
   oily: boolean;
-  normal: boolean;
-  mix: boolean;
+  combination: boolean;
+  mild: boolean;
+  medium: boolean;
+  high: boolean;
 };
 
 export type PageFiveOptions = {

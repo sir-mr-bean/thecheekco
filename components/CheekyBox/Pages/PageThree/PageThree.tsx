@@ -77,8 +77,8 @@ const PageThree = ({
           option="fragrance free"
         />
       </div>
-      <div className="flex w-full items-center justify-center space-x-3 pt-16 sm:translate-x-12 sm:pt-8 ">
-        <label className="text-center text-xs text-text-primary sm:text-base">
+      <div className="flex w-full flex-col items-center justify-center space-x-3 pt-16 sm:translate-x-12 sm:flex-row sm:pt-8 ">
+        <label className="pb-3 text-center text-xs text-text-primary sm:pb-0 sm:text-base">
           do you have an allergies we should be aware of?
         </label>
         <input
