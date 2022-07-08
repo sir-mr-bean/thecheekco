@@ -16,7 +16,10 @@ const SubscriptionOption = ({
   return (
     <div
       onClick={() => {
-        nextStepRef?.current?.focus();
+        nextStepRef?.current?.scrollIntoView();
+        setTimeout(() => {
+          nextStepRef?.current?.focus();
+        }, 500);
         setIntroOptions({ duration: duration as IntroOptions["duration"] });
       }}
       className={

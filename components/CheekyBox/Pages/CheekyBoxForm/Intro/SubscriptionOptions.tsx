@@ -11,7 +11,7 @@ const SubscriptionOptions = ({
   nextStepRef: React.RefObject<HTMLButtonElement>;
 }) => {
   return (
-    <div className="flex w-full flex-col items-center justify-center space-y-3 sm:flex-row sm:space-y-0 sm:space-x-24 xl:w-3/4">
+    <div className="flex w-full flex-col items-center justify-center space-y-3 sm:flex-row sm:space-y-0 sm:space-x-8 lg:space-x-24 xl:w-3/4">
       <SubscriptionOption
         introOptions={introOptions}
         setIntroOptions={setIntroOptions}

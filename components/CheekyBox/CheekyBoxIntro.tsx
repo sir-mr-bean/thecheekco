@@ -15,7 +15,7 @@ const CheekyBoxIntro = ({
   const nextStepRef = useRef<HTMLButtonElement>(null);
   return (
     <div className="flex w-full flex-col items-center justify-center font-gothic text-sm sm:text-xl">
-      <div className="flex w-full flex-col items-center space-y-10 px-5 lg:px-20">
+      <div className="flex w-full flex-col items-center space-y-10 px-1 lg:px-20">
         <span className="mt-3 text-center text-2xl sm:text-4xl">
           monthly subscription
         </span>
