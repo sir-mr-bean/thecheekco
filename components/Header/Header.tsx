@@ -131,12 +131,12 @@ export const Header = (): JSX.Element => {
                     <a>
                       <div className="relative top-2 right-3 ml-5 mb-3 cursor-pointer sm:absolute sm:top-3 sm:block sm:rounded-full sm:bg-white sm:bg-opacity-100 md:h-[65px] md:w-[65px] md:border-text-secondary md:shadow-md md:shadow-text-primary lg:right-20">
                         {cart && hasMounted ? (
-                          <IoBasketSharp className="m-2 h-6 w-6 -translate-y-1.5 text-shopping-cart opacity-100 sm:h-12 sm:w-12" />
+                          <IoBasketSharp className="m-2 h-6 w-6 -translate-y-0 text-shopping-cart opacity-100 sm:h-12 sm:w-12" />
                         ) : (
-                          <IoBasketSharp className="m-2 h-8 w-8 -translate-y-2 text-shopping-cart opacity-100 sm:h-12 sm:w-12 sm:translate-y-0" />
+                          <IoBasketSharp className="m-2 h-8 w-8 -translate-y-0 text-shopping-cart opacity-100 sm:h-12 sm:w-12 sm:translate-y-0" />
                         )}
                         {cart && hasMounted && (
-                          <div className="font-gothica absolute -top-4 -left-1 flex h-5 w-5 items-center justify-center rounded-full bg-shopping-cart-badge text-white sm:-top-1">
+                          <div className="font-gothica absolute -top-3 -left-0 flex h-4 w-4 items-center justify-center rounded-full bg-text-secondary text-center text-xs font-semibold text-white sm:-top-1 sm:h-6 sm:w-6 sm:text-sm">
                             {cart.length}
                           </div>
                         )}

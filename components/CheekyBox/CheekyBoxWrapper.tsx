@@ -535,6 +535,8 @@ const CheekyBoxWrapper = () => {
                   >
                     Next
                   </button>
+                ) : currentStep === 7 ? (
+                  <></>
                 ) : (
                   <button
                     type="button"
