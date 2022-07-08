@@ -4,7 +4,7 @@ import CheekyBoxIntro from "./CheekyBoxIntro";
 import PageOne from "./Pages/PageOne/PageOne";
 import PageTwo from "./Pages/PageTwo/PageTwo";
 import PageFour from "./Pages/PageFour/PageFour";
-import PageFive from "./Pages/PageFive";
+import PageFive from "./Pages/PageFive/PageFive";
 import PageSix, {
   cheekyBoxUserGifter,
   cheekyBoxUserRecipient,
