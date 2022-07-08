@@ -160,7 +160,10 @@ const CheekyBoxWrapper = () => {
 
   const nextStep = async () => {
     setMoving("right");
-
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
     if (true) {
       setSteps((old) =>
         old.map((v, i) => {
