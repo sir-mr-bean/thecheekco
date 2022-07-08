@@ -57,7 +57,7 @@ const FormField = ({
           />
         )}
         {form.formState.errors?.[methodName]?.message && (
-          <span className=" z-20 bg-white px-2 py-1 text-center font-gothic text-xs text-red-500">
+          <span className=" z-20 whitespace-nowrap rounded-xl bg-white px-2 py-1 text-center font-gothic text-xs text-red-500">
             {form.formState.errors?.[methodName].message}
           </span>
         )}

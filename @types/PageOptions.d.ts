@@ -42,6 +42,7 @@ export type PageFiveOptions = {
   hair: boolean;
   skin: boolean;
   sleep: boolean;
-  home: boolean;
+  medium: boolean;
+  homeDecor: boolean;
   wearable: boolean;
 };

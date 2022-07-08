@@ -88,7 +88,8 @@ const CheekyBoxWrapper = () => {
     hair: false,
     skin: false,
     sleep: false,
-    home: false,
+    medium: false,
+    homeDecor: false,
     wearable: false,
   });
 
