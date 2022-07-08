@@ -1,3 +1,7 @@
+export type IntroOptions = {
+  duration: "" | "monthly" | "threemonths";
+};
+
 export type PageOneOptions = {
   bathProducts: boolean;
   showerProducts: boolean;

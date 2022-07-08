@@ -14,6 +14,7 @@ import FinalPage from "./Pages/FinalPage";
 import Head from "next/head";
 import * as z from "zod";
 import { useZodForm } from "@/utils/hooks/useZodForm";
+import { IntroOptions } from "@/types/PageOptions";
 
 const CheekyBoxWrapper = () => {
   const [cbUserObject, setCbUserObject] = useState({
@@ -42,6 +43,10 @@ const CheekyBoxWrapper = () => {
     { name: "Step 7", href: "#", status: "upcoming" },
     { name: "Step 8", href: "#", status: "upcoming" },
   ]);
+
+  const [introOptions, setIntroOptions] = useState<IntroOptions>({
+    duration: "",
+  });
 
   const [pageOneOptions, setPageOneOptions] = useState({
     bathProducts: false,
@@ -229,7 +234,11 @@ const CheekyBoxWrapper = () => {
                 as="div"
               >
                 <div style={{ width: `${wrapperWidth}px`, height: "100%" }}>
-                  <CheekyBoxIntro nextStep={nextStep} />
+                  <CheekyBoxIntro
+                    introOptions={introOptions}
+                    setIntroOptions={setIntroOptions}
+                    nextStep={nextStep}
+                  />
                 </div>
               </Transition>
 

@@ -1,23 +1,41 @@
-const SubscrinOn = ({
+import { IntroOptions } from "@/types/PageOptions";
+
+const SubscriptionOption = ({
   price,
   duration,
+  introOptions,
+  setIntroOptions,
+  nextStepRef,
 }: {
   price: string;
   duration: string;
+  introOptions: IntroOptions;
+  setIntroOptions: (options: IntroOptions) => void;
+  nextStepRef: React.RefObject<HTMLButtonElement>;
 }) => {
   return (
-    <div className="group h-[370px]  w-full max-w-xs rounded-xl bg-button shadow-sm sm:h-[460px] ">
-      <div className="flex h-full w-full flex-col items-center justify-between p-2 sm:p-6">
-        <span className=" text-center text-2xl text-text-primary sm:text-4xl">
+    <div
+      onClick={() => {
+        nextStepRef?.current?.focus();
+        setIntroOptions({ duration: duration as IntroOptions["duration"] });
+      }}
+      className={
+        introOptions.duration === duration
+          ? `h-[370px]  w-full max-w-xs cursor-pointer rounded-xl bg-button shadow-sm ring-2 ring-text-secondary sm:h-[460px]`
+          : `h-[370px]  w-full max-w-xs cursor-pointer rounded-xl bg-button shadow-sm sm:h-[460px]`
+      }
+    >
+      <div className="flex h-full w-full select-none flex-col items-center justify-between p-2 sm:p-6">
+        <span className=" pt-4 text-center text-2xl text-text-primary sm:text-4xl">
           the cheeky box.
         </span>
         {duration === "monthly" ? (
           <span className="text-base text-text-primary sm:text-lg">
-            monthly subscrin box
+            monthly subscription box
           </span>
         ) : (
           <span className="text-base text-text-primary sm:text-lg">
-            3 month gift addition
+            3 month gift edition
           </span>
         )}
         <div className="flex w-full flex-col items-center justify-center">
@@ -60,13 +78,13 @@ const SubscrinOn = ({
           calender month.
         </span>
         {duration === "monthly" ? (
-          <div className="mt-1 flex w-full cursor-pointer items-center justify-center rounded-xl border border-transparent bg-bg-tan py-3 hover:border-white">
+          <div className="mt-1 mb-1 flex w-full cursor-pointer items-center justify-center rounded-xl border border-transparent bg-bg-tan py-3 hover:border-white">
             <span className="text-base font-semibold text-text-primary">
               Select
             </span>
           </div>
         ) : (
-          <div className="mt-2 flex w-full cursor-pointer items-center justify-center rounded-xl border border-transparent bg-bg-tan py-3 hover:border-white">
+          <div className="mb-1 flex w-full cursor-pointer items-center justify-center rounded-xl border border-transparent bg-bg-tan py-3 hover:border-white">
             <span className="text-base font-semibold text-text-primary">
               Send a gift
             </span>
@@ -77,4 +95,4 @@ const SubscrinOn = ({
   );
 };
 
-export default SubscrinOn;
+export default SubscriptionOption;

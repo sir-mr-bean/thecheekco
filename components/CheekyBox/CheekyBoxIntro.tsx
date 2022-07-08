@@ -1,6 +1,18 @@
+import { IntroOptions } from "@/types/PageOptions";
+import { useRef } from "react";
 import SubscriptionOption from "./Pages/CheekyBoxForm/Intro/SubscriptionOption";
+import SubscriptionOptions from "./Pages/CheekyBoxForm/Intro/SubscriptionOptions";
 
-const CheekyBoxIntro = ({ nextStep }: { nextStep: () => void }) => {
+const CheekyBoxIntro = ({
+  nextStep,
+  introOptions,
+  setIntroOptions,
+}: {
+  nextStep: () => void;
+  introOptions: IntroOptions;
+  setIntroOptions: (options: IntroOptions) => void;
+}) => {
+  const nextStepRef = useRef<HTMLButtonElement>(null);
   return (
     <div className="flex w-full flex-col items-center justify-center font-gothic text-sm sm:text-xl">
       <div className="flex w-full flex-col items-center space-y-10 px-5 lg:px-20">
@@ -17,15 +29,22 @@ const CheekyBoxIntro = ({ nextStep }: { nextStep: () => void }) => {
             necessities.
           </span>
         </div>
-        <div className="flex w-full flex-col items-center justify-center space-y-3 sm:flex-row sm:space-y-0 sm:space-x-24 xl:w-3/4">
-          <SubscriptionOption duration="monthly" price="49.99" />
-          <SubscriptionOption duration="threemonths" price="149.97" />
-        </div>
+        <SubscriptionOptions
+          introOptions={introOptions}
+          setIntroOptions={setIntroOptions}
+          nextStepRef={nextStepRef}
+        />
       </div>
       <div className="my-6 flex w-full items-center justify-end">
-        <span className="text-text-primary">
-          Tell us a bit about your preferences →
-        </span>
+        <button
+          className="mx-1 px-4 py-2 focus:animate-pulse focus:rounded-xl focus:ring-2 focus:ring-text-secondary focus:duration-1000 "
+          ref={nextStepRef}
+          onClick={nextStep}
+        >
+          <span className="text-text-primary">
+            Tell us a bit about your preferences →
+          </span>
+        </button>
       </div>
     </div>
   );
