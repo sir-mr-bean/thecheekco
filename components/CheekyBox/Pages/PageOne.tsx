@@ -1,4 +1,7 @@
 import type { PageOneOptions } from "@/types/PageOptions";
+import { useEffect, useRef } from "react";
+import lottie from "lottie-web";
+import PageOneOption from "@/components/CheekyBox/Pages/PageOne/PageOneOption";
 
 const PageOne = ({
   pageOneOptions,
@@ -7,93 +10,90 @@ const PageOne = ({
   pageOneOptions: PageOneOptions;
   setPageOneOptions: (pageOneOptions: PageOneOptions) => void;
 }) => {
+  const topHousePlantRef = useRef() as React.MutableRefObject<HTMLInputElement>;
+  const bottomHousePlantRef =
+    useRef() as React.MutableRefObject<HTMLInputElement>;
+  useEffect(() => {
+    if (topHousePlantRef.current) {
+      lottie.loadAnimation({
+        container: topHousePlantRef.current,
+        renderer: "svg",
+        loop: true,
+        autoplay: true,
+        animationData: require("../../../public/images/CheekyBox/houseplant.json"),
+      });
+    }
+    if (bottomHousePlantRef.current) {
+      lottie.loadAnimation({
+        container: bottomHousePlantRef.current,
+        renderer: "svg",
+        loop: true,
+        autoplay: true,
+        animationData: require("../../../public/images/CheekyBox/houseplant.json"),
+      });
+    }
+    return () => {
+      lottie.destroy();
+    };
+  }, []);
+
   return (
     <>
-      <div className="flex h-full w-full flex-col items-start justify-center">
-        <div className="flex w-full flex-col items-center justify-center space-y-3">
-          <span className="text-center text-sm sm:text-lg">
-            To begin, tell us a little about your bathing & skin preferences to
-            help shape each months selections.
-          </span>
-          <span className="text-center text-sm sm:text-lg">
-            Would you prefer: Bath Products, Shower Products or Both
-          </span>
-        </div>
-        <div className="flex w-full items-center justify-between space-x-4 py-2 sm:px-5 sm:pt-5">
-          <div
-            onClick={() =>
-              setPageOneOptions({
-                bathProducts: true,
-                showerProducts: false,
-                both: false,
-              })
-            }
-            className={
-              pageOneOptions.bathProducts
-                ? `relative h-64 w-full cursor-pointer rounded-lg border border-text-secondary bg-button p-3 hover:scale-[1.01]`
-                : `relative h-64 w-full cursor-pointer rounded-lg border border-text-secondary bg-bg-tan p-3 hover:scale-[1.01]`
-            }
-          >
-            <span
-              className={
-                pageOneOptions.bathProducts
-                  ? `absolute inset-x-[22px] bottom-8  w-fit rounded-lg border border-text-secondary bg-bg-tan px-2 py-1 font-semibold text-text-primary sm:inset-x-[58px] sm:px-4 sm:pt-2`
-                  : `absolute inset-x-[22px] bottom-8  w-fit rounded-lg border border-text-secondary bg-button px-2 py-1 font-semibold text-white sm:inset-x-[58px] sm:px-4 sm:pt-2`
-              }
-            >
-              Bath
-            </span>
-          </div>
-          <div
-            onClick={() =>
-              setPageOneOptions({
-                bathProducts: false,
-                showerProducts: true,
-                both: false,
-              })
-            }
-            className={
-              pageOneOptions.showerProducts
-                ? `relative h-64 w-full cursor-pointer rounded-lg border border-text-secondary bg-button p-3 hover:scale-[1.01]`
-                : `relative h-64 w-full cursor-pointer rounded-lg border border-text-secondary bg-bg-tan p-3 hover:scale-[1.01]`
-            }
-          >
-            <span
-              className={
-                pageOneOptions.showerProducts
-                  ? `absolute inset-x-3 bottom-8  w-fit rounded-lg border border-text-secondary bg-bg-tan px-2 py-1 font-semibold text-text-primary sm:inset-x-[58px] sm:px-4 sm:pt-2`
-                  : `absolute inset-x-3 bottom-8  w-fit rounded-lg border border-text-secondary bg-button px-2 py-1 font-semibold text-white sm:inset-x-[58px] sm:px-4 sm:pt-2`
-              }
-            >
-              Shower
-            </span>
-          </div>
-          <div
-            onClick={() =>
-              setPageOneOptions({
-                bathProducts: false,
-                showerProducts: false,
-                both: true,
-              })
-            }
-            className={
-              pageOneOptions.both
-                ? `relative h-64 w-full cursor-pointer rounded-lg border border-text-secondary bg-button p-3 hover:scale-[1.01]`
-                : `relative h-64 w-full cursor-pointer rounded-lg border border-text-secondary bg-bg-tan p-3 hover:scale-[1.01]`
-            }
-          >
-            <span
-              className={
-                pageOneOptions.both
-                  ? `absolute inset-x-5 bottom-8  w-fit rounded-lg border border-text-secondary bg-bg-tan px-2 py-1 font-semibold text-text-primary sm:inset-x-[58px] sm:px-4 sm:pt-2`
-                  : `absolute inset-x-5 bottom-8  w-fit rounded-lg border border-text-secondary bg-button px-2 py-1 font-semibold text-white sm:inset-x-[58px] sm:px-4 sm:pt-2`
-              }
-            >
-              Both
-            </span>
+      <div className="flex h-full w-full flex-col items-center justify-start">
+        <span className=" mb-6 text-center text-2xl sm:text-4xl">
+          likes & dislikes
+        </span>
+        <div className="flex w-full flex-col items-center justify-between space-y-4 text-center text-sm text-text-primary sm:w-3/4 sm:text-base  lg:text-lg">
+          <div className="flex w-full items-center justify-center sm:-translate-x-24 xl:-translate-x-48">
+            <div
+              className="mx-auto hidden sm:block sm:w-fit sm:-translate-x-10 xl:w-fit xl:translate-y-24 xl:translate-x-16"
+              ref={topHousePlantRef ? topHousePlantRef : ""}
+              onMouseEnter={() => lottie.play()}
+              onMouseLeave={() => lottie.pause()}
+            />
+            <div className="-m-12 my-8 flex w-full flex-col items-center justify-between space-y-4">
+              <span>
+                To begin, tell us a little about your bathing & skin preferences
+                to help shape each months selections. While this will help us to
+                create the boxes we cannot guarantee your specific selections
+                will be met each month, outside of the below.
+              </span>
+
+              <span>
+                Please select the type of box you would like to recieve.
+              </span>
+
+              <span>
+                All boxes will contain a mixture of skin care, soap, accessories
+                & your selection below.
+              </span>
+            </div>
           </div>
         </div>
       </div>
+      <div className="flex h-full w-full items-start justify-center space-x-4 py-2 pt-8 sm:space-x-8 sm:px-5 lg:space-x-16 xl:pt-0">
+        <PageOneOption
+          pageOneOptions={pageOneOptions}
+          setPageOneOptions={setPageOneOptions}
+          option="bath"
+        />
+        <PageOneOption
+          pageOneOptions={pageOneOptions}
+          setPageOneOptions={setPageOneOptions}
+          option="shower"
+        />
+        <PageOneOption
+          pageOneOptions={pageOneOptions}
+          setPageOneOptions={setPageOneOptions}
+          option="both"
+        />
+      </div>
+      <div
+        className="mx-auto w-2/3 sm:hidden"
+        ref={bottomHousePlantRef ? bottomHousePlantRef : ""}
+        onMouseEnter={() => lottie.play()}
+        onMouseLeave={() => lottie.pause()}
+      />
     </>
   );
 };

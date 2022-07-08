@@ -49,8 +49,8 @@ const CheekyBoxWrapper = () => {
   });
 
   const [pageOneOptions, setPageOneOptions] = useState({
-    bathProducts: false,
-    showerProducts: false,
+    bath: false,
+    shower: false,
     both: false,
   });
 
@@ -208,7 +208,7 @@ const CheekyBoxWrapper = () => {
             the cheeky box
           </h1>
           <div
-            className="flex min-h-[60vh] w-80 items-start overflow-hidden sm:w-full"
+            className="flex min-h-[60vh] w-full flex-1 grow items-start overflow-hidden"
             ref={wrapper}
           >
             <div className="flex flex-nowrap items-center ">
@@ -449,7 +449,7 @@ const CheekyBoxWrapper = () => {
               </Transition>
             </div>
           </div>
-          {currentStep > 1 && (
+          {currentStep > 0 && (
             <div className={`mt-2`}>
               <p className="mb-1 mt-3 text-center text-xs font-medium sm:text-sm">
                 Step {steps.findIndex((step) => step.status === "current") + 1}{" "}

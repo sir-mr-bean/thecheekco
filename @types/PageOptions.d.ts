@@ -3,8 +3,8 @@ export type IntroOptions = {
 };
 
 export type PageOneOptions = {
-  bathProducts: boolean;
-  showerProducts: boolean;
+  bath: boolean;
+  shower: boolean;
   both: boolean;
 };
 
