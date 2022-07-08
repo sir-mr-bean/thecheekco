@@ -27,16 +27,16 @@ const FinalPage = ({
   return (
     <div className="w-full justify-center">
       <div className="mx-4 rounded-lg bg-bg-tan p-2">
-        <h1 className="text-2xl pb-6">Review your Cheeky Box:</h1>
-        <div className="flex flex-wrap items-start justify-around w-full">
-          <span className="text-sm sm:text-lg text-center border rounded-lg p-2 border-text-secondary">
-            {pageOneOptions.bathProducts
+        <h1 className="pb-6 text-2xl">Review your Cheeky Box:</h1>
+        <div className="flex w-full flex-wrap items-start justify-around">
+          <span className="rounded-lg border border-text-secondary p-2 text-center text-sm sm:text-lg">
+            {pageOneOptions.bath
               ? "Just Bath Products"
-              : pageOneOptions.showerProducts
+              : pageOneOptions.shower
               ? "Just Shower Products"
               : "Both Shower and Bath Products"}
           </span>
-          <div className="text-sm sm:text-lg text-start flex flex-col items-start justify-center border rounded-lg p-2 border-text-secondary">
+          <div className="flex flex-col items-start justify-center rounded-lg border border-text-secondary p-2 text-start text-sm sm:text-lg">
             <ul>
               <li>
                 {pageTwoOptions.bathSoak ? (
@@ -96,7 +96,7 @@ const FinalPage = ({
               </li>
             </ul>
           </div>
-          <div className="text-sm sm:text-lg text-start flex flex-col items-start justify-center border rounded-lg p-2 border-text-secondary">
+          <div className="flex flex-col items-start justify-center rounded-lg border border-text-secondary p-2 text-start text-sm sm:text-lg">
             <ul>
               <li>
                 {pageThreeOptions.sweet ? (
