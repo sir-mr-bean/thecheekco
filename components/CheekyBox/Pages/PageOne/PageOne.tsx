@@ -20,7 +20,7 @@ const PageOne = ({
         renderer: "svg",
         loop: true,
         autoplay: true,
-        animationData: require("../../../public/images/CheekyBox/houseplant.json"),
+        animationData: require("../../../../public/images/CheekyBox/houseplant.json"),
       });
     }
     if (bottomHousePlantRef.current) {
@@ -29,7 +29,7 @@ const PageOne = ({
         renderer: "svg",
         loop: true,
         autoplay: true,
-        animationData: require("../../../public/images/CheekyBox/houseplant.json"),
+        animationData: require("../../../../public/images/CheekyBox/houseplant.json"),
       });
     }
     return () => {
@@ -46,7 +46,7 @@ const PageOne = ({
         <div className="flex w-full flex-col items-center justify-between space-y-4 text-center text-sm text-text-primary sm:w-3/4 sm:text-base  lg:text-lg">
           <div className="flex w-full items-center justify-center sm:-translate-x-24 xl:-translate-x-48">
             <div
-              className="mx-auto hidden sm:block sm:w-fit sm:-translate-x-10 xl:w-fit xl:translate-y-24 xl:translate-x-16"
+              className="mx-auto hidden sm:block sm:w-1/2 sm:-translate-x-10 xl:translate-x-10 xl:translate-y-24"
               ref={topHousePlantRef ? topHousePlantRef : ""}
               onMouseEnter={() => lottie.play()}
               onMouseLeave={() => lottie.pause()}

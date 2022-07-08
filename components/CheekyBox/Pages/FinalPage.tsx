@@ -59,13 +59,13 @@ const FinalPage = ({
                   <NoThanks item="Body Wash" />
                 )}
               </li>
-              <li>
+              {/* <li>
                 {pageTwoOptions.bubbleBath ? (
                   <YesPlease item="Bubble Bath" />
                 ) : (
                   <NoThanks item="Bubble Bath" />
                 )}
-              </li>
+              </li> */}
               <li>
                 {pageTwoOptions.conditioner ? (
                   <YesPlease item="Conditioner" />
@@ -80,13 +80,13 @@ const FinalPage = ({
                   <NoThanks item="Shampoo Bar" />
                 )}
               </li>
-              <li>
+              {/* <li>
                 {pageTwoOptions.showerSteamer ? (
                   <YesPlease item="Shower Steamer" />
                 ) : (
                   <NoThanks item="Shower Steamer" />
                 )}
-              </li>
+              </li> */}
               <li>
                 {pageTwoOptions.soapBar ? (
                   <YesPlease item="Soap Bar" />

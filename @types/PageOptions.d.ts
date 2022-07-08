@@ -15,8 +15,8 @@ export type PageTwoOptions = {
   bodyButter: boolean;
   soapBar: boolean;
   bathSoak: boolean;
-  bubbleBath: boolean;
-  showerSteamer: boolean;
+  beautyTools: boolean;
+  hygieneAccessories: boolean;
 };
 
 export type PageThreeOptions = {

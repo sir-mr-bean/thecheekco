@@ -13,8 +13,8 @@ const PageOneOption = ({
     <div
       onClick={() => {
         setPageOneOptions({
-          bathProducts: false,
-          showerProducts: false,
+          bath: false,
+          shower: false,
           both: false,
         });
         setPageOneOptions((prevOptions: PageOneOptions) => ({

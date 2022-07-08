@@ -1,8 +1,8 @@
 import { Transition } from "@headlessui/react";
 import { useEffect, useRef, useState } from "react";
 import CheekyBoxIntro from "./CheekyBoxIntro";
-import PageOne from "./Pages/PageOne";
-import PageTwo from "./Pages/PageTwo";
+import PageOne from "./Pages/PageOne/PageOne";
+import PageTwo from "./Pages/PageTwo/PageTwo";
 import PageFour from "./Pages/PageFour";
 import PageFive from "./Pages/PageFive";
 import PageSix, {
@@ -61,8 +61,8 @@ const CheekyBoxWrapper = () => {
     bodyButter: false,
     soapBar: false,
     bathSoak: false,
-    bubbleBath: false,
-    showerSteamer: false,
+    beautyTools: false,
+    hygieneAccessories: false,
   });
 
   const [pageThreeOptions, setPageThreeOptions] = useState({
