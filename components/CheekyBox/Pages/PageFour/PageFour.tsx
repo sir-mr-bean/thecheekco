@@ -29,7 +29,7 @@ const PageFour = ({
 
   return (
     <>
-      <div className="relative flex h-full w-full flex-col items-center justify-start">
+      <div className="relative flex h-fit w-full flex-col items-center justify-start">
         <div
           className="-right-6 mx-auto hidden w-1/3 sm:absolute sm:block xl:-right-24"
           ref={plantRef ? plantRef : ""}
@@ -66,7 +66,7 @@ const PageFour = ({
           option="oily"
         />
       </div>
-      <div className="flex h-full w-full flex-col items-center justify-start">
+      <div className="flex h-fit w-full flex-col items-center justify-start">
         <div className="flex w-full flex-col items-center justify-between space-y-4 text-center text-sm text-text-primary sm:w-3/4 sm:text-base lg:text-lg">
           <div className="flex w-full items-center justify-center ">
             <div className="-m-12 my-8 flex w-full flex-col items-center justify-between space-y-4">
