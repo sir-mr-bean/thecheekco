@@ -6,13 +6,24 @@ import {
   PageThreeOptions,
   PageTwoOptions,
 } from "@/types/PageOptions";
-import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
+import { trpc } from "@/utils/trpc";
+import { UseFormReturn } from "react-hook-form";
 import {
   CreditCard,
   GooglePay,
   PaymentForm,
 } from "react-square-web-payments-sdk";
 import CheckoutResults from "./FinalPage/CheckoutResults";
+import PageSix, {
+  cheekyBoxUserGifter,
+  cheekyBoxUserRecipient,
+} from "../Pages/PageSix";
+import { CatalogObject } from "square";
+import { TokenResult } from "@square/web-sdk";
+import { BeatLoader } from "react-spinners";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 
 const FinalPage = ({
   introOptions,
@@ -22,6 +33,8 @@ const FinalPage = ({
   pageFourOptions,
   pageFiveOptions,
   gift,
+  giftForm,
+  gifterForm,
 }: {
   introOptions: IntroOptions;
   pageOneOptions: PageOneOptions;
@@ -30,7 +43,161 @@ const FinalPage = ({
   pageFourOptions: PageFourOptions;
   pageFiveOptions: PageFiveOptions;
   gift: boolean;
+  giftForm: UseFormReturn<any>;
+  gifterForm: UseFormReturn<any>;
 }) => {
+  const { data: plans, status: plansStatus } = trpc.useQuery([
+    "square-subscription.get-all-subscriptions",
+  ]);
+  const createSubscription = trpc.useMutation([
+    "square-subscription.create-subscription",
+  ]);
+  const [orderProcessing, setOrderProcessing] = useState(false);
+  const router = useRouter();
+
+  const handlePayment = async (token: TokenResult) => {
+    setOrderProcessing(true);
+    console.log("handling payment", token);
+    const customer = giftForm.getValues();
+    const recipient = gifterForm.getValues();
+    if (token.status === "OK") {
+      if (introOptions.duration === "monthly") {
+        createSubscription.mutate(
+          {
+            token: {
+              status: token.status,
+              token: token.token as string,
+              details: {
+                card: {
+                  brand: token.details?.card?.brand as string,
+                  expMonth: token.details?.card?.expMonth as number,
+                  expYear: token.details?.card?.expYear as number,
+                  last4: token.details?.card?.last4 as string,
+                },
+                method: token.details?.method as string,
+              },
+            },
+            subscriptionPlanId: plans?.find(
+              (plan: CatalogObject) =>
+                plan.presentAtAllLocations === true &&
+                plan.subscriptionPlanData?.name === "TestPlan"
+            )?.id as string,
+            customer: {
+              email: giftForm.getValues("email") as string,
+              firstName: giftForm.getValues("firstName") as string,
+              lastName: giftForm.getValues("lastName") as string,
+              phoneNumber: giftForm.getValues("phoneNumber") as string,
+              address: giftForm.getValues("address") as string,
+              city: giftForm.getValues("city") as string,
+              state: giftForm.getValues("state") as string,
+              postCode: giftForm.getValues("postCode") as string,
+              country: "Australia",
+              company: giftForm.getValues("company") as string | undefined,
+            },
+            recipient: {
+              firstName: gift
+                ? (gifterForm.getValues("firstName") as string)
+                : (customer.firstName as string),
+              lastName: gift
+                ? (gifterForm.getValues("lastName") as string)
+                : (customer.lastName as string),
+              phoneNumber: gift
+                ? (gifterForm.getValues("phoneNumber") as string)
+                : (customer.phoneNumber as string),
+              address: gift
+                ? (gifterForm.getValues("address") as string)
+                : (customer.address as string),
+              city: gift
+                ? (gifterForm.getValues("city") as string)
+                : (customer.city as string),
+              state: gift
+                ? (gifterForm.getValues("state") as string)
+                : (customer.state as string),
+              postCode: gift
+                ? (gifterForm.getValues("postCode") as string)
+                : (customer.postCode as string),
+              country: "Australia",
+              company: gift
+                ? (gifterForm.getValues("company") as string | undefined)
+                : (customer.company as string | undefined),
+            },
+          },
+          {
+            onSuccess(data, variables, context) {
+              toast.success("Payment successful!");
+              setOrderProcessing(false);
+              setTimeout(() => {
+                router.push("/");
+              }, 3000);
+            },
+          }
+        );
+      } else {
+        createSubscription.mutate({
+          token: {
+            status: token.status,
+            token: token.token as string,
+            details: {
+              card: {
+                brand: token.details?.card?.brand as string,
+                expMonth: token.details?.card?.expMonth as number,
+                expYear: token.details?.card?.expYear as number,
+                last4: token.details?.card?.last4 as string,
+              },
+              method: token.details?.method as string,
+            },
+          },
+          subscriptionPlanId: plans?.find(
+            (plan) =>
+              plan.presentAtAllLocations === true &&
+              plan.subscriptionPlanData?.name === "TestPlan"
+          )?.id as string,
+          customer: {
+            email: giftForm.getValues("email") as string,
+            firstName: giftForm.getValues("firstName") as string,
+            lastName: giftForm.getValues("lastName") as string,
+            phoneNumber: giftForm.getValues("phoneNumber") as string,
+            address: giftForm.getValues("address") as string,
+            city: giftForm.getValues("city") as string,
+            state: giftForm.getValues("state") as string,
+            postCode: giftForm.getValues("postCode") as string,
+            country: "Australia",
+            company: giftForm.getValues("company") as string | undefined,
+          },
+          recipient: {
+            firstName: gift
+              ? (gifterForm.getValues("firstName") as string)
+              : (customer.firstName as string),
+            lastName: gift
+              ? (gifterForm.getValues("lastName") as string)
+              : (customer.lastName as string),
+            phoneNumber: gift
+              ? (gifterForm.getValues("phoneNumber") as string)
+              : (customer.phoneNumber as string),
+            address: gift
+              ? (gifterForm.getValues("address") as string)
+              : (customer.address as string),
+            city: gift
+              ? (gifterForm.getValues("city") as string)
+              : (customer.city as string),
+            state: gift
+              ? (gifterForm.getValues("state") as string)
+              : (customer.state as string),
+            postCode: gift
+              ? (gifterForm.getValues("postCode") as string)
+              : (customer.postCode as string),
+            country: "Australia",
+            company: gift
+              ? (gifterForm.getValues("company") as string | undefined)
+              : (customer.company as string | undefined),
+          },
+        });
+      }
+    } else {
+      console.log("payment failed");
+    }
+  };
+
   return (
     <>
       <span className="flex w-full items-center justify-center pb-3 text-lg sm:text-3xl">
@@ -95,7 +262,9 @@ const FinalPage = ({
                       label: "Total",
                     },
                   })}
-                  cardTokenizeResponseReceived={async (token, buyer) => {}}
+                  cardTokenizeResponseReceived={async (token, buyer) => {
+                    await handlePayment(token);
+                  }}
                 >
                   <CreditCard
                     includeInputLabels
@@ -113,21 +282,28 @@ const FinalPage = ({
                   >
                     <div className="flex h-full w-full items-center justify-center">
                       {introOptions.duration === "monthly" ? (
-                        <span className="text-white">Pay $49.99</span>
+                        <>
+                          {orderProcessing ? (
+                            <div className="flex w-full items-center justify-center space-x-2">
+                              <span>Processing Order</span>
+                              <BeatLoader size={8} color="#602d0d" />
+                            </div>
+                          ) : (
+                            <span className="text-white">Pay $49.99</span>
+                          )}
+                        </>
                       ) : (
-                        <span className="text-white"> Pay $149.97</span>
+                        <>
+                          {orderProcessing ? (
+                            <div className="flex w-full items-center justify-center space-x-2">
+                              <span>Processing Order</span>
+                              <BeatLoader size={8} color="#602d0d" />
+                            </div>
+                          ) : (
+                            <span className="text-white">Pay $149.97</span>
+                          )}
+                        </>
                       )}
-                      {/* {orderProcessing ? (
-                                            <div className="flex w-full items-center justify-center space-x-2">
-                                              <span>Processing Order</span>
-                                              <BeatLoader
-                                                size={8}
-                                                color="#602d0d"
-                                              />
-                                            </div>
-                                          ) : (
-                                            <span>Pay ${total.toFixed(2)}</span>
-                                          )} */}
                     </div>
                   </CreditCard>
                   <div className="py-4">

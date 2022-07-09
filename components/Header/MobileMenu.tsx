@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Category } from "@/types/Category";
 import { CatalogObject } from "square";
 import { trpc } from "@/utils/trpc";
+import { useSession } from "next-auth/react";
 
 function classNames(...classes: [string, string?, string?, Boolean?]): string {
   return classes.filter(Boolean).join(" ");
@@ -14,6 +15,7 @@ function classNames(...classes: [string, string?, string?, Boolean?]): string {
 export default function MobileMenu(): JSX.Element {
   const categoryQuery = trpc.useQuery(["square-categories.all-categories"]);
   const { data: navigation } = categoryQuery;
+  const session = useSession();
   return (
     <Menu
       as="div"
@@ -84,6 +86,29 @@ export default function MobileMenu(): JSX.Element {
                         );
                       })}
                 </ul>
+                <div>
+                  {session.status === "unauthenticated" ? (
+                    <Menu.Item as="div">
+                      <Link passHref href="/login/">
+                        <a href="/login">
+                          <div className="block cursor-pointer rounded-b-md px-4 py-2 text-sm text-text-primary hover:bg-bg-tan ui-active:rounded-b-md ui-active:bg-gray-100 ui-active:text-text-secondary">
+                            Login
+                          </div>
+                        </a>
+                      </Link>
+                    </Menu.Item>
+                  ) : (
+                    <Menu.Item as="div">
+                      <Link passHref href="/profile">
+                        <a href="/profile">
+                          <div className="block cursor-pointer rounded-b-md px-4 py-2 text-sm text-text-primary hover:bg-bg-tan ui-active:rounded-b-md ui-active:bg-gray-100 ui-active:text-text-secondary">
+                            My Profile
+                          </div>
+                        </a>
+                      </Link>
+                    </Menu.Item>
+                  )}
+                </div>
                 <div>
                   <Menu.Item as="div">
                     <Link passHref href="/wishlist/">

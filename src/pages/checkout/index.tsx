@@ -526,10 +526,7 @@ export default function checkout() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <SuccessModal
-        orderComplete={orderComplete}
-        setOrderComplete={setOrderComplete}
-      />
+
       <div className="mx-1 mt-16 min-h-screen rounded-md bg-white font-gothic shadow-sm shadow-text-primary md:mx-8">
         <div className="mx-auto max-w-7xl px-4 pt-4 pb-16 sm:px-6 sm:pt-8 sm:pb-24 lg:px-8 xl:px-2 xl:pt-14">
           {total ? (

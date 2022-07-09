@@ -17,19 +17,6 @@ import { useZodForm } from "@/utils/hooks/useZodForm";
 import { IntroOptions } from "@/types/PageOptions";
 
 const CheekyBoxWrapper = () => {
-  const [cbUserObject, setCbUserObject] = useState({
-    firstName: "",
-    lastName: "",
-    company: "",
-    email: "",
-    phoneNumber: "",
-    address: "",
-    city: "",
-    state: "",
-    postCode: "",
-    country: "",
-  });
-
   const [currentStep, setCurrentStep] = useState(0);
   const [moving, setMoving] = useState("right");
   const [gift, setGift] = useState(false);
@@ -452,6 +439,8 @@ const CheekyBoxWrapper = () => {
                     pageFourOptions={pageFourOptions}
                     pageFiveOptions={pageFiveOptions}
                     gift={gift}
+                    giftForm={giftForm}
+                    gifterForm={gifterForm}
                   />
                 </div>
               </Transition>

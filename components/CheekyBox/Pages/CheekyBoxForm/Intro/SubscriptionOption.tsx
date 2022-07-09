@@ -24,8 +24,8 @@ const SubscriptionOption = ({
       }}
       className={
         introOptions.duration === duration
-          ? `h-[370px]  w-full max-w-xs cursor-pointer rounded-xl bg-button shadow-sm ring-2 ring-text-secondary sm:h-[460px]`
-          : `h-[370px]  w-full max-w-xs cursor-pointer rounded-xl bg-button shadow-sm sm:h-[460px]`
+          ? `h-[370px]  w-full max-w-xs cursor-pointer rounded-xl bg-button shadow-sm shadow-text-secondary ring-2 ring-text-secondary sm:h-[460px]`
+          : `h-[370px]  w-full max-w-xs cursor-pointer rounded-xl bg-button shadow-sm shadow-text-secondary sm:h-[460px]`
       }
     >
       <div className="flex h-full w-full select-none flex-col items-center justify-between p-2 sm:p-6">
@@ -58,7 +58,7 @@ const SubscriptionOption = ({
         {duration === "monthly" ? (
           <div className="flex flex-col items-center justify-center text-center text-xs text-text-primary sm:text-sm">
             <span className="">
-              This little box of luxury a collection of locally handmade,
+              This little box of luxury is a collection of locally handmade,
               plastic free and fabulous products.
             </span>
             <span className="">

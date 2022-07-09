@@ -11,6 +11,7 @@ import { squareCategoriesRouter } from "./square/square-categories";
 import { squareCustomerRouter } from "./square/square-customer";
 import { cheekyBoxFormRouter } from "./form/cheekyboxForm";
 import { contactUsRouter } from "./form/contactUsForm";
+import { squareSubscriptionRouter } from "./square/square-subscription";
 
 /**
  * Create your application's root router
@@ -30,6 +31,7 @@ export const appRouter = createRouter()
   .merge("email.", emailRouter)
   .merge("review.", reviewsRouter)
   .merge("cheekybox-form.", cheekyBoxFormRouter)
-  .merge("contact-us-form.", contactUsRouter);
+  .merge("contact-us-form.", contactUsRouter)
+  .merge("square-subscription.", squareSubscriptionRouter);
 
 export type AppRouter = typeof appRouter;

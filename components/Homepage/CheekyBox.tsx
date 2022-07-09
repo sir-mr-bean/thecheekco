@@ -41,16 +41,14 @@ const CheekyBox = () => {
                 A limited run monthly mystery subscription box designed to keep
                 you & your bathroom plastic free and fabulous without any
                 stress. Each month will contain an assortment of bathroom
-                goodies to keep your regulars needs satisfied with a generous
-                splash of delicous seasonal goodness.
+                goodies to keep your regular needs satisfied with a generous
+                splash of delicious seasonal goodness.
               </span>
               <span className="pt-12 pb-2">
                 Each month will contain (but of course will not be limited to):
               </span>
               <ul className="pl-5 text-lg sm:text-xl">
-                <li className="list-disc  text-text-secondary">
-                  shampoo & conditioner bar{" "}
-                </li>
+                <li className="list-disc  text-text-secondary">haircare </li>
                 <li className="list-disc text-text-secondary">
                   limited edition soap bar
                 </li>
