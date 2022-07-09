@@ -24,20 +24,24 @@ const Footer = () => {
           </div>
           <div className="flex items-center justify-center space-x-1 p-3 sm:space-x-3">
             <div className="h-6 w-6 sm:h-20 sm:w-20">
-              <Image
-                alt="Eco Alliance Badge 1"
-                src="/images/sticker2.png"
-                height="300"
-                width="300"
-              />
+              <div className="relative w-full">
+                <Image
+                  alt="Eco Alliance Badge 1"
+                  src="/images/sticker2.png"
+                  height="300"
+                  width="300"
+                />
+              </div>
             </div>
             <div className="h-6 w-6 sm:h-20 sm:w-20">
-              <Image
-                alt="Eco Alliance Badge 1"
-                src="/images/sticker1.png"
-                height="300"
-                width="300"
-              />
+              <div className="relative w-full">
+                <Image
+                  alt="Eco Alliance Badge 1"
+                  src="/images/sticker1.png"
+                  height="300"
+                  width="300"
+                />
+              </div>
             </div>
             <div className="h-6 w-6 sm:h-20 sm:w-20">
               <a
@@ -45,12 +49,14 @@ const Footer = () => {
                 target="_blank"
                 rel="noopener"
               >
-                <Image
-                  alt="Eco Alliance Badge"
-                  src="https://images.ctfassets.net/xmruv773lc7r/7iHSIdcOgBqG8KsVcw9wmm/46902df9b1125bfede12980be687dd7a/Eco-A.gif"
-                  height="300"
-                  width="300"
-                />
+                <div className="relative w-full">
+                  <Image
+                    alt="Eco Alliance Badge"
+                    src="https://images.ctfassets.net/xmruv773lc7r/7iHSIdcOgBqG8KsVcw9wmm/46902df9b1125bfede12980be687dd7a/Eco-A.gif"
+                    height="300"
+                    width="300"
+                  />
+                </div>
               </a>
             </div>
           </div>
