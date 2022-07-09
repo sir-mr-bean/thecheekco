@@ -100,6 +100,62 @@ export const squareProductRouter = createRouter()
       return { products: productResult, items: itemsResult };
     },
   })
+  .query("search-product-by-fullname", {
+    input: z
+      .object({
+        productName: z.string(),
+      })
+      .nullish(),
+    async resolve({ input, ctx }) {
+      if (input?.productName) {
+        const { productName } = input;
+
+        const productsQuery = await catalogApi.searchCatalogObjects({
+          objectTypes: ["ITEM", "CATEGORY", "IMAGE"],
+        });
+        console.log(productName);
+        if (productsQuery?.result?.objects) {
+          const products = productsQuery.result.objects;
+          //console.log(products);
+          console.log(products?.[2].itemData?.name?.toLowerCase().split(" "));
+          const productsResults = products.filter(
+            (product) =>
+              (product.itemData?.variations?.[0]?.customAttributeValues?.[
+                "Square:bc63391b-f09f-4399-846a-6721f81e4a4d"
+              ]?.booleanValue !== true &&
+                product.itemData?.name
+                  ?.toLowerCase()
+                  .replace(/ /g, "-")
+                  .includes(productName?.toLowerCase().replace(/ /g, "-"))) ||
+              product.type === "IMAGE" ||
+              product.type === "CATEGORY"
+          ) as CatalogObject[];
+          const thisProduct: CatalogObject = productsResults.find(
+            (product) => product.type === "ITEM"
+          ) as CatalogObject;
+          const ImageResults = productsResults.filter(
+            (item) =>
+              item.type === "ITEM" ||
+              item.type === "CATEGORY" ||
+              (item.type === "IMAGE" &&
+                thisProduct?.itemData?.imageIds?.includes(item.id))
+          ) as CatalogObject[];
+
+          const categoryResults = ImageResults.filter(
+            (item) =>
+              item.type === "ITEM" ||
+              item.type === "IMAGE" ||
+              (item.type === "CATEGORY" &&
+                thisProduct?.itemData?.categoryId === item.id)
+          ) as CatalogObject[];
+
+          return categoryResults;
+        }
+      } else {
+        return null;
+      }
+    },
+  })
   .query("search-product", {
     input: z
       .object({

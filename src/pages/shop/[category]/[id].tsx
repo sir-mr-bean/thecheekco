@@ -101,12 +101,17 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
       utils.invalidateQueries(["review.fetch-reviews"]);
     },
   });
-  const { data: reviews, status: reviewQueryStatus } = trpc.useQuery([
-    "review.fetch-reviews",
+  const { data: reviews, status: reviewQueryStatus } = trpc.useQuery(
+    [
+      "review.fetch-reviews",
+      {
+        productIds: [product?.id as string],
+      },
+    ],
     {
-      productIds: [product?.id as string],
-    },
-  ]);
+      enabled: !!product?.id,
+    }
+  );
   const { data: reviewers, status: reviewerQueryStatus } = trpc.useQuery(
     [
       "review.reviewed-by",
@@ -119,7 +124,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     }
   );
   const review = reviews?.find((r) => r.productId === product?.id);
-
+  console.log(router);
   useEffect(() => {
     if (reviews) {
       const ratings = reviews.map((r) => r.rating);
@@ -323,7 +328,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   <ul role="list" className="flex items-center space-x-6">
                     <li>
                       <a
-                        href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`}
+                        href={`https://www.facebook.com/sharer/sharer.php?u=${router.basePath}${router.asPath}`}
                         className="flex h-6 w-6 items-center justify-center text-gray-400 hover:text-[#4267B2]"
                       >
                         <span className="sr-only">Share on Facebook</span>
@@ -344,7 +349,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
                     <li>
                       <a
-                        href={`https://twitter.com/intent/tweet?text=${product?.itemData?.name}&url=${window.location.href}`}
+                        href={`https://twitter.com/intent/tweet?text=${product?.itemData?.name}&url=${router.basePath}${router.asPath}`}
                         className="flex h-6 w-6 items-center justify-center text-gray-400 hover:text-[#1DA1F2]"
                       >
                         <span className="sr-only">Share on Twitter</span>
@@ -649,9 +654,12 @@ export const getStaticProps: GetStaticProps = async (
     transformer: superjson,
   });
 
-  const productsQuery = await ssg.fetchQuery("square-products.search-product", {
-    productName: context?.params?.id as string,
-  });
+  const productsQuery = await ssg.fetchQuery(
+    "square-products.search-product-by-fullname",
+    {
+      productName: context?.params?.id as string,
+    }
+  );
 
   return {
     props: {
