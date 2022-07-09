@@ -1,8 +1,4 @@
-/* This example requires Tailwind CSS v2.0+ */
-
-import { LineItem } from "@square/web-sdk";
 import Link from "next/link";
-import { AiOutlineCheck } from "react-icons/ai";
 import { BeatLoader } from "react-spinners";
 import { Order, OrderLineItem } from "square";
 

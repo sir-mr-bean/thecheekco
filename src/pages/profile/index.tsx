@@ -209,7 +209,10 @@ export default function Profile(): JSX.Element {
                 </div>
                 {openTab === 1 && (
                   <>
-                    <UserDashboard />
+                    <UserDashboard
+                      customerOrders={customerOrders}
+                      orderQueryStatus={orderQueryStatus}
+                    />
                   </>
                 )}
                 {openTab === 2 && session && (
