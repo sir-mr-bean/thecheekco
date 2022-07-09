@@ -35,16 +35,18 @@ const CheekyBoxIntro = ({
           nextStepRef={nextStepRef}
         />
       </div>
-      <div className="my-6 flex w-full items-center justify-end">
-        <button
-          className="mx-1 px-4 py-2 focus:animate-pulse focus:rounded-xl focus:ring-2 focus:ring-text-secondary focus:duration-1000 "
-          ref={nextStepRef}
-          onClick={nextStep}
-        >
-          <span className="text-text-primary">
-            Tell us a bit about your preferences →
-          </span>
-        </button>
+      <div className="my-6 flex h-8 w-full items-center justify-end">
+        {introOptions.duration && (
+          <button
+            className="mx-1 px-4 py-2 focus:animate-pulse focus:rounded-xl focus:ring-2 focus:ring-text-secondary focus:duration-1000 "
+            ref={nextStepRef}
+            onClick={nextStep}
+          >
+            <span className="text-text-primary">
+              Tell us a bit about your preferences →
+            </span>
+          </button>
+        )}
       </div>
     </div>
   );

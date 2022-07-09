@@ -195,6 +195,7 @@ const CheekyBoxWrapper = () => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+  console.log(introOptions);
 
   return (
     <>
@@ -444,6 +445,7 @@ const CheekyBoxWrapper = () => {
               >
                 <div style={{ width: `${wrapperWidth}px`, height: "100%" }}>
                   <FinalPage
+                    introOptions={introOptions}
                     pageOneOptions={pageOneOptions}
                     pageTwoOptions={pageTwoOptions}
                     pageThreeOptions={pageThreeOptions}
