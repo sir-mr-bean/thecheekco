@@ -29,7 +29,7 @@ const PageFour = ({
 
   return (
     <>
-      <div className="relative flex h-fit w-full flex-col items-center justify-start">
+      <div className="relative flex max-h-fit w-full flex-col items-center justify-start">
         <div
           className="-right-6 mx-auto hidden w-1/3 sm:absolute sm:block xl:-right-24"
           ref={plantRef ? plantRef : ""}
@@ -75,7 +75,7 @@ const PageFour = ({
           </div>
         </div>
 
-        <div className="mx-auto mt-2 grid h-full w-fit grid-cols-2 content-center items-center justify-center gap-3 p-2">
+        <div className="mx-auto mt-2 grid w-fit grid-cols-2 content-center items-center justify-center gap-3 p-2">
           <div className="col-span-2 mx-auto items-center justify-center">
             <PageFourOption
               pageFourOptions={pageFourOptions}
