@@ -1,3 +1,4 @@
+import useDebounce from "@/utils/hooks/useDebounce";
 import { trpc } from "@/utils/trpc";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,7 +10,8 @@ import { CatalogObject } from "square";
 
 const SearchBar = () => {
   const [search, setSearch] = useState("");
-  const [searchResults, setSearchResults] = useState<CatalogObject[]>([]);
+  const debouncedSearch = useDebounce<string>(search, 500);
+  //const [product, setSearchResults] = useState<CatalogObject[]>([]);
   const [catSearchResults, setCatSearchResults] = useState<string[]>([]);
   const searchRef = useRef<HTMLInputElement>(null);
   const searchIconRef = useRef<HTMLDivElement>(null);
@@ -20,7 +22,7 @@ const SearchBar = () => {
   const { data: product, status } = trpc.useQuery([
     "square-products.search-product",
     {
-      productName: search,
+      productName: debouncedSearch,
     },
   ]);
   const { data: subcategories, status: subCatStatus } = trpc.useQuery([
@@ -41,7 +43,7 @@ const SearchBar = () => {
           searchRef.current.value = "";
           setIsOpen(false);
           setIsSearching(false);
-          setSearchResults([]);
+          //setSearchResults([]);
         }
       }
     }
@@ -52,12 +54,12 @@ const SearchBar = () => {
   }, [searchRef, searchIconRef, closeSearchRef]);
 
   useEffect(() => {
-    setSearchResults(product || []);
+    //setSearchResults(product || []);
     setCatSearchResults([]);
     if (status === "success" && product && product?.length > 0) {
-      setSearchResults(product);
-      if (subCatStatus === "success" && subcategories) {
-        searchResults.forEach((result) => {
+      //setSearchResults(product);
+      if (subCatStatus === "success" && subcategories && product) {
+        product.forEach((result) => {
           const subCat =
             subcategories?.customAttributeDefinitionData?.selectionConfig?.allowedSelections?.find(
               (sub) =>
@@ -90,7 +92,7 @@ const SearchBar = () => {
           type="text"
           ref={searchRef}
           className={
-            isOpen && searchResults && searchResults.length > 0
+            isOpen && product && product.length > 0
               ? `z-10 h-8 w-full origin-right transform appearance-none rounded-t-xl border border-x-text-secondary border-t-text-secondary border-b-transparent bg-bg-tan bg-opacity-100 p-1 pl-3 text-xs text-text-primary opacity-100 transition-[width] delay-1000 duration-1000 ease-in-out focus:border-x-text-secondary focus:border-t-text-secondary focus:border-b-transparent  focus:ring-0 sm:text-base`
               : isOpen
               ? `z-10 h-8 w-full origin-right transform appearance-none rounded-full border border-text-secondary bg-bg-tan bg-opacity-100  p-1 pl-3 text-xs text-text-primary opacity-100 ring-0 transition-[width] duration-1000 ease-in-out focus:border-0 focus:border-text-primary  focus:ring-0  sm:text-base`
@@ -100,7 +102,7 @@ const SearchBar = () => {
             utils.invalidateQueries([
               "square-products.search-product",
               {
-                productName: search,
+                productName: debouncedSearch,
               },
             ]);
             setSearch(e.target.value);
@@ -115,7 +117,7 @@ const SearchBar = () => {
         />
         <div
           className={
-            isOpen && searchResults && searchResults.length > 0
+            isOpen && product && product.length > 0
               ? `z-5 absolute top-1 mt-7 h-48 w-full transform overflow-y-auto rounded-b-xl border-x border-b border-text-secondary bg-bg-tan pr-2 transition-all duration-100 ease-in scrollbar-thin scrollbar-thumb-text-primary `
               : `z-5 absolute top-2 h-0 w-full transform rounded-xl bg-bg-tan transition-all duration-500 ease-in`
           }
@@ -126,33 +128,34 @@ const SearchBar = () => {
           <div className="w-full rounded-xl border-t border-text-secondary">
             <span className="pl-2">Products</span>
           </div> */}
-          {searchResults
-            .filter((result) => result.type === "ITEM")
-            .map((result) => {
-              const productImage = searchResults?.find(
-                (p) =>
-                  p.type === "IMAGE" &&
-                  result.itemData?.imageIds?.includes(p.id)
-              );
-              const productCategory = searchResults?.find(
-                (p) =>
-                  p.type === "CATEGORY" &&
-                  result.itemData?.categoryId?.includes(p.id)
-              );
+          {product &&
+            product
+              .filter((result) => result.type === "ITEM")
+              .map((result) => {
+                const productImage = product?.find(
+                  (p) =>
+                    p.type === "IMAGE" &&
+                    result.itemData?.imageIds?.includes(p.id)
+                );
+                const productCategory = product?.find(
+                  (p) =>
+                    p.type === "CATEGORY" &&
+                    result.itemData?.categoryId?.includes(p.id)
+                );
 
-              return (
-                <div className="flex w-full items-center justify-between px-1.5 py-1  text-text-primary hover:bg-text-secondary hover:text-bg-tan">
-                  <Link
-                    href="/shop/[category]/[id]"
-                    as={`/shop/${productCategory?.categoryData?.name
-                      ?.replace(/ /g, "-")
-                      .toLowerCase()}/${result.itemData?.name
-                      ?.replace(/ /g, "-")
-                      .toLowerCase()}`}
-                  >
-                    <a className="w-full">
-                      <div className="relative flex w-full items-center justify-center">
-                        {/* <div className="relative h-6 w-6">
+                return (
+                  <div className="flex w-full items-center justify-between px-1.5 py-1  text-text-primary hover:bg-text-secondary hover:text-bg-tan">
+                    <Link
+                      href="/shop/[category]/[id]"
+                      as={`/shop/${productCategory?.categoryData?.name
+                        ?.replace(/ /g, "-")
+                        .toLowerCase()}/${result.itemData?.name
+                        ?.replace(/ /g, "-")
+                        .toLowerCase()}`}
+                    >
+                      <a className="w-full">
+                        <div className="relative flex w-full items-center justify-center">
+                          {/* <div className="relative h-6 w-6">
                           <Image
                             src={
                               productImage?.imageData?.url ||
@@ -166,11 +169,13 @@ const SearchBar = () => {
                           />
                         </div> */}
 
-                        <span className="text-xs">{result.itemData?.name}</span>
-                      </div>
-                    </a>
-                  </Link>
-                  {/* <span className="text-xs  sm:text-sm">
+                          <span className="text-xs">
+                            {result.itemData?.name}
+                          </span>
+                        </div>
+                      </a>
+                    </Link>
+                    {/* <span className="text-xs  sm:text-sm">
                   $
                   {(
                     parseInt(
@@ -180,9 +185,9 @@ const SearchBar = () => {
                     ) / 100
                   ).toFixed(2)}
                 </span> */}
-                </div>
-              );
-            })}
+                  </div>
+                );
+              })}
         </div>
         <div
           ref={searchIconRef}
@@ -203,7 +208,7 @@ const SearchBar = () => {
                     setSearch("");
                     searchRef.current ? (searchRef.current.value = "") : null;
                     setIsSearching(false);
-                    setSearchResults([]);
+                    //setSearchResults([]);
                     setIsOpen(false);
                   }}
                   className="absolute right-1 top-1.5 z-20 h-5 w-5 transform text-text-primary opacity-100 transition-all duration-1000 ease-out"

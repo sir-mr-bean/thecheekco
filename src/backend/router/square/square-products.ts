@@ -162,7 +162,7 @@ export const squareProductRouter = createRouter()
     async resolve({ input, ctx }) {
       if (input?.productName) {
         const { productName } = input;
-
+        console.log(productName);
         const productsQuery = await catalogApi.searchCatalogObjects({
           objectTypes: ["ITEM", "CATEGORY", "IMAGE"],
         });
