@@ -109,16 +109,12 @@ export default function MobileMenu(): JSX.Element {
                         </Link>
                       </Menu.Item>
                       <Menu.Item as="div">
-                        <Link passHref href="/profile">
-                          <a href="/profile">
-                            <button
-                              onClick={() => signOut()}
-                              className="block w-full cursor-pointer rounded-b-md px-4 py-2 text-left text-sm text-text-primary hover:bg-bg-tan ui-active:rounded-b-md ui-active:bg-gray-100 ui-active:text-text-secondary"
-                            >
-                              Sign Out
-                            </button>
-                          </a>
-                        </Link>
+                        <button
+                          onClick={() => signOut()}
+                          className="block w-full cursor-pointer rounded-b-md px-4 py-2 text-left text-sm text-text-primary hover:bg-bg-tan ui-active:rounded-b-md ui-active:bg-gray-100 ui-active:text-text-secondary"
+                        >
+                          Sign Out
+                        </button>
                       </Menu.Item>
                     </div>
                   )}
