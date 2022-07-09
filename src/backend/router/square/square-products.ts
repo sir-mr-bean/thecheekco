@@ -113,10 +113,11 @@ export const squareProductRouter = createRouter()
         const productsQuery = await catalogApi.searchCatalogObjects({
           objectTypes: ["ITEM", "CATEGORY", "IMAGE"],
         });
-
+        console.log(productName);
         if (productsQuery?.result?.objects) {
           const products = productsQuery.result.objects;
-
+          //console.log(products);
+          console.log(products?.[2].itemData?.name?.toLowerCase().split(" "));
           const productsResults = products.filter(
             (product) =>
               (product.itemData?.variations?.[0]?.customAttributeValues?.[
@@ -124,8 +125,7 @@ export const squareProductRouter = createRouter()
               ]?.booleanValue !== true &&
                 product.itemData?.name
                   ?.toLowerCase()
-                  .replace(/ /g, "-")
-                  .includes(productName?.toLowerCase().replace(/ /g, "-"))) ||
+                  .indexOf(productName.toLowerCase()) !== -1) ||
               product.type === "IMAGE" ||
               product.type === "CATEGORY"
           ) as CatalogObject[];

@@ -97,6 +97,12 @@ const SearchBar = () => {
               : `z-10 h-6 w-6 origin-right transform rounded-full border border-text-secondary bg-bg-tan transition-[width] delay-500 duration-1000 ease-in-out`
           }
           onChange={(e) => {
+            utils.invalidateQueries([
+              "square-products.search-product",
+              {
+                productName: search,
+              },
+            ]);
             setSearch(e.target.value);
             setIsSearching(true);
             utils.refetchQueries([
