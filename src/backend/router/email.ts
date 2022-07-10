@@ -181,7 +181,7 @@ export const emailRouter = createRouter()
     }),
     async resolve({ input, ctx }) {
       const { customer, recipient, selections, gifted, giftMessage } = input;
-      const { prisma } = ctx;
+      //const { prisma } = ctx;
       const sgMail = new MailService();
       sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
       const templateData = {
@@ -196,6 +196,95 @@ export const emailRouter = createRouter()
         to: "kroucher.1019@gmail.com", // Change to your recipient
         from: "contact@thecheekco.com", // Change to your verified sender
         subject: "🎁 New Cheeky Box Subscription! 🎁",
+        dynamicTemplateData: templateData,
+      });
+      console.log(result);
+      if (result[0].statusCode === 202) {
+        return {
+          success: true,
+        };
+      } else {
+        return {
+          success: result?.[0].statusCode,
+        };
+      }
+    },
+  })
+  .mutation("send-cheekybox-customer-email", {
+    input: z.object({
+      customer: z.object({
+        firstName: z.string(),
+        lastName: z.string(),
+        company: z.string().optional(),
+        email: z.string(),
+        phoneNumber: z.string(),
+        address: z.string(),
+        city: z.string(),
+        state: z.string(),
+        postCode: z.string(),
+        country: z.literal("Australia"),
+      }),
+      duration: z.string(),
+      recipient: z.object({
+        firstName: z.string(),
+        lastName: z.string(),
+        company: z.string().optional(),
+        phoneNumber: z.string(),
+        address: z.string(),
+        city: z.string(),
+        state: z.string(),
+        postCode: z.string(),
+        country: z.literal("Australia"),
+      }),
+      gifted: z.boolean(),
+    }),
+    async resolve({ input, ctx }) {
+      const { customer, duration, recipient, gifted } = input;
+      //const { prisma } = ctx;
+      const sgMail = new MailService();
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
+      const templateData = {
+        customer: customer,
+        duration: duration,
+        recipient: recipient,
+        gifted: gifted,
+      };
+      const result = await sgMail.send({
+        templateId: "d-f5f3358f12ee4c91ba703febfcb013fc",
+        to: "kroucher.1019@gmail.com",
+        from: "contact@thecheekco.com", // Change to your verified sender
+        subject: "🎁 New Cheeky Box Subscription! 🎁",
+        dynamicTemplateData: templateData,
+      });
+      console.log(result);
+      if (result[0].statusCode === 202) {
+        return {
+          success: true,
+        };
+      } else {
+        return {
+          success: result?.[0].statusCode,
+        };
+      }
+    },
+  })
+  .mutation("send-error-email", {
+    input: z.object({
+      error: z.string(),
+    }),
+    async resolve({ input, ctx }) {
+      const { error } = input;
+      //const { prisma } = ctx;
+      const sgMail = new MailService();
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
+      const templateData = {
+        error: error,
+      };
+      const result = await sgMail.send({
+        templateId: "d-f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8",
+        to: "kroucher.1019@gmail.com",
+        from: "contact@thecheekco.com",
+        subject: "❌ Something went wrong ❌",
         dynamicTemplateData: templateData,
       });
       console.log(result);
