@@ -86,10 +86,12 @@ export const squareProductRouter = createRouter()
       productIds: z.array(z.string()).nullish(),
     }),
     async resolve({ input, ctx }) {
+      console.log(input);
       const productsQuery = await catalogApi.batchRetrieveCatalogObjects({
         objectIds: input?.productIds as string[],
         includeRelatedObjects: true,
       });
+      console.log(productsQuery);
       const itemsQuery = await catalogApi.searchCatalogObjects({
         objectTypes: ["IMAGE"],
       });
@@ -206,74 +208,6 @@ export const squareProductRouter = createRouter()
       }
     },
   })
-  // .query("products", {
-  //   input: z
-  //     .object({
-  //       categoryId: z.string().nullish(),
-  //     })
-  //     .nullish(),
-  //   async resolve({ input, ctx }) {
-  //     const productsQuery = await catalogApi.searchCatalogObjects({
-  //       objectTypes: ["ITEM", "CATEGORY"],
-  //       includeRelatedObjects: true,
-  //     });
-
-  //     if (input?.categoryId) {
-  //       const productsResponse = productsQuery.result.objects?.filter(
-  //         (product) =>
-  //           product?.itemData?.categoryId?.includes(
-  //             input?.categoryId as string
-  //           ) && product?.type === "ITEM"
-  //       );
-  //       const products = productsResponse?.map((item) => {
-  //         const currentImage = productsQuery.result?.relatedObjects?.find(
-  //           (item) => item.id === item.itemData?.itemIds?.[0]
-  //         );
-  //         const categories = productsQuery.result?.objects?.filter(
-  //           (category) => category.type === "CATEGORY"
-  //         );
-
-  //         const currentCategory = productsQuery.result?.objects?.find(
-  //           (category) =>
-  //             category.type === "CATEGORY" &&
-  //             category.id === item?.itemData?.categoryId
-  //         );
-
-  //         let isAllNatural = false;
-
-  //         if (item?.itemData?.variations?.[0].customAttributeValues) {
-  //           const keys = Object.keys(
-  //             item?.itemData.variations?.[0]?.customAttributeValues
-  //           );
-  //           if (keys.length) {
-  //             const allNaturalAttr = keys?.some((key) => {
-  //               return (
-  //                 item?.itemData?.variations?.[0]?.customAttributeValues?.[key]
-  //                   ?.name === "All-Natural" &&
-  //                 item?.itemData.variations?.[0].customAttributeValues?.[key]
-  //                   ?.booleanValue === true
-  //               );
-  //             });
-  //             isAllNatural = allNaturalAttr;
-  //           }
-  //         }
-
-  //         return {
-  //           id: item.id,
-  //           name: item.itemData?.name,
-  //           description: item.itemData?.description,
-  //           category: currentCategory,
-  //           price: item?.itemData?.variations?.[0],
-  //           item: currentImage?.itemData?.url,
-  //           isAllNatural,
-  //         };
-  //       });
-  //       return products;
-  //     } else {
-  //       return productsQuery;
-  //     }
-  //   },
-  // })
   .query("get-product-subcategories", {
     async resolve({ input, ctx }) {
       const attributesQuery = await catalogApi.searchCatalogObjects({

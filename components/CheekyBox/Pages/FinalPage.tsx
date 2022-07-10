@@ -123,7 +123,7 @@ const FinalPage = ({
             },
           },
           {
-            onSuccess(data, variables, context) {
+            onSuccess() {
               toast.success("Payment successful!");
               setOrderProcessing(false);
               setTimeout(() => {

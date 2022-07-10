@@ -4,6 +4,7 @@ import { WishlistObject } from "@/types/WishlistObject";
 import Wishlist from "./Dashboard/Wishlist";
 import Link from "next/link";
 import { Order } from "square";
+import RecentOrders from "./Dashboard/RecentOrders";
 
 const UserDashboard = ({
   customerOrders,
@@ -29,16 +30,18 @@ const UserDashboard = ({
           </div>
         </div>
       </div>
-      <div className="m-2 rounded-md bg-white px-4 py-5 font-gothic text-text-primary shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-6">
+      <div className="m-2 flex flex-col items-stretch justify-center space-y-3 divide-y divide-text-secondary rounded-md bg-white px-4 py-5 font-gothic text-text-primary shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-6">
         {wishlist.length > 0 ? (
           <>
-            <span>My Wishlist</span>
+            <span className="text-2xl">My Wishlist</span>
             <Wishlist />
             {wishlist.length > 5 && (
               <div className="text-center">
                 <Link href="/wishlist">
                   <a>
-                    <span className="text-text-primary">View All</span>
+                    <span className="flex w-full items-center justify-end font-gothic text-sm text-text-secondary">
+                      View All
+                    </span>
                   </a>
                 </Link>
               </div>
@@ -55,14 +58,25 @@ const UserDashboard = ({
             </a>
           </span>
         )}
-        {wishlist.length > 0 ? (
+        {customerOrders && customerOrders.length > 0 ? (
           <>
-            <span>My Recent Orders</span>
-            <Wishlist />
+            <span className="py-3 text-2xl">My Recent Orders</span>
+            <RecentOrders customerOrders={customerOrders} />
+            {customerOrders.length > 5 && (
+              <div className="text-center">
+                <Link href="/wishlist">
+                  <a>
+                    <span className="flex w-full items-center justify-end font-gothic text-sm text-text-secondary">
+                      View All
+                    </span>
+                  </a>
+                </Link>
+              </div>
+            )}
           </>
         ) : (
           <span>
-            No items in your wishlist.. Find your next favourite goodie{" "}
+            No recent orders. Find your next favourite goodie{" "}
             <a href="/shop">
               {" "}
               <span className="underline decoration-text-secondary decoration-dotted underline-offset-2">
