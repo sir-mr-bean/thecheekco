@@ -52,8 +52,8 @@ const Admin = () => {
 
   return (
     <div className="flex flex-col space-y-2">
-      <div className="bg-white sm:p-3 m-2 sm:m-6 font-gothic sm:w-3/4 sm:mx-auto rounded-md sm:rounded-lg shadow">
-        <div className="max-w-4xl mx-auto py-3 sm:px-6 sm:py-4">
+      <div className="m-2 rounded-md bg-white font-gothic shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-3">
+        <div className="max-w-4xl py-3 sm:px-6 sm:py-4">
           <div className="px-4 sm:px-0">
             <h1 className="text-2xl font-extrabold tracking-tight text-text-primary sm:text-3xl">
               Admin Dashboard
@@ -64,15 +64,15 @@ const Admin = () => {
           </div>
         </div>
       </div>
-      <div className="bg-white shadow px-4 py-5 rounded-md sm:rounded-lg sm:p-6 m-2 sm:m-6 sm:w-3/4 sm:mx-auto text-text-primary font-gothic">
+      <div className="m-2 rounded-md bg-white px-4 py-5 font-gothic text-text-primary shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-6">
         Admin Dashboard
       </div>
-      <div className="bg-white shadow px-4 py-5 rounded-md sm:rounded-lg sm:p-6 m-2 sm:m-6 sm:w-3/4 sm:mx-auto text-text-primary font-gothic">
+      <div className="m-2 rounded-md bg-white px-4 py-5 font-gothic text-text-primary shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-6">
         <div className="w-full rounded-2xl bg-white p-2">
-          <Disclosure>
+          <Disclosure as="div">
             {({ open }) => (
               <>
-                <Disclosure.Button className="border border-text-secondary flex w-full justify-between rounded-t-lg  px-4 py-2 text-left text-sm font-medium text-text-primary hover:bg-button focus:outline-none focus-visible:ring focus-visible:ring-text-secondary focus-visible:ring-opacity-75">
+                <Disclosure.Button className="flex w-full justify-between rounded-t-lg border border-text-secondary  px-4 py-2 text-left text-sm font-medium text-text-primary hover:bg-button focus:outline-none focus-visible:ring focus-visible:ring-text-secondary focus-visible:ring-opacity-75">
                   <span>Unapproved Reviews</span>
                   <BsChevronCompactUp
                     className={`${
@@ -80,9 +80,9 @@ const Admin = () => {
                     } h-5 w-5 text-text-primary`}
                   />
                 </Disclosure.Button>
-                <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-text-primary border-x border-text-secondary border-b">
+                <Disclosure.Panel className="border-x border-b border-text-secondary px-4 pt-4 pb-2 text-sm text-text-primary">
                   {unapprovedReviews && unapprovedReviews.length > 0 ? (
-                    <div className="flex flex-col space-y-2 w-full">
+                    <div className="flex w-full flex-col space-y-2">
                       {unapprovedReviews
                         .filter((review) => review.comment !== "")
                         .map((review) => {
@@ -92,18 +92,18 @@ const Admin = () => {
                           return (
                             <div
                               key={review.id}
-                              className="flex flex-col space-y-2 w-full border border-text-secondary rounded-lg py-2"
+                              className="flex w-full flex-col space-y-2 rounded-lg border border-text-secondary py-2"
                             >
-                              <div className="flex flex-col w-full space-y-4">
-                                <div className="flex space-x-2 items-center justify-center text-lg">
+                              <div className="flex w-full flex-col space-y-4">
+                                <div className="flex items-center justify-center space-x-2 text-lg">
                                   <span>Comment by:</span>
                                   <span>{reviewer?.name}</span>
                                 </div>
-                                <div className="flex space-x-2 items-center justify-center text-sm">
+                                <div className="flex items-center justify-center space-x-2 text-sm">
                                   <span>Comment:</span>
                                   <span>{review.comment}</span>
                                 </div>
-                                <div className="flex space-x-2 items-center justify-center text-sm">
+                                <div className="flex items-center justify-center space-x-2 text-sm">
                                   <span>Rating Given:</span>
                                   <span>{review.rating.toString()}</span>
                                   <span className="pl-2">stars</span>
@@ -114,7 +114,7 @@ const Admin = () => {
                                   onClick={() => {
                                     handleApproveReview(review.id);
                                   }}
-                                  className="bg-button hover:border-black border border-transparent text-white font-bold py-1 px-4 rounded-lg flex items-center justify-center"
+                                  className="flex items-center justify-center rounded-lg border border-transparent bg-button py-1 px-4 font-bold text-white hover:border-black"
                                 >
                                   <span>Approve</span>
                                 </button>
@@ -122,7 +122,7 @@ const Admin = () => {
                                   onClick={() => {
                                     handleDeleteReview(review.id);
                                   }}
-                                  className="bg-red-200 hover:border-black border border-transparent text-white font-bold py-1 px-4 rounded-lg flex items-center justify-center"
+                                  className="flex items-center justify-center rounded-lg border border-transparent bg-red-200 py-1 px-4 font-bold text-white hover:border-black"
                                 >
                                   <span>Delete</span>
                                 </button>
@@ -132,9 +132,9 @@ const Admin = () => {
                         })}
                     </div>
                   ) : (
-                    <div className="flex flex-col space-y-2 w-full">
-                      <div className="flex flex-col w-full space-y-4">
-                        <div className="flex space-x-2 items-center justify-center text-lg">
+                    <div className="flex w-full flex-col space-y-2">
+                      <div className="flex w-full flex-col space-y-4">
+                        <div className="flex items-center justify-center space-x-2 text-lg">
                           <span>🦦 No Unapproved Reviews 🦦</span>
                         </div>
                       </div>
@@ -147,7 +147,7 @@ const Admin = () => {
           <Disclosure as="div">
             {({ open }) => (
               <>
-                <Disclosure.Button className="border-x border-b border-text-secondary flex w-full justify-between rounded-b-lg  px-4 py-2 text-left text-sm font-medium text-text-primary hover:bg-button focus:outline-none focus-visible:ring focus-visible:ring-text-secondary focus-visible:ring-opacity-75">
+                <Disclosure.Button className="flex w-full justify-between rounded-b-lg border-x border-b border-text-secondary  px-4 py-2 text-left text-sm font-medium text-text-primary hover:bg-button focus:outline-none focus-visible:ring focus-visible:ring-text-secondary focus-visible:ring-opacity-75">
                   <span>Do you offer technical support?</span>
                   <BsChevronCompactUp
                     className={`${
@@ -155,7 +155,7 @@ const Admin = () => {
                     } h-5 w-5 text-text-primary`}
                   />
                 </Disclosure.Button>
-                <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-text-primary border-x border-text-secondary border-b rounded-b-lg -translate-y-1">
+                <Disclosure.Panel className="-translate-y-1 rounded-b-lg border-x border-b border-text-secondary px-4 pt-4 pb-2 text-sm text-text-primary">
                   No.
                 </Disclosure.Panel>
               </>

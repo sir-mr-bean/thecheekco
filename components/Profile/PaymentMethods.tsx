@@ -32,8 +32,8 @@ const PaymentMethods = ({ userObj }: { userObj: User }) => {
   );
   return (
     <div className="flex flex-col space-y-2">
-      <div className="bg-white sm:p-3 m-2 sm:m-6 font-gothic sm:w-3/4 sm:mx-auto rounded-md sm:rounded-lg shadow">
-        <div className="max-w-4xl mx-auto py-3 sm:px-6 sm:py-4">
+      <div className="m-2 rounded-md bg-white font-gothic shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-3">
+        <div className="max-w-4xl py-3 sm:px-6 sm:py-4">
           <div className="px-4 sm:px-0">
             <h1 className="text-2xl font-extrabold tracking-tight text-text-primary sm:text-3xl">
               Payment Methods
@@ -44,15 +44,15 @@ const PaymentMethods = ({ userObj }: { userObj: User }) => {
           </div>
         </div>
       </div>
-      <div className="bg-white shadow sm:w-3/4 sm:mx-auto sm:p-3 m-2 rounded-md sm:rounded-lg">
+      <div className="m-2 rounded-md bg-white shadow sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-3">
         {paymentMethods && paymentMethods.length > 0 ? (
           <div className="px-4 py-5 sm:p-6">
-            <div className="flex items-center justify-between w-full">
+            <div className="flex w-full items-center justify-between">
               {addCard ? (
                 <>
-                  <div className="flex flex-col items-start justify-center w-full pb-6">
-                    <div className="flex items-center justify-between w-full">
-                      <h3 className="text-lg leading-6 font-medium text-text-primary">
+                  <div className="flex w-full flex-col items-start justify-center pb-6">
+                    <div className="flex w-full items-center justify-between">
+                      <h3 className="text-lg font-medium leading-6 text-text-primary">
                         Add Payment Method
                       </h3>
                       <div className="mt-4 sm:mt-0 sm:ml-6 sm:flex-shrink-0">
@@ -61,13 +61,13 @@ const PaymentMethods = ({ userObj }: { userObj: User }) => {
                             setAddCard((addCard) => !addCard);
                           }}
                           type="button"
-                          className="inline-flex items-center px-4 py-2 text-white border border-transparent hover:border-black shadow-sm font-medium rounded-md  bg-button  focus:outline-none sm:text-sm"
+                          className="inline-flex items-center rounded-md border border-transparent bg-button px-4 py-2 font-medium text-white shadow-sm  hover:border-black  focus:outline-none sm:text-sm"
                         >
                           Cancel
                         </button>
                       </div>
                     </div>
-                    <div className="pt-6 w-full">
+                    <div className="w-full pt-6">
                       <AddPaymentMethodForm
                         setAddCard={setAddCard}
                         userObject={userObj}
@@ -78,7 +78,7 @@ const PaymentMethods = ({ userObj }: { userObj: User }) => {
                 </>
               ) : (
                 <>
-                  <h3 className="text-lg leading-6 font-medium text-text-primary">
+                  <h3 className="text-lg font-medium leading-6 text-text-primary">
                     Payment methods
                   </h3>
                   <div className="mt-4 sm:mt-0 sm:ml-6 sm:flex-shrink-0">
@@ -87,7 +87,7 @@ const PaymentMethods = ({ userObj }: { userObj: User }) => {
                         setAddCard((addCard) => !addCard);
                       }}
                       type="button"
-                      className="inline-flex items-center px-4 py-2 text-white border border-transparent hover:border-black shadow-sm font-medium rounded-md  bg-button  focus:outline-none sm:text-sm"
+                      className="inline-flex items-center rounded-md border border-transparent bg-button px-4 py-2 font-medium text-white shadow-sm  hover:border-black  focus:outline-none sm:text-sm"
                     >
                       Add Card
                     </button>
@@ -107,9 +107,9 @@ const PaymentMethods = ({ userObj }: { userObj: User }) => {
           <div>
             <div className="px-4 py-5 sm:p-6">
               {addCard ? (
-                <div className="flex flex-col items-start justify-center w-full">
-                  <div className="flex items-center justify-between w-full">
-                    <h3 className="text-lg leading-6 font-medium text-text-primary">
+                <div className="flex w-full flex-col items-start justify-center">
+                  <div className="flex w-full items-center justify-between">
+                    <h3 className="text-lg font-medium leading-6 text-text-primary">
                       Add Payment Method
                     </h3>
                     <div className="mt-4 sm:mt-0 sm:ml-6 sm:flex-shrink-0">
@@ -118,13 +118,13 @@ const PaymentMethods = ({ userObj }: { userObj: User }) => {
                           setAddCard((addCard) => !addCard);
                         }}
                         type="button"
-                        className="inline-flex items-center px-4 py-2 text-white border border-transparent hover:border-black shadow-sm font-medium rounded-md  bg-button  focus:outline-none sm:text-sm"
+                        className="inline-flex items-center rounded-md border border-transparent bg-button px-4 py-2 font-medium text-white shadow-sm  hover:border-black  focus:outline-none sm:text-sm"
                       >
                         Cancel
                       </button>
                     </div>
                   </div>
-                  <div className="pt-6 w-full">
+                  <div className="w-full pt-6">
                     <AddPaymentMethodForm
                       setAddCard={setAddCard}
                       userObject={userObj}
@@ -135,7 +135,7 @@ const PaymentMethods = ({ userObj }: { userObj: User }) => {
               ) : (
                 <>
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg leading-6 font-medium text-text-primary">
+                    <h3 className="text-lg font-medium leading-6 text-text-primary">
                       No Payment Methods Found
                     </h3>
                     <div className="mt-4 sm:mt-0 sm:ml-6 sm:flex-shrink-0">
@@ -144,7 +144,7 @@ const PaymentMethods = ({ userObj }: { userObj: User }) => {
                           setAddCard((addCard) => !addCard);
                         }}
                         type="button"
-                        className="inline-flex items-center px-4 py-2 text-white border border-transparent hover:border-black shadow-sm font-medium rounded-md  bg-button  focus:outline-none sm:text-sm"
+                        className="inline-flex items-center rounded-md border border-transparent bg-button px-4 py-2 font-medium text-white shadow-sm  hover:border-black  focus:outline-none sm:text-sm"
                       >
                         Add Card
                       </button>

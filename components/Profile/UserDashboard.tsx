@@ -19,7 +19,7 @@ const UserDashboard = ({
   return (
     <div className="flex flex-col space-y-2">
       <div className="m-2 rounded-md bg-white font-gothic shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-3">
-        <div className="mx-auto max-w-4xl py-3 sm:px-6 sm:py-4">
+        <div className="max-w-4xl py-3 sm:px-6 sm:py-4">
           <div className="px-4 sm:px-0">
             <h1 className="text-2xl font-extrabold tracking-tight text-text-primary sm:text-3xl">
               Dashboard
@@ -30,10 +30,9 @@ const UserDashboard = ({
           </div>
         </div>
       </div>
-      <div className="m-2 flex flex-col items-stretch justify-center space-y-3 divide-y divide-text-secondary rounded-md bg-white px-4 py-5 font-gothic text-text-primary shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-6">
+      <div className="m-2 flex flex-col items-stretch justify-center space-y-3  rounded-md bg-white px-4 py-5 font-gothic text-text-primary shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-6">
         {wishlist.length > 0 ? (
           <>
-            <span className="text-2xl">My Wishlist</span>
             <Wishlist />
             {wishlist.length > 5 && (
               <div className="text-center">
@@ -60,19 +59,7 @@ const UserDashboard = ({
         )}
         {customerOrders && customerOrders.length > 0 ? (
           <>
-            <span className="py-3 text-2xl">My Recent Orders</span>
             <RecentOrders customerOrders={customerOrders} />
-            {customerOrders.length > 5 && (
-              <div className="text-center">
-                <Link href="/wishlist">
-                  <a>
-                    <span className="flex w-full items-center justify-end font-gothic text-sm text-text-secondary">
-                      View All
-                    </span>
-                  </a>
-                </Link>
-              </div>
-            )}
           </>
         ) : (
           <span>

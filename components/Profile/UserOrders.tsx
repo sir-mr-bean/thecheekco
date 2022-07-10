@@ -29,7 +29,7 @@ const UserOrders = ({
         <div>
           <div className="flex flex-col space-y-2">
             <div className="m-2 rounded-md bg-white font-gothic shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-3">
-              <div className="mx-auto max-w-4xl py-3 sm:px-6 sm:py-4">
+              <div className="max-w-4xl py-3 sm:px-6 sm:py-4">
                 <div className="px-4 sm:px-0">
                   <h1 className="text-2xl font-extrabold tracking-tight text-text-primary sm:text-3xl">
                     Order history
@@ -88,7 +88,7 @@ const UserOrders = ({
                           <div className="mt-6 space-y-4 sm:flex sm:space-x-4 sm:space-y-0 md:mt-0">
                             <Link href={`/order/${order.id}` as string}>
                               <a
-                                href={order.id}
+                                href={`/order/${order.id}`}
                                 className="flex w-full items-center justify-center rounded-md border border-text-secondary bg-white py-2 px-4 text-sm font-medium text-text-secondary shadow-sm hover:bg-gray-50 focus:outline-none  md:w-auto"
                               >
                                 View Order

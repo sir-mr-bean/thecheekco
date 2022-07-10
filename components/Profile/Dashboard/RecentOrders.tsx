@@ -10,6 +10,8 @@ import { CartState } from "@/context/Cart/Context";
 import toast from "react-hot-toast";
 import { CartObject } from "@/types/CartObject";
 import moment from "moment";
+import { Disclosure } from "@headlessui/react";
+import { BsChevronCompactUp } from "react-icons/bs";
 
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
@@ -105,153 +107,191 @@ const RecentOrders = ({
   };
 
   return (
-    <>
-      {customerOrders &&
-        categories &&
-        customerOrders.slice(0, 2).map((order: Order) => (
-          <div
-            key={order.id}
-            className="max-w-2xl divide-y  divide-text-secondary py-4"
-          >
-            <h3 className="sr-only">
-              Order placed on{" "}
-              <time dateTime={order.createdAt}>{order.createdAt}</time>
-            </h3>
+    <Disclosure as="div">
+      {(open) => (
+        <>
+          <Disclosure.Button className="flex w-full justify-between rounded-t-lg border border-text-secondary  px-4 py-2 text-left text-sm font-medium text-text-primary hover:bg-button focus:outline-none focus-visible:ring focus-visible:ring-text-secondary focus-visible:ring-opacity-75">
+            <span className="text-2xl">My Recent Orders</span>
+            <BsChevronCompactUp
+              className={
+                open
+                  ? `h-5 w-5 rotate-180 transform text-text-primary`
+                  : `h-5 w-5 text-text-primary`
+              }
+            />
+          </Disclosure.Button>
+          {customerOrders &&
+            categories &&
+            customerOrders.slice(0, 2).map((order: Order, i: number) => (
+              <Disclosure.Panel className="border-x border-b border-text-secondary px-4 pt-4 pb-2 text-sm text-text-primary">
+                <div
+                  key={order.id}
+                  className="max-w-2xl divide-y  divide-text-secondary py-4"
+                >
+                  <h3 className="sr-only">
+                    Order placed on{" "}
+                    <time dateTime={order.createdAt}>{order.createdAt}</time>
+                  </h3>
 
-            <div className="rounded-t-lg border border-text-secondary px-2 py-2 sm:rounded-t-lg md:flex md:items-center md:justify-between md:space-x-6 lg:space-x-8">
-              <dl className="flex flex-col items-stretch justify-center space-y-4 divide-y divide-text-secondary text-sm text-text-secondary sm:flex-row  md:gap-x-6 md:space-y-0 md:divide-y-0">
-                <div className="flex w-full flex-col justify-start whitespace-pre-wrap md:block">
-                  <dt className="whitespace-nowrap text-base font-medium text-text-primary">
-                    Order number
-                  </dt>
-                  <dd className=" whitespace-pre-wrap text-xs md:mt-1">
-                    {order.id}
-                  </dd>
-                </div>
-                <div className="flex flex-col justify-between pt-4 md:block md:pt-0">
-                  <dt className="font-medium text-text-primary">Date placed</dt>
-                  <dd className="md:mt-1">
-                    <span>{`${moment(order.createdAt).format(
-                      "MMM DD, YYYY" + " hh:mm a"
-                    )}`}</span>
-                  </dd>
-                </div>
-                <div className="flex flex-col justify-between pt-4 font-medium text-text-primary md:block md:pt-0">
-                  <dt>Total amount</dt>
-                  <dd className="md:mt-1">
-                    $
-                    {(
-                      parseInt(
-                        order?.totalMoney?.amount?.toString() as string
-                      ) / 100
-                    ).toFixed(2)}
-                  </dd>
-                </div>
-              </dl>
-              <div className="mt-6 space-y-4 sm:flex sm:space-x-4 sm:space-y-0 md:mt-0">
-                <Link href={`/order/${order.id}` as string}>
-                  <a
-                    href={order.id}
-                    className="flex w-full items-center justify-center rounded-md border border-text-secondary bg-white py-2 px-4 text-sm font-medium text-text-secondary shadow-sm hover:bg-gray-50 focus:outline-none  md:w-auto"
-                  >
-                    View Order
-                    <span className="sr-only">for order {order.id}</span>
-                  </a>
-                </Link>
-              </div>
-            </div>
-
-            <div className="flow-root rounded-b-lg border border-text-secondary px-4 sm:px-0 ">
-              <div className="-my-6 divide-y divide-text-secondary">
-                {order?.lineItems &&
-                  order.lineItems.slice(0, 1).map((product: OrderLineItem) => {
-                    console.log(product);
-                    console.log(categories);
-                    console.log(orderProducts);
-                    const thisProduct =
-                      orderProducts?.products.relatedObjects?.find(
-                        (item) =>
-                          item.id === product.catalogObjectId ||
-                          item.itemData?.variations?.[0].id ===
-                            product.catalogObjectId
-                      );
-                    console.log();
-                    const categoryName = categories?.find(
-                      (category) =>
-                        category.id ===
-                        orderProducts?.products.relatedObjects?.find(
-                          (item) =>
-                            item.id === product.catalogObjectId ||
-                            item.itemData?.variations?.[0].id ===
-                              product.catalogObjectId
-                        )?.itemData?.categoryId
-                    )?.categoryData?.name;
-                    const productImage = orderProducts?.items?.find(
-                      (item) =>
-                        item.type === "IMAGE" &&
-                        thisProduct?.itemData?.imageIds?.includes(item.id)
-                    )?.imageData?.url;
-                    console.log(productImage);
-
-                    console.log(categoryName);
-                    return (
-                      <div key={product.uid} className="flex py-6 sm:py-10">
-                        <div className="min-w-0 flex-1 lg:flex lg:flex-col">
-                          <div className="pl-4 lg:flex-1">
-                            <div className="sm:flex">
-                              <div>
-                                <h4 className="text-sm font-medium text-text-primary sm:text-base">
-                                  {product.name}
-                                </h4>
-                                <p className="mt-2 hidden text-sm text-text-secondary sm:block">
-                                  {/* {product?.} */}
-                                </p>
-                              </div>
-                              <p className="mt-1 text-sm font-medium text-text-primary sm:mt-0 sm:ml-6 sm:text-base">
-                                $
-                                {(
-                                  parseInt(
-                                    product?.totalMoney?.amount?.toString() as string
-                                  ) / 100
-                                ).toFixed(2)}
-                              </p>
-                            </div>
-                            <div className="mt-2 flex text-sm font-medium sm:mt-2">
-                              {categoryName && (
-                                <>
-                                  <a
-                                    href={`/shop/${slugify(
-                                      categoryName as string
-                                    )}/${slugify(product.name as string)}`}
-                                    className="text-text-primary hover:text-text-secondary"
-                                  >
-                                    View Product
-                                  </a>
-                                  <div className="ml-4 border-l border-text-secondary pl-4 sm:ml-6 sm:pl-6">
-                                    <button
-                                      onClick={() => {
-                                        handleAddToCart(
-                                          thisProduct as CatalogObject
-                                        );
-                                      }}
-                                      className="text-text-primary hover:text-text-secondary"
-                                    >
-                                      Add to Cart
-                                    </button>
-                                  </div>
-                                </>
-                              )}
-                            </div>
-                          </div>
-                        </div>
+                  <div className="rounded-t-lg border border-text-secondary px-2 py-2 sm:rounded-t-lg md:flex md:items-center md:justify-between md:space-x-6 lg:space-x-8">
+                    <dl className="flex flex-col items-stretch justify-center space-y-4 divide-y divide-text-secondary text-sm text-text-secondary sm:flex-row  md:gap-x-6 md:space-y-0 md:divide-y-0">
+                      <div className="flex w-full flex-col justify-start whitespace-pre-wrap md:block">
+                        <dt className="whitespace-nowrap text-base font-medium text-text-primary">
+                          Order number
+                        </dt>
+                        <dd className=" whitespace-pre-wrap text-xs md:mt-1">
+                          {order.id}
+                        </dd>
                       </div>
-                    );
-                  })}
-              </div>
-            </div>
-          </div>
-        ))}
-    </>
+                      <div className="flex flex-col justify-between pt-4 md:block md:pt-0">
+                        <dt className="font-medium text-text-primary">
+                          Date placed
+                        </dt>
+                        <dd className="md:mt-1">
+                          <span>{`${moment(order.createdAt).format(
+                            "MMM DD, YYYY" + " hh:mm a"
+                          )}`}</span>
+                        </dd>
+                      </div>
+                      <div className="flex flex-col justify-between pt-4 font-medium text-text-primary md:block md:pt-0">
+                        <dt>Total amount</dt>
+                        <dd className="md:mt-1">
+                          $
+                          {(
+                            parseInt(
+                              order?.totalMoney?.amount?.toString() as string
+                            ) / 100
+                          ).toFixed(2)}
+                        </dd>
+                      </div>
+                    </dl>
+                    <div className="mt-6 space-y-4 sm:flex sm:space-x-4 sm:space-y-0 md:mt-0">
+                      <Link href={`/order/${order.id}` as string}>
+                        <a
+                          href={`/order/${order.id}`}
+                          className="flex w-full items-center justify-center rounded-md border border-text-secondary bg-white py-2 px-4 text-sm font-medium text-text-secondary shadow-sm hover:bg-gray-50 focus:outline-none  md:w-auto"
+                        >
+                          View Order
+                          <span className="sr-only">for order {order.id}</span>
+                        </a>
+                      </Link>
+                    </div>
+                  </div>
+
+                  <div className="flow-root rounded-b-lg border border-text-secondary px-4 sm:px-0 ">
+                    <div className="-my-6 divide-y divide-text-secondary">
+                      {order?.lineItems &&
+                        order.lineItems
+                          .slice(0, 1)
+                          .map((product: OrderLineItem) => {
+                            console.log(product);
+                            console.log(categories);
+                            console.log(orderProducts);
+                            const thisProduct =
+                              orderProducts?.products.relatedObjects?.find(
+                                (item) =>
+                                  item.id === product.catalogObjectId ||
+                                  item.itemData?.variations?.[0].id ===
+                                    product.catalogObjectId
+                              );
+                            console.log();
+                            const categoryName = categories?.find(
+                              (category) =>
+                                category.id ===
+                                orderProducts?.products.relatedObjects?.find(
+                                  (item) =>
+                                    item.id === product.catalogObjectId ||
+                                    item.itemData?.variations?.[0].id ===
+                                      product.catalogObjectId
+                                )?.itemData?.categoryId
+                            )?.categoryData?.name;
+                            const productImage = orderProducts?.items?.find(
+                              (item) =>
+                                item.type === "IMAGE" &&
+                                thisProduct?.itemData?.imageIds?.includes(
+                                  item.id
+                                )
+                            )?.imageData?.url;
+                            console.log(productImage);
+
+                            console.log(categoryName);
+                            return (
+                              <div
+                                key={product.uid}
+                                className="flex py-6 sm:py-10"
+                              >
+                                <div className="min-w-0 flex-1 lg:flex lg:flex-col">
+                                  <div className="pl-4 lg:flex-1">
+                                    <div className="sm:flex">
+                                      <div>
+                                        <h4 className="text-sm font-medium text-text-primary sm:text-base">
+                                          {product.name}
+                                        </h4>
+                                        <p className="mt-2 hidden text-sm text-text-secondary sm:block">
+                                          {/* {product?.} */}
+                                        </p>
+                                      </div>
+                                      <p className="mt-1 text-sm font-medium text-text-primary sm:mt-0 sm:ml-6 sm:text-base">
+                                        $
+                                        {(
+                                          parseInt(
+                                            product?.totalMoney?.amount?.toString() as string
+                                          ) / 100
+                                        ).toFixed(2)}
+                                      </p>
+                                    </div>
+                                    <div className="mt-2 flex text-sm font-medium sm:mt-2">
+                                      {categoryName && (
+                                        <>
+                                          <a
+                                            href={`/shop/${slugify(
+                                              categoryName as string
+                                            )}/${slugify(
+                                              product.name as string
+                                            )}`}
+                                            className="text-text-primary hover:text-text-secondary"
+                                          >
+                                            View Product
+                                          </a>
+                                          <div className="ml-4 border-l border-text-secondary pl-4 sm:ml-6 sm:pl-6">
+                                            <button
+                                              onClick={() => {
+                                                handleAddToCart(
+                                                  thisProduct as CatalogObject
+                                                );
+                                              }}
+                                              className="text-text-primary hover:text-text-secondary"
+                                            >
+                                              Add to Cart
+                                            </button>
+                                          </div>
+                                        </>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                    </div>
+                  </div>
+                </div>
+                {i === 1 && customerOrders.length > 1 && (
+                  <div className="text-center">
+                    <Link href="/wishlist">
+                      <a>
+                        <span className="flex w-full items-center justify-end font-gothic text-sm text-text-secondary">
+                          View All
+                        </span>
+                      </a>
+                    </Link>
+                  </div>
+                )}
+              </Disclosure.Panel>
+            ))}
+        </>
+      )}
+    </Disclosure>
   );
 };
 

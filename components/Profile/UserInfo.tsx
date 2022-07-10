@@ -70,8 +70,8 @@ const UserInfo = ({ session }: { session: Session }) => {
   return (
     <div>
       <div className="flex flex-col space-y-2">
-        <div className="bg-white sm:p-3 m-2 sm:m-6 font-gothic sm:w-3/4 sm:mx-auto rounded-md sm:rounded-lg shadow">
-          <div className="max-w-4xl mx-auto py-3 sm:px-6 sm:py-4">
+        <div className="m-2 rounded-md bg-white font-gothic shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-3">
+          <div className="max-w-4xl py-3 sm:px-6 sm:py-4">
             <div className="px-4 sm:px-0">
               <h1 className="text-2xl font-extrabold tracking-tight text-text-primary sm:text-3xl">
                 Account Details
@@ -82,9 +82,9 @@ const UserInfo = ({ session }: { session: Session }) => {
             </div>
           </div>
         </div>
-        <div className="bg-white shadow px-4 py-5 rounded-md sm:rounded-lg sm:p-6 m-2 sm:m-6 sm:w-3/4 sm:mx-auto">
+        <div className="m-2 rounded-md bg-white px-4 py-5 shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-6">
           <div className="md:grid md:grid-cols-2 md:gap-6">
-            <div className="mt-5 md:mt-0 md:col-span-2">
+            <div className="mt-5 md:col-span-2 md:mt-0">
               <form>
                 <div className="grid grid-cols-6 gap-6">
                   <div className="col-span-6 sm:col-span-2">
@@ -100,7 +100,7 @@ const UserInfo = ({ session }: { session: Session }) => {
                       id="first-name"
                       autoComplete="given-name"
                       defaultValue={userObj?.firstName as string}
-                      className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-secondary block w-full border shadow-text-secondary sm:text-sm border-text-secondary focus:ring rounded-md p-1 appearance-none"
+                      className="mt-1 block w-full appearance-none rounded-md border border-text-secondary p-1 text-text-primary shadow-text-secondary focus:border-text-secondary focus:ring focus:ring-text-primary sm:text-sm"
                     />
                   </div>
 
@@ -117,7 +117,7 @@ const UserInfo = ({ session }: { session: Session }) => {
                       id="last-name"
                       autoComplete="family-name"
                       defaultValue={userObj?.lastName as string}
-                      className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-secondary block w-full border shadow-text-secondary sm:text-sm border-text-secondary focus:ring rounded-md p-1 appearance-none"
+                      className="mt-1 block w-full appearance-none rounded-md border border-text-secondary p-1 text-text-primary shadow-text-secondary focus:border-text-secondary focus:ring focus:ring-text-primary sm:text-sm"
                     />
                   </div>
 
@@ -134,7 +134,7 @@ const UserInfo = ({ session }: { session: Session }) => {
                       id="organization"
                       autoComplete="organization"
                       defaultValue={userObj?.company as string}
-                      className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-secondary block w-full border shadow-text-secondary sm:text-sm border-text-secondary focus:ring rounded-md p-1 appearance-none"
+                      className="mt-1 block w-full appearance-none rounded-md border border-text-secondary p-1 text-text-primary shadow-text-secondary focus:border-text-secondary focus:ring focus:ring-text-primary sm:text-sm"
                     />
                   </div>
 
@@ -151,7 +151,7 @@ const UserInfo = ({ session }: { session: Session }) => {
                       id="email-address"
                       autoComplete="email"
                       defaultValue={userObj?.email as string}
-                      className="mt-1 focus:ring-text-primary focus:ring text-text-primary focus:border-text-secondary block w-full border shadow-text-secondary sm:text-sm border-text-secondary rounded-md p-1"
+                      className="mt-1 block w-full rounded-md border border-text-secondary p-1 text-text-primary shadow-text-secondary focus:border-text-secondary focus:ring focus:ring-text-primary sm:text-sm"
                     />
                   </div>
                   <div className="col-span-6 sm:col-span-3">
@@ -232,7 +232,7 @@ const UserInfo = ({ session }: { session: Session }) => {
                               .value,
                           });
                         }}
-                        className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-primary block w-full border sm:text-sm border-text-secondary rounded-md p-1 focus:ring"
+                        className="mt-1 block w-full rounded-md border border-text-secondary p-1 text-text-primary focus:border-text-primary focus:ring focus:ring-text-primary sm:text-sm"
                       />
                       <input
                         hidden
@@ -274,7 +274,7 @@ const UserInfo = ({ session }: { session: Session }) => {
                           apartmentOrUnit: e.target.value,
                         });
                       }}
-                      className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-secondary block w-full border shadow-text-secondary sm:text-sm border-text-secondary rounded-md p-1 focus:ring"
+                      className="mt-1 block w-full rounded-md border border-text-secondary p-1 text-text-primary shadow-text-secondary focus:border-text-secondary focus:ring focus:ring-text-primary sm:text-sm"
                     />
                   </div>
 
@@ -297,7 +297,7 @@ const UserInfo = ({ session }: { session: Session }) => {
                           city: e.target.value,
                         });
                       }}
-                      className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-secondary block w-full border shadow-text-secondary sm:text-sm border-text-secondary rounded-md p-1 focus:ring"
+                      className="mt-1 block w-full rounded-md border border-text-secondary p-1 text-text-primary shadow-text-secondary focus:border-text-secondary focus:ring focus:ring-text-primary sm:text-sm"
                     />
                   </div>
 
@@ -320,7 +320,7 @@ const UserInfo = ({ session }: { session: Session }) => {
                           state: e.target.value,
                         });
                       }}
-                      className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-secondary focus:ring block w-full border shadow-text-secondary sm:text-sm border-text-secondary rounded-md p-1"
+                      className="mt-1 block w-full rounded-md border border-text-secondary p-1 text-text-primary shadow-text-secondary focus:border-text-secondary focus:ring focus:ring-text-primary sm:text-sm"
                     />
                   </div>
 
@@ -347,7 +347,7 @@ const UserInfo = ({ session }: { session: Session }) => {
                           postalCode: e.target.value,
                         });
                       }}
-                      className="mt-1 focus:ring-text-primary text-text-primary focus:border-text-secondary focus:ring block w-full border shadow-text-secondary sm:text-sm border-text-secondary rounded-md p-1"
+                      className="mt-1 block w-full rounded-md border border-text-secondary p-1 text-text-primary shadow-text-secondary focus:border-text-secondary focus:ring focus:ring-text-primary sm:text-sm"
                     />
                   </div>
                   <div className="col-span-6 sm:col-span-3">
@@ -370,7 +370,7 @@ const UserInfo = ({ session }: { session: Session }) => {
                           country: e.target.value,
                         });
                       }}
-                      className="mt-1 block w-full p-1 border-text-secondary bg-white rounded-md border shadow-text-secondary focus:outline-none focus:ring-text-primary focus:ring text-text-primary focus:border-text-secondary sm:text-sm"
+                      className="mt-1 block w-full rounded-md border border-text-secondary bg-white p-1 text-text-primary shadow-text-secondary focus:border-text-secondary focus:outline-none focus:ring focus:ring-text-primary sm:text-sm"
                     >
                       <option>Australia</option>
                     </select>
@@ -388,7 +388,7 @@ const UserInfo = ({ session }: { session: Session }) => {
                       autoComplete="tel"
                       type={userObj.phoneNumber ? "text" : "tel"}
                       defaultValue={userObj.phoneNumber as string}
-                      className="mt-1 block w-full p-1 border-text-secondary bg-white rounded-md border shadow-text-secondary focus:outline-none focus:ring-text-primary focus:ring text-text-primary focus:border-text-secondary sm:text-sm"
+                      className="mt-1 block w-full rounded-md border border-text-secondary bg-white p-1 text-text-primary shadow-text-secondary focus:border-text-secondary focus:outline-none focus:ring focus:ring-text-primary sm:text-sm"
                     ></input>
                   </div>
                 </div>
@@ -397,7 +397,7 @@ const UserInfo = ({ session }: { session: Session }) => {
           </div>
         </div>
 
-        <div className="bg-white shadow px-4 py-5 rounded-md sm:rounded-lg sm:p-6 m-2 sm:m-6 sm:w-3/4 sm:mx-auto text-text-primary font-gothic">
+        <div className="m-2 rounded-md bg-white px-4 py-5 font-gothic text-text-primary shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-6">
           <div className="md:grid md:grid-cols-3 md:gap-6">
             <div className="md:col-span-1">
               <h3 className="text-lg font-medium leading-6 text-text-primary">
@@ -407,7 +407,7 @@ const UserInfo = ({ session }: { session: Session }) => {
                 Decide which communications you'd like to receive and how.
               </p>
             </div>
-            <div className="mt-5 md:mt-0 md:col-span-2">
+            <div className="mt-5 md:col-span-2 md:mt-0">
               <form className="space-y-6" action="#" method="POST">
                 <fieldset>
                   <legend className="sr-only">By Email</legend>
@@ -419,12 +419,12 @@ const UserInfo = ({ session }: { session: Session }) => {
                   </div>
                   <div className="mt-4 space-y-4">
                     <div className="flex items-start">
-                      <div className="h-5 flex items-center">
+                      <div className="flex h-5 items-center">
                         <input
                           id="comments"
                           {...register("comments")}
                           type="checkbox"
-                          className="focus:ring-text-primary focus:ring text-text-primary h-4 w-4  border-text-secondary rounded"
+                          className="h-4 w-4 rounded border-text-secondary text-text-primary  focus:ring focus:ring-text-primary"
                         />
                       </div>
                       <div className="ml-3 text-sm">
@@ -441,12 +441,12 @@ const UserInfo = ({ session }: { session: Session }) => {
                       </div>
                     </div>
                     <div className="flex items-start">
-                      <div className="flex items-center h-5">
+                      <div className="flex h-5 items-center">
                         <input
                           id="candidates"
                           {...register("candidates")}
                           type="checkbox"
-                          className="focus:ring-text-primary focus:ring text-text-primary h-4 w-4  border-text-secondary rounded"
+                          className="h-4 w-4 rounded border-text-secondary text-text-primary  focus:ring focus:ring-text-primary"
                         />
                       </div>
                       <div className="ml-3 text-sm">
@@ -462,12 +462,12 @@ const UserInfo = ({ session }: { session: Session }) => {
                       </div>
                     </div>
                     <div className="flex items-start">
-                      <div className="flex items-center h-5">
+                      <div className="flex h-5 items-center">
                         <input
                           id="offers"
                           {...register("offers")}
                           type="checkbox"
-                          className="focus:ring-text-primary focus:ring text-text-primary h-4 w-4  border-text-secondary rounded"
+                          className="h-4 w-4 rounded border-text-secondary text-text-primary  focus:ring focus:ring-text-primary"
                         />
                       </div>
                       <div className="ml-3 text-sm">
@@ -498,7 +498,7 @@ const UserInfo = ({ session }: { session: Session }) => {
                         id="push-everything"
                         {...register("push-everything")}
                         type="radio"
-                        className="focus:ring-text-primary focus:ring text-text-primary h-4 w-4  border-text-secondary"
+                        className="h-4 w-4 border-text-secondary text-text-primary focus:ring  focus:ring-text-primary"
                       />
                       <label
                         htmlFor="push-everything"
@@ -512,7 +512,7 @@ const UserInfo = ({ session }: { session: Session }) => {
                         id="push-email"
                         {...register("push-email")}
                         type="radio"
-                        className="focus:ring-text-primary focus:ring text-text-primary h-4 w-4 border-text-secondary"
+                        className="h-4 w-4 border-text-secondary text-text-primary focus:ring focus:ring-text-primary"
                       />
                       <label
                         htmlFor="push-email"
@@ -526,7 +526,7 @@ const UserInfo = ({ session }: { session: Session }) => {
                         id="push-nothing"
                         {...register("push-nothing")}
                         type="radio"
-                        className="focus:ring-text-primary focus:ring text-text-primary h-4 w-4  border-text-secondary"
+                        className="h-4 w-4 border-text-secondary text-text-primary focus:ring  focus:ring-text-primary"
                       />
                       <label
                         htmlFor="push-nothing"
@@ -537,17 +537,17 @@ const UserInfo = ({ session }: { session: Session }) => {
                     </div>
                   </div>
                 </fieldset>
-                <div className="flex justify-end sm:m-6 m-2">
+                <div className="m-2 flex justify-end sm:m-6">
                   <button
                     type="button"
-                    className="bg-white py-2 px-4 border border-text-secondary rounded-md shadow-text-secondary text-sm font-medium text-text-primary hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary "
+                    className="rounded-md border border-text-secondary bg-white py-2 px-4 text-sm font-medium text-text-primary shadow-text-secondary hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2 "
                   >
                     Cancel
                   </button>
                   <button
                     type="button"
                     onClick={handleSubmit(handleFormSubmit)}
-                    className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-text-secondary text-sm font-medium rounded-md  bg-button hover:bg-button/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-text-primary text-text-primary"
+                    className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-button py-2 px-4 text-sm font-medium  text-text-primary shadow-text-secondary hover:bg-button/90 focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2"
                   >
                     Save
                   </button>
