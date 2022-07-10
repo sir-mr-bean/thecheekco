@@ -22,7 +22,7 @@ export const contactUsRouter = createRouter()
       };
       const result = await sgMail.send({
         templateId: "d-98e4d901efbe45b38ceef21bda78faae",
-        to: "danieldeveney@hotmail.com", // Change to your recipient
+        to: "customerservice@thecheekco.com", // Change to your recipient
         from: "contact@thecheekco.com", // Change to your verified sender
         subject: "🦦 New Message from Contact Us Form 🦦",
         dynamicTemplateData: templateData,

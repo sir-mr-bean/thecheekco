@@ -91,7 +91,10 @@ export default async function handler(
       };
       const result = await sgMail.send({
         templateId: "d-4738feab78164214b2d1c6a9229f670f",
-        to: "danieldeveney@hotmail.com", // Change to your recipient
+        to:
+          orderResult?.fulfillments?.[0].shipmentDetails?.recipient
+            ?.emailAddress ||
+          orderResult?.fulfillments?.[0].pickupDetails?.recipient?.emailAddress, // Change to your recipient
         from: "contact@thecheekco.com", // Change to your verified sender
         subject: "Thanks! Your order has been receieved!",
         dynamicTemplateData: templateData,
@@ -184,7 +187,11 @@ export default async function handler(
           };
           const result = await sgMail.send({
             templateId: "d-d245cf1d52aa4bc8abf18e2151da6ab4",
-            to: "danieldeveney@hotmail.com", // Change to your recipient
+            to:
+              orderResult?.fulfillments?.[0].shipmentDetails?.recipient
+                ?.emailAddress ||
+              orderResult?.fulfillments?.[0].pickupDetails?.recipient
+                ?.emailAddress, // Change to your recipient
             from: "contact@thecheekco.com", // Change to your verified sender
             subject: "Great news! Your order has been shipped!",
             dynamicTemplateData: templateData,
@@ -262,7 +269,11 @@ export default async function handler(
           };
           const result = await sgMail.send({
             templateId: "d-d912e872425445a8b2ce929643655934",
-            to: "danieldeveney@hotmail.com", // Change to your recipient
+            to:
+              orderResult?.fulfillments?.[0].shipmentDetails?.recipient
+                ?.emailAddress ||
+              orderResult?.fulfillments?.[0].pickupDetails?.recipient
+                ?.emailAddress, // Change to your recipient
             from: "contact@thecheekco.com", // Change to your verified sender
             subject: "Great news! Your order is ready for collection!",
             dynamicTemplateData: templateData,

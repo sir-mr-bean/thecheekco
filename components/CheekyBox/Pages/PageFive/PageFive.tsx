@@ -61,7 +61,7 @@ const PageFive = ({
         <PageFiveOption
           pageFiveOptions={pageFiveOptions}
           setPageFiveOptions={setPageFiveOptions}
-          option="medium"
+          option="bathroom accessories"
         />
         <PageFiveOption
           pageFiveOptions={pageFiveOptions}

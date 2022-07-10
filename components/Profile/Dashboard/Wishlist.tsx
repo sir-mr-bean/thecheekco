@@ -84,94 +84,108 @@ const Wishlist = () => {
               }
             />
           </Disclosure.Button>
-          {wishlist.slice(0, 5).map((product, productIdx: number) => {
-            return (
-              <Disclosure.Panel className="border-x border-b border-text-secondary px-4 pt-4 pb-2 text-sm text-text-primary">
-                <li key={product.product.id} className="flex py-6 px-2 ">
-                  <div className="relative h-48 w-52 overflow-hidden ">
-                    <Image
-                      src={
-                        product?.productImage
-                          ? product?.productImage
-                          : "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
-                      }
-                      objectFit="cover"
-                      width={900}
-                      height={600}
-                      layout="responsive"
-                      alt={product.product.itemData?.name}
-                      className="rounded-md"
-                    />
-                  </div>
+          {wishlist.length > 0 ? (
+            wishlist.slice(0, 5).map((product, productIdx: number) => {
+              return (
+                <Disclosure.Panel className="rounded-b-lg border-x border-b border-text-secondary px-4 pt-4 pb-2 text-sm text-text-primary">
+                  <li key={product.product.id} className="flex py-6 px-2 ">
+                    <div className="relative h-48 w-52 overflow-hidden ">
+                      <Image
+                        src={
+                          product?.productImage
+                            ? product?.productImage
+                            : "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
+                        }
+                        objectFit="cover"
+                        width={900}
+                        height={600}
+                        layout="responsive"
+                        alt={product.product.itemData?.name}
+                        className="rounded-md"
+                      />
+                    </div>
 
-                  <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
-                    <div className="relative h-full pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
-                      <div>
-                        <div className="flex justify-between">
-                          <h3 className="text-sm">
-                            <Link
-                              href="/shop/[category]/[id]"
-                              as={`/shop/${
-                                product?.product.categoryData?.name
-                              }/${product.product.itemData?.name
-                                ?.replace(/ /g, "-")
-                                .toLowerCase()}`}
-                            >
-                              <span className="font-medium text-text-primary hover:text-text-secondary">
-                                {product.product.itemData?.name}
-                              </span>
-                            </Link>
-                          </h3>
-                        </div>
-                        <div className="mt-1 flex text-sm"></div>
-                        <p className="mt-1 text-sm font-medium text-text-primary">
-                          $
-                          {(
-                            parseInt(
+                    <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
+                      <div className="relative h-full pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
+                        <div>
+                          <div className="flex justify-between">
+                            <h3 className="text-sm">
+                              <Link
+                                href="/shop/[category]/[id]"
+                                as={`/shop/${
+                                  product?.product.categoryData?.name
+                                }/${product.product.itemData?.name
+                                  ?.replace(/ /g, "-")
+                                  .toLowerCase()}`}
+                              >
+                                <span className="font-medium text-text-primary hover:text-text-secondary">
+                                  {product.product.itemData?.name}
+                                </span>
+                              </Link>
+                            </h3>
+                          </div>
+                          <div className="mt-1 flex text-sm"></div>
+                          <p className="mt-1 text-sm font-medium text-text-primary">
+                            $
+                            {(
                               parseInt(
-                                product.product.itemData?.variations?.[0].itemVariationData?.priceMoney?.amount?.toString() as string
-                              ).toFixed(2)
-                            ) / 100
-                          ).toFixed(2)}
-                        </p>
-                      </div>
-                      <div className="absolute top-0 right-0">
-                        <button
-                          type="button"
-                          onClick={() => handleRemove(product)}
-                          className="-m-2 inline-flex p-2 text-text-primary hover:text-text-secondary"
-                        >
-                          <span className="sr-only">Remove</span>
-                          <AiOutlineClose
-                            className="h-5 w-5"
-                            aria-hidden="true"
-                          />
-                        </button>
-                      </div>
-                      <div className="absolute bottom-0 right-0">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleAddToCart(
-                              product,
-                              product?.productImage as string
-                            )
-                          }
-                          className="-m-2 inline-flex p-2 text-green-600 hover:text-text-secondary"
-                        >
-                          <span className="sr-only">Remove</span>
-                          <AiOutlineShoppingCart
-                            className="h-5 w-5"
-                            aria-hidden="true"
-                          />
-                        </button>
+                                parseInt(
+                                  product.product.itemData?.variations?.[0].itemVariationData?.priceMoney?.amount?.toString() as string
+                                ).toFixed(2)
+                              ) / 100
+                            ).toFixed(2)}
+                          </p>
+                        </div>
+                        <div className="absolute top-0 right-0">
+                          <button
+                            type="button"
+                            onClick={() => handleRemove(product)}
+                            className="-m-2 inline-flex p-2 text-text-primary hover:text-text-secondary"
+                          >
+                            <span className="sr-only">Remove</span>
+                            <AiOutlineClose
+                              className="h-5 w-5"
+                              aria-hidden="true"
+                            />
+                          </button>
+                        </div>
+                        <div className="absolute bottom-0 right-0">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleAddToCart(
+                                product,
+                                product?.productImage as string
+                              )
+                            }
+                            className="-m-2 inline-flex p-2 text-green-600 hover:text-text-secondary"
+                          >
+                            <span className="sr-only">Remove</span>
+                            <AiOutlineShoppingCart
+                              className="h-5 w-5"
+                              aria-hidden="true"
+                            />
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </li>
-              </Disclosure.Panel>
-            );
-          })}
+                  </li>
+                </Disclosure.Panel>
+              );
+            })
+          ) : (
+            <Disclosure.Panel className="rounded-b-lg border-x border-b border-text-secondary px-4 pt-4 pb-2 text-sm text-text-primary">
+              <span>
+                No items in your wishlist.. Find your next favourite goodie{" "}
+                <a href="/shop">
+                  {" "}
+                  <span className="underline decoration-text-secondary decoration-dotted underline-offset-2">
+                    now
+                  </span>
+                </a>
+              </span>
+            </Disclosure.Panel>
+          )}
         </>
       )}
     </Disclosure>

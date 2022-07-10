@@ -2,38 +2,40 @@ import { TRPCError } from "@trpc/server";
 import { createRouter } from "../createRouter";
 import { SMTPClient } from "emailjs";
 import * as z from "zod";
+import { MailService } from "@sendgrid/mail";
 
-export const emailRouter = createRouter().mutation("sendEmail", {
-  input: z.object({
-    firstName: z.string().optional(),
-    lastName: z.string().optional(),
-    company: z.string().optional(),
-    email: z.string().optional(),
-    phoneNumber: z.string().optional(),
-    message: z.string().optional(),
-    type: z.string().optional(),
-    requiredDate: z.string().optional(),
-  }),
-  async resolve({ input, ctx }) {
-    const {
-      firstName,
-      lastName,
-      company,
-      email,
-      phoneNumber,
-      message,
-      type,
-      requiredDate,
-    } = input;
-    const { prisma } = ctx;
-    const client = new SMTPClient({
-      user: process.env.EMAILACCOUNT,
-      password: process.env.EMAIL_PASS,
-      host: process.env.EMAIL_HOST,
-      ssl: true,
-      port: 465,
-    });
-    const emailBody = `
+export const emailRouter = createRouter()
+  .mutation("sendEmail", {
+    input: z.object({
+      firstName: z.string().optional(),
+      lastName: z.string().optional(),
+      company: z.string().optional(),
+      email: z.string().optional(),
+      phoneNumber: z.string().optional(),
+      message: z.string().optional(),
+      type: z.string().optional(),
+      requiredDate: z.string().optional(),
+    }),
+    async resolve({ input, ctx }) {
+      const {
+        firstName,
+        lastName,
+        company,
+        email,
+        phoneNumber,
+        message,
+        type,
+        requiredDate,
+      } = input;
+      const { prisma } = ctx;
+      const client = new SMTPClient({
+        user: process.env.EMAILACCOUNT,
+        password: process.env.EMAIL_PASS,
+        host: process.env.EMAIL_HOST,
+        ssl: true,
+        port: 465,
+      });
+      const emailBody = `
     <h1>The Cheek Co</h1>
     <p>
         ${firstName} ${lastName} has sent you a message:
@@ -51,7 +53,7 @@ export const emailRouter = createRouter().mutation("sendEmail", {
         Phone Number: ${phoneNumber}
     </p>
     `;
-    const requestBody = `
+      const requestBody = `
     <h1>The Cheek Co</h1>
     <p>
         ${firstName} ${lastName} has sent you a special request!
@@ -75,34 +77,160 @@ export const emailRouter = createRouter().mutation("sendEmail", {
         Phone Number: ${phoneNumber}
     </p>
     `;
-    try {
-      client.send(
-        {
-          text: type === null ? emailBody : requestBody,
-          from: process.env.EMAILACCOUNT as string,
-          to: "danieldeveney@hotmail.com",
-          subject:
-            type === null
-              ? "New Contact Form Submission"
-              : "New Special Request Form Submission",
-          attachment: [
-            {
-              data: type === null ? emailBody : requestBody,
-              alternative: true,
-            },
-          ],
-        },
-        (err, message) => {
-          console.log(err || message);
-        }
-      );
-    } catch (e) {
-      console.log(e);
-      ctx?.res?.status(400).end(JSON.stringify({ e }));
-      throw new TRPCError(e as TRPCError);
-    }
-    return {
-      result: "success",
-    };
-  },
-});
+      try {
+        client.send(
+          {
+            text: type === null ? emailBody : requestBody,
+            from: process.env.EMAILACCOUNT as string,
+            to: "kroucher.1019@hotmail.com",
+            subject:
+              type === null
+                ? "New Contact Form Submission"
+                : "New Special Request Form Submission",
+            attachment: [
+              {
+                data: type === null ? emailBody : requestBody,
+                alternative: true,
+              },
+            ],
+          },
+          (err, message) => {
+            console.log(err || message);
+          }
+        );
+      } catch (e) {
+        console.log(e);
+        ctx?.res?.status(400).end(JSON.stringify({ e }));
+        throw new TRPCError(e as TRPCError);
+      }
+      return {
+        result: "success",
+      };
+    },
+  })
+  .mutation("send-cheekybox-selections", {
+    input: z.object({
+      customer: z.object({
+        firstName: z.string(),
+        lastName: z.string(),
+        company: z.string().optional(),
+        email: z.string(),
+        phoneNumber: z.string(),
+        address: z.string(),
+        city: z.string(),
+        state: z.string(),
+        postCode: z.string(),
+        country: z.literal("Australia"),
+      }),
+      recipient: z.object({
+        firstName: z.string(),
+        lastName: z.string(),
+        company: z.string().optional(),
+        phoneNumber: z.string(),
+        address: z.string(),
+        city: z.string(),
+        state: z.string(),
+        postCode: z.string(),
+        country: z.literal("Australia"),
+      }),
+      selections: z.object({
+        pageOne: z.object({
+          bath: z.boolean(),
+          shower: z.boolean(),
+          both: z.boolean(),
+        }),
+        pageTwo: z.object({
+          shampooBar: z.boolean(),
+          conditioner: z.boolean(),
+          bodyWash: z.boolean(),
+          bodyButter: z.boolean(),
+          soapBar: z.boolean(),
+          bathSoak: z.boolean(),
+          beautyTools: z.boolean(),
+          hygieneAccessories: z.boolean(),
+        }),
+        pageThree: z.object({
+          floral: z.boolean(),
+          allNatural: z.boolean(),
+          darkAndSexy: z.boolean(),
+          fruity: z.boolean(),
+          sweet: z.boolean(),
+          fragranceFree: z.boolean(),
+          allergies: z.string().optional(),
+        }),
+        pageFour: z.object({
+          dry: z.boolean(),
+          oily: z.boolean(),
+          combination: z.boolean(),
+          mild: z.boolean(),
+          medium: z.boolean(),
+          high: z.boolean(),
+        }),
+        pageFive: z.object({
+          hair: z.boolean(),
+          skin: z.boolean(),
+          sleep: z.boolean(),
+          bathroomAccessories: z.boolean(),
+          homeDecor: z.boolean(),
+          wearable: z.boolean(),
+        }),
+      }),
+      gifted: z.boolean(),
+      giftMessage: z.string().optional(),
+    }),
+    async resolve({ input, ctx }) {
+      const { customer, recipient, selections, gifted, giftMessage } = input;
+      const { prisma } = ctx;
+      const {
+        firstName,
+        lastName,
+        company,
+        email,
+        phoneNumber,
+        address,
+        city,
+        state,
+        postCode,
+        country,
+      } = customer;
+      const {
+        firstName: recipientFirstName,
+        lastName: recipientLastName,
+        company: recipientCompany,
+        phoneNumber: recipientPhoneNumber,
+        address: recipientAddress,
+        city: recipientCity,
+        state: recipientState,
+        postCode: recipientPostCode,
+        country: recipientCountry,
+      } = recipient;
+      const { pageOne, pageTwo, pageThree, pageFour, pageFive } = selections;
+
+      const sgMail = new MailService();
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
+      const templateData = {
+        customer: customer,
+        recipient: recipient,
+        selections: selections,
+        gifted: gifted,
+        giftMessage: giftMessage,
+      };
+      const result = await sgMail.send({
+        templateId: "d-98e4d901efbe45b38ceef21bda78faae",
+        to: "kroucher.1019@gmail.com", // Change to your recipient
+        from: "contact@thecheekco.com", // Change to your verified sender
+        subject: "🎁 New Cheeky Box Subscription! 🎁",
+        dynamicTemplateData: templateData,
+      });
+      console.log(result);
+      if (result[0].statusCode === 202) {
+        return {
+          success: true,
+        };
+      } else {
+        return {
+          success: result?.[0].statusCode,
+        };
+      }
+    },
+  });

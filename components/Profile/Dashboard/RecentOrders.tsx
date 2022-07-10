@@ -110,7 +110,7 @@ const RecentOrders = ({
     <Disclosure as="div">
       {(open) => (
         <>
-          <Disclosure.Button className="flex w-full justify-between rounded-t-lg border border-text-secondary  px-4 py-2 text-left text-sm font-medium text-text-primary hover:bg-button focus:outline-none focus-visible:ring focus-visible:ring-text-secondary focus-visible:ring-opacity-75">
+          <Disclosure.Button className="flex w-full justify-between rounded-t-lg border border-text-secondary px-4  py-2 text-left text-sm font-medium text-text-primary hover:bg-button focus:outline-none focus-visible:ring focus-visible:ring-text-secondary focus-visible:ring-opacity-75 ui-not-open:rounded-b-lg">
             <span className="text-2xl">My Recent Orders</span>
             <BsChevronCompactUp
               className={
@@ -120,10 +120,9 @@ const RecentOrders = ({
               }
             />
           </Disclosure.Button>
-          {customerOrders &&
-            categories &&
+          {customerOrders && categories && customerOrders.length > 0 ? (
             customerOrders.slice(0, 2).map((order: Order, i: number) => (
-              <Disclosure.Panel className="border-x border-b border-text-secondary px-4 pt-4 pb-2 text-sm text-text-primary">
+              <Disclosure.Panel className="rounded-b-lg border-x border-b border-text-secondary px-4 pt-4 pb-2 text-sm text-text-primary">
                 <div
                   key={order.id}
                   className="max-w-2xl divide-y  divide-text-secondary py-4"
@@ -288,7 +287,20 @@ const RecentOrders = ({
                   </div>
                 )}
               </Disclosure.Panel>
-            ))}
+            ))
+          ) : (
+            <Disclosure.Panel className="rounded-b-lg border-x border-b border-text-secondary px-4 pt-4 pb-2 text-sm text-text-primary">
+              <span>
+                No recent orders found.. Find your next favourite goodie{" "}
+                <a href="/shop">
+                  {" "}
+                  <span className="underline decoration-text-secondary decoration-dotted underline-offset-2">
+                    now
+                  </span>
+                </a>
+              </span>
+            </Disclosure.Panel>
+          )}
         </>
       )}
     </Disclosure>

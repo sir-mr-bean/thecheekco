@@ -75,7 +75,7 @@ const CheekyBoxWrapper = () => {
     hair: false,
     skin: false,
     sleep: false,
-    medium: false,
+    bathroomAccessories: false,
     homeDecor: false,
     wearable: false,
   });

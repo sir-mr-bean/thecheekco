@@ -31,32 +31,8 @@ const UserDashboard = ({
         </div>
       </div>
       <div className="m-2 flex flex-col items-stretch justify-center space-y-3  rounded-md bg-white px-4 py-5 font-gothic text-text-primary shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-6">
-        {wishlist.length > 0 ? (
-          <>
-            <Wishlist />
-            {wishlist.length > 5 && (
-              <div className="text-center">
-                <Link href="/wishlist">
-                  <a>
-                    <span className="flex w-full items-center justify-end font-gothic text-sm text-text-secondary">
-                      View All
-                    </span>
-                  </a>
-                </Link>
-              </div>
-            )}
-          </>
-        ) : (
-          <span>
-            No items in your wishlist.. Find your next favourite goodie{" "}
-            <a href="/shop">
-              {" "}
-              <span className="underline decoration-text-secondary decoration-dotted underline-offset-2">
-                now
-              </span>
-            </a>
-          </span>
-        )}
+        <Wishlist />
+
         {customerOrders && customerOrders.length > 0 ? (
           <>
             <RecentOrders customerOrders={customerOrders} />
