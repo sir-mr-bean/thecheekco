@@ -52,6 +52,7 @@ const FinalPage = ({
   const createSubscription = trpc.useMutation([
     "square-subscription.create-subscription",
   ]);
+  const storeEmail = trpc.useMutation(["email.send-cheekybox-selections"]);
   const [orderProcessing, setOrderProcessing] = useState(false);
   const router = useRouter();
 
@@ -124,11 +125,73 @@ const FinalPage = ({
           },
           {
             onSuccess() {
-              toast.success("Payment successful!");
-              setOrderProcessing(false);
-              setTimeout(() => {
-                router.push("/");
-              }, 3000);
+              storeEmail.mutate(
+                {
+                  duration:
+                    introOptions.duration === "monthly"
+                      ? "Monthly"
+                      : "3 Month Prepaid",
+                  customer: {
+                    email: giftForm.getValues("email") as string,
+                    firstName: giftForm.getValues("firstName") as string,
+                    lastName: giftForm.getValues("lastName") as string,
+                    phoneNumber: giftForm.getValues("phoneNumber") as string,
+                    address: giftForm.getValues("address") as string,
+                    city: giftForm.getValues("city") as string,
+                    state: giftForm.getValues("state") as string,
+                    postCode: giftForm.getValues("postCode") as string,
+                    country: "Australia",
+                    company: giftForm.getValues("company") as
+                      | string
+                      | undefined,
+                  },
+                  recipient: {
+                    firstName: gift
+                      ? (gifterForm.getValues("firstName") as string)
+                      : (customer.firstName as string),
+                    lastName: gift
+                      ? (gifterForm.getValues("lastName") as string)
+                      : (customer.lastName as string),
+                    phoneNumber: gift
+                      ? (gifterForm.getValues("phoneNumber") as string)
+                      : (customer.phoneNumber as string),
+                    address: gift
+                      ? (gifterForm.getValues("address") as string)
+                      : (customer.address as string),
+                    city: gift
+                      ? (gifterForm.getValues("city") as string)
+                      : (customer.city as string),
+                    state: gift
+                      ? (gifterForm.getValues("state") as string)
+                      : (customer.state as string),
+                    postCode: gift
+                      ? (gifterForm.getValues("postCode") as string)
+                      : (customer.postCode as string),
+                    country: "Australia",
+                    company: gift
+                      ? (gifterForm.getValues("company") as string | undefined)
+                      : (customer.company as string | undefined),
+                  },
+                  gifted: gift,
+                  giftMessage: "",
+                  selections: {
+                    pageOne: pageOneOptions,
+                    pageTwo: pageTwoOptions,
+                    pageThree: pageThreeOptions,
+                    pageFour: pageFourOptions,
+                    pageFive: pageFiveOptions,
+                  },
+                },
+                {
+                  onSuccess() {
+                    toast.success("Payment successful!");
+                    setOrderProcessing(false);
+                    setTimeout(() => {
+                      router.push("/");
+                    }, 3000);
+                  },
+                }
+              );
             },
           }
         );

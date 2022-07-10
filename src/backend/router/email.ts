@@ -110,6 +110,7 @@ export const emailRouter = createRouter()
   })
   .mutation("send-cheekybox-selections", {
     input: z.object({
+      duration: z.string(),
       customer: z.object({
         firstName: z.string(),
         lastName: z.string(),
@@ -181,31 +182,6 @@ export const emailRouter = createRouter()
     async resolve({ input, ctx }) {
       const { customer, recipient, selections, gifted, giftMessage } = input;
       const { prisma } = ctx;
-      const {
-        firstName,
-        lastName,
-        company,
-        email,
-        phoneNumber,
-        address,
-        city,
-        state,
-        postCode,
-        country,
-      } = customer;
-      const {
-        firstName: recipientFirstName,
-        lastName: recipientLastName,
-        company: recipientCompany,
-        phoneNumber: recipientPhoneNumber,
-        address: recipientAddress,
-        city: recipientCity,
-        state: recipientState,
-        postCode: recipientPostCode,
-        country: recipientCountry,
-      } = recipient;
-      const { pageOne, pageTwo, pageThree, pageFour, pageFive } = selections;
-
       const sgMail = new MailService();
       sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
       const templateData = {
@@ -216,7 +192,7 @@ export const emailRouter = createRouter()
         giftMessage: giftMessage,
       };
       const result = await sgMail.send({
-        templateId: "d-98e4d901efbe45b38ceef21bda78faae",
+        templateId: "d-ede5c253026645d8b55ebc8e40f2c25e",
         to: "kroucher.1019@gmail.com", // Change to your recipient
         from: "contact@thecheekco.com", // Change to your verified sender
         subject: "🎁 New Cheeky Box Subscription! 🎁",
