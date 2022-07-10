@@ -66,276 +66,199 @@ const FinalPage = ({
     const customer = giftForm.getValues();
     const recipient = gifterForm.getValues();
     if (token.status === "OK") {
-      if (introOptions.duration === "monthly") {
-        createSubscription.mutate(
-          {
-            token: {
-              status: token.status,
-              token: token.token as string,
-              details: {
-                card: {
-                  brand: token.details?.card?.brand as string,
-                  expMonth: token.details?.card?.expMonth as number,
-                  expYear: token.details?.card?.expYear as number,
-                  last4: token.details?.card?.last4 as string,
-                },
-                method: token.details?.method as string,
+      createSubscription.mutate(
+        {
+          token: {
+            status: token.status,
+            token: token.token as string,
+            details: {
+              card: {
+                brand: token.details?.card?.brand as string,
+                expMonth: token.details?.card?.expMonth as number,
+                expYear: token.details?.card?.expYear as number,
+                last4: token.details?.card?.last4 as string,
               },
-            },
-            subscriptionPlanId: plans?.find(
-              (plan: CatalogObject) =>
-                plan.presentAtAllLocations === true &&
-                plan.subscriptionPlanData?.name === "TestPlan"
-            )?.id as string,
-            customer: {
-              email: giftForm.getValues("email") as string,
-              firstName: giftForm.getValues("firstName") as string,
-              lastName: giftForm.getValues("lastName") as string,
-              phoneNumber: giftForm.getValues("phoneNumber") as string,
-              address: giftForm.getValues("address") as string,
-              city: giftForm.getValues("city") as string,
-              state: giftForm.getValues("state") as string,
-              postCode: giftForm.getValues("postCode") as string,
-              country: "Australia",
-              company: giftForm.getValues("company") as string | undefined,
-            },
-            recipient: {
-              firstName: gift
-                ? (gifterForm.getValues("firstName") as string)
-                : (customer.firstName as string),
-              lastName: gift
-                ? (gifterForm.getValues("lastName") as string)
-                : (customer.lastName as string),
-              phoneNumber: gift
-                ? (gifterForm.getValues("phoneNumber") as string)
-                : (customer.phoneNumber as string),
-              address: gift
-                ? (gifterForm.getValues("address") as string)
-                : (customer.address as string),
-              city: gift
-                ? (gifterForm.getValues("city") as string)
-                : (customer.city as string),
-              state: gift
-                ? (gifterForm.getValues("state") as string)
-                : (customer.state as string),
-              postCode: gift
-                ? (gifterForm.getValues("postCode") as string)
-                : (customer.postCode as string),
-              country: "Australia",
-              company: gift
-                ? (gifterForm.getValues("company") as string | undefined)
-                : (customer.company as string | undefined),
+              method: token.details?.method as string,
             },
           },
-          {
-            onSuccess() {
-              storeEmail.mutate(
-                {
-                  duration:
-                    introOptions.duration === "monthly"
-                      ? "Monthly"
-                      : "3 Month Prepaid",
-                  customer: {
-                    email: giftForm.getValues("email") as string,
-                    firstName: giftForm.getValues("firstName") as string,
-                    lastName: giftForm.getValues("lastName") as string,
-                    phoneNumber: giftForm.getValues("phoneNumber") as string,
-                    address: giftForm.getValues("address") as string,
-                    city: giftForm.getValues("city") as string,
-                    state: giftForm.getValues("state") as string,
-                    postCode: giftForm.getValues("postCode") as string,
-                    country: "Australia",
-                    company: giftForm.getValues("company") as
-                      | string
-                      | undefined,
-                  },
-                  recipient: {
-                    firstName: gift
-                      ? (gifterForm.getValues("firstName") as string)
-                      : (customer.firstName as string),
-                    lastName: gift
-                      ? (gifterForm.getValues("lastName") as string)
-                      : (customer.lastName as string),
-                    phoneNumber: gift
-                      ? (gifterForm.getValues("phoneNumber") as string)
-                      : (customer.phoneNumber as string),
-                    address: gift
-                      ? (gifterForm.getValues("address") as string)
-                      : (customer.address as string),
-                    city: gift
-                      ? (gifterForm.getValues("city") as string)
-                      : (customer.city as string),
-                    state: gift
-                      ? (gifterForm.getValues("state") as string)
-                      : (customer.state as string),
-                    postCode: gift
-                      ? (gifterForm.getValues("postCode") as string)
-                      : (customer.postCode as string),
-                    country: "Australia",
-                    company: gift
-                      ? (gifterForm.getValues("company") as string | undefined)
-                      : (customer.company as string | undefined),
-                  },
-                  gifted: gift,
-                  giftMessage: "",
-                  selections: {
-                    pageOne: pageOneOptions,
-                    pageTwo: pageTwoOptions,
-                    pageThree: pageThreeOptions,
-                    pageFour: pageFourOptions,
-                    pageFive: pageFiveOptions,
-                  },
-                },
-                {
-                  onSuccess() {
-                    toast.success("Payment successful!");
-                    setOrderProcessing(false);
-                    setTimeout(() => {
-                      router.push("/");
-                    }, 3000);
-                  },
-                }
-              );
-            },
-          }
-        );
-      } else {
-        createSubscription.mutate(
-          {
-            token: {
-              status: token.status,
-              token: token.token as string,
-              details: {
-                card: {
-                  brand: token.details?.card?.brand as string,
-                  expMonth: token.details?.card?.expMonth as number,
-                  expYear: token.details?.card?.expYear as number,
-                  last4: token.details?.card?.last4 as string,
-                },
-                method: token.details?.method as string,
-              },
-            },
-            subscriptionPlanId: plans?.find(
-              (plan) =>
-                plan.presentAtAllLocations === true &&
-                plan.subscriptionPlanData?.name === "TestPlan"
-            )?.id as string,
-            customer: {
-              email: giftForm.getValues("email") as string,
-              firstName: giftForm.getValues("firstName") as string,
-              lastName: giftForm.getValues("lastName") as string,
-              phoneNumber: giftForm.getValues("phoneNumber") as string,
-              address: giftForm.getValues("address") as string,
-              city: giftForm.getValues("city") as string,
-              state: giftForm.getValues("state") as string,
-              postCode: giftForm.getValues("postCode") as string,
-              country: "Australia",
-              company: giftForm.getValues("company") as string | undefined,
-            },
-            recipient: {
-              firstName: gift
-                ? (gifterForm.getValues("firstName") as string)
-                : (customer.firstName as string),
-              lastName: gift
-                ? (gifterForm.getValues("lastName") as string)
-                : (customer.lastName as string),
-              phoneNumber: gift
-                ? (gifterForm.getValues("phoneNumber") as string)
-                : (customer.phoneNumber as string),
-              address: gift
-                ? (gifterForm.getValues("address") as string)
-                : (customer.address as string),
-              city: gift
-                ? (gifterForm.getValues("city") as string)
-                : (customer.city as string),
-              state: gift
-                ? (gifterForm.getValues("state") as string)
-                : (customer.state as string),
-              postCode: gift
-                ? (gifterForm.getValues("postCode") as string)
-                : (customer.postCode as string),
-              country: "Australia",
-              company: gift
-                ? (gifterForm.getValues("company") as string | undefined)
-                : (customer.company as string | undefined),
-            },
+          subscriptionPlanId: plans?.find(
+            (plan: CatalogObject) =>
+              plan.presentAtAllLocations === true &&
+              (introOptions.duration === "monthly"
+                ? plan.subscriptionPlanData?.name === "TestPlan"
+                : plan.subscriptionPlanData?.name === "TestPlanMonthly")
+          )?.id as string,
+          customer: {
+            email: giftForm.getValues("email") as string,
+            firstName: giftForm.getValues("firstName") as string,
+            lastName: giftForm.getValues("lastName") as string,
+            phoneNumber: giftForm.getValues("phoneNumber") as string,
+            address: giftForm.getValues("address") as string,
+            city: giftForm.getValues("city") as string,
+            state: giftForm.getValues("state") as string,
+            postCode: giftForm.getValues("postCode") as string,
+            country: "Australia",
+            company: giftForm.getValues("company") as string | undefined,
           },
-          {
-            onSuccess() {
-              customerEmail.mutate(
-                {
-                  duration:
-                    introOptions.duration === "monthly"
-                      ? "Monthly"
-                      : "3 Month Prepaid",
-                  customer: {
-                    email: giftForm.getValues("email") as string,
-                    firstName: giftForm.getValues("firstName") as string,
-                    lastName: giftForm.getValues("lastName") as string,
-                    phoneNumber: giftForm.getValues("phoneNumber") as string,
-                    address: giftForm.getValues("address") as string,
-                    city: giftForm.getValues("city") as string,
-                    state: giftForm.getValues("state") as string,
-                    postCode: giftForm.getValues("postCode") as string,
-                    country: "Australia",
-                    company: giftForm.getValues("company") as
-                      | string
-                      | undefined,
-                  },
-                  recipient: {
-                    firstName: gift
-                      ? (gifterForm.getValues("firstName") as string)
-                      : (customer.firstName as string),
-                    lastName: gift
-                      ? (gifterForm.getValues("lastName") as string)
-                      : (customer.lastName as string),
-                    phoneNumber: gift
-                      ? (gifterForm.getValues("phoneNumber") as string)
-                      : (customer.phoneNumber as string),
-                    address: gift
-                      ? (gifterForm.getValues("address") as string)
-                      : (customer.address as string),
-                    city: gift
-                      ? (gifterForm.getValues("city") as string)
-                      : (customer.city as string),
-                    state: gift
-                      ? (gifterForm.getValues("state") as string)
-                      : (customer.state as string),
-                    postCode: gift
-                      ? (gifterForm.getValues("postCode") as string)
-                      : (customer.postCode as string),
-                    country: "Australia",
-                    company: gift
-                      ? (gifterForm.getValues("company") as string | undefined)
-                      : (customer.company as string | undefined),
-                  },
-                  gifted: gift,
+          recipient: {
+            firstName: gift
+              ? (gifterForm.getValues("firstName") as string)
+              : (customer.firstName as string),
+            lastName: gift
+              ? (gifterForm.getValues("lastName") as string)
+              : (customer.lastName as string),
+            phoneNumber: gift
+              ? (gifterForm.getValues("phoneNumber") as string)
+              : (customer.phoneNumber as string),
+            address: gift
+              ? (gifterForm.getValues("address") as string)
+              : (customer.address as string),
+            city: gift
+              ? (gifterForm.getValues("city") as string)
+              : (customer.city as string),
+            state: gift
+              ? (gifterForm.getValues("state") as string)
+              : (customer.state as string),
+            postCode: gift
+              ? (gifterForm.getValues("postCode") as string)
+              : (customer.postCode as string),
+            country: "Australia",
+            company: gift
+              ? (gifterForm.getValues("company") as string | undefined)
+              : (customer.company as string | undefined),
+          },
+        },
+        {
+          onSuccess() {
+            storeEmail.mutate(
+              {
+                duration:
+                  introOptions.duration === "monthly"
+                    ? "Monthly"
+                    : "3 Month Prepaid",
+                customer: {
+                  email: giftForm.getValues("email") as string,
+                  firstName: giftForm.getValues("firstName") as string,
+                  lastName: giftForm.getValues("lastName") as string,
+                  phoneNumber: giftForm.getValues("phoneNumber") as string,
+                  address: giftForm.getValues("address") as string,
+                  city: giftForm.getValues("city") as string,
+                  state: giftForm.getValues("state") as string,
+                  postCode: giftForm.getValues("postCode") as string,
+                  country: "Australia",
+                  company: giftForm.getValues("company") as string | undefined,
                 },
-                {
-                  onSuccess() {
-                    toast.success("Payment successful!");
-                    setOrderProcessing(false);
-                    setTimeout(() => {
-                      router.push("/");
-                    }, 3000);
-                  },
-                }
-              );
-            },
-            onError(error) {
-              toast.error(
-                "Failed to create subscription - please check your contact information and try again."
-              );
-              errorEmail.mutate({
-                error: error.message,
-              });
-              setOrderProcessing(false);
-            },
-          }
-        );
-      }
+                recipient: {
+                  firstName: gift
+                    ? (gifterForm.getValues("firstName") as string)
+                    : (customer.firstName as string),
+                  lastName: gift
+                    ? (gifterForm.getValues("lastName") as string)
+                    : (customer.lastName as string),
+                  phoneNumber: gift
+                    ? (gifterForm.getValues("phoneNumber") as string)
+                    : (customer.phoneNumber as string),
+                  address: gift
+                    ? (gifterForm.getValues("address") as string)
+                    : (customer.address as string),
+                  city: gift
+                    ? (gifterForm.getValues("city") as string)
+                    : (customer.city as string),
+                  state: gift
+                    ? (gifterForm.getValues("state") as string)
+                    : (customer.state as string),
+                  postCode: gift
+                    ? (gifterForm.getValues("postCode") as string)
+                    : (customer.postCode as string),
+                  country: "Australia",
+                  company: gift
+                    ? (gifterForm.getValues("company") as string | undefined)
+                    : (customer.company as string | undefined),
+                },
+                gifted: gift,
+                giftMessage: "",
+                selections: {
+                  pageOne: pageOneOptions,
+                  pageTwo: pageTwoOptions,
+                  pageThree: pageThreeOptions,
+                  pageFour: pageFourOptions,
+                  pageFive: pageFiveOptions,
+                },
+              },
+              {
+                onSuccess() {
+                  customerEmail.mutate(
+                    {
+                      duration:
+                        introOptions.duration === "monthly"
+                          ? "Monthly"
+                          : "3 Month Prepaid",
+                      customer: {
+                        email: giftForm.getValues("email") as string,
+                        firstName: giftForm.getValues("firstName") as string,
+                        lastName: giftForm.getValues("lastName") as string,
+                        phoneNumber: giftForm.getValues(
+                          "phoneNumber"
+                        ) as string,
+                        address: giftForm.getValues("address") as string,
+                        city: giftForm.getValues("city") as string,
+                        state: giftForm.getValues("state") as string,
+                        postCode: giftForm.getValues("postCode") as string,
+                        country: "Australia",
+                        company: giftForm.getValues("company") as
+                          | string
+                          | undefined,
+                      },
+                      recipient: {
+                        firstName: gift
+                          ? (gifterForm.getValues("firstName") as string)
+                          : (customer.firstName as string),
+                        lastName: gift
+                          ? (gifterForm.getValues("lastName") as string)
+                          : (customer.lastName as string),
+                        phoneNumber: gift
+                          ? (gifterForm.getValues("phoneNumber") as string)
+                          : (customer.phoneNumber as string),
+                        address: gift
+                          ? (gifterForm.getValues("address") as string)
+                          : (customer.address as string),
+                        city: gift
+                          ? (gifterForm.getValues("city") as string)
+                          : (customer.city as string),
+                        state: gift
+                          ? (gifterForm.getValues("state") as string)
+                          : (customer.state as string),
+                        postCode: gift
+                          ? (gifterForm.getValues("postCode") as string)
+                          : (customer.postCode as string),
+                        country: "Australia",
+                        company: gift
+                          ? (gifterForm.getValues("company") as
+                              | string
+                              | undefined)
+                          : (customer.company as string | undefined),
+                      },
+                      gifted: gift,
+                    },
+                    {
+                      onSuccess() {
+                        toast.success("Payment successful!");
+                        setOrderProcessing(false);
+                        setTimeout(() => {
+                          router.push("/");
+                        }, 3000);
+                      },
+                    }
+                  );
+                },
+              }
+            );
+          },
+        }
+      );
     } else {
-      console.log("payment failed");
+      toast.error("Payment failed, please try again.");
+      setOrderProcessing(false);
     }
   };
 
