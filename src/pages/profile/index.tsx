@@ -212,6 +212,7 @@ export default function Profile(): JSX.Element {
                     <UserDashboard
                       customerOrders={customerOrders}
                       orderQueryStatus={orderQueryStatus}
+                      setOpenTab={setOpenTab}
                     />
                   </>
                 )}

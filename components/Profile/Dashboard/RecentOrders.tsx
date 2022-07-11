@@ -19,8 +19,10 @@ import { BsChevronCompactUp } from "react-icons/bs";
 
 const RecentOrders = ({
   customerOrders,
+  setOpenTab,
 }: {
   customerOrders: Order[] | undefined;
+  setOpenTab: (tab: number) => void;
 }) => {
   const { dispatch: dispatchCart } = CartState();
   const productIDs = [
@@ -221,16 +223,26 @@ const RecentOrders = ({
                               >
                                 <div className="min-w-0 flex-1 lg:flex lg:flex-col">
                                   <div className="pl-4 lg:flex-1">
-                                    <div className="sm:flex">
-                                      <div>
-                                        <h4 className="text-sm font-medium text-text-primary sm:text-base">
-                                          {product.name}
-                                        </h4>
-                                        <p className="mt-2 hidden text-sm text-text-secondary sm:block">
-                                          {/* {product?.} */}
-                                        </p>
-                                      </div>
-                                      <p className="mt-1 text-sm font-medium text-text-primary sm:mt-0 sm:ml-6 sm:text-base">
+                                    <div className="items-center pt-1 sm:flex sm:space-x-2">
+                                      <Image
+                                        className="h-24 w-24 rounded-full "
+                                        height={50}
+                                        width={50}
+                                        objectFit="cover"
+                                        src={
+                                          productImage ||
+                                          "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
+                                        }
+                                        alt={product.name}
+                                      />
+                                      <h4 className="font-medium text-text-primary">
+                                        {product.name}
+                                      </h4>
+                                      <p className="mt-2 hidden text-sm text-text-secondary sm:block">
+                                        {/* {product?.} */}
+                                      </p>
+
+                                      <p className="mt-1 font-medium text-text-primary sm:mt-0 sm:ml-6">
                                         $
                                         {(
                                           parseInt(
@@ -246,7 +258,8 @@ const RecentOrders = ({
                                             href={`/shop/${slugify(
                                               categoryName as string
                                             )}/${slugify(
-                                              product.name as string
+                                              thisProduct?.itemData
+                                                ?.name as string
                                             )}`}
                                             className="text-text-primary hover:text-text-secondary"
                                           >
@@ -261,7 +274,7 @@ const RecentOrders = ({
                                               }}
                                               className="text-text-primary hover:text-text-secondary"
                                             >
-                                              Add to Cart
+                                              Buy Again
                                             </button>
                                           </div>
                                         </>
@@ -276,14 +289,20 @@ const RecentOrders = ({
                   </div>
                 </div>
                 {i === 1 && customerOrders.length > 1 && (
-                  <div className="text-center">
-                    <Link href="/wishlist">
-                      <a>
-                        <span className="flex w-full items-center justify-end font-gothic text-sm text-text-secondary">
-                          View All
-                        </span>
-                      </a>
-                    </Link>
+                  <div className="flex w-full items-start justify-end text-center">
+                    <button
+                      onClick={() => {
+                        window.scrollTo({
+                          top: 0,
+                          behavior: "smooth",
+                        });
+                        setOpenTab(3);
+                      }}
+                    >
+                      <span className="flex w-full items-center justify-end font-gothic text-sm text-text-secondary">
+                        View All
+                      </span>
+                    </button>
                   </div>
                 )}
               </Disclosure.Panel>

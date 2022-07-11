@@ -28,7 +28,7 @@ const login = ({ providers }: { providers: AppProviders }) => {
 
   const [loggingIn, setLoggingIn] = useState(false);
   const returnUrl = router.query?.returnTo;
-  const error = router.query?.error;
+  const error = router.query?.error?.includes("Verification");
 
   useEffect(() => {
     if (status === String("authenticated")) {

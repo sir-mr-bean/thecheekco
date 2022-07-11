@@ -9,9 +9,11 @@ import RecentOrders from "./Dashboard/RecentOrders";
 const UserDashboard = ({
   customerOrders,
   orderQueryStatus,
+  setOpenTab,
 }: {
   customerOrders: Order[] | undefined;
   orderQueryStatus: string;
+  setOpenTab: (tab: number) => void;
 }) => {
   const { wishlist, dispatch } = WishlistState();
   const { cart, dispatch: dispatchCart } = CartState();
@@ -35,7 +37,10 @@ const UserDashboard = ({
 
         {customerOrders && customerOrders.length > 0 ? (
           <>
-            <RecentOrders customerOrders={customerOrders} />
+            <RecentOrders
+              setOpenTab={setOpenTab}
+              customerOrders={customerOrders}
+            />
           </>
         ) : (
           <span>
