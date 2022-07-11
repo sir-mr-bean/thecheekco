@@ -179,6 +179,7 @@ export const squareSubscriptionRouter = createRouter()
             locationIds: [process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string],
           },
         },
+        include: ["actions"],
       });
       return subscriptions?.result?.subscriptions;
     },

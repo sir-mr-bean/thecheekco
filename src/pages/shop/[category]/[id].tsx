@@ -328,6 +328,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   <ul role="list" className="flex items-center space-x-6">
                     <li>
                       <a
+                        target={"_blank"}
                         href={`https://www.facebook.com/sharer/sharer.php?u=https://${process.env.NEXT_PUBLIC_VERCEL_URL}${router.asPath}`}
                         className="flex h-6 w-6 items-center justify-center text-gray-400 hover:text-[#4267B2]"
                       >
@@ -349,6 +350,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
                     <li>
                       <a
+                        target={"_blank"}
                         href={`https://twitter.com/intent/tweet?text=${product?.itemData?.name}&url=https://${process.env.NEXT_PUBLIC_VERCEL_URL}${router.asPath}`}
                         className="flex h-6 w-6 items-center justify-center text-gray-400 hover:text-[#1DA1F2]"
                       >

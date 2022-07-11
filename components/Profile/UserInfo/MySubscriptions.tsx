@@ -80,46 +80,73 @@ const MySubscriptions = ({
                 const thisPlan = allPlans?.find(
                   (plan) => plan.id === subscription.planId
                 );
+                const isPaused = subscription.actions?.find(
+                  (action) => action.type === "PAUSE"
+                );
+                const isDueToBeCancelled = subscription.actions?.find(
+                  (action) => action.type === "CANCEL"
+                );
                 return (
-                  <div className="my-2 flex w-full items-center justify-between rounded-xl border border-text-secondary">
-                    <div className="flex items-center justify-between">
-                      <p className="px-2 py-6 text-sm font-medium leading-5 text-text-primary">
+                  <div className="my-2 flex w-full items-center justify-between rounded-xl border border-text-secondary sm:grid sm:grid-cols-3">
+                    <div className="flex items-start justify-between py-6">
+                      <p className="px-2 text-sm font-medium leading-5 text-text-primary">
                         {thisPlan?.subscriptionPlanData?.name}
                       </p>
-                      <p className="text-sm leading-5 text-text-secondary"></p>
                     </div>
-                    <div className="flex h-full w-fit flex-col items-center justify-center gap-2 p-2">
-                      <button
-                        onClick={() => {
-                          handlePauseSubscription(subscription);
-                        }}
-                        className="inline-flex justify-center rounded-md border border-button bg-white py-2 px-4 text-sm font-medium  text-text-secondary shadow-text-secondary hover:bg-button hover:text-white focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2"
-                      >
-                        Pause
-                      </button>
-                      <button
-                        onClick={() => {
-                          handleCancelSubscription(subscription);
-                        }}
-                        className="inline-flex justify-center rounded-md border border-transparent bg-button py-2 px-4 text-sm font-medium  text-text-primary shadow-text-secondary hover:bg-button/90 focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2"
-                      >
-                        Cancel
-                      </button>
+                    <div className="flex flex-col items-center justify-center">
+                      <span className="text-sm font-medium">Status:</span>
+                      <p className="text-sm leading-5 text-text-secondary">
+                        {isDueToBeCancelled
+                          ? "Cancelling"
+                          : isPaused
+                          ? "Paused"
+                          : "Active"}
+                      </p>
+                    </div>
+                    <div className="flex h-full flex-col items-center justify-center gap-2 place-self-end py-1 pr-2">
+                      <>
+                        {isPaused && !isDueToBeCancelled ? (
+                          <button
+                            className="rounded-lg border border-text-secondary px-2 py-2 text-sm font-medium leading-5 text-text-primary hover:text-text-secondary"
+                            onClick={() =>
+                              handleResumeSubscription(subscription)
+                            }
+                          >
+                            Resume
+                          </button>
+                        ) : (
+                          !isPaused &&
+                          !isDueToBeCancelled && (
+                            <>
+                              <button
+                                className="rounded-lg border border-text-secondary px-2 py-2 text-sm font-medium leading-5 text-text-primary hover:text-text-secondary"
+                                onClick={() =>
+                                  handlePauseSubscription(subscription)
+                                }
+                              >
+                                Pause
+                              </button>
+                              <button
+                                className="rounded-lg border border-text-secondary bg-button px-2 py-2 text-sm font-medium  leading-5 text-white hover:text-text-secondary"
+                                onClick={() =>
+                                  handleCancelSubscription(subscription)
+                                }
+                              >
+                                Cancel
+                              </button>
+                            </>
+                          )
+                        )}
+                      </>
                     </div>
                   </div>
                 );
               })}
             </>
           ) : (
-            <span>
-              No subscriptions. Find your next favourite goodie{" "}
-              <a href="/shop">
-                {" "}
-                <span className="underline decoration-text-secondary decoration-dotted underline-offset-2">
-                  now
-                </span>
-              </a>
-            </span>
+            <p className="text-sm text-text-secondary">
+              You have no subscriptions.
+            </p>
           )}
         </div>
       </div>
