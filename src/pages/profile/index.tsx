@@ -10,7 +10,6 @@ import BeatLoader from "react-spinners/BeatLoader";
 import { trpc } from "@/utils/trpc";
 import Head from "next/head";
 import Script from "next/script";
-import { oneko, destroyOneko } from "public/oneko/oneko";
 
 const tabs = [
   {
@@ -81,12 +80,7 @@ export default function Profile(): JSX.Element {
   useEffect(() => {
     if (status === String("unauthenticated")) {
       router.push("/login");
-    } else {
-      oneko();
     }
-    return () => {
-      destroyOneko();
-    };
   }, [session]);
 
   return (

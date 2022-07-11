@@ -584,7 +584,6 @@ export default function checkout() {
                                   saveCardDetails={saveCardDetails}
                                   selectedPaymentMethod={selectedPaymentMethod}
                                   shipping={shipping}
-                                  session={session}
                                   userShippingObj={null}
                                 >
                                   <div className="flex w-full flex-col space-y-4 pt-3">
@@ -810,7 +809,6 @@ export default function checkout() {
                                   saveCardDetails={saveCardDetails}
                                   selectedPaymentMethod={selectedPaymentMethod}
                                   shipping={shipping}
-                                  session={session}
                                 >
                                   <div className="flex w-full flex-col space-y-4 pt-3">
                                     <h2 className="py-3 text-lg font-medium">

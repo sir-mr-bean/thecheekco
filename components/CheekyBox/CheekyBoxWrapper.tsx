@@ -507,7 +507,10 @@ const CheekyBoxWrapper = () => {
                   <button
                     type="submit"
                     onClick={async () => {
-                      if (gift) await gifterForm.trigger();
+                      if (gift)
+                        await gifterForm.trigger(undefined, {
+                          shouldFocus: true,
+                        });
                       await giftForm.trigger();
                       if (gift) {
                         if (

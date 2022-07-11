@@ -50,7 +50,7 @@ const FormField = ({
             type="text"
             disabled={methodName === "country"}
             id={field}
-            autoComplete="given-name"
+            //autoComplete="given-name"
             {...form.register(methodName)}
             className="block w-full appearance-none rounded-md border border-text-secondary p-1 focus:border-text-primary focus:ring-text-primary sm:text-base "
             onChange={(e) => form.clearErrors(methodName)}

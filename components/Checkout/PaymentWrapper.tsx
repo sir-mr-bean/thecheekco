@@ -20,7 +20,6 @@ const PaymentWrapper = ({
   saveCardDetails,
   selectedPaymentMethod,
   shipping,
-  session,
   userShippingObj,
 }: {
   children: React.ReactNode;
@@ -32,7 +31,6 @@ const PaymentWrapper = ({
   saveCardDetails: boolean;
   selectedPaymentMethod: Card | null;
   shipping: number;
-  session: Session | null;
 }) => {
   const router = useRouter();
   const { data: customer, status } = trpc.useQuery([
