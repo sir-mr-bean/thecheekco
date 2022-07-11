@@ -128,7 +128,8 @@ const SearchBar = () => {
           <div className="w-full rounded-xl border-t border-text-secondary">
             <span className="pl-2">Products</span>
           </div> */}
-          {product &&
+          {isOpen &&
+            product &&
             product
               .filter((result) => result.type === "ITEM")
               .map((result) => {
