@@ -153,25 +153,57 @@ export const squareSubscriptionRouter = createRouter()
       return createSubscription.result;
     },
   })
+  .query("get-my-subscriptions", {
+    async resolve({ ctx }) {
+      const { req } = ctx;
+      const session = await getSession({ req });
+      const customerEmail = session?.user?.email;
+      if (!customerEmail) {
+        throw new TRPCError({ message: "Not logged in", code: "UNAUTHORIZED" });
+      }
+      const allCustomers = await customersApi.listCustomers();
+      const existingCustomer = allCustomers?.result?.customers?.find(
+        (cust) => cust.emailAddress === customerEmail
+      );
+      if (!existingCustomer) {
+        throw new TRPCError({
+          message: "No customer found",
+          code: "BAD_REQUEST",
+        });
+      }
+      const customerId = existingCustomer.id;
+      const subscriptions = await subscriptionsApi.searchSubscriptions({
+        query: {
+          filter: {
+            customerIds: [customerId as string],
+            locationIds: [process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string],
+          },
+        },
+      });
+      return subscriptions?.result?.subscriptions;
+    },
+  })
   .mutation("cancel-subscription", {
     input: z.object({
       subscriptionId: z.string(),
-      customerId: z.string(),
       reason: z.string(),
     }),
     async resolve({ input, ctx }) {
       const { req } = ctx;
       const { subscriptionId } = input;
       const session = await getSession({ req });
-      const thisCustomer = await customersApi.retrieveCustomer(
-        input.customerId
+      const customerEmail = session?.user?.email;
+      if (!customerEmail) {
+        throw new TRPCError({ message: "Not logged in", code: "UNAUTHORIZED" });
+      }
+      const allCustomers = await customersApi.listCustomers();
+      const existingCustomer = allCustomers?.result?.customers?.find(
+        (cust) => cust.emailAddress === customerEmail
       );
-      if (
-        session?.user.email !== thisCustomer?.result?.customer?.emailAddress
-      ) {
+      if (!existingCustomer) {
         throw new TRPCError({
-          message: "You are not authorized to perform this action",
-          code: "UNAUTHORIZED",
+          message: "No customer found",
+          code: "BAD_REQUEST",
         });
       }
       const cancelSubscription = await subscriptionsApi.cancelSubscription(
@@ -186,21 +218,23 @@ export const squareSubscriptionRouter = createRouter()
   .mutation("pause-subscription", {
     input: z.object({
       subscriptionId: z.string(),
-      customerId: z.string(),
     }),
     async resolve({ input, ctx }) {
       const { req } = ctx;
       const { subscriptionId } = input;
       const session = await getSession({ req });
-      const thisCustomer = await customersApi.retrieveCustomer(
-        input.customerId
+      const customerEmail = session?.user?.email;
+      if (!customerEmail) {
+        throw new TRPCError({ message: "Not logged in", code: "UNAUTHORIZED" });
+      }
+      const allCustomers = await customersApi.listCustomers();
+      const existingCustomer = allCustomers?.result?.customers?.find(
+        (cust) => cust.emailAddress === customerEmail
       );
-      if (
-        session?.user.email !== thisCustomer?.result?.customer?.emailAddress
-      ) {
+      if (!existingCustomer) {
         throw new TRPCError({
-          message: "You are not authorized to perform this action",
-          code: "UNAUTHORIZED",
+          message: "No customer found",
+          code: "BAD_REQUEST",
         });
       }
       const pauseSubscription = await subscriptionsApi.pauseSubscription(
@@ -211,5 +245,34 @@ export const squareSubscriptionRouter = createRouter()
         }
       );
       return pauseSubscription?.result;
+    },
+  })
+  .mutation("resume-subscription", {
+    input: z.object({
+      subscriptionId: z.string(),
+    }),
+    async resolve({ input, ctx }) {
+      const { req } = ctx;
+      const { subscriptionId } = input;
+      const session = await getSession({ req });
+      const customerEmail = session?.user?.email;
+      if (!customerEmail) {
+        throw new TRPCError({ message: "Not logged in", code: "UNAUTHORIZED" });
+      }
+      const allCustomers = await customersApi.listCustomers();
+      const existingCustomer = allCustomers?.result?.customers?.find(
+        (cust) => cust.emailAddress === customerEmail
+      );
+      if (!existingCustomer) {
+        throw new TRPCError({
+          message: "No customer found",
+          code: "BAD_REQUEST",
+        });
+      }
+      const resumeSubscription = await subscriptionsApi.resumeSubscription(
+        subscriptionId,
+        {}
+      );
+      return resumeSubscription?.result;
     },
   });

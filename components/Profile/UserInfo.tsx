@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { User } from "@prisma/client";
 import toast from "react-hot-toast";
 import { Session } from "next-auth";
+import MySubscriptions from "./UserInfo/MySubscriptions";
 
 type FormData = {
   [x: string]: any;
@@ -24,6 +25,13 @@ const UserInfo = ({ session }: { session: Session }) => {
   } = useForm();
   const [userObj, setUserObj] = useState<User>(session?.user as User);
   const updateUser = trpc.useMutation(["userupdateUser"]);
+  const { data: mySubscriptions, status } = trpc.useQuery([
+    "square-subscription.get-my-subscriptions",
+  ]);
+  const { data: allPlans, status: planStatus } = trpc.useQuery([
+    "square-subscription.get-all-subscriptions",
+  ]);
+  console.log(mySubscriptions);
 
   const dateSchema = z.preprocess((arg) => {
     if (typeof arg == "string" || arg instanceof Date) return new Date(arg);
@@ -65,6 +73,7 @@ const UserInfo = ({ session }: { session: Session }) => {
       }
     );
   };
+
   //mutation.mutate({ email: d.email, user: d });
 
   return (
@@ -396,6 +405,12 @@ const UserInfo = ({ session }: { session: Session }) => {
             </div>
           </div>
         </div>
+
+        {/* My Subscriptions Panel */}
+        <MySubscriptions
+          mySubscriptions={mySubscriptions}
+          allPlans={allPlans}
+        />
 
         <div className="m-2 rounded-md bg-white px-4 py-5 font-gothic text-text-primary shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-6">
           <div className="md:grid md:grid-cols-3 md:gap-6">

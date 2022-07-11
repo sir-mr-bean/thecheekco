@@ -15,9 +15,6 @@ const UserDashboard = ({
   orderQueryStatus: string;
   setOpenTab: (tab: number) => void;
 }) => {
-  const { wishlist, dispatch } = WishlistState();
-  const { cart, dispatch: dispatchCart } = CartState();
-
   return (
     <div className="flex flex-col space-y-2">
       <div className="m-2 rounded-md bg-white font-gothic shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-3">
