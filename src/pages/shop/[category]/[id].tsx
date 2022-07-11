@@ -137,14 +137,27 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   const handleNewReview = () => {
     if (session) {
-      reviewMutation.mutate({
-        productId: product?.id as string,
-        userId: session.user.id,
-        rating: rating,
-        comment: reviewInputRef.current?.value as string,
-      });
-
-      toast.success("Review submitted for approval!");
+      reviewMutation.mutate(
+        {
+          productId: product?.id as string,
+          userId: session.user.id,
+          rating: rating,
+          comment: reviewInputRef.current?.value as string,
+        },
+        {
+          onSuccess(input) {
+            // set value of  reviewInputRef to empty string
+            reviewInputRef.current &&
+              reviewInputRef.current.value &&
+              (reviewInputRef.current.value = "");
+            setRating(0);
+            toast.success("Review submitted successfully");
+          },
+          onError(error) {
+            toast.error(error.message);
+          },
+        }
+      );
     } else {
       toast.error("You must be logged in to submit a review");
     }

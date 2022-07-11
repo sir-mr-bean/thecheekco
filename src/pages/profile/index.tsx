@@ -98,10 +98,6 @@ export default function Profile(): JSX.Element {
           content="More than just amazing bath and skin care products. Ethically sourced handmade in Australia, cruelty free, vegan."
         />
         <link rel="icon" href="/favicon.ico" />
-        <Script
-          src="../../../public/oneko/oneko.js"
-          strategy="afterInteractive"
-        />
       </Head>
       <div className=" min-h-screen">
         <div>
