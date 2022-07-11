@@ -328,7 +328,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   <ul role="list" className="flex items-center space-x-6">
                     <li>
                       <a
-                        href={`https://www.facebook.com/sharer/sharer.php?u=${router.basePath}${router.asPath}`}
+                        href={`https://www.facebook.com/sharer/sharer.php?u=${process.env.NEXT_PUBLIC_VERCEL_URL}${router.asPath}`}
                         className="flex h-6 w-6 items-center justify-center text-gray-400 hover:text-[#4267B2]"
                       >
                         <span className="sr-only">Share on Facebook</span>
@@ -349,7 +349,7 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
                     <li>
                       <a
-                        href={`https://twitter.com/intent/tweet?text=${product?.itemData?.name}&url=${router.basePath}${router.asPath}`}
+                        href={`https://twitter.com/intent/tweet?text=${product?.itemData?.name}&url=${process.env.NEXT_PUBLIC_VERCEL_URL}${router.asPath}`}
                         className="flex h-6 w-6 items-center justify-center text-gray-400 hover:text-[#1DA1F2]"
                       >
                         <span className="sr-only">Share on Twitter</span>
