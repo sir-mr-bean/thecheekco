@@ -32,7 +32,7 @@ const PageFive = ({
     <>
       <div className="relative flex h-full w-full flex-col items-center justify-start">
         <span className=" mb-6 text-center text-2xl sm:text-4xl">
-          scents & allergies
+          home & accessories
         </span>
         <div
           className="top-64 left-5 hidden sm:block sm:w-1/4 xl:absolute"

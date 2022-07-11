@@ -314,7 +314,7 @@ const CheekyBoxWrapper = () => {
                 className="w-0 overflow-visible"
                 as="div"
               >
-                <div style={{ width: `${wrapperWidth}px`, height: "100%" }}>
+                <div style={{ width: `${wrapperWidth}px` }}>
                   <PageThree
                     pageThreeOptions={pageThreeOptions}
                     setPageThreeOptions={setPageThreeOptions}
@@ -343,7 +343,7 @@ const CheekyBoxWrapper = () => {
                 className="w-0 overflow-visible"
                 as="div"
               >
-                <div style={{ width: `${wrapperWidth}px`, height: "100%" }}>
+                <div style={{ width: `${wrapperWidth}px` }}>
                   <PageFour
                     pageFourOptions={pageFourOptions}
                     setPageFourOptions={setPageFourOptions}
