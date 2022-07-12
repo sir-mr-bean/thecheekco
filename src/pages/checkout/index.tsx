@@ -229,9 +229,7 @@ export default function checkout() {
   };
 
   const handleCustomerInfoComplete = () => {
-    console.log("validating! ", userObj);
     const form = getValues();
-    console.log(form);
     if (termsAccepted) {
       if (
         userObj.firstName &&

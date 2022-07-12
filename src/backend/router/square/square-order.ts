@@ -81,7 +81,6 @@ export const squareOrderRouter = createRouter()
       );
 
       if (!existingCustomer) {
-        console.log("creating new customer");
         const newCustomer = await customersApi.createCustomer({
           address: {
             addressLine1: billingAddress.addressLine1,
@@ -148,7 +147,6 @@ export const squareOrderRouter = createRouter()
           }
         }
       );
-      console.log(orderItems);
       const order: ApiResponse<CreateOrderResponse> =
         await ordersApi.createOrder({
           idempotencyKey: randomUUID(),

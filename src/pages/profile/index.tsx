@@ -63,7 +63,9 @@ export default function Profile(): JSX.Element {
   const productIDs = customerOrders
     ?.map(
       (order) =>
-        order.lineItems?.map((item) => item.catalogObjectId as string) ?? []
+        order.lineItems
+          ?.filter((item) => item.name !== "Shipping")
+          .map((item) => item.catalogObjectId as string) ?? []
     )
     .flat();
 

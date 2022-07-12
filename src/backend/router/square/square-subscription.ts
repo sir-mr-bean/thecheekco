@@ -149,7 +149,6 @@ export const squareSubscriptionRouter = createRouter()
           cardId: input.cardId,
           timezone: "Australia/Brisbane",
         });
-      console.log(createSubscription);
       return createSubscription.result;
     },
   })

@@ -37,7 +37,6 @@ const CACForm = ({
   form: UseFormReturn<any>;
   userObj: User;
 }) => {
-  console.log(form);
   return (
     <form
       autoComplete="off"

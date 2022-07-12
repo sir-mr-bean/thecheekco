@@ -86,12 +86,10 @@ export const squareProductRouter = createRouter()
       productIds: z.array(z.string()).nullish(),
     }),
     async resolve({ input, ctx }) {
-      console.log(input);
       const productsQuery = await catalogApi.batchRetrieveCatalogObjects({
         objectIds: input?.productIds as string[],
         includeRelatedObjects: true,
       });
-      console.log(productsQuery);
       const itemsQuery = await catalogApi.searchCatalogObjects({
         objectTypes: ["IMAGE"],
       });
@@ -164,7 +162,6 @@ export const squareProductRouter = createRouter()
     async resolve({ input, ctx }) {
       if (input?.productName) {
         const { productName } = input;
-        console.log(productName);
         const productsQuery = await catalogApi.searchCatalogObjects({
           objectTypes: ["ITEM", "CATEGORY", "IMAGE"],
         });

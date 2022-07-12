@@ -20,7 +20,6 @@ const UserOrders = ({
   orderQueryStatus: string;
 }) => {
   const { dispatch: dispatchCart } = CartState();
-  console.log(customerOrders);
   const productIDs = [
     ...new Set(
       customerOrders
@@ -230,7 +229,6 @@ const UserOrders = ({
                                           item.itemData?.variations?.[0].id ===
                                             product.catalogObjectId
                                       );
-                                    //console.log(thisProduct);
                                     const categoryName = categories?.find(
                                       (category) =>
                                         category.id ===
@@ -242,7 +240,6 @@ const UserOrders = ({
                                               .id === product.catalogObjectId
                                         )?.itemData?.categoryId
                                     )?.categoryData?.name;
-                                    //console.log(categoryName);
                                     const productImage =
                                       orderProducts?.items?.find(
                                         (item) =>

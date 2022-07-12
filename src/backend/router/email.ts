@@ -198,7 +198,6 @@ export const emailRouter = createRouter()
         subject: "🎁 New Cheeky Box Subscription! 🎁",
         dynamicTemplateData: templateData,
       });
-      console.log(result);
       if (result[0].statusCode === 202) {
         return {
           success: true,
@@ -256,7 +255,6 @@ export const emailRouter = createRouter()
         subject: "🎁 New Cheeky Box Subscription! 🎁",
         dynamicTemplateData: templateData,
       });
-      console.log(result);
       if (result[0].statusCode === 202) {
         return {
           success: true,
@@ -287,7 +285,6 @@ export const emailRouter = createRouter()
         subject: "❌ Something went wrong ❌",
         dynamicTemplateData: templateData,
       });
-      console.log(result);
       if (result[0].statusCode === 202) {
         return {
           success: true,

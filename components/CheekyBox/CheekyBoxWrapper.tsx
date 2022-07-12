@@ -182,7 +182,6 @@ const CheekyBoxWrapper = () => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  console.log(introOptions);
 
   return (
     <>

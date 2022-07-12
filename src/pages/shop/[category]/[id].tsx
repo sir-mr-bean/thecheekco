@@ -124,7 +124,6 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     }
   );
   const review = reviews?.find((r) => r.productId === product?.id);
-  console.log(router);
   useEffect(() => {
     if (reviews) {
       const ratings = reviews.map((r) => r.rating);

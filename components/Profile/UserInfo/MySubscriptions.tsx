@@ -25,7 +25,6 @@ const MySubscriptions = ({
       },
       {
         onSuccess: () => {
-          console.log("paused");
           toast.success("Subscription paused");
         },
       }
@@ -39,7 +38,6 @@ const MySubscriptions = ({
       },
       {
         onSuccess: () => {
-          console.log("resumed");
           toast.success("Subscription resumed");
         },
       }
@@ -54,7 +52,6 @@ const MySubscriptions = ({
       },
       {
         onSuccess: () => {
-          console.log("cancelled");
           toast.success("Subscription cancelled");
         },
       }

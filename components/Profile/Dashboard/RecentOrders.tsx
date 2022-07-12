@@ -30,12 +30,13 @@ const RecentOrders = ({
       customerOrders
         ?.map(
           (order) =>
-            order.lineItems?.map((item) => item.catalogObjectId as string) ?? []
+            order.lineItems
+              ?.filter((item) => item.name !== "Shipping")
+              .map((item) => item.catalogObjectId as string) ?? []
         )
         .flat()
     ),
   ];
-  console.log(productIDs);
   const { data: orderProducts, status: orderProductsStatus } = trpc.useQuery(
     [
       "square-products.search-products-by-ids",
@@ -185,9 +186,6 @@ const RecentOrders = ({
                         order.lineItems
                           .slice(0, 1)
                           .map((product: OrderLineItem) => {
-                            console.log(product);
-                            console.log(categories);
-                            console.log(orderProducts);
                             const thisProduct =
                               orderProducts?.products.relatedObjects?.find(
                                 (item) =>
@@ -195,7 +193,6 @@ const RecentOrders = ({
                                   item.itemData?.variations?.[0].id ===
                                     product.catalogObjectId
                               );
-                            console.log();
                             const categoryName = categories?.find(
                               (category) =>
                                 category.id ===
@@ -213,9 +210,6 @@ const RecentOrders = ({
                                   item.id
                                 )
                             )?.imageData?.url;
-                            console.log(productImage);
-
-                            console.log(categoryName);
                             return (
                               <div
                                 key={product.uid}
