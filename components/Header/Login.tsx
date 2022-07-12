@@ -27,27 +27,13 @@ export default function Login() {
     >
       <div className="">
         <Menu.Button className="inline-flex w-full justify-center rounded-md py-2 font-gothic font-medium shadow-sm">
-          {session.status != String("loading") &&
-          session.status != String("authenticated") ? (
-            <div className="hidden items-center sm:flex">
-              Login
-              <BsChevronDown
-                className="-mr-1 ml-2 h-4 w-4 bg-transparent"
-                aria-hidden="true"
-              />
-            </div>
-          ) : (
-            session.status != String("loading") &&
-            session.status === String("authenticated") && (
-              <div className="hidden items-center whitespace-nowrap sm:flex sm:pr-10">
-                My Account
-                <BsChevronDown
-                  className="-mr-1 ml-2 h-4 w-4 bg-transparent"
-                  aria-hidden="true"
-                />
-              </div>
-            )
-          )}
+          <div className="hidden items-center whitespace-nowrap sm:flex sm:pr-10">
+            My Account
+            <BsChevronDown
+              className="-mr-1 ml-2 h-4 w-4 bg-transparent"
+              aria-hidden="true"
+            />
+          </div>
 
           {/* <div className="active:bg-black rounded-md active:bg-opacity-10 py-1.5 px-1.5 sm:hidden">
             <BsPerson size={21} className="fill-text-primary" />
