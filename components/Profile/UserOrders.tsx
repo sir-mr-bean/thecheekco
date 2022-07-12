@@ -16,16 +16,19 @@ const UserOrders = ({
   customerOrders,
   orderQueryStatus,
 }: {
-  customerOrders: Order[];
+  customerOrders: Order[] | undefined;
   orderQueryStatus: string;
 }) => {
   const { dispatch: dispatchCart } = CartState();
+  console.log(customerOrders);
   const productIDs = [
     ...new Set(
       customerOrders
         ?.map(
           (order) =>
-            order.lineItems?.map((item) => item.catalogObjectId as string) ?? []
+            order.lineItems
+              ?.filter((item) => item.name !== "Shipping")
+              .map((item) => item.catalogObjectId as string) ?? []
         )
         .flat()
     ),
@@ -104,187 +107,213 @@ const UserOrders = ({
 
   return (
     <>
-      {orderQueryStatus !== "success" ? (
-        <div className="m-2 rounded-md bg-white font-gothic shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-3">
-          <div className="mx-auto flex h-screen w-full items-center justify-center  text-text-primary">
-            <BeatLoader
-              color="#602d0d"
-              loading={orderQueryStatus === String("loading")}
-              size={20}
-            />
-          </div>
-        </div>
-      ) : (
-        <div>
-          <div className="flex flex-col space-y-2">
-            <div className="m-2 rounded-md bg-white font-gothic shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-3">
-              <div className="max-w-4xl py-3 sm:px-6 sm:py-4">
-                <div className="px-4 sm:px-0">
-                  <h1 className="text-2xl font-extrabold tracking-tight text-text-primary sm:text-3xl">
-                    Order history
-                  </h1>
-                  <p className="mt-2 text-sm text-text-secondary">
-                    Check the status of recent orders, manage returns, and
-                    download invoices.
-                  </p>
-                </div>
+      <div>
+        <div className="flex flex-col space-y-2">
+          <div className="m-2 rounded-md bg-white font-gothic shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-3">
+            <div className="max-w-4xl py-3 sm:px-6 sm:py-4">
+              <div className="px-4 sm:px-0">
+                <h1 className="text-2xl font-extrabold tracking-tight text-text-primary sm:text-3xl">
+                  Order history
+                </h1>
+                <p className="mt-2 text-sm text-text-secondary">
+                  Check the status of recent orders, manage returns, and
+                  download invoices.
+                </p>
               </div>
             </div>
+          </div>
+          {orderQueryStatus !== "success" ? (
+            <div className="m-2 rounded-md bg-white font-gothic shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-3">
+              <div className="mx-auto flex h-screen w-full items-center justify-center  text-text-primary">
+                <BeatLoader
+                  color="#602d0d"
+                  loading={orderQueryStatus === String("loading")}
+                  size={20}
+                />
+              </div>
+            </div>
+          ) : (
             <div className="m-2 rounded-md bg-white font-gothic sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-6">
               <div className="mt-16">
                 <h2 className="sr-only">Recent orders</h2>
 
                 <div className="space-y-16 divide-y divide-text-primary px-2 sm:space-y-24">
                   {customerOrders &&
-                    customerOrders.map((order: Order) => (
-                      <div key={order.id}>
-                        <h3 className="sr-only">
-                          Order placed on{" "}
-                          <time dateTime={order.createdAt}>
-                            {order.createdAt}
-                          </time>
-                        </h3>
+                    customerOrders.map((order: Order) => {
+                      const shippingCost = order.lineItems?.find(
+                        (item) => item.name === "Shipping"
+                      );
+                      return (
+                        <div
+                          key={order.id}
+                          className="rounded-lg border border-text-secondary px-4 py-6 sm:rounded-lg sm:p-6"
+                        >
+                          <h3 className="sr-only">
+                            Order placed on{" "}
+                            <time dateTime={order.createdAt}>
+                              {order.createdAt}
+                            </time>
+                          </h3>
 
-                        <div className="rounded-lg border border-text-secondary px-4 py-6 sm:rounded-lg sm:p-6 md:flex md:items-center md:justify-between md:space-x-6 lg:space-x-8">
-                          <dl className="flex flex-col divide-y divide-text-secondary text-sm text-text-secondary sm:flex-row sm:space-y-4  md:gap-x-6 md:space-y-0 md:divide-y-0">
-                            <div className="flex w-full justify-between whitespace-pre-wrap md:block">
-                              <dt className="text-base font-medium text-text-primary">
-                                Order number
-                              </dt>
-                              <dd className=" whitespace-pre-wrap text-xs md:mt-1">
-                                {order.id}
-                              </dd>
+                          <div className="flex-wrap items-center justify-between md:flex">
+                            <dl className="flex w-full flex-col items-center text-sm  text-text-secondary md:gap-x-6 md:space-y-2 md:divide-y-0 lg:w-fit lg:flex-row lg:space-y-4">
+                              <div className="flex w-full flex-col items-center justify-between whitespace-pre-wrap sm:whitespace-nowrap lg:block lg:flex-row">
+                                <dt className="text-sm font-medium text-text-primary sm:text-base">
+                                  Order number
+                                </dt>
+                                <dd className="whitespace-pre-wrap text-xs md:mt-1">
+                                  {order.id}
+                                </dd>
+                              </div>
+                              <div className="flex w-fit flex-col items-center justify-center pt-4 lg:items-start lg:pt-0">
+                                <dt className="font-medium text-text-primary">
+                                  Date placed
+                                </dt>
+                                <dd className="sm:whitespace-nowrap md:mt-1">
+                                  <span>
+                                    {`${moment(order.createdAt).format(
+                                      "MMM DD, YYYY" + " hh:mm a"
+                                    )}`}
+                                  </span>
+                                </dd>
+                              </div>
+                              {shippingCost && (
+                                <div className="flex justify-between space-x-1 pt-4 font-medium text-text-primary md:block md:pt-0 lg:pt-0">
+                                  <dt>Shipping</dt>
+                                  <dd className="md:mt-1">
+                                    $
+                                    {(
+                                      parseInt(
+                                        shippingCost?.totalMoney?.amount?.toString() as string
+                                      ) / 100
+                                    ).toFixed(2)}
+                                  </dd>
+                                </div>
+                              )}
+                              <div className="flex justify-between space-x-1 pt-4 font-medium text-text-primary sm:whitespace-nowrap md:block md:pt-0">
+                                <dt>Total amount</dt>
+                                <dd className="md:mt-1">
+                                  $
+                                  {(
+                                    parseInt(
+                                      order?.totalMoney?.amount?.toString() as string
+                                    ) / 100
+                                  ).toFixed(2)}
+                                </dd>
+                              </div>
+                            </dl>
+                            <div className="mt-6 space-y-4 sm:flex sm:space-y-0 md:mt-0 xl:space-x-4">
+                              <Link href={`/order/${order.id}` as string}>
+                                <a
+                                  href={`/order/${order.id}`}
+                                  className="flex w-full items-center justify-center rounded-md border border-text-secondary bg-white py-2 px-4 text-sm font-medium text-text-secondary shadow-sm hover:bg-gray-50 focus:outline-none  md:w-auto"
+                                >
+                                  View Order
+                                  <span className="sr-only">
+                                    for order {order.id}
+                                  </span>
+                                </a>
+                              </Link>
                             </div>
-                            <div className="flex justify-between pt-4">
-                              <dt className="font-medium text-text-primary">
-                                Date placed
-                              </dt>
-                              <dd className="md:mt-1">
-                                <span>
-                                  {`${moment(order.createdAt).format(
-                                    "MMM DD, YYYY" + " hh:mm a"
-                                  )}`}
-                                </span>
-                              </dd>
-                            </div>
-                            <div className="flex justify-between pt-4 font-medium text-text-primary md:block md:pt-0">
-                              <dt>Total amount</dt>
-                              <dd className="md:mt-1">
-                                $
-                                {(
-                                  parseInt(
-                                    order?.totalMoney?.amount?.toString() as string
-                                  ) / 100
-                                ).toFixed(2)}
-                              </dd>
-                            </div>
-                          </dl>
-                          <div className="mt-6 space-y-4 sm:flex sm:space-x-4 sm:space-y-0 md:mt-0">
-                            <Link href={`/order/${order.id}` as string}>
-                              <a
-                                href={`/order/${order.id}`}
-                                className="flex w-full items-center justify-center rounded-md border border-text-secondary bg-white py-2 px-4 text-sm font-medium text-text-secondary shadow-sm hover:bg-gray-50 focus:outline-none  md:w-auto"
-                              >
-                                View Order
-                                <span className="sr-only">
-                                  for order {order.id}
-                                </span>
-                              </a>
-                            </Link>
                           </div>
-                        </div>
 
-                        <div className="mt-6 flow-root px-4 sm:mt-10 sm:px-0">
-                          <div className="-my-6 sm:-my-10">
-                            {order?.lineItems &&
-                              order.lineItems.map((product: OrderLineItem) => {
-                                const thisProduct =
-                                  orderProducts?.products.relatedObjects?.find(
-                                    (item) =>
-                                      item.id === product.catalogObjectId ||
-                                      item.itemData?.variations?.[0].id ===
-                                        product.catalogObjectId
-                                  );
-                                console.log();
-                                const categoryName = categories?.find(
-                                  (category) =>
-                                    category.id ===
-                                    orderProducts?.products.relatedObjects?.find(
-                                      (item) =>
-                                        item.id === product.catalogObjectId ||
-                                        item.itemData?.variations?.[0].id ===
-                                          product.catalogObjectId
-                                    )?.itemData?.categoryId
-                                )?.categoryData?.name;
-                                const productImage = orderProducts?.items?.find(
-                                  (item) =>
-                                    item.type === "IMAGE" &&
-                                    thisProduct?.itemData?.imageIds?.includes(
-                                      item.id
-                                    )
-                                )?.imageData?.url;
-                                return (
-                                  <div
-                                    key={product.uid}
-                                    className="flex py-6 sm:py-10"
-                                  >
-                                    <div className="min-w-0 flex-1 lg:flex lg:flex-col">
-                                      <div className="lg:flex-1">
-                                        <div className="items-center sm:flex sm:space-x-2">
-                                          <Image
-                                            className="h-24 w-24 rounded-full"
-                                            height={50}
-                                            width={50}
-                                            objectFit="cover"
-                                            src={
-                                              productImage ||
-                                              "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
-                                            }
-                                            alt={product.name}
-                                          />
-                                          <h4 className="font-medium text-text-primary">
-                                            {product.name}
-                                          </h4>
-                                          <p className="mt-2 hidden text-sm text-text-secondary sm:block">
-                                            {/* {product?.} */}
-                                          </p>
+                          <div className="mt-6 flow-root sm:mt-10">
+                            <div className="-my-6 sm:-my-10">
+                              {order?.lineItems &&
+                                order.lineItems
+                                  ?.filter((item) => item.name !== "Shipping")
+                                  .map((product: OrderLineItem) => {
+                                    const thisProduct =
+                                      orderProducts?.products.relatedObjects?.find(
+                                        (item) =>
+                                          item.id === product.catalogObjectId ||
+                                          item.itemData?.variations?.[0].id ===
+                                            product.catalogObjectId
+                                      );
+                                    //console.log(thisProduct);
+                                    const categoryName = categories?.find(
+                                      (category) =>
+                                        category.id ===
+                                        orderProducts?.products.relatedObjects?.find(
+                                          (item) =>
+                                            item.id ===
+                                              product.catalogObjectId ||
+                                            item.itemData?.variations?.[0]
+                                              .id === product.catalogObjectId
+                                        )?.itemData?.categoryId
+                                    )?.categoryData?.name;
+                                    //console.log(categoryName);
+                                    const productImage =
+                                      orderProducts?.items?.find(
+                                        (item) =>
+                                          item.type === "IMAGE" &&
+                                          thisProduct?.itemData?.imageIds?.includes(
+                                            item.id
+                                          )
+                                      )?.imageData?.url;
+                                    return (
+                                      <div
+                                        key={product.uid}
+                                        className="flex py-6 sm:py-10"
+                                      >
+                                        <div className="lg:flex lg:flex-1 lg:flex-col">
+                                          <div className="items-center sm:flex sm:space-x-2">
+                                            <Image
+                                              className="h-24 w-24 rounded-full"
+                                              height={50}
+                                              width={50}
+                                              objectFit="cover"
+                                              src={
+                                                productImage ||
+                                                "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
+                                              }
+                                              alt={product.name}
+                                            />
+                                            <h4 className="font-medium text-text-primary">
+                                              {product.name}
+                                            </h4>
+                                            <p className="mt-2 hidden text-sm text-text-secondary sm:block">
+                                              {/* {product?.} */}
+                                            </p>
 
-                                          <p className="mt-1 font-medium text-text-primary sm:mt-0 sm:ml-6">
-                                            $
-                                            {(
-                                              parseInt(
-                                                product?.totalMoney?.amount?.toString() as string
-                                              ) / 100
-                                            ).toFixed(2)}
-                                          </p>
-                                        </div>
-                                        <div className="mt-2 flex text-sm font-medium sm:mt-4">
-                                          <a
-                                            href={`/shop/${slugify(
-                                              categoryName as string
-                                            )}/${slugify(
-                                              thisProduct?.itemData
-                                                ?.name as string
-                                            )}`}
-                                            className="text-text-primary hover:text-text-secondary"
-                                          >
-                                            View Product
-                                          </a>
-                                          <div className="ml-4 border-l border-gray-200 pl-4 sm:ml-6 sm:pl-6">
-                                            <button
-                                              onClick={() => {
-                                                handleAddToCart(
-                                                  thisProduct as CatalogObject
-                                                );
-                                              }}
-                                              className="text-text-primary hover:text-text-secondary"
-                                            >
-                                              Buy Again
-                                            </button>
+                                            <p className="mt-1 font-medium text-text-primary sm:mt-0 sm:ml-6">
+                                              $
+                                              {(
+                                                parseInt(
+                                                  product?.totalMoney?.amount?.toString() as string
+                                                ) / 100
+                                              ).toFixed(2)}
+                                            </p>
+                                          </div>
+                                          <div className="mt-2 flex text-sm font-medium sm:mt-4">
+                                            {categoryName && thisProduct && (
+                                              <a
+                                                href={`/shop/${slugify(
+                                                  categoryName as string
+                                                )}/${slugify(
+                                                  thisProduct?.itemData
+                                                    ?.name as string
+                                                )}`}
+                                                className="text-text-primary hover:text-text-secondary"
+                                              >
+                                                View Product
+                                              </a>
+                                            )}
+                                            <div className="ml-4 border-l border-gray-200 pl-4 sm:ml-6 sm:pl-6">
+                                              <button
+                                                onClick={() => {
+                                                  handleAddToCart(
+                                                    thisProduct as CatalogObject
+                                                  );
+                                                }}
+                                                className="text-text-primary hover:text-text-secondary"
+                                              >
+                                                Buy Again
+                                              </button>
+                                            </div>
                                           </div>
                                         </div>
-                                      </div>
-                                      {/* <div className="mt-6 font-medium">
+                                        {/* <div className="mt-6 font-medium">
                                     {product.status === "delivered" ? (
                                       <div className="flex space-x-2">
                                         <AiOutlineCheck
@@ -313,27 +342,28 @@ const UserOrders = ({
                                       </p>
                                     ) : null}
                                     </div> */}
-                                    </div>
-                                    <div className="ml-4 flex-shrink-0 sm:order-first sm:m-0 sm:mr-6">
-                                      {/* <img
+
+                                        <div className="ml-4 flex-shrink-0 sm:order-first sm:m-0 sm:mr-6">
+                                          {/* <img
                                     src={product.}
                                     alt={product.imageAlt}
                                     className="col-start-2 col-end-3 sm:col-start-1 sm:row-start-1 sm:row-span-2 w-20 h-20 rounded-lg object-center object-cover sm:w-40 sm:h-40 lg:w-52 lg:h-52"
                                   /> */}
-                                    </div>
-                                  </div>
-                                );
-                              })}
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
-      )}
+      </div>
     </>
   );
 };

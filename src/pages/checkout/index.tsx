@@ -49,12 +49,7 @@ export type validationErrors = {
   zip: boolean;
 };
 export default function checkout() {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
+  const { getValues, register, handleSubmit, watch, formState } = useForm();
   const router = useRouter();
   const [pickup, setPickup] = useState(false);
   const [firstLoad, setFirstLoad] = useState(true);
@@ -158,7 +153,7 @@ export default function checkout() {
       },
     ],
     {
-      enabled: CustomerStatus === "success",
+      enabled: !!customer,
     }
   );
   const utils = trpc.useContext();
@@ -234,50 +229,53 @@ export default function checkout() {
   };
 
   const handleCustomerInfoComplete = () => {
+    console.log("validating! ", userObj);
+    const form = getValues();
+    console.log(form);
     if (termsAccepted) {
       if (
-        userObj.firstName !== "" &&
-        userObj.streetAddress !== "" &&
-        userObj.city !== "" &&
-        userObj.postalCode !== "" &&
-        userObj.email !== "" &&
-        userObj.phoneNumber !== "" &&
-        userObj.state !== ""
+        userObj.firstName &&
+        userObj.streetAddress &&
+        userObj.city &&
+        userObj.postalCode &&
+        userObj.email &&
+        userObj.phoneNumber &&
+        userObj.state
       ) {
         setCustomerInfoSet(true);
       } else {
         toast.error("Please fill out all fields");
-        if (userObj.firstName === "") {
+        if (!userObj.firstName) {
           setValidationErrors((validationErrors) => {
             return { ...validationErrors, name: true };
           });
         }
-        if (userObj.streetAddress === "") {
+        if (!userObj.streetAddress) {
           setValidationErrors((validationErrors) => {
             return { ...validationErrors, streetAddress: true };
           });
         }
-        if (userObj.city === "") {
+        if (!userObj.city) {
           setValidationErrors((validationErrors) => {
             return { ...validationErrors, city: true };
           });
         }
-        if (userObj.postalCode === "") {
+        if (!userObj.postalCode) {
           setValidationErrors((validationErrors) => {
             return { ...validationErrors, zip: true };
           });
         }
-        if (userObj.phoneNumber === "") {
+        if (!userObj.phoneNumber) {
           setValidationErrors((validationErrors) => {
             return { ...validationErrors, phone: true };
           });
         }
-        if (userObj.email === "") {
+        if (!userObj.email) {
           setValidationErrors((validationErrors) => {
             return { ...validationErrors, email: true };
           });
         }
-        if (userObj.state === "") {
+        if (!userObj.state) {
           setValidationErrors((validationErrors) => {
             return { ...validationErrors, state: true };
           });
@@ -320,12 +318,11 @@ export default function checkout() {
         {
           onSuccess(data, variables, context) {
             const orderId = data?.id as string;
-            const totalMoney = data?.totalMoney?.amount?.toString() as string;
             const customerId = data?.customerId as string;
             paymentMutation.mutate(
               {
                 orderId: orderId,
-                totalMoney: totalMoney,
+                totalMoney: data?.totalMoney?.amount as bigint,
                 token: paymentMethod.id as string,
                 customerId: data?.customerId as string,
               },
@@ -355,9 +352,28 @@ export default function checkout() {
         }
       );
     } else {
+      const shippingObject = {
+        type: "SHIPPING",
+        id: "shipping",
+        itemData: {
+          name: "Shipping",
+          priceMoney: {
+            amount: shipping,
+            currencyCode: "AUD",
+          },
+          variations: [
+            {
+              id: "shipping",
+            },
+          ],
+        },
+        quantity: 1,
+      };
+
+      const deliveryItems = [...cart, shippingObject];
       deliveryOrderMutation.mutate(
         {
-          lineItems: cart.map((product) => {
+          lineItems: deliveryItems.map((product) => {
             return {
               catalogObjectId: product.itemData?.variations?.[0].id as string,
               quantity: product.quantity,
@@ -369,13 +385,14 @@ export default function checkout() {
               ],
             };
           }),
+          shippingTotal: shipping.toString(),
           referenceId: paymentMethod.id as string,
           billingAddress: {
             email: userObj.email,
             firstName: userObj.firstName || "",
             lastName: userObj.lastName || "",
             displayName: `${userObj?.firstName} ${userObj.lastName}`,
-            companyName: userObj.company as string,
+            companyName: (userObj.company as string) || "",
             phoneNumber: userObj.phoneNumber as string,
             addressLine1: userObj.apartmentOrUnit
               ? `${userObj.apartmentOrUnit} / ${userObj.streetAddress}`
@@ -406,12 +423,11 @@ export default function checkout() {
         {
           onSuccess(data, variables, context) {
             const orderId = data?.id as string;
-            const totalMoney = data?.totalMoney?.amount?.toString() as string;
 
             paymentMutation.mutate(
               {
                 orderId: orderId,
-                totalMoney: totalMoney,
+                totalMoney: data?.totalMoney?.amount as bigint,
                 token: paymentMethod.id as string,
                 customerId: data?.customerId as string,
               },

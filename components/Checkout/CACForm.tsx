@@ -22,7 +22,7 @@ const CACForm = ({
       {userObj && (
         <form
           autoComplete="off"
-          className="mt-4 text-text-primary font-gothic w-full"
+          className="mt-4 w-full font-gothic text-text-primary"
         >
           <input type="hidden" defaultValue="something" />
           <div>
@@ -49,7 +49,7 @@ const CACForm = ({
                         firstName: e.target.value,
                       })
                     }
-                    className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
+                    className="block w-full appearance-none rounded-md border border-text-secondary p-1 focus:border-text-primary focus:ring-text-primary sm:text-sm"
                   />
                 </div>
               </div>
@@ -74,7 +74,7 @@ const CACForm = ({
                         lastName: e.target.value,
                       })
                     }
-                    className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
+                    className="block w-full appearance-none rounded-md border border-text-secondary p-1 focus:border-text-primary focus:ring-text-primary sm:text-sm"
                   />
                 </div>
               </div>
@@ -99,7 +99,7 @@ const CACForm = ({
                         email: e.target.value,
                       })
                     }
-                    className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
+                    className="block w-full appearance-none rounded-md border border-text-secondary p-1 focus:border-text-primary focus:ring-text-primary sm:text-sm"
                   />
                 </div>
               </div>
@@ -117,21 +117,21 @@ const CACForm = ({
                     {...register("tel")}
                     autoComplete="tel"
                     type={userObj.phoneNumber ? "text" : "tel"}
-                    value={userObj.phoneNumber as string}
+                    defaultValue={userObj.phoneNumber as string}
                     onChange={(e) => {
                       setUserObj({
                         ...userObj,
                         phoneNumber: e.target.value,
                       });
                     }}
-                    className="block w-full border-text-secondary rounded-md border focus:ring-text-primary focus:border-text-primary sm:text-sm p-1 appearance-none"
+                    className="block w-full appearance-none rounded-md border border-text-secondary p-1 focus:border-text-primary focus:ring-text-primary sm:text-sm"
                   />
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="mt-6 flex space-x-2 space-y-2 flex-col">
+          <div className="mt-6 flex flex-col space-x-2 space-y-2">
             <div className="flex items-center space-x-2 ">
               <input
                 onChange={() =>
@@ -142,11 +142,11 @@ const CACForm = ({
                 id="terms"
                 name="terms"
                 type="checkbox"
-                className="h-6 w-6 border-text-secondary rounded text-text-secondary focus:ring-text-secondary accent-text-secondary"
+                className="h-6 w-6 rounded border-text-secondary text-text-secondary accent-text-secondary focus:ring-text-secondary"
               />
               <label
                 htmlFor="terms"
-                className="text-sm text-text-primary select-none"
+                className="select-none text-sm text-text-primary"
               >
                 I have read the terms and conditions and privacy policy.
               </label>

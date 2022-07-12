@@ -17,6 +17,10 @@ const { ordersApi, paymentsApi, cardsApi } = new Client({
   environment: Environment.Production,
 });
 
+(BigInt.prototype as any).toJSON = function () {
+  return this.toString();
+};
+
 export const squarePaymentRouter = createRouter()
   .transformer(superjson)
   .middleware(async ({ ctx, next }) => {
@@ -33,20 +37,20 @@ export const squarePaymentRouter = createRouter()
   .mutation("create-order-payment", {
     input: z.object({
       orderId: z.string(),
-      totalMoney: z.string(),
+      totalMoney: z.bigint(),
       token: z.string(),
       customerId: z.string().nullish(),
     }),
     async resolve({ input, ctx }) {
       const { orderId, totalMoney, token } = input;
-      const totalPayment = BigInt(totalMoney);
+
       const payment = await paymentsApi.createPayment({
         idempotencyKey: randomUUID(),
         customerId: input.customerId ? (input.customerId as string) : undefined,
         sourceId: token,
         amountMoney: {
           currency: "AUD",
-          amount: totalPayment,
+          amount: totalMoney,
         },
         orderId: orderId,
         locationId: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string,
@@ -75,6 +79,12 @@ export const squarePaymentRouter = createRouter()
         (orderResult?.fulfillments?.[0]?.shipmentDetails?.recipient ||
           orderResult?.fulfillments?.[0].pickupDetails?.recipient)
       ) {
+        const dbUser = await prisma.user.findUnique({
+          where: {
+            id: ctx.session?.user.id as string,
+          },
+        });
+
         const orderCreated = await prisma.order.create({
           data: {
             id: orderResult?.id as string,
@@ -90,11 +100,7 @@ export const squarePaymentRouter = createRouter()
             },
             user: {
               connect: {
-                email:
-                  orderResult?.fulfillments?.[0]?.shipmentDetails?.recipient
-                    ?.emailAddress ||
-                  orderResult?.fulfillments?.[0].pickupDetails?.recipient
-                    ?.emailAddress,
+                email: dbUser?.email,
               },
             },
           },

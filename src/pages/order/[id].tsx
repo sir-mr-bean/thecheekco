@@ -40,7 +40,9 @@ const UserDashboard = () => {
     [
       "square-products.search-products-by-ids",
       {
-        productIds: order?.lineItems?.map((i) => i.catalogObjectId as string),
+        productIds: order?.lineItems
+          ?.filter((item) => item.name !== "Shipping")
+          .map((i) => i.catalogObjectId as string),
       },
     ],
     {
@@ -49,6 +51,9 @@ const UserDashboard = () => {
   );
   const products = productsQuery?.products.relatedObjects;
   const images = productsQuery?.items?.filter((i) => i.type === "IMAGE") as any;
+  const shippingCost = order?.lineItems?.find(
+    (item) => item.name === "Shipping"
+  );
 
   if (status === "loading") {
     return (
@@ -195,29 +200,72 @@ const UserDashboard = () => {
                 <dl className="space-y-6 border-t border-text-primary pt-6 text-sm font-medium text-text-secondary">
                   <div className="flex justify-between">
                     <dt>Subtotal</dt>
-                    <dd className="text-text-primary">
-                      $
-                      {(
-                        Number(order?.totalMoney?.amount) / 100 -
-                        (Number(order?.totalMoney?.amount) / 100) * 0.1
-                      ).toFixed(2)}
-                    </dd>
+                    {shippingCost?.totalMoney?.amount &&
+                    order?.totalMoney?.amount ? (
+                      <dd className="text-text-primary">
+                        $
+                        {(
+                          Number(
+                            order?.totalMoney?.amount -
+                              shippingCost.totalMoney.amount
+                          ) /
+                            100 -
+                          (Number(
+                            order?.totalMoney?.amount -
+                              shippingCost.totalMoney.amount
+                          ) /
+                            100) *
+                            0.1
+                        ).toFixed(2)}
+                      </dd>
+                    ) : (
+                      <dd className="text-text-primary">
+                        $
+                        {(
+                          Number(order?.totalMoney?.amount) / 100 -
+                          (Number(order?.totalMoney?.amount) / 100) * 0.1
+                        ).toFixed(2)}
+                      </dd>
+                    )}
                   </div>
-
-                  <div className="flex justify-between">
-                    <dt>Shipping</dt>
-                    <dd className="text-text-primary">$8.00</dd>
-                  </div>
+                  {shippingCost && (
+                    <div className="flex justify-between">
+                      <dt>Shipping</dt>
+                      <dd className="text-sm font-medium text-text-primary">
+                        $
+                        {`${(
+                          parseInt(
+                            shippingCost?.totalMoney?.amount?.toString() as string
+                          ) / 100
+                        ).toFixed(2)}`}
+                      </dd>
+                    </div>
+                  )}
 
                   <div className="flex justify-between">
                     <dt>Taxes</dt>
-                    <dd className="text-text-primary">
-                      $
-                      {(
-                        (Number(order?.totalMoney?.amount) / 100) *
-                        0.1
-                      ).toFixed(2)}
-                    </dd>
+                    {shippingCost?.totalMoney?.amount &&
+                    order?.totalMoney?.amount ? (
+                      <dd className="text-text-primary">
+                        $
+                        {(
+                          (Number(
+                            order.totalMoney.amount -
+                              shippingCost.totalMoney.amount
+                          ) /
+                            100) *
+                          0.1
+                        ).toFixed(2)}
+                      </dd>
+                    ) : (
+                      <dd className="text-text-primary">
+                        $
+                        {(
+                          (Number(order?.totalMoney?.amount) / 100) *
+                          0.1
+                        ).toFixed(2)}
+                      </dd>
+                    )}
                   </div>
 
                   <div className="flex items-center justify-between border-t border-text-primary pt-6 text-text-primary">

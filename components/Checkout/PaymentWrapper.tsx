@@ -130,6 +130,8 @@ const PaymentWrapper = ({
               {
                 onSuccess: (data) => {
                   utils.invalidateQueries(["square-customer.search-customer"]);
+                  utils.refetchQueries(["square-customer.search-customer"]);
+                  setTimeout(() => {}, 1000);
                 },
               }
             );
@@ -156,6 +158,9 @@ const PaymentWrapper = ({
             {
               onSuccess: (data) => {
                 utils.invalidateQueries([
+                  "square-payment.get-customer-payment-methods",
+                ]);
+                utils.refetchQueries([
                   "square-payment.get-customer-payment-methods",
                 ]);
               },
@@ -191,13 +196,11 @@ const PaymentWrapper = ({
             {
               onSuccess(data, variables, context) {
                 const orderId = data?.id as string;
-                const totalMoney =
-                  data?.totalMoney?.amount?.toString() as string;
 
                 paymentMutation.mutate(
                   {
                     orderId: orderId,
-                    totalMoney: totalMoney,
+                    totalMoney: data?.totalMoney?.amount as bigint,
                     token: token.token as string,
                   },
                   {
@@ -226,21 +229,40 @@ const PaymentWrapper = ({
             }
           );
         } else {
+          const lineItems = cart?.map((product) => {
+            return {
+              catalogObjectId: product.itemData?.variations?.[0].id as string,
+              quantity: product.quantity,
+              modifiers: [
+                {
+                  name: product.itemData?.name as string,
+                  catalogObjectId: product.id,
+                },
+              ],
+            };
+          });
+          const shippingItem = {
+            catalogObjectId: "",
+            quantity: 1,
+            modifiers: [
+              {
+                name: "Shipping",
+                catalogObjectId: "",
+                basePriceMoney: {
+                  amount: BigInt(
+                    parseInt(parseFloat((shipping * 100).toString()).toString())
+                  ),
+                  currencyCode: "AUD",
+                },
+              },
+            ],
+          };
+          const totalItems = [...lineItems, shippingItem];
+
           deliveryOrderMutation.mutate(
             {
-              lineItems: cart?.map((product) => {
-                return {
-                  catalogObjectId: product.itemData?.variations?.[0]
-                    .id as string,
-                  quantity: product.quantity,
-                  modifiers: [
-                    {
-                      name: product.itemData?.name as string,
-                      catalogObjectId: product.id,
-                    },
-                  ],
-                };
-              }),
+              lineItems: totalItems,
+              shippingTotal: shipping.toString(),
               referenceId: token.token as string,
               billingAddress: {
                 email: userObj.email,
@@ -280,13 +302,11 @@ const PaymentWrapper = ({
                 const orderId = data?.id as string;
                 const totalMoney =
                   data?.totalMoney?.amount?.toString() as string;
-                const totalWithShipping =
-                  data?.totalMoney?.amount + shipping.toFixed(2);
 
                 paymentMutation.mutate(
                   {
                     orderId: orderId,
-                    totalMoney: totalWithShipping,
+                    totalMoney: data?.totalMoney?.amount as bigint,
                     token: token.token as string,
                   },
                   {

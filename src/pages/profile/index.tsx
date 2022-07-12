@@ -211,7 +211,7 @@ export default function Profile(): JSX.Element {
                     <UserInfo session={session} />
                   </>
                 )}
-                {openTab === 3 && customerOrders && (
+                {openTab === 3 && (
                   <>
                     <UserOrders
                       customerOrders={customerOrders}

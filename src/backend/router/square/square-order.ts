@@ -4,6 +4,7 @@ import { ApiResponse, Client, CreateOrderResponse, Environment } from "square";
 import { randomUUID } from "crypto";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { quantityRatioSchema } from "square/dist/models/quantityRatio";
 
 const { ordersApi, customersApi } = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
@@ -14,14 +15,23 @@ export const squareOrderRouter = createRouter()
   .transformer(superjson)
   .mutation("create-delivery-order", {
     input: z.object({
+      shippingTotal: z.string(),
       lineItems: z.array(
         z.object({
+          name: z.string().optional().nullable(),
           catalogObjectId: z.string(),
           quantity: z.number(),
           modifiers: z.array(
             z.object({
               name: z.string(),
               catalogObjectId: z.string(),
+              basePriceMoney: z
+                .object({
+                  amount: z.bigint().nullable().optional(),
+                  currency: z.string().nullable().optional(),
+                })
+                .nullable()
+                .optional(),
             })
           ),
         })
@@ -32,7 +42,7 @@ export const squareOrderRouter = createRouter()
         firstName: z.string(),
         lastName: z.string(),
         displayName: z.string(),
-        companyName: z.string(),
+        companyName: z.string().nullable().optional(),
         phoneNumber: z.string(),
         addressLine1: z.string(),
         addressLine2: z.string().nullish(),
@@ -46,7 +56,7 @@ export const squareOrderRouter = createRouter()
         displayName: z.string(),
         firstName: z.string(),
         lastName: z.string(),
-        companyName: z.string(),
+        companyName: z.string().nullable().optional(),
         phoneNumber: z.string(),
         addressLine1: z.string(),
         addressLine2: z.string().nullish(),
@@ -57,13 +67,21 @@ export const squareOrderRouter = createRouter()
       }),
     }),
     async resolve({ input, ctx }) {
-      const { lineItems, referenceId, billingAddress, shippingAddress } = input;
+      const {
+        lineItems,
+        referenceId,
+        billingAddress,
+        shippingAddress,
+        shippingTotal,
+      } = input;
       const customer = await customersApi.listCustomers();
       let customerId: string | undefined;
       const existingCustomer = customer?.result?.customers?.find(
         (customer) => customer.emailAddress === billingAddress.email
       );
+
       if (!existingCustomer) {
+        console.log("creating new customer");
         const newCustomer = await customersApi.createCustomer({
           address: {
             addressLine1: billingAddress.addressLine1,
@@ -73,7 +91,7 @@ export const squareOrderRouter = createRouter()
             postalCode: billingAddress.postalCode,
             country: billingAddress.country,
           },
-          companyName: billingAddress.companyName,
+          companyName: billingAddress.companyName || "",
           givenName: billingAddress.firstName,
           familyName: billingAddress.lastName,
           emailAddress: billingAddress.email,
@@ -98,7 +116,7 @@ export const squareOrderRouter = createRouter()
               postalCode: billingAddress.postalCode,
               country: billingAddress.country,
             },
-            companyName: billingAddress.companyName,
+            companyName: billingAddress.companyName || "",
             givenName: billingAddress.firstName,
             familyName: billingAddress.lastName,
             emailAddress: billingAddress.email,
@@ -109,6 +127,28 @@ export const squareOrderRouter = createRouter()
         }
       }
 
+      const orderItems = lineItems.map(
+        ({ catalogObjectId, quantity, name, modifiers }) => {
+          if (name) {
+            return {
+              quantity: quantity.toString(),
+              name: name,
+              basePriceMoney: {
+                amount: BigInt(
+                  parseInt(parseFloat(shippingTotal.toString()).toString())
+                ),
+                currencyCode: "AUD",
+              },
+            };
+          } else {
+            return {
+              catalogObjectId: catalogObjectId as string,
+              quantity: quantity.toString(),
+            };
+          }
+        }
+      );
+      console.log(orderItems);
       const order: ApiResponse<CreateOrderResponse> =
         await ordersApi.createOrder({
           idempotencyKey: randomUUID(),
@@ -116,10 +156,25 @@ export const squareOrderRouter = createRouter()
             locationId: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string,
             referenceId: referenceId.substring(0, 39),
             customerId: customerId,
-            lineItems: lineItems.map(({ catalogObjectId, quantity }) => ({
-              catalogObjectId,
-              quantity: quantity.toString(),
-            })),
+            lineItems: lineItems.map(
+              ({ catalogObjectId, quantity, name, modifiers }) => {
+                if (modifiers?.[0].basePriceMoney) {
+                  return {
+                    quantity: quantity.toString(),
+                    name: modifiers?.[0].name as string,
+                    basePriceMoney: {
+                      amount: modifiers[0].basePriceMoney.amount as bigint,
+                      currency: "AUD" as string,
+                    },
+                  };
+                } else {
+                  return {
+                    catalogObjectId: catalogObjectId as string,
+                    quantity: quantity.toString(),
+                  };
+                }
+              }
+            ),
             fulfillments: [
               {
                 shipmentDetails: {

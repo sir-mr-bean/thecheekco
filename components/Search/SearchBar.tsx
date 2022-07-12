@@ -28,9 +28,7 @@ const SearchBar = () => {
   const { data: subcategories, status: subCatStatus } = trpc.useQuery([
     "square-products.get-product-subcategories",
   ]);
-  console.log(subcategories);
 
-  console.log(product);
   useEffect(() => {
     const searchIcon = document.getElementById("search-icon");
     function handleClickOutside(event: any) {
@@ -79,7 +77,6 @@ const SearchBar = () => {
     }
   }, [status, product, subcategories, subCatStatus, isSearching]);
 
-  console.log(catSearchResults);
   return (
     <>
       <div
