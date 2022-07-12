@@ -78,7 +78,7 @@ const MyApp = ({
             />
             <link rel="icon" href="/favicon.ico" />
           </Head>
-          <Script
+          {/* <Script
             strategy="afterInteractive"
             src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
           />
@@ -95,7 +95,7 @@ const MyApp = ({
             });
           `,
             }}
-          />
+          /> */}
           <div className="max-w-screen z-50 bg-bg-tan bg-cover">
             <Header />
             <Component {...pageProps} />
