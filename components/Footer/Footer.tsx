@@ -4,11 +4,11 @@ import Link from "next/link";
 const Footer = () => {
   return (
     <>
-      <div className="max-w-screen mt-20 h-[250px] overflow-hidden sm:h-[300px]">
+      <div className="max-w-screen h-[250px] overflow-hidden pb-10 sm:h-[300px]">
         <div className="flex h-10 w-full items-end justify-end bg-gradient-to-b from-bg-tan to-[#EEE6E4]" />
-        <div className="flex h-full w-full flex-col items-stretch justify-end bg-white bg-opacity-20 bg-footer-backdrop bg-cover bg-local bg-bottom">
-          <div className="flex items-end justify-between">
-            <div className="flex items-center justify-center space-x-3 whitespace-nowrap px-4 pb-6 text-xs text-white sm:text-lg">
+        <div className="flex h-full w-full flex-col items-stretch justify-end bg-white bg-opacity-20 bg-footer-backdrop bg-cover bg-bottom">
+          <div className="flex w-full items-end justify-between">
+            <div className="flex items-center justify-center space-x-3 whitespace-nowrap px-4 pb-4 text-xs text-white sm:text-lg">
               <Link href="/contact-us">
                 <span className="cursor-pointer hover:scale-105">Contact</span>
               </Link>
