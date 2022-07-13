@@ -61,7 +61,7 @@ module.exports = withTM({
               "https://pay.google.com",
               "https://nd.squarecdn.com",
               "https://embed.prod.simpletix.com",
-              "'sha256-LlO+71lpsLxXoexAkMmvrcOfBiUTeGrsWfpJLx8tlPU='",
+              "'sha256-xxd7K3EvDM2PP02c14jwEOMyBWGIbcUTLYJ2552nn+M='",
             ],
             "img-src": [
               "data:",
