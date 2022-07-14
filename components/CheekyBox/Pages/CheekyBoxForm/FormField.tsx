@@ -1,4 +1,8 @@
 import { UseFormReturn } from "react-hook-form";
+import Autocomplete, {
+  ReactGoogleAutocompleteInputProps,
+} from "react-google-autocomplete";
+import { useEffect, useRef } from "react";
 
 const FormField = ({
   form,
@@ -7,14 +11,22 @@ const FormField = ({
   form: UseFormReturn<any>;
   field: string;
 }) => {
+  const streetAddressRef = useRef<HTMLInputElement>(null);
   const methodName =
     `${field}`.replace(/\s+/g, "").charAt(0).toLowerCase() +
     `${field}`.replace(/\s+/g, "").slice(1);
+
+  useEffect(() => {
+    if (streetAddressRef.current) {
+      streetAddressRef.current.value = form.getValues()[methodName] || "";
+    }
+  }, [form.getValues()[methodName]]);
+
   return (
     <div>
       <label
         htmlFor={`${field}`}
-        className="block text-sm font-medium capitalize text-text-primary sm:text-base"
+        className="block text-sm font-medium capitalize text-text-primary"
       >
         {field}
       </label>
@@ -22,8 +34,7 @@ const FormField = ({
         {methodName === "state" ? (
           <select
             {...form.register(methodName)}
-            id="guest-region"
-            autoComplete="address-level1"
+            id={field}
             className="mt-1 block w-full overflow-y-scroll rounded-md border border-text-secondary p-1 py-1.5 text-text-primary focus:border-text-primary focus:ring-text-primary sm:text-sm"
           >
             <option></option>
@@ -45,6 +56,108 @@ const FormField = ({
               className="w-full appearance-none rounded-md border border-text-secondary py-2 px-3 text-text-primary focus:border-text-primary focus:ring-text-primary sm:text-sm"
             />
           </div>
+        ) : methodName === "streetAddress" ? (
+          <>
+            <Autocomplete<ReactGoogleAutocompleteInputProps>
+              apiKey={`${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
+              onPlaceSelected={(place) => {
+                console.log(place);
+                const apartmentOrUnit = place?.address_components?.find(
+                  (component) => component.types.includes("subpremise")
+                );
+
+                const streetNumber = place?.address_components?.find(
+                  (component) => component.types.includes("street_number")
+                );
+                const streetAddress = place?.address_components?.find(
+                  (component) => component.types.includes("route")
+                );
+                const city = place?.address_components?.find((component) =>
+                  component.types.includes("locality")
+                );
+                const state = place?.address_components?.find((component) =>
+                  component.types.includes("administrative_area_level_1")
+                );
+                const country = place?.address_components?.find((component) =>
+                  component.types.includes("country")
+                );
+                const postalCode = place?.address_components?.find(
+                  (component) => component.types.includes("postal_code")
+                );
+                form.setValue(
+                  "streetAddress",
+                  streetNumber
+                    ? streetNumber.long_name + " " + streetAddress?.long_name
+                    : streetAddress?.long_name,
+                  {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                    shouldTouch: true,
+                  }
+                );
+                console.log(apartmentOrUnit);
+
+                form.setValue(
+                  "apartmentorUnit",
+                  apartmentOrUnit?.long_name || "",
+                  {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                    shouldTouch: true,
+                  }
+                );
+                form.setValue("city", city?.long_name, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                  shouldTouch: true,
+                });
+                form.setValue("state", state?.short_name, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                  shouldTouch: true,
+                });
+                form.setValue("postCode", postalCode?.long_name, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                  shouldTouch: true,
+                });
+                form.setValue("country", country?.long_name, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                  shouldTouch: true,
+                });
+              }}
+              options={{
+                componentRestrictions: { country: "au" },
+                fields: ["address_components", "formatted_address"],
+                types: ["address"],
+              }}
+              {...form.register(methodName)}
+              ref={streetAddressRef}
+              id={methodName}
+              defaultValue={form.watch(methodName)}
+              // onChange={(e) => {
+              //   setUserObj({
+              //     ...userObj,
+              //     streetAddress: (e.target as HTMLTextAreaElement).value,
+              //   });
+              // }}
+              className="mt-1 block w-full rounded-md border border-text-secondary p-1 text-text-primary focus:border-text-primary focus:ring focus:ring-text-primary sm:text-sm"
+            />
+            <input
+              hidden
+              id={field}
+              type="text"
+              defaultValue={form.getValues(methodName)}
+              autoComplete="off"
+              // onChange={(e) => {
+              //   setUserObj({
+              //     ...userObj,
+              //     streetAddress: (e.target as HTMLInputElement).value,
+              //   });
+              //}}
+            />
+          </>
         ) : (
           <input
             type="text"
@@ -52,7 +165,8 @@ const FormField = ({
             id={field}
             //autoComplete="given-name"
             {...form.register(methodName)}
-            className="block w-full appearance-none rounded-md border border-text-secondary p-1 focus:border-text-primary focus:ring-text-primary sm:text-base "
+            //value={form.getValues()[methodName]}
+            className="block w-full appearance-none rounded-md border border-text-secondary p-1 text-text-primary focus:border-text-primary focus:ring-text-primary sm:text-sm"
             onChange={(e) => form.clearErrors(methodName)}
           />
         )}

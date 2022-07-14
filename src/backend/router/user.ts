@@ -28,9 +28,7 @@ export const userRouter = createRouter()
           streetAddress: z.string().optional().nullish() as z.ZodType<
             string | null
           >,
-          streetNumber: z.string().optional().nullish() as z.ZodType<
-            string | null
-          >,
+          streetNumber: z.string().optional() as z.ZodType<string | null>,
           apartmentOrUnit: z.string().optional().nullish() as z.ZodType<
             string | null
           >,
