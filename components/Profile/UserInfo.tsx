@@ -118,30 +118,32 @@ const UserInfo = ({ session }: { session: Session }) => {
           mySubscriptions={mySubscriptions}
           allPlans={allPlans}
         />
-        <UserInfoNotifications
-          handleFormSubmit={handleFormSubmit}
-          handleSubmit={handleSubmit}
-          register={register}
-          saving={saving}
-        />
-      </div>
-      <div className="m-2 flex justify-end sm:m-6">
-        <button
-          type="button"
-          className="rounded-md border border-text-secondary bg-white py-2 px-4 text-sm font-medium text-text-primary shadow-text-secondary hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2 "
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            console.log("submitting");
-            handleSubmit(handleFormSubmit);
-          }}
-          className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-button py-2 px-4 text-sm font-medium  text-text-primary shadow-text-secondary hover:bg-button/90 focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2"
-        >
-          {saving ? <BeatLoader size={8} color="#602d0d" /> : <span>Save</span>}
-        </button>
+        <UserInfoNotifications form={userProfileForm} />
+        <div className="m-2 flex justify-end rounded-md bg-white p-3 font-gothic shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg">
+          <button
+            type="button"
+            className="rounded-md border border-text-secondary bg-white py-2 px-4 text-sm font-medium text-text-primary shadow-text-secondary hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2 "
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={async (e) => {
+              console.log("submitting");
+              await userProfileForm.trigger();
+              if (userProfileForm.formState.isValid) {
+                userProfileForm.handleSubmit(handleFormSubmit)(e);
+              }
+            }}
+            className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-button py-2 px-4 text-sm font-medium  text-text-primary shadow-text-secondary hover:bg-button/90 focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2"
+          >
+            {saving ? (
+              <BeatLoader size={8} color="#602d0d" />
+            ) : (
+              <span>Save</span>
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );
