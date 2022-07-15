@@ -1,4 +1,5 @@
 import { IntroOptions } from "@/types/PageOptions";
+import CornerRibbon from "react-corner-ribbon";
 
 const SubscriptionOption = ({
   price,
@@ -6,12 +7,14 @@ const SubscriptionOption = ({
   introOptions,
   setIntroOptions,
   nextStepRef,
+  soldOut,
 }: {
   price: string;
   duration: string;
   introOptions: IntroOptions;
   setIntroOptions: (options: IntroOptions) => void;
   nextStepRef: React.RefObject<HTMLButtonElement>;
+  soldOut: boolean;
 }) => {
   return (
     <div
@@ -24,10 +27,22 @@ const SubscriptionOption = ({
       }}
       className={
         introOptions.duration === duration
-          ? `h-[370px]  w-full max-w-xs cursor-pointer rounded-xl bg-button shadow-sm shadow-text-secondary ring-2 ring-text-secondary sm:h-[460px]`
-          : `h-[370px]  w-full max-w-xs cursor-pointer rounded-xl bg-button shadow-sm shadow-text-secondary sm:h-[460px]`
+          ? `relative h-[370px]  w-full max-w-xs cursor-pointer rounded-xl bg-button shadow-sm shadow-text-secondary ring-2 ring-text-secondary sm:h-[460px]`
+          : `relative h-[370px]  w-full max-w-xs cursor-pointer rounded-xl bg-button shadow-sm shadow-text-secondary sm:h-[460px]`
       }
     >
+      {soldOut && (
+        <CornerRibbon
+          position="top-right" // OPTIONAL, default as "top-right"
+          fontColor="#f0f0f0" // OPTIONAL, default as "#f0f0f0"
+          backgroundColor="#a75e2f" // OPTIONAL, default as "#2c7"
+          containerStyle={{}} // OPTIONAL, style of the ribbon
+          style={{}} // OPTIONAL, style of ribbon content
+          className="font-gothic" // OPTIONAL, css class of ribbon
+        >
+          Out of Stock
+        </CornerRibbon>
+      )}
       <div className="flex h-full w-full select-none flex-col items-center justify-between p-2 sm:p-6">
         <span className=" pt-4 text-center text-2xl text-text-primary sm:text-4xl">
           the cheeky box.

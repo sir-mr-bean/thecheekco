@@ -15,6 +15,7 @@ import Head from "next/head";
 import * as z from "zod";
 import { useZodForm } from "@/utils/hooks/useZodForm";
 import { IntroOptions } from "@/types/PageOptions";
+import { prisma } from "@/backend/utils/prisma";
 
 const CheekyBoxWrapper = () => {
   const [paymentSuccessful, setPaymentSuccessful] = useState(false);

@@ -21,12 +21,20 @@ const { subscriptionsApi, customersApi, cardsApi, catalogApi } = new Client({
 export const squareSubscriptionRouter = createRouter()
   .transformer(superjson)
   .query("get-all-subscriptions", {
-    async resolve() {
+    async resolve({ ctx }) {
+      const { prisma } = ctx;
       const subscriptions = await catalogApi.listCatalog(
         undefined,
         "SUBSCRIPTION_PLAN"
       );
       return subscriptions?.result.objects;
+    },
+  })
+  .query("get-all-existing-subscriptions", {
+    async resolve({ ctx }) {
+      const { prisma } = ctx;
+      const subscriptions = await subscriptionsApi.searchSubscriptions({});
+      return subscriptions?.result.subscriptions;
     },
   })
   .mutation("create-subscription", {

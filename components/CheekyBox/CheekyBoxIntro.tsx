@@ -1,5 +1,7 @@
 import { IntroOptions } from "@/types/PageOptions";
-import { useRef } from "react";
+import { trpc } from "@/utils/trpc";
+import { useEffect, useRef, useState } from "react";
+import { BeatLoader } from "react-spinners";
 import SubscriptionOption from "./Pages/CheekyBoxForm/Intro/SubscriptionOption";
 import SubscriptionOptions from "./Pages/CheekyBoxForm/Intro/SubscriptionOptions";
 
@@ -13,6 +15,23 @@ const CheekyBoxIntro = ({
   setIntroOptions: (options: IntroOptions) => void;
 }) => {
   const nextStepRef = useRef<HTMLButtonElement>(null);
+  const [soldOut, setSoldOut] = useState(false);
+  const { data: existingSubscriptions, status: loadingExistingSubscriptions } =
+    trpc.useQuery(["square-subscription.get-all-existing-subscriptions"]);
+  useEffect(() => {
+    if (existingSubscriptions) {
+      const cheekyBoxes = existingSubscriptions.filter(
+        (subscription) =>
+          subscription.planId === "RWUIUC37IWXYHNMZROFRFANR" || // CheekyBox Monthly
+          subscription.planId === "3LJVW5GICZQO674H6VHFE24O" // CheekyBox ThreeMonths
+      );
+      console.log(cheekyBoxes.length);
+      if (cheekyBoxes.length - 3 >= 10) {
+        setSoldOut(true);
+      }
+    }
+  }, [existingSubscriptions]);
+
   return (
     <div className="flex w-full flex-col items-center justify-center font-gothic text-sm sm:text-xl">
       <div className="flex w-full flex-col items-center space-y-10 px-1 lg:px-20">
@@ -29,14 +48,27 @@ const CheekyBoxIntro = ({
             necessities.
           </span>
         </div>
-        <SubscriptionOptions
-          introOptions={introOptions}
-          setIntroOptions={setIntroOptions}
-          nextStepRef={nextStepRef}
-        />
+        {loadingExistingSubscriptions === "success" ? (
+          <SubscriptionOptions
+            introOptions={introOptions}
+            setIntroOptions={setIntroOptions}
+            nextStepRef={nextStepRef}
+            soldOut={soldOut}
+          />
+        ) : (
+          <>
+            <div className="mx-auto flex h-full w-full items-center justify-center  text-text-primary">
+              <BeatLoader
+                color="#602d0d"
+                loading={loadingExistingSubscriptions === String("loading")}
+                size={8}
+              />
+            </div>
+          </>
+        )}
       </div>
       <div className="my-6 flex h-8 w-full items-center justify-end">
-        {introOptions.duration && (
+        {introOptions.duration && soldOut === false && (
           <button
             className="mx-1 px-4 py-2 focus:animate-pulse focus:rounded-xl focus:ring-2 focus:ring-text-secondary focus:duration-1000 "
             ref={nextStepRef}

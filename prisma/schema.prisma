@@ -40,31 +40,33 @@ model Session {
 }
 
 model User {
-  id              String          @id @default(cuid())
-  createdAt       DateTime?       @default(now())
-  updatedAt       DateTime?       @default(now())
-  name            String?
-  image           String?
-  firstName       String?
-  lastName        String?
-  email           String          @unique
-  emailVerified   DateTime?
-  company         String?
-  streetAddress   String?
-  streetNumber    String?
-  apartmentOrUnit String?
-  city            String?
-  state           String?
-  country         String?
-  postalCode      String?
-  phoneNumber     String?
-  isAdmin         Boolean         @default(false)
-  accounts        Account[]
-  sessions        Session[]
-  cart            Cart[]
-  orders          Order[]         @relation()
-  wishlist        Wishlist[]
-  ProductReview   ProductReview[]
+  id                String              @id @default(cuid())
+  createdAt         DateTime?           @default(now())
+  updatedAt         DateTime?           @default(now())
+  name              String?
+  image             String?
+  firstName         String?
+  lastName          String?
+  email             String              @unique
+  emailVerified     DateTime?
+  company           String?
+  streetAddress     String?
+  streetNumber      String?
+  apartmentOrUnit   String?
+  city              String?
+  state             String?
+  country           String?
+  postalCode        String?
+  phoneNumber       String?
+  isAdmin           Boolean             @default(false)
+  accounts          Account[]
+  sessions          Session[]
+  cart              Cart[]
+  orders            Order[]             @relation()
+  wishlist          Wishlist[]
+  ProductReview     ProductReview[]
+  SubscriptionBoxes SubscriptionBoxes[]
+  Box               Box[]
 }
 
 model VerificationToken {
@@ -150,4 +152,20 @@ model ProductReview {
   user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   approved         Boolean   @default(false)
   approvedByUserId String?
+}
+
+model SubscriptionBoxes {
+  id     String @id @default(cuid())
+  userId String
+  boxId  String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  box    Box    @relation(fields: [boxId], references: [id], onDelete: Cascade)
+}
+
+model Box {
+  id                String              @id @default(cuid())
+  name              String
+  userId            String
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  SubscriptionBoxes SubscriptionBoxes[]
 }

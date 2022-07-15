@@ -89,8 +89,9 @@ const FinalPage = ({
             (plan: CatalogObject) =>
               plan.presentAtAllLocations === true &&
               (introOptions.duration === "monthly"
-                ? plan.subscriptionPlanData?.name === "TestPlan"
-                : plan.subscriptionPlanData?.name === "TestPlanMonthly")
+                ? plan.subscriptionPlanData?.name === "The Cheeky Box"
+                : plan.subscriptionPlanData?.name ===
+                  "The Cheeky Box - Gift Bundle")
           )?.id as string,
           customer: {
             email: giftForm.getValues("email") as string,
