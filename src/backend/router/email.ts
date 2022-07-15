@@ -193,7 +193,7 @@ export const emailRouter = createRouter()
       };
       const result = await sgMail.send({
         templateId: "d-ede5c253026645d8b55ebc8e40f2c25e",
-        to: "kroucher.1019@gmail.com", // Change to your recipient
+        to: "admin@thecheekco.com", // Change to your recipient
         from: "contact@thecheekco.com", // Change to your verified sender
         subject: "🎁 New Cheeky Box Subscription! 🎁",
         dynamicTemplateData: templateData,
@@ -250,7 +250,7 @@ export const emailRouter = createRouter()
       };
       const result = await sgMail.send({
         templateId: "d-f5f3358f12ee4c91ba703febfcb013fc",
-        to: "kroucher.1019@gmail.com",
+        to: customer.email
         from: "contact@thecheekco.com", // Change to your verified sender
         subject: "🎁 New Cheeky Box Subscription! 🎁",
         dynamicTemplateData: templateData,
