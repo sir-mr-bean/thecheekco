@@ -250,7 +250,7 @@ export const emailRouter = createRouter()
       };
       const result = await sgMail.send({
         templateId: "d-f5f3358f12ee4c91ba703febfcb013fc",
-        to: customer.email
+        to: customer.email,
         from: "contact@thecheekco.com", // Change to your verified sender
         subject: "🎁 New Cheeky Box Subscription! 🎁",
         dynamicTemplateData: templateData,
