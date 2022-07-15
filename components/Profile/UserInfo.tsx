@@ -117,6 +117,7 @@ const UserInfo = ({ session }: { session: Session }) => {
         <MySubscriptions
           mySubscriptions={mySubscriptions}
           allPlans={allPlans}
+          status={status}
         />
         <UserInfoNotifications form={userProfileForm} />
         <div className="m-2 flex justify-end rounded-md bg-white p-3 font-gothic shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg">

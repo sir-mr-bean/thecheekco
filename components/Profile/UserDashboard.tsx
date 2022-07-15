@@ -5,6 +5,7 @@ import Wishlist from "./Dashboard/Wishlist";
 import Link from "next/link";
 import { Order } from "square";
 import RecentOrders from "./Dashboard/RecentOrders";
+import { BeatLoader } from "react-spinners";
 
 const UserDashboard = ({
   customerOrders,
@@ -15,6 +16,7 @@ const UserDashboard = ({
   orderQueryStatus: string;
   setOpenTab: (tab: number) => void;
 }) => {
+  console.log(orderQueryStatus);
   return (
     <div className="flex flex-col space-y-2">
       <div className="m-2 rounded-md bg-white font-gothic shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-3">
@@ -39,16 +41,29 @@ const UserDashboard = ({
               customerOrders={customerOrders}
             />
           </>
+        ) : orderQueryStatus === "loading" ? (
+          <>
+            <div className="mx-auto flex h-10 w-full items-center justify-center  text-text-primary">
+              <BeatLoader
+                color="#602d0d"
+                loading={orderQueryStatus === String("loading")}
+                size={8}
+              />
+            </div>
+          </>
         ) : (
-          <span>
-            No recent orders. Find your next favourite goodie{" "}
-            <a href="/shop">
-              {" "}
-              <span className="underline decoration-text-secondary decoration-dotted underline-offset-2">
-                now
-              </span>
-            </a>
-          </span>
+          orderQueryStatus === "success" &&
+          customerOrders?.length === 0 && (
+            <span>
+              No recent orders. Find your next favourite goodie{" "}
+              <a href="/shop">
+                {" "}
+                <span className="underline decoration-text-secondary decoration-dotted underline-offset-2">
+                  now
+                </span>
+              </a>
+            </span>
+          )
         )}
       </div>
     </div>

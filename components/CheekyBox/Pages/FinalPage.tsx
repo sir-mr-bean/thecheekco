@@ -35,6 +35,8 @@ const FinalPage = ({
   gift,
   giftForm,
   gifterForm,
+  setPaymentSuccessful,
+  setCurrentStep,
 }: {
   introOptions: IntroOptions;
   pageOneOptions: PageOneOptions;
@@ -45,6 +47,8 @@ const FinalPage = ({
   gift: boolean;
   giftForm: UseFormReturn<any>;
   gifterForm: UseFormReturn<any>;
+  setPaymentSuccessful: Function;
+  setCurrentStep: Function;
 }) => {
   const { data: plans, status: plansStatus } = trpc.useQuery([
     "square-subscription.get-all-subscriptions",
@@ -244,9 +248,8 @@ const FinalPage = ({
                       onSuccess() {
                         toast.success("Payment successful!");
                         setOrderProcessing(false);
-                        setTimeout(() => {
-                          router.push("/");
-                        }, 3000);
+                        setCurrentStep(8);
+                        setPaymentSuccessful(true);
                       },
                     }
                   );

@@ -11,6 +11,7 @@ import { getSession } from "next-auth/react";
 import * as z from "zod";
 import { TRPCError } from "@trpc/server";
 import { randomUUID } from "crypto";
+import { date } from "zod";
 
 const { subscriptionsApi, customersApi, cardsApi, catalogApi } = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
@@ -218,6 +219,7 @@ export const squareSubscriptionRouter = createRouter()
   .mutation("pause-subscription", {
     input: z.object({
       subscriptionId: z.string(),
+      duration: z.number(),
     }),
     async resolve({ input, ctx }) {
       const { req } = ctx;
@@ -250,10 +252,12 @@ export const squareSubscriptionRouter = createRouter()
   .mutation("resume-subscription", {
     input: z.object({
       subscriptionId: z.string(),
+      date: z.string(),
     }),
     async resolve({ input, ctx }) {
       const { req } = ctx;
-      const { subscriptionId } = input;
+      const { subscriptionId, date } = input;
+      console.log(date);
       const session = await getSession({ req });
       const customerEmail = session?.user?.email;
       if (!customerEmail) {
@@ -269,9 +273,13 @@ export const squareSubscriptionRouter = createRouter()
           code: "BAD_REQUEST",
         });
       }
+
       const resumeSubscription = await subscriptionsApi.resumeSubscription(
         subscriptionId,
-        {}
+        {
+          resumeChangeTiming: "IMMEDIATE",
+          resumeEffectiveDate: date,
+        }
       );
       return resumeSubscription?.result;
     },

@@ -17,6 +17,7 @@ import { useZodForm } from "@/utils/hooks/useZodForm";
 import { IntroOptions } from "@/types/PageOptions";
 
 const CheekyBoxWrapper = () => {
+  const [paymentSuccessful, setPaymentSuccessful] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [moving, setMoving] = useState("right");
   const [gift, setGift] = useState(false);
@@ -29,6 +30,7 @@ const CheekyBoxWrapper = () => {
     { name: "Step 6", href: "#", status: "upcoming" },
     { name: "Step 7", href: "#", status: "upcoming" },
     { name: "Step 8", href: "#", status: "upcoming" },
+    { name: "Step 9", href: "#", status: "upcoming" },
   ]);
 
   const [introOptions, setIntroOptions] = useState<IntroOptions>({
@@ -440,16 +442,60 @@ const CheekyBoxWrapper = () => {
                     gift={gift}
                     giftForm={giftForm}
                     gifterForm={gifterForm}
+                    setPaymentSuccessful={setPaymentSuccessful}
+                    setCurrentStep={setCurrentStep}
                   />
+                </div>
+              </Transition>
+              <Transition
+                appear={false}
+                unmount={false}
+                show={currentStep === 8}
+                enter="transform transition ease-in-out duration-700"
+                enterFrom={
+                  moving === "right"
+                    ? `translate-x-80 opacity-0`
+                    : `-translate-x-80 opacity-0`
+                }
+                enterTo={`translate-x-0 opacity-100`}
+                leave="transform transition ease-in-out duration-500 "
+                leaveFrom={`translate-x-0 opacity-100`}
+                leaveTo={
+                  moving === "right"
+                    ? `-translate-x-80 opacity-0`
+                    : `translate-x-80 opacity-0`
+                }
+                className="w-0 overflow-visible bg-blue-200"
+                as="div"
+              >
+                <div style={{ width: `${wrapperWidth}px`, height: "100%" }}>
+                  <div className="flex h-full w-full flex-col items-center justify-center">
+                    <span className="pt-10 text-center text-2xl sm:text-4xl">
+                      Thanks for your order!
+                    </span>
+                    <span className="pt-10 text-center text-lg sm:text-4xl">
+                      You will recieve an email with your subscription details,
+                      and you can manage your subscription at any time by
+                      logging in to your account.
+                    </span>
+                    <div className="pt-10">
+                      <a
+                        className="underline decoration-text-secondary decoration-dotted underline-offset-2"
+                        href="/"
+                      >
+                        Return Home
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </Transition>
             </div>
           </div>
-          {currentStep > 0 && (
+          {currentStep > 0 && currentStep < steps.length - 1 && (
             <div className={`mt-2`}>
               <p className="mb-1 mt-3 text-center text-xs font-medium sm:text-sm">
                 Step {steps.findIndex((step) => step.status === "current") + 1}{" "}
-                of {steps.length}
+                of {steps.length - 1}
               </p>
               <nav
                 className="flex items-center justify-center"
@@ -464,43 +510,45 @@ const CheekyBoxWrapper = () => {
                   Prev
                 </button>
                 <ol className="mx-2 flex items-center space-x-2 sm:mx-8 sm:space-x-5">
-                  {steps.map((step, i) => (
-                    <li key={`step_${i}`}>
-                      {step.status === "complete" ? (
-                        <div
-                          onClick={() => thisStep(i)}
-                          className="block h-2.5 w-2.5 cursor-pointer rounded-full bg-text-primary hover:bg-text-secondary"
-                        >
-                          <span className="sr-only"></span>
-                        </div>
-                      ) : step.status === "current" ? (
-                        <a
-                          href={step.href}
-                          className="relative flex items-center justify-center"
-                          aria-current="step"
-                        >
-                          <span
-                            className="absolute flex h-4 w-4 p-px sm:h-6 sm:w-6"
-                            aria-hidden="true"
+                  {steps
+                    .filter((step, i) => i < steps.length - 1)
+                    .map((step, i) => (
+                      <li key={`step_${i}`}>
+                        {step.status === "complete" ? (
+                          <div
+                            onClick={() => thisStep(i)}
+                            className="block h-2.5 w-2.5 cursor-pointer rounded-full bg-text-primary hover:bg-text-secondary"
                           >
-                            <span className="h-full w-full rounded-full bg-text-secondary/30" />
-                          </span>
-                          <span
-                            className="relative block h-2 w-2 rounded-full bg-text-secondary sm:h-2.5 sm:w-2.5"
-                            aria-hidden="true"
-                          />
-                          <span className="sr-only"></span>
-                        </a>
-                      ) : (
-                        <div
-                          onClick={() => thisStep(i)}
-                          className="block h-2.5 w-2.5 cursor-pointer rounded-full bg-text-secondary"
-                        >
-                          <span className="sr-only"></span>
-                        </div>
-                      )}
-                    </li>
-                  ))}
+                            <span className="sr-only"></span>
+                          </div>
+                        ) : step.status === "current" ? (
+                          <a
+                            href={step.href}
+                            className="relative flex items-center justify-center"
+                            aria-current="step"
+                          >
+                            <span
+                              className="absolute flex h-4 w-4 p-px sm:h-6 sm:w-6"
+                              aria-hidden="true"
+                            >
+                              <span className="h-full w-full rounded-full bg-text-secondary/30" />
+                            </span>
+                            <span
+                              className="relative block h-2 w-2 rounded-full bg-text-secondary sm:h-2.5 sm:w-2.5"
+                              aria-hidden="true"
+                            />
+                            <span className="sr-only"></span>
+                          </a>
+                        ) : (
+                          <div
+                            onClick={() => thisStep(i)}
+                            className="block h-2.5 w-2.5 cursor-pointer rounded-full bg-text-secondary"
+                          >
+                            <span className="sr-only"></span>
+                          </div>
+                        )}
+                      </li>
+                    ))}
                 </ol>
                 {currentStep === 6 ? (
                   <button
