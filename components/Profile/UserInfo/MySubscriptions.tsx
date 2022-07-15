@@ -5,6 +5,7 @@ import moment from "moment";
 import { useState } from "react";
 import { BeatLoader } from "react-spinners";
 import PauseButton from "./PauseButton";
+import CancelButton from "./CancelButton";
 
 const MySubscriptions = ({
   mySubscriptions,
@@ -16,80 +17,6 @@ const MySubscriptions = ({
   status: string;
 }) => {
   const [initialNumber, setInitialNumber] = useState(3);
-  const [pausing, setPausing] = useState(false);
-  const utils = trpc.useContext();
-  const pauseSubscription = trpc.useMutation([
-    "square-subscription.pause-subscription",
-  ]);
-  const resumeSubscription = trpc.useMutation([
-    "square-subscription.resume-subscription",
-  ]);
-  const cancelSubscription = trpc.useMutation([
-    "square-subscription.cancel-subscription",
-  ]);
-  const handlePauseSubscription = (
-    subscription: Subscription,
-    duration: number
-  ) => {
-    setPausing(true);
-    pauseSubscription.mutate(
-      {
-        subscriptionId: subscription.id as string,
-        duration: duration,
-      },
-      {
-        onSuccess: () => {
-          utils.invalidateQueries(["square-subscription.get-my-subscriptions"]);
-          toast.success("Subscription paused");
-          setPausing(false);
-        },
-      }
-    );
-  };
-
-  const earliestResumeDate = (subscription: Subscription) => {
-    const now = moment();
-    const pausedUntil = moment(
-      subscription.actions?.find((action) => action.type === "PAUSE")
-        ?.effectiveDate
-    );
-
-    const nextBillingDate = moment(subscription.chargedThroughDate);
-    const diff = pausedUntil.diff(now, "days");
-    if (diff <= 0) {
-      return now.add(1, "days").format("YYYY-MM-DD");
-    }
-    return nextBillingDate.format("YYYY-MM-DD");
-  };
-
-  const handleResumeSubscription = (subscription: Subscription) => {
-    resumeSubscription.mutate(
-      {
-        subscriptionId: subscription.id as string,
-        date: earliestResumeDate(subscription),
-      },
-      {
-        onSuccess: () => {
-          toast.success("Subscription resumed");
-        },
-      }
-    );
-  };
-
-  const handleCancelSubscription = (subscription: Subscription) => {
-    cancelSubscription.mutate(
-      {
-        subscriptionId: subscription.id as string,
-        reason: "CUSTOMER_CANCELLED",
-      },
-      {
-        onSuccess: () => {
-          toast.success("Subscription cancelled");
-        },
-      }
-    );
-  };
-
   return (
     <div className="m-2 rounded-md bg-white px-4 py-5 font-gothic text-text-primary shadow sm:m-6 sm:mx-auto sm:w-3/4 sm:rounded-lg sm:p-6">
       <div className="md:grid md:grid-cols-3 md:gap-6">
@@ -150,26 +77,13 @@ const MySubscriptions = ({
                                 <PauseButton
                                   subscription={subscription}
                                   duration={1}
-                                  handlePauseSubscription={
-                                    handlePauseSubscription
-                                  }
                                 />
                                 <PauseButton
                                   subscription={subscription}
                                   duration={2}
-                                  handlePauseSubscription={
-                                    handlePauseSubscription
-                                  }
                                 />
                               </div>
-                              <button
-                                className="rounded-lg border border-text-secondary bg-button px-2 py-2 text-xs font-semibold leading-5 text-white hover:text-text-secondary"
-                                onClick={() =>
-                                  handleCancelSubscription(subscription)
-                                }
-                              >
-                                Cancel
-                              </button>
+                              <CancelButton subscription={subscription} />
                             </div>
                           )}
                         </>
