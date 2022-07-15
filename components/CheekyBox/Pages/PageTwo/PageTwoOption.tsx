@@ -36,7 +36,7 @@ const PageTwoOption = ({
           pageTwoOptions[`${optionCapitalised}` as keyof PageTwoOptions] ===
           true
             ? `w-36 rounded-lg border border-text-secondary bg-button py-2 px-3 font-semibold text-text-primary sm:w-48 lg:w-72 lg:px-20 `
-            : `w-36 rounded-lg border border-transparent border-text-secondary bg-bg-tan px-3 py-2 font-semibold text-text-primary hover:border-text-primary sm:w-48 lg:w-72 lg:px-20   `
+            : `mx-auto w-36 rounded-lg border border-transparent border-text-secondary bg-bg-tan px-3 py-2 font-semibold text-text-primary hover:border-text-primary sm:w-48 lg:w-72   `
         }
       >
         {option}
