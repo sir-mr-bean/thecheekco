@@ -20,11 +20,11 @@ export const userProfileSchema = z.object({
     }),
   company: z
     .string()
-    .min(2, { message: "Company must be at least two characters long." })
     .max(25, {
       message: "Company must be at most twenty-five characters long.",
     })
-    .optional(),
+    .optional()
+    .nullable(),
   email: z.string().email(),
   phoneNumber: z
     .string()
@@ -38,16 +38,13 @@ export const userProfileSchema = z.object({
     }),
   apartmentorUnit: z
     .string()
-    .min(1, {
-      message: "Apartment or unit must be at least two characters long.",
-    })
     .max(5, {
       message: "Apartment or unit must be at most ten characters long.",
     })
     .optional(),
   city: z
     .string()
-    .min(2, { message: "City must be at least two characters long." })
+    .min(0, { message: "City must be at least two characters long." })
     .max(25, { message: "City must be at most twenty-five characters long." }),
   state: z
     .string()

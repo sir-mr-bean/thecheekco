@@ -35,7 +35,6 @@ const UserInfo = ({ session }: { session: Session }) => {
     defaultValues: {
       firstName: userObj.firstName || "",
       lastName: userObj.lastName || "",
-      company: userObj.company || "",
       email: userObj.email || "",
       phoneNumber: userObj.phoneNumber || "",
       streetAddress: userObj.streetAddress || "",
@@ -65,7 +64,7 @@ const UserInfo = ({ session }: { session: Session }) => {
       image: userObj.image,
       firstName: d["first-name"],
       lastName: d["last-name"],
-      company: d.organization,
+      company: d?.organization,
       streetAddress: userObj.streetAddress,
       streetNumber: d["apartment-unit"],
       apartmentOrUnit: d["apartment-unit"],
