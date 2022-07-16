@@ -43,7 +43,6 @@ const CheekyBoxIntro = ({
             The Cheeky Box is a decadent collection of limited edition & store
             favs.
           </span>
-          <div className="flex h-screen w-full items-center justify-center bg-gray-900"></div>
           <span className="my-1 text-base">
             Designed to expand your bathing experience and top up on bathroom
             necessities.

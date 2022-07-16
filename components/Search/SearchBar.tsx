@@ -1,5 +1,6 @@
 import useDebounce from "@/utils/hooks/useDebounce";
 import { trpc } from "@/utils/trpc";
+import { productionBrowserSourceMaps } from "next.config";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -12,7 +13,7 @@ const SearchBar = () => {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce<string>(search, 500);
   //const [product, setSearchResults] = useState<CatalogObject[]>([]);
-  const [catSearchResults, setCatSearchResults] = useState<string[]>([]);
+  const [catSearchResults, setCatSearchResults] = useState<CatalogObject[]>([]);
   const searchRef = useRef<HTMLInputElement>(null);
   const searchIconRef = useRef<HTMLDivElement>(null);
   const closeSearchRef = useRef<HTMLDivElement>(null);
@@ -27,6 +28,10 @@ const SearchBar = () => {
   ]);
   const { data: subcategories, status: subCatStatus } = trpc.useQuery([
     "square-products.get-product-subcategories",
+  ]);
+
+  const { data: allProducts, status: allProductsStatus } = trpc.useQuery([
+    "square-products.all-products",
   ]);
 
   useEffect(() => {
@@ -51,31 +56,62 @@ const SearchBar = () => {
     };
   }, [searchRef, searchIconRef, closeSearchRef]);
 
+  // useEffect(() => {
+  //   //setSearchResults(product || []);
+  //   setCatSearchResults([]);
+  //   if (status === "success" && product && product?.length > 0) {
+  //     //setSearchResults(product);
+  //     if (
+  //       subCatStatus === "success" &&
+  //       subcategories &&
+  //       product &&
+  //       allProducts
+  //     ) {
+  //       allProducts.forEach((result) => {
+  //         const subCat =
+  //           subcategories?.customAttributeDefinitionData?.selectionConfig?.allowedSelections?.find(
+  //             (sub) =>
+  //               result.itemData?.variations?.[0]?.customAttributeValues?.[
+  //                 "Square:c373acb7-e030-422a-bbcc-aae6e4f11958"
+  //               ]?.selectionUidValues?.[0] === sub.uid
+  //           );
+  //         if (subCat) {
+  //           console.log(subCat.name);
+  //           const filteredProducts = allProducts.filter((result) => {
+  //             return (
+  //               result.itemData?.variations?.[0]?.customAttributeValues?.[
+  //                 "Square:c373acb7-e030-422a-bbcc-aae6e4f11958"
+  //               ]?.selectionUidValues?.[0] === subCat.uid
+  //             );
+  //           });
+  //           console.log("filteredProducts", filteredProducts);
+  //           if (!catSearchResults.includes(subCat.name)) {
+  //             setCatSearchResults((prev) => [...prev, subCat.name]);
+  //           }
+  //         }
+  //       });
+  //     }
+  //     setIsSearching(false);
+  //   }
+  // }, [status, product, subcategories, subCatStatus, isSearching]);
+
   useEffect(() => {
-    //setSearchResults(product || []);
-    setCatSearchResults([]);
-    if (status === "success" && product && product?.length > 0) {
-      //setSearchResults(product);
-      if (subCatStatus === "success" && subcategories && product) {
-        product.forEach((result) => {
-          const subCat =
-            subcategories?.customAttributeDefinitionData?.selectionConfig?.allowedSelections?.find(
-              (sub) =>
-                result.itemData?.variations?.[0]?.customAttributeValues?.[
-                  "Square:c373acb7-e030-422a-bbcc-aae6e4f11958"
-                ]?.selectionUidValues?.[0] === sub.uid
-            );
-          if (subCat) {
-            // push subCat.name to catSearchResults if unique
-            if (!catSearchResults.includes(subCat.name)) {
-              setCatSearchResults((prev) => [...prev, subCat.name]);
-            }
-          }
-        });
-      }
-      setIsSearching(false);
+    if (debouncedSearch.length > 0) {
+      const filteredResult = allProducts?.filter((result) => {
+        return (
+          result.itemData?.variations?.[0]?.customAttributeValues?.[
+            "Square:c373acb7-e030-422a-bbcc-aae6e4f11958"
+          ]?.selectionUidValues?.[0] === debouncedSearch
+        );
+      });
+      setIsSearching(true);
+      setCatSearchResults(filteredResult || []);
+      setSearch(debouncedSearch);
+      //setSearchResults(filteredResult || []);
     }
-  }, [status, product, subcategories, subCatStatus, isSearching]);
+  }, [debouncedSearch, allProducts]);
+
+  console.log("catSearchResults", catSearchResults);
 
   return (
     <>

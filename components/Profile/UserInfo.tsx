@@ -54,26 +54,27 @@ const UserInfo = ({ session }: { session: Session }) => {
   const handleFormSubmit = (d: FormData) => {
     console.log("submitting!");
     setSaving(true);
+    const formValues = userProfileForm.getValues();
     const updatedUserObj = {
       id: userObj.id,
       createdAt: userObj.createdAt as DateSchema,
       updatedAt: new Date(Date.now()),
-      name: d["first-name"] + " " + d["last-name"],
-      email: userObj.email,
+      name: formValues.firstName + " " + formValues.lastName || "",
+      email: formValues.email || "",
       emailVerified: userObj.emailVerified,
-      image: userObj.image,
-      firstName: d["first-name"],
-      lastName: d["last-name"],
-      company: d?.organization,
-      streetAddress: userObj.streetAddress,
-      streetNumber: d["apartment-unit"],
-      apartmentOrUnit: d["apartment-unit"],
-      city: d.city,
-      state: d.region,
-      country: d.country,
-      postalCode: d["postal-code"],
-      phoneNumber: d.tel,
-      isAdmin: userObj.isAdmin,
+      image: userObj.image || "",
+      firstName: formValues.firstName || "",
+      lastName: formValues.lastName || "",
+      company: formValues.company || "",
+      streetAddress: formValues.streetAddress || "",
+      streetNumber: formValues.streetAddress.split(" ")?.[0] || "",
+      apartmentOrUnit: formValues.apartmentorUnit || "",
+      city: formValues.city || "",
+      state: formValues.state || "QLD",
+      country: formValues.country || "Australia",
+      postalCode: formValues.postCode || "",
+      phoneNumber: formValues.phoneNumber || "",
+      isAdmin: userObj.isAdmin || false,
     };
 
     const userUpdate = updateUser.mutate(
