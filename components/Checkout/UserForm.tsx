@@ -115,6 +115,7 @@ const UserForm = ({
                     name="email"
                     id="email"
                     autoComplete="email"
+                    disabled={userObj.email !== undefined}
                     defaultValue={userObj?.email as string}
                     onChange={(e) => {
                       setValidationErrors({
@@ -126,7 +127,7 @@ const UserForm = ({
                         email: e.target.value,
                       });
                     }}
-                    className="block w-full appearance-none rounded-md border border-text-secondary p-1 focus:border-text-primary focus:ring-text-primary sm:text-sm"
+                    className="block w-full appearance-none rounded-md border border-text-secondary p-1 focus:border-text-primary focus:ring-text-primary disabled:bg-gray-100 sm:text-sm"
                   />
                 </div>
               </div>

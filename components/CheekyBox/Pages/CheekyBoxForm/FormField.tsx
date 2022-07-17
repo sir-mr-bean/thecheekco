@@ -3,13 +3,16 @@ import Autocomplete, {
   ReactGoogleAutocompleteInputProps,
 } from "react-google-autocomplete";
 import { useEffect, useRef } from "react";
+import { Session, User } from "next-auth";
 
 const FormField = ({
   form,
   field,
+  user,
 }: {
   form: UseFormReturn<any>;
   field: string;
+  user?: User;
 }) => {
   const streetAddressRef = useRef<HTMLInputElement>(null);
   const methodName =
@@ -161,12 +164,16 @@ const FormField = ({
         ) : (
           <input
             type="text"
-            disabled={methodName === "country"}
+            disabled={
+              methodName === "country" ||
+              (user?.email !== undefined &&
+                (methodName === "email" || methodName === "emailAddress"))
+            }
             id={field}
             //autoComplete="given-name"
             {...form.register(methodName)}
             //value={form.getValues()[methodName]}
-            className="block w-full appearance-none rounded-md border border-text-secondary p-1 text-text-primary focus:border-text-primary focus:ring-text-primary sm:text-sm"
+            className="block w-full appearance-none rounded-md border border-text-secondary p-1 text-text-primary focus:border-text-primary focus:ring-text-primary disabled:bg-gray-100 sm:text-sm"
             onChange={(e) => form.clearErrors(methodName)}
           />
         )}

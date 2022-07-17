@@ -81,44 +81,84 @@ const UserInfoForm = ({
           <form>
             <div className="grid grid-cols-6 gap-6">
               <div className="col-span-6 sm:col-span-2">
-                <FormField form={userProfileForm} field="First Name" />
+                <FormField
+                  form={userProfileForm}
+                  field="First Name"
+                  user={userObj}
+                />
               </div>
 
               <div className="col-span-6 sm:col-span-2">
-                <FormField form={userProfileForm} field="Last Name" />
+                <FormField
+                  form={userProfileForm}
+                  field="Last Name"
+                  user={userObj}
+                />
               </div>
 
               <div className="col-span-6 sm:col-span-2">
-                <FormField form={userProfileForm} field="Company" />
+                <FormField
+                  form={userProfileForm}
+                  field="Company"
+                  user={userObj}
+                />
               </div>
 
               <div className="col-span-6 sm:col-span-4">
-                <FormField form={userProfileForm} field="Email" />
+                <FormField
+                  form={userProfileForm}
+                  field="Email"
+                  user={userObj}
+                />
               </div>
               <div className="col-span-6 sm:col-span-3">
-                <FormField form={userProfileForm} field="Street Address" />
+                <FormField
+                  form={userProfileForm}
+                  field="Street Address"
+                  user={userObj}
+                />
               </div>
 
               <div className="col-span-6 sm:col-span-3">
-                <FormField form={userProfileForm} field="Apartment or Unit" />
+                <FormField
+                  form={userProfileForm}
+                  field="Apartment or Unit"
+                  user={userObj}
+                />
               </div>
 
               <div className="col-span-6 sm:col-span-6 lg:col-span-2">
-                <FormField form={userProfileForm} field="City" />
+                <FormField form={userProfileForm} field="City" user={userObj} />
               </div>
 
               <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                <FormField form={userProfileForm} field="State" />
+                <FormField
+                  form={userProfileForm}
+                  field="State"
+                  user={userObj}
+                />
               </div>
 
               <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                <FormField form={userProfileForm} field="Post Code" />
+                <FormField
+                  form={userProfileForm}
+                  field="Post Code"
+                  user={userObj}
+                />
               </div>
               <div className="col-span-6 sm:col-span-3">
-                <FormField form={userProfileForm} field="Country" />
+                <FormField
+                  form={userProfileForm}
+                  field="Country"
+                  user={userObj}
+                />
               </div>
               <div className="col-span-6 sm:col-span-3">
-                <FormField form={userProfileForm} field="Phone Number" />
+                <FormField
+                  form={userProfileForm}
+                  field="Phone Number"
+                  user={userObj}
+                />
               </div>
             </div>
           </form>
