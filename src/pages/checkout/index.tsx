@@ -1,4 +1,4 @@
-import { CreditCard, GooglePay } from "react-square-web-payments-sdk";
+import { CreditCard, GooglePay, ApplePay } from "react-square-web-payments-sdk";
 import { CartState } from "../../../context/Cart/Context";
 import React, { useState, useEffect, useRef, Dispatch } from "react";
 import BeatLoader from "react-spinners/BeatLoader";
@@ -749,6 +749,9 @@ export default function checkout() {
                                       </CreditCard>
                                       <div className="py-4">
                                         <GooglePay buttonColor="white" />
+                                      </div>
+                                      <div className="py-4">
+                                        <ApplePay />
                                       </div>
                                     </div>
                                   </div>
