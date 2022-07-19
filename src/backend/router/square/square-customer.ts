@@ -32,12 +32,12 @@ export const squareCustomerRouter = createRouter()
     async resolve({ input, ctx }) {
       const { req } = ctx;
       const session = await getSession({ req });
-      if (session?.user.email !== input?.email) {
-        throw new TRPCError({
-          message: "You are not authorized to perform this action",
-          code: "UNAUTHORIZED",
-        });
-      }
+      // if session?.user.email !== input?.email) {
+      //   throw new TRPCError({
+      //     message: "You are not authorized to perform this action",
+      //     code: "UNAUTHORIZED",
+      //   });
+      // }
       const { email, firstName, lastName, phoneNumber, address } = input;
       const createCustomer = await customersApi.createCustomer({
         emailAddress: email,
@@ -57,17 +57,6 @@ export const squareCustomerRouter = createRouter()
       const customerResult = createCustomer?.result?.customer;
       return customerResult;
     },
-  })
-  .middleware(async ({ ctx, next }) => {
-    // Any query or mutation after this middleware will raise
-    // an error unless there is a current session
-    if (!ctx.session) {
-      throw new TRPCError({
-        message: "You are not authorized to perform this action",
-        code: "UNAUTHORIZED",
-      });
-    }
-    return next();
   })
   .mutation("update-customer", {
     input: z.object({
@@ -111,7 +100,6 @@ export const squareCustomerRouter = createRouter()
       }
     },
   })
-
   .query("search-customer", {
     input: z.object({
       email: z.string(),
