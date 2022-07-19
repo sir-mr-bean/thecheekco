@@ -274,8 +274,12 @@ const CategoryPage = (
                       </div>
                       <div className="mt-6">
                         <button
+                          disabled={
+                            product.itemData?.variations?.[0]?.itemVariationData
+                              ?.locationOverrides?.[0]?.soldOut
+                          }
                           onClick={() => handleAdd(product)}
-                          className="border-invisible relative flex cursor-pointer items-center justify-center rounded-2xl border bg-button py-2 px-8 text-sm font-medium uppercase text-white hover:border-black"
+                          className="border-invisible relative flex cursor-pointer items-center justify-center rounded-2xl border bg-button py-2 px-8 text-sm font-medium uppercase text-white hover:border-black disabled:cursor-not-allowed disabled:bg-button/50"
                         >
                           Add to cart
                           <span className="sr-only">

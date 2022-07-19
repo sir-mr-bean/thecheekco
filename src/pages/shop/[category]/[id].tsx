@@ -289,11 +289,20 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 </p>
                 <div className="flex items-center justify-between space-x-10">
                   <button
+                    disabled={
+                      product.itemData?.variations?.[0]?.itemVariationData
+                        ?.locationOverrides?.[0]?.soldOut
+                    }
                     onClick={() => handleAdd(product)}
                     type="button"
-                    className="mt-3 flex items-center justify-center rounded-md border border-transparent bg-button py-3 px-8 text-base font-medium uppercase text-white hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2 focus:ring-offset-gray-50"
+                    className="mt-3 flex items-center justify-center rounded-md border border-transparent bg-button py-3 px-8 text-base font-medium uppercase text-white hover:border hover:border-black focus:outline-none focus:ring-2 focus:ring-text-primary focus:ring-offset-2 focus:ring-offset-gray-50 disabled:cursor-not-allowed disabled:bg-button/50"
                   >
-                    Add to cart
+                    {product.itemData?.variations?.[0]?.itemVariationData
+                      ?.locationOverrides?.[0]?.soldOut ? (
+                      <span>Sold out</span>
+                    ) : (
+                      <span>Add to cart</span>
+                    )}
                   </button>
 
                   <div>
@@ -304,10 +313,14 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                       Quantity
                     </label>
                     <select
+                      disabled={
+                        product.itemData?.variations?.[0]?.itemVariationData
+                          ?.locationOverrides?.[0]?.soldOut
+                      }
                       ref={quantity}
                       id="quantity"
                       name="quantity"
-                      className="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-4 text-base text-text-primary focus:border-text-primary focus:outline-none focus:ring-text-primary sm:text-sm"
+                      className="block w-full rounded-md border border-gray-300 py-2 pl-3 pr-4 text-base text-text-primary focus:border-text-primary focus:outline-none focus:ring-text-primary disabled:cursor-not-allowed disabled:bg-gray-100 sm:text-sm"
                       defaultValue={1}
                     >
                       <option>1</option>
