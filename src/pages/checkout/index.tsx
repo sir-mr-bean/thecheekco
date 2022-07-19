@@ -133,12 +133,17 @@ export default function checkout() {
   const [newCard, setNewCard] = useState(true);
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
     useState<Card | null>({} as Card);
-  const { data: customer, status: CustomerStatus } = trpc.useQuery([
-    "square-customer.search-customer",
+  const { data: customer, status: CustomerStatus } = trpc.useQuery(
+    [
+      "square-customer.search-customer",
+      {
+        email: session?.user.email || "",
+      },
+    ],
     {
-      email: userObj.email,
-    },
-  ]);
+      enabled: !!session?.user.email,
+    }
+  );
   const {
     data: paymentMethods,
     status: PaymentMethodStatus,
@@ -149,11 +154,11 @@ export default function checkout() {
       "square-payment.get-customer-payment-methods",
       {
         customerId: customer?.id as string,
-        email: userObj.email,
+        email: session?.user.email || "",
       },
     ],
     {
-      enabled: !!customer,
+      enabled: !!customer && !!session?.user.email,
     }
   );
   const utils = trpc.useContext();
