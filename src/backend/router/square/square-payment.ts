@@ -23,17 +23,6 @@ const { ordersApi, paymentsApi, cardsApi } = new Client({
 
 export const squarePaymentRouter = createRouter()
   .transformer(superjson)
-  .middleware(async ({ ctx, next }) => {
-    // Any query or mutation after this middleware will raise
-    // an error unless there is a current session
-    if (!ctx.session) {
-      throw new TRPCError({
-        message: "You are not authorized to perform this action",
-        code: "UNAUTHORIZED",
-      });
-    }
-    return next();
-  })
   .mutation("create-order-payment", {
     input: z.object({
       orderId: z.string(),
@@ -43,7 +32,7 @@ export const squarePaymentRouter = createRouter()
     }),
     async resolve({ input, ctx }) {
       const { orderId, totalMoney, token } = input;
-
+      console.log("input", input);
       const payment = await paymentsApi.createPayment({
         idempotencyKey: randomUUID(),
         customerId: input.customerId ? (input.customerId as string) : undefined,
@@ -56,6 +45,7 @@ export const squarePaymentRouter = createRouter()
         locationId: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID as string,
         autocomplete: false,
       });
+      console.log(payment);
       const paymentResult = payment?.result?.payment;
       return paymentResult;
     },
