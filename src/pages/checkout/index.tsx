@@ -750,9 +750,6 @@ export default function checkout() {
                                       <div className="py-4">
                                         <GooglePay buttonColor="white" />
                                       </div>
-                                      <div className="py-4">
-                                        <ApplePay />
-                                      </div>
                                     </div>
                                   </div>
                                 </PaymentWrapper>
@@ -1005,6 +1002,9 @@ export default function checkout() {
 
                                       <div className="py-4">
                                         <GooglePay buttonColor="white" />
+                                      </div>
+                                      <div className="py-4">
+                                        <ApplePay />
                                       </div>
                                     </div>
                                   </div>
