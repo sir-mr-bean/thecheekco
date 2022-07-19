@@ -106,13 +106,13 @@ export const squareCustomerRouter = createRouter()
     }),
     async resolve({ input, ctx }) {
       const { req } = ctx;
-      const session = await getSession({ req });
-      if (session?.user.email !== input?.email) {
-        throw new TRPCError({
-          message: "You are not authorized to perform this action",
-          code: "UNAUTHORIZED",
-        });
-      }
+      // const session = await getSession({ req });
+      // if (session?.user.email !== input?.email) {
+      //   throw new TRPCError({
+      //     message: "You are not authorized to perform this action",
+      //     code: "UNAUTHORIZED",
+      //   });
+      // }
       const { email } = input;
       const searchCustomer = await customersApi.searchCustomers({
         query: {
