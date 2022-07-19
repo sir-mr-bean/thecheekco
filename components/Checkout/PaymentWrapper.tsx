@@ -105,7 +105,7 @@ const PaymentWrapper = ({
         requestBillingContact: false,
         requestShippingContact: false,
         total: {
-          amount: total.toString(),
+          amount: (total + Number(shipping)).toString(),
           label: "Total",
         },
       })}
