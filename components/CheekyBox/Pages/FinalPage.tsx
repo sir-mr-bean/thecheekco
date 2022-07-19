@@ -69,6 +69,7 @@ const FinalPage = ({
     console.log("handling payment", token);
     const customer = giftForm.getValues();
     const recipient = gifterForm.getValues();
+    console.log(token);
     if (token.status === "OK") {
       createSubscription.mutate(
         {

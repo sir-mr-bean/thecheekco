@@ -28,7 +28,7 @@ const UserInfo = ({ session }: { session: Session }) => {
   const { data: allPlans, status: planStatus } = trpc.useQuery([
     "square-subscription.get-all-subscriptions",
   ]);
-
+  console.log(mySubscriptions);
   const userProfileForm = useZodForm({
     schema: userProfileSchema,
     shouldFocusError: true,

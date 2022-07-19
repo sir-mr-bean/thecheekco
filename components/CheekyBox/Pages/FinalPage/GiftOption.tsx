@@ -51,20 +51,6 @@ const GiftOption = () => {
                 className="mx-1 flex min-w-full items-center justify-between"
               >
                 <td className="ml-2 flex flex-nowrap items-center py-4 text-sm font-medium text-text-primary sm:pl-2">
-                  {/* <div className="relative h-20 w-20"> */}
-                  {/* <Image
-                    src={
-                      product.productImage ||
-                      "https://thecheekcomedia.s3.ap-southeast-2.amazonaws.com/placeholder-image.png"
-                    }
-                    alt={product.itemData?.name}
-                    width={75}
-                    height={75}
-                    layout="fixed"
-                    priority={true}
-                    className="h-16 w-16 flex-none rounded-md bg-gray-100 object-cover object-center"
-                  /> */}
-                  {/* </div> */}
                   <div className="flex flex-col pl-2 text-xs">
                     <h3 className="text-text-primary  lg:whitespace-nowrap">
                       <a href={"#"}>Cheeky Box (3 months)</a>
