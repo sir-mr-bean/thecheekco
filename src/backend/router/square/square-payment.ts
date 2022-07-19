@@ -69,35 +69,45 @@ export const squarePaymentRouter = createRouter()
         (orderResult?.fulfillments?.[0]?.shipmentDetails?.recipient ||
           orderResult?.fulfillments?.[0].pickupDetails?.recipient)
       ) {
-        const dbUser = await prisma.user.findUnique({
-          where: {
-            id: ctx.session?.user.id as string,
-          },
-        });
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: {
+              id:
+                orderResult.fulfillments?.[0]?.shipmentDetails?.recipient
+                  ?.emailAddress ||
+                orderResult.fulfillments?.[0].pickupDetails?.recipient
+                  ?.emailAddress,
+            },
+          });
 
-        const orderCreated = await prisma.order.create({
-          data: {
-            id: orderResult?.id as string,
+          const orderCreated = await prisma.order.create({
+            data: {
+              id: orderResult?.id as string,
 
-            lineItems: {
-              createMany: {
-                data: orderResult.lineItems.map((item) => ({
-                  id: randomUUID(),
-                  productId: item.catalogObjectId as string,
-                  quantity: parseInt(item.quantity) as number,
-                })),
+              lineItems: {
+                createMany: {
+                  data: orderResult.lineItems.map((item) => ({
+                    id: randomUUID(),
+                    productId: item.catalogObjectId as string,
+                    quantity: parseInt(item.quantity) as number,
+                  })),
+                },
+              },
+              user: {
+                connect: {
+                  email: dbUser?.email,
+                },
               },
             },
-            user: {
-              connect: {
-                email: dbUser?.email,
-              },
-            },
-          },
-        });
-
-        return { orderResult, orderCreated };
+          });
+          if (orderCreated) {
+            return { orderResult, orderCreated };
+          }
+        } catch (e) {
+          console.log(e);
+        }
       }
+      return orderResult;
     },
   })
   .query("get-customer-payment-methods", {
