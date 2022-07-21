@@ -102,7 +102,7 @@ export const Header = (): JSX.Element => {
 
               <div className="mr-3 flex items-center justify-between font-gothic text-header-brown">
                 {/* Mobile Menu */}
-                <SearchBar />
+                {/* <SearchBar /> */}
 
                 <div className="rounded-md p-1.5 sm:hidden">
                   <MobileMenu />
