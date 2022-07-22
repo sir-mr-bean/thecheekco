@@ -224,6 +224,16 @@ const Product = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
           name="description"
           content="More than just amazing bath and skin care products. Ethically sourced handmade in Australia, cruelty free, vegan."
         />
+        <meta
+          property="og:image"
+          content={
+            productQuery?.find(
+              (p) =>
+                p.type === "IMAGE" &&
+                product?.itemData?.imageIds?.includes(p.id)
+            )?.imageData?.url
+          }
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {product && (

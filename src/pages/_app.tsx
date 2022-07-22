@@ -77,6 +77,7 @@ const MyApp = ({
               content="width=device-width, initial-scale=1"
             />
             <link rel="icon" href="/favicon.ico" />
+            <meta property="og:image" content="/images/logo.png" />
           </Head>
           <div className="max-w-screen z-50 bg-bg-tan bg-cover">
             <Header />
