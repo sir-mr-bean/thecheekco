@@ -104,10 +104,12 @@ const AllNatural = ({
                 >
                   <Link
                     key={product.id}
-                    href={`/shop/${productCategory?.categoryData?.name}/${product.itemData?.name}`}
+                    href={`/shop/[category]/[id]`}
                     as={`/shop/${slugify(
                       productCategory?.categoryData?.name as string
-                    )}/${slugify(product.itemData?.name as string)}`}
+                    )}/${product.itemData?.name
+                      ?.replace(/ /g, "-")
+                      .toLowerCase()}`}
                     className="relative overflow-hidden"
                   >
                     <div className="m-4 flex h-32 w-32 cursor-pointer flex-col items-center justify-center hover:scale-105 md:m-4">
