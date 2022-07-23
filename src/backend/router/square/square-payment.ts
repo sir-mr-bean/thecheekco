@@ -161,7 +161,7 @@ export const squarePaymentRouter = createRouter()
             addressLine2: token.cardDetails.billingAddress.addressLine2,
             locality: token.cardDetails.billingAddress.locality,
             postalCode: token.cardDetails.billingAddress.postalCode,
-            country: token.cardDetails.billingAddress.country,
+            country: "AU",
           },
           cardholderName: token.cardDetails.holderName,
           expMonth: BigInt(token.cardDetails.expMonth),

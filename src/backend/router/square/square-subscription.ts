@@ -124,7 +124,7 @@ export const squareSubscriptionRouter = createRouter()
             locality: customer.city,
             addressLine2: customer.state,
             postalCode: customer.postCode,
-            country: customer.country,
+            country: "AU",
           },
         });
         customerId = newCustomer?.result?.customer?.id;

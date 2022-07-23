@@ -48,7 +48,7 @@ export const squareCustomerRouter = createRouter()
           addressLine1: address?.addressLine1,
           administrativeDistrictLevel1: address?.region,
           locality: address?.locality,
-          country: address?.country,
+          country: "AU",
           postalCode: address?.postalCode,
         },
         idempotencyKey: randomUUID(),
@@ -90,7 +90,7 @@ export const squareCustomerRouter = createRouter()
             addressLine2: address?.addressLine2,
             administrativeDistrictLevel1: address?.region,
             locality: address?.locality,
-            country: address?.country,
+            country: "AU",
             postalCode: address?.postalCode,
           },
         });

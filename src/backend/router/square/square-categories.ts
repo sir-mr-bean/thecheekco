@@ -11,6 +11,7 @@ export const squareCategoriesRouter = createRouter()
   .transformer(superjson)
   .query("all-categories", {
     async resolve({ input, ctx }) {
+      console.log("prisma", ctx.prisma);
       const categoryQuery = await catalogApi.searchCatalogObjects({
         objectTypes: ["CATEGORY"],
       });
